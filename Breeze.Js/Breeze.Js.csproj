@@ -172,7 +172,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <Compile Include="Dummy.cs" />
     <Reference Include="System" />
     <None Include="src\_build.ps1" />
