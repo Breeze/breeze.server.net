@@ -99,166 +99,186 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\libs\breeze.base.debug.js">
-      <Link>Scripts\src\breeze.base.debug.js</Link>
+    <Content Include="..\breeze.js.tests\libs\breeze.base.debug.js">
+      <Link>libs\breeze.base.debug.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\breeze.base.min.js">
-      <Link>Scripts\src\breeze.base.min.js</Link>
+    <Content Include="..\breeze.js.tests\libs\breeze.base.min.js">
+      <Link>libs\breeze.base.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\breeze.debug.js">
-      <Link>Scripts\src\breeze.debug.js</Link>
+    <Content Include="..\breeze.js.tests\libs\breeze.debug.js">
+      <Link>libs\breeze.debug.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\breeze.min.js">
-      <Link>Scripts\src\breeze.min.js</Link>
+    <Content Include="..\breeze.js.tests\libs\breeze.min.js">
+      <Link>libs\breeze.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\attachTests.js">
-      <Link>Scripts\tests\attachTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\almond.js">
+      <Link>libs\almond.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\classRewriteTests.js">
-      <Link>Scripts\tests\classRewriteTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\backbone.js">
+      <Link>libs\backbone.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\complexTypeTests.js">
-      <Link>Scripts\tests\complexTypeTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\backbone.min.js">
+      <Link>libs\backbone.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\entityManagerTests.js">
-      <Link>Scripts\tests\entityManagerTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\datajs-1.1.1.js">
+      <Link>libs\datajs-1.1.1.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\entityTests.js">
-      <Link>Scripts\tests\entityTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\jquery-2.0.3.intellisense.js">
+      <Link>libs\jquery-2.0.3.intellisense.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\koSpecificTests.js">
-      <Link>Scripts\tests\koSpecificTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\jquery-2.0.3.js">
+      <Link>libs\jquery-2.0.3.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\metadataTests.js">
-      <Link>Scripts\tests\metadataTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\jquery-2.0.3.min.js">
+      <Link>libs\jquery-2.0.3.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\miscTests.js">
-      <Link>Scripts\tests\miscTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\knockout-2.3.0.debug.js">
+      <Link>libs\knockout-2.3.0.debug.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\paramTests.js">
-      <Link>Scripts\tests\paramTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\modernizr-2.0.6-development-only.js">
+      <Link>libs\modernizr-2.0.6-development-only.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\queryCtorTests.js">
-      <Link>Scripts\tests\queryCtorTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\q.js">
+      <Link>libs\q.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\queryDatatypeTests.js">
-      <Link>Scripts\tests\queryDatatypeTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\q.min.js">
+      <Link>libs\q.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\queryLocalTests.js">
-      <Link>Scripts\tests\queryLocalTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\qunit-1.11.0.css">
+      <Link>libs\qunit-1.11.0.css</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\queryNamedTests.js">
-      <Link>Scripts\tests\queryNamedTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\qunit-1.11.0.js">
+      <Link>libs\qunit-1.11.0.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\queryRawOdataTests.js">
-      <Link>Scripts\tests\queryRawOdataTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\r.js">
+      <Link>libs\r.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\querySelectTests.js">
-      <Link>Scripts\tests\querySelectTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\require.js">
+      <Link>libs\require.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\queryTests.js">
-      <Link>Scripts\tests\queryTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\underscore.js">
+      <Link>libs\underscore.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\saveTests.js">
-      <Link>Scripts\tests\saveTests.js</Link>
+    <Content Include="..\breeze.js.tests\libs\underscore.min.js">
+      <Link>libs\underscore.min.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>    
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\breeze.js.tests\tests\attachTests.js">
+      <Link>tests\attachTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\testFns.js">
-      <Link>Scripts\tests\testFns.js</Link>
+    <Content Include="..\breeze.js.tests\tests\classRewriteTests.js">
+      <Link>tests\classRewriteTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\validateEntityTests.js">
-      <Link>Scripts\tests\validateEntityTests.js</Link>
+    <Content Include="..\breeze.js.tests\tests\complexTypeTests.js">
+      <Link>tests\complexTypeTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\tests\validateTests.js">
-      <Link>Scripts\tests\validateTests.js</Link>
+    <Content Include="..\breeze.js.tests\tests\entityManagerTests.js">
+      <Link>tests\entityManagerTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\almond.js">
-      <Link>Scripts\libs\almond.js</Link>
+    <Content Include="..\breeze.js.tests\tests\entityTests.js">
+      <Link>tests\entityTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\backbone.js">
-      <Link>Scripts\libs\backbone.js</Link>
+    <Content Include="..\breeze.js.tests\tests\inheritBillingTests.js">    
+      <Link>tests\inheritBillingTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\backbone.min.js">
-      <Link>Scripts\libs\backbone.min.js</Link>
+    <Content Include="..\breeze.js.tests\tests\inheritProduceTests.js">    
+      <Link>tests\inheritProduceTests.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>        
+    <Content Include="..\breeze.js.tests\tests\koSpecificTests.js">
+      <Link>tests\koSpecificTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\jquery-2.0.3.intellisense.js">
-      <Link>Scripts\libs\jquery-2.0.3.intellisense.js</Link>
+    <Content Include="..\breeze.js.tests\tests\metadataTests.js">
+      <Link>tests\metadataTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\jquery-2.0.3.js">
-      <Link>Scripts\libs\jquery-2.0.3.js</Link>
+    <Content Include="..\breeze.js.tests\tests\miscTests.js">
+      <Link>tests\miscTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\jquery-2.0.3.min.js">
-      <Link>Scripts\libs\jquery-2.0.3.min.js</Link>
+    <Content Include="..\breeze.js.tests\tests\paramTests.js">
+      <Link>tests\paramTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\knockout-2.3.0.debug.js">
-      <Link>Scripts\libs\knockout-2.3.0.debug.js</Link>
+    <Content Include="..\breeze.js.tests\tests\queryCtorTests.js">
+      <Link>tests\queryCtorTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\modernizr-2.0.6-development-only.js">
-      <Link>Scripts\libs\modernizr-2.0.6-development-only.js</Link>
+    <Content Include="..\breeze.js.tests\tests\queryDatatypeTests.js">
+      <Link>tests\queryDatatypeTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\q.js">
-      <Link>Scripts\libs\q.js</Link>
+    <Content Include="..\breeze.js.tests\tests\queryLocalTests.js">
+      <Link>tests\queryLocalTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\q.min.js">
-      <Link>Scripts\libs\q.min.js</Link>
+    <Content Include="..\breeze.js.tests\tests\queryNamedTests.js">
+      <Link>tests\queryNamedTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\qunit-1.11.0.css">
-      <Link>Scripts\libs\qunit-1.11.0.css</Link>
+    <Content Include="..\breeze.js.tests\tests\queryNonEFTests.js">    
+      <Link>tests\queryNonEFTests.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>   
+    <Content Include="..\breeze.js.tests\tests\queryRawOdataTests.js">
+      <Link>tests\queryRawOdataTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\qunit-1.11.0.js">
-      <Link>Scripts\libs\qunit-1.11.0.js</Link>
+    <Content Include="..\breeze.js.tests\tests\querySelectTests.js">
+      <Link>tests\querySelectTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\r.js">
-      <Link>Scripts\libs\r.js</Link>
+    <Content Include="..\breeze.js.tests\tests\queryTests.js">
+      <Link>tests\queryTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\require.js">
-      <Link>Scripts\libs\require.js</Link>
+    <Content Include="..\breeze.js.tests\tests\saveTests.js">
+      <Link>tests\saveTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\underscore.js">
-      <Link>Scripts\libs\underscore.js</Link>
+    <Content Include="..\breeze.js.tests\tests\testFns.js">
+      <Link>tests\testFns.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\libs\underscore.min.js">
-      <Link>Scripts\libs\underscore.min.js</Link>
+    <Content Include="..\breeze.js.tests\tests\validateEntityTests.js">
+      <Link>tests\validateEntityTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\breeze.js.tests\tests\validateTests.js">
+      <Link>tests\validateTests.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Default.aspx" />
     <Content Include="ODataService.svc" />
@@ -336,7 +356,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>call "$(SolutionDir)import-breeze-js-files.bat"</PreBuildEvent>
-    <PostBuildEvent>xcopy /Y /E "$(TargetDir)\Scripts" "$(ProjectDir)\Scripts"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y /E "$(TargetDir)libs" "$(ProjectDir)libs"
+    xcopy /Y /E "$(TargetDir)tests" "$(ProjectDir)tests"</PostBuildEvent>
   </PropertyGroup>
 </Project>

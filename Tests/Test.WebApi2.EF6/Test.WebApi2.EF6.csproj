@@ -360,6 +360,10 @@
       <Project>{ab54c69a-14c0-4e60-9dd4-cbea3685c7dd}</Project>
       <Name>Breeze.WebApi2</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Breeze.Js.Tests\Breeze.Js.Tests.csproj">
+      <Project>{74a06f9d-62d9-4cdd-b5d3-66c7eba4fbce}</Project>
+      <Name>Breeze.Js.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model_Inheritance.EF6\Model_Inheritance.EF6.csproj">
       <Project>{6ca2f9ec-22d8-41d8-b029-193252acb802}</Project>
       <Name>Model_Inheritance.EF6</Name>
