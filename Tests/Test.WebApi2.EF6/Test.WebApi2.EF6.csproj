@@ -240,8 +240,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\breeze.js.tests\libs\breeze.debug.js">
-      <Link>libs\breeze.debug.js</Link>
+    <Content Include="..\breeze.js.tests\breeze\breeze.debug.js">
+      <Link>breeze\breeze.debug.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\breeze.js.tests\libs\angular.js">
@@ -431,7 +431,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /E "$(TargetDir)libs" "$(ProjectDir)libs"
+    <PostBuildEvent>xcopy /Y /E "$(TargetDir)breeze" "$(ProjectDir)breeze"
+    xcopy /Y /E "$(TargetDir)libs" "$(ProjectDir)libs"
     xcopy /Y /E "$(TargetDir)tests" "$(ProjectDir)tests"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

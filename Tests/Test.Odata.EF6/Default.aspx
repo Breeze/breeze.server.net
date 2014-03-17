@@ -28,7 +28,7 @@
  
     <!-- Test helper scripts  --> 
     <!-- These two must come first -->    
-    <script src="libs/breeze.debug.js"></script>
+    <script src="breeze/breeze.debug.js"></script>
     <script src="tests/testFns.js"></script>  
     
     <script>

@@ -99,20 +99,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\breeze.js.tests\libs\breeze.base.debug.js">
-      <Link>libs\breeze.base.debug.js</Link>
+    <Content Include="..\breeze.js.tests\breeze\breeze.base.debug.js">
+      <Link>breeze\breeze.base.debug.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\breeze.js.tests\libs\breeze.base.min.js">
-      <Link>libs\breeze.base.min.js</Link>
+    <Content Include="..\breeze.js.tests\breeze\breeze.base.min.js">
+      <Link>breeze\breeze.base.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\breeze.js.tests\libs\breeze.debug.js">
-      <Link>libs\breeze.debug.js</Link>
+    <Content Include="..\breeze.js.tests\breeze\breeze.debug.js">
+      <Link>breeze\breeze.debug.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\breeze.js.tests\libs\breeze.min.js">
-      <Link>libs\breeze.min.js</Link>
+    <Content Include="..\breeze.js.tests\breeze\breeze.min.js">
+      <Link>breeze\breeze.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\breeze.js.tests\libs\almond.js">
@@ -356,7 +356,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /E "$(TargetDir)libs" "$(ProjectDir)libs"
+    <PostBuildEvent>xcopy /Y /E "$(TargetDir)breeze" "$(ProjectDir)breeze"
+    xcopy /Y /E "$(TargetDir)libs" "$(ProjectDir)libs"
     xcopy /Y /E "$(TargetDir)tests" "$(ProjectDir)tests"</PostBuildEvent>
   </PropertyGroup>
 </Project>

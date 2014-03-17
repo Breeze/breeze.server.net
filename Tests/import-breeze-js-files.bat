@@ -11,6 +11,7 @@ set breezeJsDir=%breezeDir%breeze.js\
 set breezeJsBuildDir=%breezeJsDir%build\
 set breezeJsSrcDir=%breezeJsDir%src\
 set breezeJsLabsDir=%breezeDir%breeze.js.labs\
+set jsbreeze=%execDir%breeze.js.tests\breeze\
 set jslibs=%execDir%breeze.js.tests\libs\
 
 
@@ -20,13 +21,14 @@ GOTO :done
 
 :breezeSourceExists
 @echo on
-@echo Copying 'breeze.*.js' from '%breezeJsBuildDir%' to '%jslibs%'
-COPY "%breezeJsBuildDir%breeze.*.js" "%jslibs%" /Y
+@echo Copying 'breeze.*.js' from '%breezeJsBuildDir%' to '%jsbreeze%'
+COPY "%breezeJsBuildDir%breeze.*.js" "%jsbreeze%" /Y
 
-@echo Copying 'breeze.dataService.mongo.js' from '%breezeJsSrcDir%' to '%jslibs%'
-COPY "%breezeJsSrcDir%breeze.dataService.mongo.js" "%jslibs%" /Y
+@echo Copying 'breeze.dataService.mongo.js' from '%breezeJsSrcDir%' to '%jsbreeze%'
+COPY "%breezeJsSrcDir%breeze.dataService.mongo.js" "%jsbreeze%" /Y
 
-@echo Copying '*.js' from '%breezeJsLabsDir%' to '%jslibs%'
-COPY "%breezeJsLabsDir%*.js" "%jslibs%" /Y
+@echo Copying '*.js' from '%breezeJsLabsDir%' to '%jsbreeze%'
+COPY "%breezeJsLabsDir%*.js" "%jsbreeze%" /Y
+MOVE /Y "%jsbreeze%ngMidwayTester.js"  "%jslibs%"
 
 :done
