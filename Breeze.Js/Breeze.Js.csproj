@@ -165,94 +165,10 @@
     <Content Include="..\..\breeze.js\src\b00_breeze.ajax.angular.js">
       <Link>src\b00_breeze.ajax.angular.js</Link>
     </Content>
-    <Content Include="..\..\breeze.js\src\iface.ajaxInterface.js">
-      <Link>tests\iface.ajaxInterface.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\src\iface.keyGeneratorInterface.js">
-      <Link>tests\iface.keyGeneratorInterface.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\src\iface.promise.js">
-      <Link>tests\iface.promise.js</Link>
-    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\breeze.js\tests\inheritBillingTests.js">
-      <Link>tests\inheritBillingTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\inheritProduceTests.js">
-      <Link>tests\inheritProduceTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\notrackingTests.js">
-      <Link>tests\notrackingTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryAnyAllTests.js">
-      <Link>tests\queryAnyAllTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\saveTransactionTests.js">
-      <Link>tests\saveTransactionTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\testFns.js">
-      <Link>tests\testFns.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\complexTypeTests.js">
-      <Link>tests\complexTypeTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryNonEFTests.js">
-      <Link>tests\queryNonEFTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\querySelectTests.js">
-      <Link>tests\querySelectTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryLocalTests.js">
-      <Link>tests\queryLocalTests.js</Link>
-    </Content>
     <Content Include="..\..\breeze.js\tests\attachTests.js">
       <Link>src\attachTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\classRewriteTests.js">
-      <Link>tests\classRewriteTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryRawOdataTests.js">
-      <Link>tests\queryRawOdataTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryNamedTests.js">
-      <Link>tests\queryNamedTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\koSpecificTests.js">
-      <Link>tests\koSpecificTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryDatatypeTests.js">
-      <Link>tests\queryDatatypeTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\entityManagerTests.js">
-      <Link>tests\entityManagerTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryCtorTests.js">
-      <Link>tests\queryCtorTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\entityTests.js">
-      <Link>tests\entityTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\metadataTests.js">
-      <Link>tests\metadataTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\miscTests.js">
-      <Link>tests\miscTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\paramTests.js">
-      <Link>tests\paramTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\queryTests.js">
-      <Link>tests\queryTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\saveTests.js">
-      <Link>tests\saveTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\validateEntityTests.js">
-      <Link>tests\validateEntityTests.js</Link>
-    </Content>
-    <Content Include="..\..\breeze.js\tests\validateTests.js">
-      <Link>tests\validateTests.js</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
