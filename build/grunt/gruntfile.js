@@ -41,7 +41,9 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-
+    
+    buildBreezeJs: { foo: "bar" },
+    
 	  msBuild: {
       source: {
         // 'src' here just for 'newer' functionality
@@ -118,6 +120,13 @@ module.exports = function(grunt) {
     
   });  
   
+  grunt.registerMultiTask('buildBreezeJs', 'build breeze.xxx.js files', function() {
+    runExec('buildJsFiles', {
+      cwd:  jsBuildDir + "/grunt/",
+      cmd: 'grunt'
+    });   
+  });
+  
   grunt.registerMultiTask('updateFiles', 'update files to latest version', function() {
     var that = this;
     this.files.forEach(function(fileGroup) {
@@ -170,7 +179,7 @@ module.exports = function(grunt) {
   grunt.registerTask('buildRelease', 
    ['newer:msBuild:source' ]);
   grunt.registerTask('packageNuget',   
-   [ 'newer:updateFiles', 'buildNupkg', 'copy:testNupkg']);
+   [ 'buildBreezeJs', 'clean:nupkgs', 'newer:updateFiles', 'buildNupkg', 'copy:testNupkg']);
   
   grunt.registerTask('default', ['buildRelease', 'packageNuget']);
     
