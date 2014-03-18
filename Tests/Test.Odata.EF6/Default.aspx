@@ -6,8 +6,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
         <title id="title">Breeze OData Test Suite</title>
        
-        <link rel="stylesheet" href="libs/qunit-1.11.0.css" type="text/css" media="screen"/>
-        <script type="text/javascript" src="libs/modernizr-2.0.6-development-only.js" ></script>
+        <link rel="stylesheet" href="vendor/qunit-1.11.0.css" type="text/css" media="screen"/>
+        <script type="text/javascript" src="vendor/modernizr-2.0.6-development-only.js" ></script>
         
     </head>
 
@@ -18,13 +18,13 @@
     </body>
     
     <!-- load 3rd party libs -->
-    <script src="libs/qunit-1.11.0.js"></script> 
-    <script src="libs/q.min.js"></script>
-    <script src="libs/knockout-2.3.0.debug.js"></script>
-    <script src="libs/underscore.js"></script>
-    <script src="libs/backbone.js"></script>
-    <script src="libs/jquery-2.0.3.js"></script>
-    <script src="libs/datajs-1.1.1.js"></script>
+    <script src="vendor/qunit-1.11.0.js"></script> 
+    <script src="vendor/q.min.js"></script>
+    <script src="vendor/knockout-2.3.0.debug.js"></script>
+    <script src="vendor/underscore.js"></script>
+    <script src="vendor/backbone.js"></script>
+    <script src="vendor/jquery-2.0.3.js"></script>
+    <script src="vendor/datajs-1.1.1.js"></script>
  
     <!-- Test helper scripts  --> 
     <!-- These two must come first -->    
