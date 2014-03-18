@@ -32,8 +32,8 @@
         <file src="content\Views\BreezeSampleShell\index.cshtml" target="content\Views\BreezeSampleShell\index.cshtml" />
         <file src="content\Scripts\app\logger.js" target="content\Scripts\app\logger.js" />
 		<file src="content\Scripts\app\sampleViewModel.js" target="content\Scripts\app\sampleViewModel.js" />
-        <file src="content\Scripts\jquery-1.7.1.min.js" target="content\Scripts\jquery-1.7.1.min.js" />
-        <file src="content\Scripts\knockout-2.1.0.js" target="content\Scripts\knockout-2.1.0.js" />
+        <file src="content\Scripts\jquery-2.0.3.min.js" target="content\Scripts\jquery-2.0.3.min.js" />
+        <file src="content\Scripts\knockout-2.3.0.js" target="content\Scripts\knockout-2.3.0.js" />
         <file src="readme.txt" target="readme.txt" />
     </files>
 </package>
