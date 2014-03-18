@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Js", "Breeze.Js\Breeze.Js.csproj", "{9BDE026E-CE0A-42F1-A508-4BE30124DD67}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.WebApi", "Breeze.WebApi\Breeze.WebApi.csproj", "{4D9CE4E7-DCA1-4458-BA63-2C3F7907B754}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.WebApi.EF", "Breeze.WebApi.EF\Breeze.WebApi.EF.csproj", "{EF0B0330-34F3-4115-9E0D-8A8B7DF16A9C}"
@@ -31,9 +29,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.WebApi2", "Breeze.WebApi2\Breeze.WebApi2.csproj", "{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Breeze.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -46,21 +41,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Debug|x86.ActiveCfg = Debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Debug|x86.Build.0 = Debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.OData-debug|Any CPU.ActiveCfg = OData-debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.OData-debug|Mixed Platforms.ActiveCfg = OData-debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.OData-debug|Mixed Platforms.Build.0 = OData-debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.OData-debug|x86.ActiveCfg = OData-debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.OData-debug|x86.Build.0 = OData-debug|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Release|Any CPU.ActiveCfg = Release|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Release|Mixed Platforms.Build.0 = Release|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Release|x86.ActiveCfg = Release|x86
-		{9BDE026E-CE0A-42F1-A508-4BE30124DD67}.Release|x86.Build.0 = Release|x86
 		{4D9CE4E7-DCA1-4458-BA63-2C3F7907B754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D9CE4E7-DCA1-4458-BA63-2C3F7907B754}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D9CE4E7-DCA1-4458-BA63-2C3F7907B754}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -169,5 +149,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Breeze.vsmdi
 	EndGlobalSection
 EndGlobal

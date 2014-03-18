@@ -1,34 +1,7 @@
-*.svn
-*.idea
-*.user
-*.docx
-*.vsmdi
-*.cmd
-*.testsettings
-*.old
-*.suo
-
-node_modules
-bin
-obj
-packages
-_temp
-Unused
-TestResults
-_ReSharper*
-
-GetFtpCredential.ps1
-
-breeze-*.zip
-breeze*.nupkg
-
 #Don't check in; copy fresh from source each time
 breeze*.js
-libs/breeze*.js
-libs/ngMidwayTester.js
+ngMidwayTester.js
 
-#Don't check in (see exception in .gitignore of Breeze.Js.Tests)
-*/libs/*.js
-*/libs/*.css
-*/libs/*.map
-*/tests/*.js
+#Don't check in 
+vendor
+tests
