@@ -44,6 +44,8 @@ module.exports = function(grunt) {
 
 	  msBuild: {
       source: {
+        // 'src' here just for 'newer' functionality
+        src: '../../Breeze.*/**',
         msBuildOptions: msBuildOptions,
         solutionFileNames: ['../../Breeze.Build.sln']
       },
@@ -102,6 +104,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-newer');
   
    
   grunt.registerMultiTask('msBuild', 'Execute MsBuild', function( ) {
@@ -165,9 +168,9 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('buildRelease', 
-   ['msBuild:source' ]);
+   ['newer:msBuild:source' ]);
   grunt.registerTask('packageNuget',   
-   [ 'clean:nupkgs', 'updateFiles:nugetScripts', 'updateFiles:nugetLibs', 'buildNupkg', 'copy:testNupkg']);
+   [ 'newer:updateFiles', 'buildNupkg', 'copy:testNupkg']);
   
   grunt.registerTask('default', ['buildRelease', 'packageNuget']);
     
