@@ -14,10 +14,10 @@ module.exports = function(grunt) {
   grunt.log.writeln('localAppData: ' + process.env.LOCALAPPDATA);
   
   var nugetPackageNames = [
+ 	   'Breeze.Client',
      'Breeze.WebApi', 
      'Breeze.WebApi2.EF6',
      'Breeze.WebApi2.NH',
-	   'Breeze.Client',
 	   'Breeze.Server.WebApi2',
      'Breeze.Server.ContextProvider.EF6',
      'Breeze.Server.ContextProvider.NH',
@@ -42,9 +42,11 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     
+    // run the breeze.js grunt scripts - args here are dummies.
     buildBreezeJs: { foo: "bar" },
     
 	  msBuild: {
+      // build the Breeze.Build sln ( which includes all of the other projects) 
       source: {
         // 'src' here just for 'newer' functionality
         src: '../../Breeze.*/**',
@@ -52,15 +54,19 @@ module.exports = function(grunt) {
         solutionFileNames: ['../../Breeze.Build.sln']
       },
     },
+    
     clean: {
       options: {
         // uncomment to test
         // 'no-write': true,
         force: true,
       },
+      // remove all previously build .nupkgs
       nupkgs: [ nugetDir + '**/*.nupkg']
     },
+    
     copy: {
+      // copy all nuget packages into the local nuget test dir
       testNupkg: {
         files: [ { 
           expand: true, 
@@ -73,26 +79,31 @@ module.exports = function(grunt) {
     },
 
     updateFiles: {
-      // copy all instance of files in source over like named files in dest.
+      // copy breeze.*.js files to each of the nuget sources
       nugetScripts: { 
         src: [ jsBuildDir + 'breeze.*.js'] ,
         destFolders: [ nugetDir ]
       },
+      // copy breeze dll files to each of the nuget sources
       nugetLibs: {
         src: breezeDlls.map(function(x) {
-          return '../' + x + '/*.dll';
+          return '../../' + x + '/*.dll';
         }),
         destFolders: [ nugetDir]
       }
     },
     
-
+    // build all nuget packages 
     buildNupkg: {
       build: { src: [ nugetDir + '**/Default.nuspec' ] }
     },
+    
+    // deploy all nuget packages
     deployNupkg: {
       base: { src: [ nugetDir + '**/*.nupkg'] }
     },
+    
+    // debugging tool
     listFiles: {
       samples: {
         src: [ nugetDir + '**/Default.nuspec']
@@ -101,13 +112,19 @@ module.exports = function(grunt) {
    
   });
 
-
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-newer');
+
   
+  grunt.registerMultiTask('buildBreezeJs', 'build breeze.xxx.js files', function() {
+    runExec('buildJsFiles', {
+      cwd:  jsBuildDir + "/grunt/",
+      cmd: 'grunt'
+    });   
+  });
    
   grunt.registerMultiTask('msBuild', 'Execute MsBuild', function( ) {
     // dynamically build the exec tasks
@@ -117,15 +134,7 @@ module.exports = function(grunt) {
     this.data.solutionFileNames.forEach(function(solutionFileName) {
       execMsBuild(solutionFileName, that.data);
     });
-    
   });  
-  
-  grunt.registerMultiTask('buildBreezeJs', 'build breeze.xxx.js files', function() {
-    runExec('buildJsFiles', {
-      cwd:  jsBuildDir + "/grunt/",
-      cmd: 'grunt'
-    });   
-  });
   
   grunt.registerMultiTask('updateFiles', 'update files to latest version', function() {
     var that = this;
@@ -145,6 +154,14 @@ module.exports = function(grunt) {
     });
   });
   
+   grunt.registerMultiTask('buildNupkg', 'package nuget files', function() {   
+    this.files.forEach(function(fileGroup) {
+      fileGroup.src.forEach(function(fileName) {
+        packNuget(fileName);
+      });
+    });
+  });
+  
   grunt.registerMultiTask('deployNupkg', 'deploy nuget package', function() {   
     this.files.forEach(function(fileGroup) {
       fileGroup.src.forEach(function(fileName) {
@@ -153,14 +170,6 @@ module.exports = function(grunt) {
         runExec('deployNupkg', {
           cmd: 'nuget push ' + fileName 
         });
-      });
-    });
-  });
-  
-  grunt.registerMultiTask('buildNupkg', 'package nuget files', function() {   
-    this.files.forEach(function(fileGroup) {
-      fileGroup.src.forEach(function(fileName) {
-        packNuget(fileName);
       });
     });
   });
@@ -182,6 +191,8 @@ module.exports = function(grunt) {
    [ 'buildBreezeJs', 'clean:nupkgs', 'newer:updateFiles', 'buildNupkg', 'copy:testNupkg']);
   
   grunt.registerTask('default', ['buildRelease', 'packageNuget']);
+  
+  // ------------------- local functions ----------------------
     
   function getBreezeVersion() {
      var versionFile = grunt.file.read( jsSrcDir + '_head.jsfrag');    

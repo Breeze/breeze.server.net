@@ -435,9 +435,9 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /E "$(TargetDir)breeze" "$(ProjectDir)breeze"
-    xcopy /Y /E "$(TargetDir)tests" "$(ProjectDir)tests"
-    xcopy /Y /E "$(TargetDir)vendor" "$(ProjectDir)vendor"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y /E "$(TargetDir)breeze"  "$(ProjectDir)breeze"
+xcopy /Y /E "$(TargetDir)tests"     "$(ProjectDir)tests"
+xcopy /Y /E "$(TargetDir)vendor" "$(ProjectDir)vendor"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>// run breeze.js build
