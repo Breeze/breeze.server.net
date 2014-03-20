@@ -159,6 +159,9 @@
       <Link>tests\entityTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\internal\Index.net.html">
+      <Link>Index.net.html</Link>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\inheritBillingTests.js">
       <Link>tests\inheritBillingTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
