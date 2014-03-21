@@ -29,6 +29,7 @@ using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.CF;
 using Foo;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Http.OData.Query;
 #elif DATABASEFIRST_OLD
 using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.EDMX;
