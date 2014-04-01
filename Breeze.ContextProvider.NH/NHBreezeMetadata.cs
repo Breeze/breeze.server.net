@@ -18,6 +18,7 @@ namespace Breeze.ContextProvider.NH
     /// Builds a data structure containing the metadata required by Breeze.
     /// <see cref="http://www.breezejs.com/documentation/breeze-metadata-format"/>
     /// </summary>
+    [Obsolete("Use NHMetadataBuilder, which does not depend upon Configuration")]
     public class NHBreezeMetadata
     {
         private ISessionFactory _sessionFactory;

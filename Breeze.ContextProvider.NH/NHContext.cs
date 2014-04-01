@@ -49,18 +49,42 @@ namespace Breeze.ContextProvider.NH {
       get { return session; }
     }
 
-    public NhQueryableInclude<T> GetQuery<T>() {
-      return new NhQueryableInclude<T>(session.GetSessionImplementation());
+    /// <summary>
+    /// Return a query for the given entity
+    /// </summary>
+    /// <typeparam name="T">Entity type</typeparam>
+    /// <param name="cacheable">Whether to mark the query Cacheable.  Default is false.</param>
+    /// <returns></returns>
+    public NhQueryableInclude<T> GetQuery<T>(bool cacheable = false) {
+      return new NhQueryableInclude<T>(session.GetSessionImplementation(), cacheable);
     }
 
+    /// <summary>
+    /// Return a cacheable query for the given entity, using the given cache region
+    /// </summary>
+    /// <typeparam name="T">Entity type</typeparam>
+    /// <param name="cacheRegion">Cache region to use.</param>
+    /// <returns></returns>
+    public NhQueryableInclude<T> GetQuery<T>(string cacheRegion) {
+      return new NhQueryableInclude<T>(session.GetSessionImplementation(), cacheRegion);
+    }
+    
+    /// <summary>
+    /// Close the session
+    /// </summary>
     public void Close() {
       if (session != null && session.IsOpen) session.Close();
     }
 
-    public void Dispose() {
+    /// <summary>
+    /// Close the session
+    /// </summary>
+    public void Dispose()
+    {
       Close();
     }
 
+    /// <returns>The connection from the session.</returns>
     public override IDbConnection GetDbConnection() {
       return session.Connection;
     }
@@ -69,6 +93,9 @@ namespace Breeze.ContextProvider.NH {
       // already open when session is created
     }
 
+    /// <summary>
+    /// Close the session and its associated db connection
+    /// </summary>
     protected override void CloseDbConnection() {
       if (session != null && session.IsOpen) {
         var dbc = session.Close();
