@@ -14,7 +14,7 @@ using System.Web.Http;
 
 using Breeze.ContextProvider;
 using Breeze.WebApi2;
-
+using Microsoft.SqlServer.Server;
 using Newtonsoft.Json.Linq;
 
 using System.Collections.Generic;
@@ -576,22 +576,8 @@ namespace Sample_WebApi2.Controllers {
       return custs;
     }
 
-    //public class CustomerDTO {
-    //  public CustomerDTO(Customer cust) {
-    //    CompanyName = cust.CompanyName;
-    //    ContactName = cust.ContactName;
-    //  }
-
-    //  public String CompanyName { get; set; }
-    //  public String ContactName { get; set; }
-    //}
-
-    //[HttpGet]
-    //// [BreezeQueryable]
-    //public IQueryable<CustomerDTO> CustomerDTOs() {
-    //  var custs = ContextProvider.Context.Customers.Select(c => new CustomerDTO(c));
-    //  return custs;
-    //}
+    
+    
 
     [HttpGet]
     public IQueryable<Customer> CustomersStartingWith(string companyName) {
@@ -814,6 +800,31 @@ namespace Sample_WebApi2.Controllers {
       var stuff = ContextProvider.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID });
       return stuff;
     }
+
+    [HttpGet]
+    public IQueryable<CustomerDTO> CompanyNamesAndIdsAsDTO() {
+      var stuff = ContextProvider.Context.Customers.Select(c => new CustomerDTO() { CompanyName = c.CompanyName, CustomerID = c.CustomerID });
+      return stuff;
+    }
+
+    public class CustomerDTO {
+      public CustomerDTO() {
+      }
+
+      public CustomerDTO(String companyName, Guid customerID) {
+        CompanyName = companyName;
+        CustomerID = customerID;
+      }
+      
+      public Guid CustomerID { get; set; }
+      public String CompanyName { get; set; }
+      public AnotherType AnotherItem { get; set; }
+    }
+
+    public class AnotherType {
+      
+    }
+
 
     [HttpGet]
     public IQueryable<Object> CustomersWithBigOrders() {
