@@ -177,7 +177,7 @@ namespace Breeze.ContextProvider.NH
 
 
             // Hibernate identifiers are excluded from the list of data properties, so we have to add them separately
-            if (meta.HasIdentifierProperty && hasOwnProperty(type, meta.IdentifierPropertyName))
+            if (meta.HasIdentifierProperty && !inheritedProperties.Contains(meta.IdentifierPropertyName))
             {
                 var dmap = MakeDataProperty(meta.IdentifierPropertyName, meta.IdentifierType, false, true, false);
                 dataList.Insert(0, dmap);
@@ -196,7 +196,7 @@ namespace Breeze.ContextProvider.NH
                 var compType = (ComponentType)meta.IdentifierType;
 
                 // check that the component belongs to this class, not a superclass
-                if (compType.ReturnedClass == type || meta.IdentifierPropertyName == null || hasOwnProperty(type, meta.IdentifierPropertyName))
+                if (compType.ReturnedClass == type || meta.IdentifierPropertyName == null || !inheritedProperties.Contains(meta.IdentifierPropertyName))
                 {
                     var compNames = compType.PropertyNames;
                     for (int i = 0; i < compNames.Length; i++)
@@ -224,7 +224,7 @@ namespace Breeze.ContextProvider.NH
             for (int i = 0; i < propNames.Length; i++)
             {
                 var propName = propNames[i];
-                if (!hasOwnProperty(type, propName)) continue;  // skip property defined on superclass 
+                if (inheritedProperties.Contains(propName)) continue;  // skip property defined on superclass 
 
                 var propType = propTypes[i];
                 if (propType.IsAssociationType)
@@ -240,13 +240,13 @@ namespace Breeze.ContextProvider.NH
         /// <param name="type"></param>
         /// <param name="propName"></param>
         /// <returns>True if the type declares the given property, false otherwise.</returns>
-        bool hasOwnProperty(Type type, string propName)
-        {
-            // this doesn't work: return persister.GetSubclassPropertyDeclarer(propName) == Declarer.Class;
-            var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
-            var hasProperty = type.GetProperty(propName, flags) != null || type.GetField(propName, flags) != null;
-            return hasProperty;
-        }
+        //bool hasOwnProperty(Type type, string propName)
+        //{
+        //    // this doesn't work: return persister.GetSubclassPropertyDeclarer(propName) == Declarer.Class;
+        //    var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
+        //    var hasProperty = type.GetProperty(propName, flags) != null || type.GetField(propName, flags) != null;
+        //    return hasProperty;
+        //}
 
         /// <summary>
         /// Return names of all properties that are defined in the mapped ancestors of the 
@@ -258,6 +258,7 @@ namespace Breeze.ContextProvider.NH
         HashSet<string> GetSuperProperties(AbstractEntityPersister persister)
         {
             HashSet<string> set = new HashSet<String>();
+            if (!persister.IsInherited) return set;
             string superClassName = persister.MappedSuperclass;
             if (superClassName == null) return set;
 
