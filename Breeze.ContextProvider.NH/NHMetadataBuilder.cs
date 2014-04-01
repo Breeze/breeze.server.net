@@ -129,6 +129,8 @@ namespace Breeze.ContextProvider.NH
             var metaModel = persister.EntityMetamodel;
             var type = metaModel.Type;
 
+            HashSet<String> inheritedProperties = GetSuperProperties(persister);
+
             var propNames = meta.PropertyNames;
             var propTypes = meta.PropertyTypes;
             var propNull = meta.PropertyNullability;
@@ -136,7 +138,7 @@ namespace Breeze.ContextProvider.NH
             for (int i = 0; i < propNames.Length; i++)
             {
                 var propName = propNames[i];
-                if (!hasOwnProperty(type, propName)) continue;  // skip property defined on superclass
+                if (inheritedProperties.Contains(propName)) continue;  // skip property defined on superclass
 
                 var propType = propTypes[i];
                 if (!propType.IsAssociationType)    // skip association types until we handle all the data types, so the relatedDataPropertyMap will be populated.
@@ -163,6 +165,11 @@ namespace Breeze.ContextProvider.NH
                         dataList.Add(dmap);
 
                         var columnNameString = GetPropertyColumnNames(persister, propName);
+                        if (relatedDataPropertyMap.ContainsKey(columnNameString))
+                        {
+                            throw new ArgumentException("Data property for column '" + columnNameString + "' is '" 
+                                + relatedDataPropertyMap[columnNameString]["nameOnServer"] + "' and cannot also be '" + propName + "'");
+                        }
                         relatedDataPropertyMap.Add(columnNameString, dmap);
                     }
                 }
@@ -176,6 +183,11 @@ namespace Breeze.ContextProvider.NH
                 dataList.Insert(0, dmap);
 
                 var columnNameString = GetPropertyColumnNames(persister, meta.IdentifierPropertyName);
+                if (relatedDataPropertyMap.ContainsKey(columnNameString))
+                {
+                    throw new ArgumentException("Data property for column '" + columnNameString + "' is '"
+                        + relatedDataPropertyMap[columnNameString]["nameOnServer"] + "' and cannot also be '" + meta.IdentifierPropertyName + "'");
+                }
                 relatedDataPropertyMap.Add(columnNameString, dmap);
             }
             else if (meta.IdentifierType != null && meta.IdentifierType.IsComponentType)
@@ -234,6 +246,28 @@ namespace Breeze.ContextProvider.NH
             var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
             var hasProperty = type.GetProperty(propName, flags) != null || type.GetField(propName, flags) != null;
             return hasProperty;
+        }
+
+        /// <summary>
+        /// Return names of all properties that are defined in the mapped ancestors of the 
+        /// given persister.  Note that unmapped superclasses are deliberately ignored, because
+        /// they shouldn't affect the metadata.
+        /// </summary>
+        /// <param name="persister"></param>
+        /// <returns>set of property names.  Empty if the persister doesn't have a superclass.</returns>
+        HashSet<string> GetSuperProperties(AbstractEntityPersister persister)
+        {
+            HashSet<string> set = new HashSet<String>();
+            string superClassName = persister.MappedSuperclass;
+            if (superClassName == null) return set;
+
+            IClassMetadata superMeta = _sessionFactory.GetClassMetadata(superClassName);
+            if (superMeta == null) return set;
+
+            string[] superProps = superMeta.PropertyNames;
+            set = new HashSet<string>(superProps);
+            set.Add(superMeta.IdentifierPropertyName);
+            return set;
         }
 
 
