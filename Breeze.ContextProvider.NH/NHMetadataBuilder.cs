@@ -496,9 +496,9 @@ namespace Breeze.ContextProvider.NH
         }
 
         /// <summary>
-        /// Get the column name without square brackets or quotes around it.  E.g. "[OrderID]" -> OrderID 
+        /// Get the column name without square brackets or quotes around it.  E.g. "[OrderID]" -> OrderID
         /// Because sometimes Hibernate gives us brackets, and sometimes it doesn't.
-        /// Double-quotes happen with SQL CE.
+        /// Double-quotes happen with SQL CE.  Backticks happen with MySQL.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -506,6 +506,7 @@ namespace Breeze.ContextProvider.NH
         {
             name = (name[0] == '[') ? name.Substring(1, name.Length - 2) : name;
             name = (name[0] == '"') ? name.Substring(1, name.Length - 2) : name;
+            name = (name[0] == '`') ? name.Substring(1, name.Length - 2) : name;
             return name;
         }
 
