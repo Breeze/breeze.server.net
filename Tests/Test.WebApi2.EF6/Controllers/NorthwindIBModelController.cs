@@ -10,11 +10,12 @@
 using System;
 using System.Net;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web.Http;
 
 using Breeze.ContextProvider;
 using Breeze.WebApi2;
-
+using Microsoft.SqlServer.Server;
 using Newtonsoft.Json.Linq;
 
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Web;
 
+using NHibernate.Mapping;
+using NHibernate.Transform;
 #if CODEFIRST_PROVIDER
 using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.CF;
@@ -576,22 +579,8 @@ namespace Sample_WebApi2.Controllers {
       return custs;
     }
 
-    //public class CustomerDTO {
-    //  public CustomerDTO(Customer cust) {
-    //    CompanyName = cust.CompanyName;
-    //    ContactName = cust.ContactName;
-    //  }
-
-    //  public String CompanyName { get; set; }
-    //  public String ContactName { get; set; }
-    //}
-
-    //[HttpGet]
-    //// [BreezeQueryable]
-    //public IQueryable<CustomerDTO> CustomerDTOs() {
-    //  var custs = ContextProvider.Context.Customers.Select(c => new CustomerDTO(c));
-    //  return custs;
-    //}
+    
+    
 
     [HttpGet]
     public IQueryable<Customer> CustomersStartingWith(string companyName) {
@@ -692,12 +681,12 @@ namespace Sample_WebApi2.Controllers {
       return ContextProvider.Context.TimeLimits;
     }
 
-    [HttpGet]
-    public Object Lookups() {
-      var regions = ContextProvider.Context.Regions.ToList();
-      var roles = ContextProvider.Context.Roles.ToList();
-      return new { regions, roles };
-    }
+    //[HttpGet]
+    //public Object Lookups() {
+    //  var regions = ContextProvider.Context.Regions.ToList();
+    //  var roles = ContextProvider.Context.Roles.ToList();
+    //  return new { regions, roles };
+    //}
 
     [HttpGet]
     public IQueryable<TimeGroup> TimeGroups() {
@@ -804,6 +793,36 @@ namespace Sample_WebApi2.Controllers {
     }
 
     [HttpGet]
+    public IEnumerable<Object> Lookup1Array() {
+      var regions = ContextProvider.Context.Regions;
+
+      var lookups = new List<Object>();
+      lookups.Add(new {regions = regions});
+      return lookups;
+    }
+
+    [HttpGet]
+    public object Lookups() {
+      var regions = ContextProvider.Context.Regions;
+      var territories = ContextProvider.Context.Territories;
+      var categories = ContextProvider.Context.Categories;
+
+      var lookups = new { regions, territories, categories };
+      return lookups;
+    }
+
+    [HttpGet]
+    public IEnumerable<Object> LookupsEnumerableAnon() {
+      var regions = ContextProvider.Context.Regions;
+      var territories = ContextProvider.Context.Territories;
+      var categories = ContextProvider.Context.Categories;
+
+      var lookups = new List<Object>();
+      lookups.Add(new {regions = regions, territories = territories, categories = categories});
+      return lookups;
+    }
+
+    [HttpGet]
     public IQueryable<Object> CompanyNames() {
       var stuff = ContextProvider.Context.Customers.Select(c => c.CompanyName);
       return stuff;
@@ -814,6 +833,31 @@ namespace Sample_WebApi2.Controllers {
       var stuff = ContextProvider.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID });
       return stuff;
     }
+
+    [HttpGet]
+    public IQueryable<CustomerDTO> CompanyNamesAndIdsAsDTO() {
+      var stuff = ContextProvider.Context.Customers.Select(c => new CustomerDTO() { CompanyName = c.CompanyName, CustomerID = c.CustomerID });
+      return stuff;
+    }
+
+    public class CustomerDTO {
+      public CustomerDTO() {
+      }
+
+      public CustomerDTO(String companyName, Guid customerID) {
+        CompanyName = companyName;
+        CustomerID = customerID;
+      }
+      
+      public Guid CustomerID { get; set; }
+      public String CompanyName { get; set; }
+      public AnotherType AnotherItem { get; set; }
+    }
+
+    public class AnotherType {
+      
+    }
+
 
     [HttpGet]
     public IQueryable<Object> CustomersWithBigOrders() {
