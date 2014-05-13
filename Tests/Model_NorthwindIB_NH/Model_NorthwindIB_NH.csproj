@@ -55,6 +55,8 @@
     <Compile Include="Entities\OrderDetail.cs" />
     <Compile Include="Entities\PreviousEmployee.cs" />
     <Compile Include="Entities\Product.cs" />
+    <Compile Include="Entities\ProductDiscontinued.cs" />
+    <Compile Include="Entities\ProductMulti.cs" />
     <Compile Include="Entities\Region.cs" />
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\RoleType.cs" />
@@ -95,6 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mapping\UnusualDate.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\ProductMulti.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
