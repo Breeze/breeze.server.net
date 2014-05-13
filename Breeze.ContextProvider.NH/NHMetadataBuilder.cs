@@ -24,6 +24,7 @@ namespace Breeze.ContextProvider.NH
         private List<Dictionary<string, object>> _typeList;
         private Dictionary<string, object> _resourceMap;
         private HashSet<string> _typeNames;
+        private HashSet<string> _assnNames;
         private Dictionary<string, string> _fkMap;
 
         public static readonly string FK_MAP = "fkMap";
@@ -59,6 +60,7 @@ namespace Breeze.ContextProvider.NH
             _map = new Dictionary<string, object>();
             _typeList = new List<Dictionary<string, object>>();
             _typeNames = new HashSet<string>();
+            _assnNames = new HashSet<string>();
             _resourceMap = new Dictionary<string, object>();
             _fkMap = new Dictionary<string, string>();
             _map.Add("localQueryComparisonOptions", "caseInsensitiveSQL");
@@ -424,7 +426,7 @@ namespace Breeze.ContextProvider.NH
             nmap.Add("isScalar", !propType.IsCollectionType);
 
             // the associationName must be the same at both ends of the association.
-            nmap.Add("associationName", GetAssociationName(containingType.Name, relatedEntityType.Name, (propType is OneToOneType)));
+            nmap.Add("associationName", GetAssociationName(containingType.Name, relatedEntityType.Name, propType));
 
             // look up the related foreign key name using the column name
             Dictionary<string, object> relatedDataProperty = null;
@@ -559,16 +561,25 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         /// <param name="name1"></param>
         /// <param name="name2"></param>
-        /// <param name="isOneToOne">if true, adds the one-to-one suffix</param>
+        /// <param name="propType">Used to ensure the association name is unique for a type</param>
         /// <returns></returns>
-        string GetAssociationName(string name1, string name2, bool isOneToOne)
+        string GetAssociationName(string name1, string name2, IAssociationType propType)
         {
+            string keyStart = name1 + ':' + name2 + ':' + propType.Name;
+            string key = keyStart;
+            string suffix = "";
+            int i = 1;
+            while (_assnNames.Contains(key))
+            {
+                suffix = "_" + i;
+                key = keyStart + suffix;
+            }
+            _assnNames.Add(key);
             if (name1.CompareTo(name2) < 0)
-                return ASSN + name1 + '_' + name2 + (isOneToOne ? ONE2ONE : null);
+                return ASSN + name1 + '_' + name2 + suffix;
             else
-                return ASSN + name2 + '_' + name1 + (isOneToOne ? ONE2ONE : null);
+                return ASSN + name2 + '_' + name1 + suffix;
         }
-        const string ONE2ONE = "_1to1";
         const string ASSN = "AN_";
 
         // Map of NH datatype to Breeze datatype.
