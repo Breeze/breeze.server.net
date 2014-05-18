@@ -6,6 +6,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -82,7 +83,6 @@ namespace Breeze.ContextProvider.EF6
             var jsonText = sw.ToString();
             return jsonText;
         }
-
 
         private XDocument GetXdocMetadataFromDbContext(Object context)
         {
@@ -273,5 +273,58 @@ namespace Breeze.ContextProvider.EF6
         }
 
         private const string ResourcePrefix = @"res://";
+
+        /* JsonPropertyFixupWriter
+         * Copied from the original in ContextProvider because needed in this helper 
+         * which must be independent of any ContextProvider.
+         * Buried within the helper class so as not to conflict with ContextProvider's.
+         */
+        public class JsonPropertyFixupWriter : JsonTextWriter
+        {
+            public JsonPropertyFixupWriter(TextWriter textWriter)
+                : base(textWriter)
+            {
+                _isDataType = false;
+            }
+
+            public override void WritePropertyName(string name)
+            {
+                if (name.StartsWith("@"))
+                {
+                    name = name.Substring(1);
+                }
+                name = ToCamelCase(name);
+                _isDataType = name == "type";
+                base.WritePropertyName(name);
+            }
+
+            public override void WriteValue(string value)
+            {
+                if (_isDataType && !value.StartsWith("Edm."))
+                {
+                    base.WriteValue("Edm." + value);
+                }
+                else
+                {
+                    base.WriteValue(value);
+                }
+            }
+
+            private static string ToCamelCase(string s)
+            {
+                if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
+                {
+                    return s;
+                }
+                string str = char.ToLower(s[0], CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
+                if (s.Length > 1)
+                {
+                    str = str + s.Substring(1);
+                }
+                return str;
+            }
+
+            private bool _isDataType;
+        }
     }
 }
