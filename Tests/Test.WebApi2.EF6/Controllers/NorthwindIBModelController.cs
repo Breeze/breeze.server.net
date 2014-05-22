@@ -584,6 +584,12 @@ namespace Sample_WebApi2.Controllers {
 
     [HttpGet]
     public IQueryable<Customer> CustomersStartingWith(string companyName) {
+      if (companyName == "null") {
+        throw new Exception("nulls should not be passed as 'null'");
+      }
+      if (String.IsNullOrEmpty(companyName)) {
+        companyName = "";
+      }
       var custs = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith(companyName));
       return custs;
     }
