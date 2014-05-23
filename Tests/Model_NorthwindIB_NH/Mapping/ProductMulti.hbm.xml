@@ -8,8 +8,8 @@
     <!-- Not marked as version property, for breeze test -->
     <property name="ProductName" type="string" length="40" not-null="true" />
     <many-to-one name="Supplier" column="`SupplierID`" class="Supplier" />
-    <many-to-one name="Category" column="`CategoryID`" class="Category" />
-    <many-to-one name="Category2" column="`CategoryID2`" class="Category" />
+    <many-to-one name="Category" column="`CategoryID`" class="CategoryMulti" />
+    <many-to-one name="Category2" column="`CategoryID2`" class="CategoryMulti" />
     <property name="SupplierID" type="int" insert="false" update="false" />
     <property name="CategoryID" type="int" insert="false" update="false" />
     <property name="CategoryID2" type="int" insert="false" update="false" />

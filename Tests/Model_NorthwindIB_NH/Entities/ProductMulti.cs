@@ -18,8 +18,8 @@
         //public virtual bool Discontinued { get; set; }
         public virtual int RowVersion { get; set; }
 
-        public virtual Category Category { get; set; }
-        public virtual Category Category2 { get; set; }
+        public virtual CategoryMulti Category { get; set; }
+        public virtual CategoryMulti Category2 { get; set; }
         public virtual Supplier Supplier { get; set; }
     }
 }
