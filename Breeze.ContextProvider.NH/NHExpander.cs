@@ -46,7 +46,7 @@ namespace Breeze.ContextProvider.NH
         /// <param name="pathIndex">Where we are in the path</param>
         private static void InitializeObjectPath(object parent, string[] expandPath, int pathIndex)
         {
-            if (pathIndex >= expandPath.Length)
+            if (parent == null || pathIndex >= expandPath.Length)
                 return;
             string propName = expandPath[pathIndex];
             Type type = parent.GetType();
