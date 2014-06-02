@@ -33,7 +33,7 @@
     
     <script>
         // -- Initialize Test vars  
-        breezeTestFns.setDataService("OData");
+        breezeTestFns.setDataService("OData", "WCF");
     </script>
        
     <script src="tests/attachTests.js"></script> 

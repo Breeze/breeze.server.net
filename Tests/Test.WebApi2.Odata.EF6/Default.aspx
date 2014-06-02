@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
-        <title id="title">Breeze OData Test Suite</title>
+        <title id="title">Breeze WebApi2 OData Test Suite</title>
        
         <link rel="stylesheet" href="vendor/qunit-1.11.0.css" type="text/css" media="screen"/>
         <script type="text/javascript" src="vendor/modernizr-2.0.6-development-only.js" ></script>
@@ -33,7 +33,7 @@
     
     <script>
         // -- Initialize Test vars  
-        breezeTestFns.setDataService("OData");
+        breezeTestFns.setDataService("OData", "WebApi2");
     </script>
        
     <script src="tests/attachTests.js"></script> 

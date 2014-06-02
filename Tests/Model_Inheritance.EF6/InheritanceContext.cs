@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Linq;
 
 namespace Inheritance.Models
 {
@@ -56,6 +57,8 @@ namespace Inheritance.Models
 
         public DbSet<AccountType> AccountTypes { get; set; }
 
+    
+
         public DbSet<BillingDetailTPH> BillingDetailTPHs { get; set; }
         public DbSet<BillingDetailTPT> BillingDetailTPTs { get; set; }
         public DbSet<BillingDetailTPC> BillingDetailTPCs { get; set; }
@@ -64,6 +67,16 @@ namespace Inheritance.Models
         public DbSet<DepositTPH> DepositTPHs { get; set; }
         public DbSet<DepositTPT> DepositTPTs { get; set; }
         public DbSet<DepositTPC> DepositTPCs { get; set; }
+
+        // Added as a test to see if these would show up in EdmModel ( they don't !). 
+        public DbSet<BankAccountTPH> BankAccountTPHs { get; set; }
+        public DbSet<BankAccountTPT> BankAccountTPTs { get; set; }
+        public DbSet<BankAccountTPC> BankAccountTPCs { get; set; }
+
+        public DbSet<CreditCardTPH> CreditCardTPHs { get; set; }
+        public DbSet<CreditCardTPT> CreditCardTPTs { get; set; }
+        public DbSet<CreditCardTPC> CreditCardTPCs { get; set; }
+      
     }
 }
 
