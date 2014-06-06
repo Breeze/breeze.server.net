@@ -7,7 +7,8 @@ module.exports = function(grunt) {
   var nugetDir = '../../Nuget.builds/'
   var msBuild = 'C:/Windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe ';
   var msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
- 
+  
+  grunt.log.writeln("Getting breeze version from: " + jsSrcDir);
   var versionNum = getBreezeVersion();
 
   grunt.file.write(tempDir + 'version.txt', 'Version: ' + versionNum);

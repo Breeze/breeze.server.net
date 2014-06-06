@@ -35,9 +35,9 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ProduceTPHModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:ib12="http://www.ideablade.com/edm/2012">
+      <Schema Namespace="ProduceTPH" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:ib12="http://www.ideablade.com/edm/2012">
         <EntityContainer Name="ProduceTPHContext" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:ib12="http://www.ideablade.com/edm/2012" ib12:EntityManagerName="DomainModelEntityManager" ib12:DataSourceKey="ProduceTPH" ib12:DevForceEnabled="true">
-          <EntitySet Name="ItemsOfProduce" EntityType="ProduceTPHModel.ItemOfProduce" />
+          <EntitySet Name="ItemsOfProduce" EntityType="ProduceTPH.ItemOfProduce" />
         </EntityContainer>
         <EntityType Name="ItemOfProduce" Abstract="true" xmlns:ib12="http://www.ideablade.com/edm/2012" ib12:Tag="test">
           <Key>
@@ -51,29 +51,29 @@
           <Property Name="UnitsOnOrder" Type="Int16" Nullable="false" />
           <Property Name="RowVersion" Type="Int32" DefaultValue="0" ConcurrencyMode="Fixed" ib12:ConcurrencyStrategy="ServerCallback" />
         </EntityType>
-        <EntityType Name="Fruit" BaseType="ProduceTPHModel.ItemOfProduce" Abstract="false">
+        <EntityType Name="Fruit" BaseType="ProduceTPH.ItemOfProduce" Abstract="false">
           <Property Type="String" Name="Name" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Type="String" Name="USDACategory" Nullable="true" MaxLength="50" Unicode="true" FixedLength="false" />
           </EntityType>
-        <EntityType Name="Vegetable" BaseType="ProduceTPHModel.ItemOfProduce" Abstract="false">
+        <EntityType Name="Vegetable" BaseType="ProduceTPH.ItemOfProduce" Abstract="false">
           <Property Type="String" Name="Name" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Type="String" Name="USDACategory" Nullable="true" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Type="Boolean" Name="AboveGround" />
           </EntityType>
-        <EntityType Name="Apple" BaseType="ProduceTPHModel.Fruit">
+        <EntityType Name="Apple" BaseType="ProduceTPH.Fruit">
           <Property Type="String" Name="Variety" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Type="String" Name="Description" MaxLength="250" Unicode="true" FixedLength="false" />
           <Property Type="Binary" Name="Photo" FixedLength="false" MaxLength="Max" /></EntityType>
-        <EntityType Name="Strawberry" BaseType="ProduceTPHModel.Fruit">
+        <EntityType Name="Strawberry" BaseType="ProduceTPH.Fruit">
           <Property Type="String" Name="Variety" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Type="String" Name="Description" MaxLength="250" Unicode="true" FixedLength="false" />
           <Property Type="Binary" Name="Photo" FixedLength="false" MaxLength="Max" /></EntityType>
-        <EntityType Name="Tomato" BaseType="ProduceTPHModel.Vegetable">
+        <EntityType Name="Tomato" BaseType="ProduceTPH.Vegetable">
           <Property Type="String" Name="Variety" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Type="String" Name="Description" MaxLength="250" Unicode="true" FixedLength="false" />
           <Property Type="Binary" Name="Photo" FixedLength="false" MaxLength="Max" />
           <Property Type="Boolean" Name="Determinate" /></EntityType>
-        <EntityType Name="WhitePotato" BaseType="ProduceTPHModel.Vegetable">
+        <EntityType Name="WhitePotato" BaseType="ProduceTPH.Vegetable">
           <Property Type="String" Name="Variety" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Type="String" Name="Description" MaxLength="250" Unicode="true" FixedLength="false" />
           <Property Type="Binary" Name="Photo" FixedLength="false" MaxLength="Max" />
@@ -87,7 +87,7 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ProduceTPHModelStoreContainer" CdmEntityContainer="ProduceTPHContext">
           <EntitySetMapping Name="ItemsOfProduce">
-            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPHModel.ItemOfProduce)">
+            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPH.ItemOfProduce)">
               <MappingFragment StoreEntitySet="ItemOfProduce">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
@@ -97,34 +97,34 @@
                 <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
                 <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
                 </MappingFragment></EntityTypeMapping>
-            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPHModel.Fruit)">
+            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPH.Fruit)">
               <MappingFragment StoreEntitySet="ItemOfProduce">
                 <ScalarProperty Name="USDACategory" ColumnName="USDACategory" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <Condition ColumnName="ItemType" Value="Fruit" /></MappingFragment></EntityTypeMapping>
-            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPHModel.Vegetable)">
+            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPH.Vegetable)">
               <MappingFragment StoreEntitySet="ItemOfProduce">
                 <ScalarProperty Name="AboveGround" ColumnName="AboveGround" />
                 <ScalarProperty Name="USDACategory" ColumnName="USDACategory" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <Condition ColumnName="ItemType" Value="Vegatable" /></MappingFragment></EntityTypeMapping>
-            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPHModel.Apple)">
+            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPH.Apple)">
               <MappingFragment StoreEntitySet="ItemOfProduce">
                 <ScalarProperty Name="Photo" ColumnName="Photo" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Variety" ColumnName="Variety" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <Condition ColumnName="ItemSubtype" Value="Apple" /></MappingFragment></EntityTypeMapping>
-            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPHModel.Strawberry)">
+            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPH.Strawberry)">
               <MappingFragment StoreEntitySet="ItemOfProduce">
                 <ScalarProperty Name="Photo" ColumnName="Photo" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Variety" ColumnName="Variety" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <Condition ColumnName="ItemSubtype" Value="Strawberry" /></MappingFragment></EntityTypeMapping>
-            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPHModel.Tomato)">
+            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPH.Tomato)">
               <MappingFragment StoreEntitySet="ItemOfProduce">
                 <ScalarProperty Name="Determinate" ColumnName="Determinate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -132,7 +132,7 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Variety" ColumnName="Variety" />
                 <Condition ColumnName="ItemSubtype" Value="Tomato" /></MappingFragment></EntityTypeMapping>
-            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPHModel.WhitePotato)">
+            <EntityTypeMapping TypeName="IsTypeOf(ProduceTPH.WhitePotato)">
               <MappingFragment StoreEntitySet="ItemOfProduce">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="PrimaryUses" ColumnName="PrimaryUses" />
@@ -164,42 +164,42 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="ProductTPH">
-        <EntityTypeShape EntityType="ProduceTPHModel.ItemOfProduce" Width="1.5" PointX="0.875" PointY="1.375" Height="2.3648893229166665" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProduceTPHModel.Fruit" Width="1.5" PointX="2.75" PointY="0.875" Height="1.4033821614583331" />
-        <InheritanceConnector EntityType="ProduceTPHModel.Fruit">
+        <EntityTypeShape EntityType="ProduceTPH.ItemOfProduce" Width="1.5" PointX="0.875" PointY="1.375" Height="2.3648893229166665" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProduceTPH.Fruit" Width="1.5" PointX="2.75" PointY="0.875" Height="1.4033821614583331" />
+        <InheritanceConnector EntityType="ProduceTPH.Fruit">
           <ConnectorPoint PointX="2.375" PointY="1.8266910807291665" />
           <ConnectorPoint PointX="2.75" PointY="1.8266910807291665" />
           </InheritanceConnector>
-        <EntityTypeShape EntityType="ProduceTPHModel.Vegetable" Width="1.5" PointX="2.875" PointY="3.25" Height="1.59568359375" />
-        <InheritanceConnector EntityType="ProduceTPHModel.Vegetable">
+        <EntityTypeShape EntityType="ProduceTPH.Vegetable" Width="1.5" PointX="2.875" PointY="3.25" Height="1.59568359375" />
+        <InheritanceConnector EntityType="ProduceTPH.Vegetable">
           <ConnectorPoint PointX="2.375" PointY="3.4949446614583333" />
           <ConnectorPoint PointX="2.875" PointY="3.4949446614583333" />
           </InheritanceConnector>
-        <EntityTypeShape EntityType="ProduceTPHModel.Apple" Width="1.5" PointX="5.125" PointY="0.5" Height="1.59568359375" />
-        <EntityTypeShape EntityType="ProduceTPHModel.Strawberry" Width="1.5" PointX="7.125" PointY="1.5" Height="1.59568359375" />
-        <InheritanceConnector EntityType="ProduceTPHModel.Apple" ManuallyRouted="false">
+        <EntityTypeShape EntityType="ProduceTPH.Apple" Width="1.5" PointX="5.125" PointY="0.5" Height="1.59568359375" />
+        <EntityTypeShape EntityType="ProduceTPH.Strawberry" Width="1.5" PointX="7.125" PointY="1.5" Height="1.59568359375" />
+        <InheritanceConnector EntityType="ProduceTPH.Apple" ManuallyRouted="false">
           <ConnectorPoint PointX="4.25" PointY="1.485341796875" />
           <ConnectorPoint PointX="5.125" PointY="1.485341796875" />
           </InheritanceConnector>
-        <EntityTypeShape EntityType="ProduceTPHModel.Tomato" Width="1.5" PointX="5" PointY="2.625" Height="1.7879850260416665" />
-        <InheritanceConnector EntityType="ProduceTPHModel.Strawberry" ManuallyRouted="false">
+        <EntityTypeShape EntityType="ProduceTPH.Tomato" Width="1.5" PointX="5" PointY="2.625" Height="1.7879850260416665" />
+        <InheritanceConnector EntityType="ProduceTPH.Strawberry" ManuallyRouted="false">
           <ConnectorPoint PointX="4.25" PointY="2.2182828776041665" />
           <ConnectorPoint PointX="7.125" PointY="2.2182828776041665" />
           </InheritanceConnector>
-        <InheritanceConnector EntityType="ProduceTPHModel.Tomato">
+        <InheritanceConnector EntityType="ProduceTPH.Tomato">
           <ConnectorPoint PointX="4.125" PointY="3.6343896484375" />
           <ConnectorPoint PointX="4.75" PointY="3.6343896484375" />
           </InheritanceConnector>
-        <EntityTypeShape EntityType="ProduceTPHModel.WhitePotato" Width="1.5" PointX="7" PointY="3.875" Height="2.1725878906249996" />
-        <InheritanceConnector EntityType="ProduceTPHModel.WhitePotato">
+        <EntityTypeShape EntityType="ProduceTPH.WhitePotato" Width="1.5" PointX="7" PointY="3.875" Height="2.1725878906249996" />
+        <InheritanceConnector EntityType="ProduceTPH.WhitePotato">
           <ConnectorPoint PointX="4.125" PointY="4.4634814453125" />
           <ConnectorPoint PointX="7" PointY="4.4634814453125" />
           </InheritanceConnector>
-        <InheritanceConnector EntityType="ProduceTPHModel.WhitePotato">
+        <InheritanceConnector EntityType="ProduceTPH.WhitePotato">
           <ConnectorPoint PointX="4.375" PointY="4.6605843098958335" />
           <ConnectorPoint PointX="7" PointY="4.6605843098958335" />
           </InheritanceConnector>
-        <InheritanceConnector EntityType="ProduceTPHModel.Tomato">
+        <InheritanceConnector EntityType="ProduceTPH.Tomato">
           <ConnectorPoint PointX="4.375" PointY="3.8314925130208333" />
           <ConnectorPoint PointX="5" PointY="3.8314925130208333" />
           </InheritanceConnector></Diagram></Diagrams>
