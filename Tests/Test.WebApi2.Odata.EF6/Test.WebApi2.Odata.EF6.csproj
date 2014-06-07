@@ -160,6 +160,10 @@
       <Link>breeze\breeze.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\internal\saveInterceptorTests.js">
+      <Link>tests\saveInterceptorTests.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\vendor\almond.js">
       <Link>vendor\almond.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

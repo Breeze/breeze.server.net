@@ -54,7 +54,8 @@
     <script src="tests/queryNamedTests.js"></script> 
     <script src="tests/queryNonEFTests.js"></script> 
     <script src="tests/queryRawOdataTests.js"></script> 
-    <script src="tests/querySelectTests.js"></script> 
+    <script src="tests/querySelectTests.js"></script>
+    <script src="tests/saveInterceptorTests.js"></script>     
     <script src="tests/saveTests.js"></script> 
     <script src="tests/validateTests.js"></script> 
     <script src="tests/validateEntityTests.js"></script> 
