@@ -226,6 +226,10 @@
       <Link>tests\queryTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\internal\saveInterceptorTests.js">
+      <Link>tests\saveInterceptorTests.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\saveTests.js">
       <Link>tests\saveTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
