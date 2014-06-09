@@ -22,6 +22,8 @@ namespace Test.WebApi2.OData {
   public static class WebApiConfig {
     public static void Register(HttpConfiguration config) {
 
+#if !ODATA_MODEL_BUILDER
+
       config.Routes.MapODataRoute(
               routeName: "NorthwindIB_ODATA",
               routePrefix: "NorthwindIB_odata",
@@ -46,18 +48,31 @@ namespace Test.WebApi2.OData {
         model: produceModel,
         batchHandler: new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer)
         );
-
+#else 
       // If using ODataConventionModelBuilder
-      ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+      var builder = new ODataConventionModelBuilder();
       builder.EntitySet<Product>("Products");
       builder.EntitySet<Customer>("Customers");
+      builder.EntitySet<Employee>("Employees");
       builder.EntitySet<Order>("Order");
+      builder.EntitySet<OrderDetail>("OrderDetails");
       builder.EntitySet<Category>("Categories");
       builder.EntitySet<Supplier>("Suppliers");
-      
-      config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());       
+      builder.EntitySet<Region>("Regions");
+      builder.EntitySet<Territory>("Territories");
+      builder.EntitySet<User>("Users");
+      builder.EntitySet<InternationalOrder>("InternationalOrders");
+      builder.EntitySet<TimeLimit>("TimeLimits");
+      // builder.EntitySet<Role>("Roles")
 
+      config.Routes.MapODataRoute(
+              routeName: "NorthwindIB_ODATA",
+              routePrefix: "NorthwindIB_odata",
+              model: builder.GetEdmModel(),
+              batchHandler: new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer)
+              );
 
+#endif
       // From Original template
 
       //// Web API configuration and services

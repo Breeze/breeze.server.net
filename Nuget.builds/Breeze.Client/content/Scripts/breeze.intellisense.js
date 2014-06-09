@@ -1,4 +1,4 @@
-﻿// Generated on: Mon Jun 02 2014 08:50:33 GMT-0700 (Pacific Daylight Time)
+﻿// Generated on: Fri Jun 06 2014 13:57:24 GMT-0700 (Pacific Daylight Time)
 
 intellisense.annotate(breeze.core, {
 
@@ -2584,7 +2584,7 @@ intellisense.annotate(breeze.breeze.EntityManager.prototype, {
     ///   Executes the specified query against this EntityManager's local cache. }
     ///   </summary>
     ///   <param name="query" type="breeze.breeze.EntityQuery" optional="true">The  'EntityQuery' to execute.</param>
-    ///   <returns type="Array" elementType="Entity" >Array of Entities</returns>
+    ///   <returns type="Array" elementType="Entity" >Array of entities from cache that satisfy the query</returns>
     /// </signature>
   },
   'saveChanges': function() {
