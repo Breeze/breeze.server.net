@@ -478,6 +478,8 @@ namespace Breeze.ContextProvider.EF6 {
       } else if (val is JObject) {
         var serializer = new JsonSerializer();
         result = serializer.Deserialize(new JTokenReader((JObject)val), toType);
+      } else if (toType.IsGenericType && toType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+        return ConvertValue(val, toType.GetGenericArguments()[0]);
       } else {
         // Guids fail above - try this
         TypeConverter typeConverter = TypeDescriptor.GetConverter(toType);
