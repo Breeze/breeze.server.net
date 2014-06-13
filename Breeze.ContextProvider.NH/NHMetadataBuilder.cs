@@ -167,7 +167,7 @@ namespace Breeze.ContextProvider.NH
                         var columnNameString = GetPropertyColumnNames(persister, propName, propType);
                         if (relatedDataPropertyMap.ContainsKey(columnNameString))
                         {
-                            throw new ArgumentException("Data property for column '" + columnNameString + "' is '" 
+                            throw new ArgumentException("Data property for column '" + columnNameString + "' is '"
                                 + relatedDataPropertyMap[columnNameString]["nameOnServer"] + "' and cannot also be '" + propName + "'");
                         }
                         relatedDataPropertyMap.Add(columnNameString, dmap);
@@ -481,7 +481,7 @@ namespace Breeze.ContextProvider.NH
                     throw new ArgumentException("Could not find matching fk for property " + entityRelationship);
                 }
             }
-            
+
             return nmap;
         }
 
@@ -508,6 +508,11 @@ namespace Breeze.ContextProvider.NH
             {
                 // this happens when the property is part of the key
                 propColumnNames = persister.KeyColumnNames;
+            }
+            // HACK for NHibernate formula: when using formula propColumnNames[0] equals null
+            if (propColumnNames[0] == null)
+            {
+                return propertyName;
             }
             return CatColumnNames(propColumnNames);
         }
