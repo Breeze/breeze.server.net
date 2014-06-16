@@ -469,12 +469,11 @@ namespace Breeze.ContextProvider.EF6 {
 
     private static Object ConvertValue(Object val, Type toType) {
       Object result;
-      // TODO: handle nullables
       if (val == null) return val;
       if (toType == val.GetType()) return val;
-
-      if (typeof(IConvertible).IsAssignableFrom(toType)) {
-        result = Convert.ChangeType(val, toType, System.Threading.Thread.CurrentThread.CurrentCulture);
+      var nnToType = TypeFns.GetNonNullableType(toType);
+      if (typeof(IConvertible).IsAssignableFrom(nnToType)) {
+        result = Convert.ChangeType(val, nnToType, System.Threading.Thread.CurrentThread.CurrentCulture);
       } else if (val is JObject) {
         var serializer = new JsonSerializer();
         result = serializer.Deserialize(new JTokenReader((JObject)val), toType);
