@@ -366,7 +366,7 @@ namespace Breeze.ContextProvider.EF6 {
       // EF needs the original values of these fk's under certain circumstances - ( not sure entirely what these are). 
       // so we restore the original fk values right before we attach the entity 
       // shouldn't be any side effects because we delete it immediately after.
-      // concurrency values also need to be restored in some cases. 
+      // ??? Do concurrency values also need to be restored in some cases 
       // This method restores more than it actually needs to because we don't
       // have metadata easily avail here, but usually a deleted entity will
       // not have much in the way of OriginalValues.
@@ -374,12 +374,33 @@ namespace Breeze.ContextProvider.EF6 {
         return entityInfo;
       }
       var entity = entityInfo.Entity;
-
-      entityInfo.OriginalValuesMap.ToList().ForEach(kvp => {
-        SetPropertyValue(entity, kvp.Key, kvp.Value);
-      });
+      var entityType = entity.GetType();
+      var efEntityType = GetEntityType(ObjectContext.MetadataWorkspace, entityType);
+      var keyPropertyNames = efEntityType.KeyMembers.Select(km => km.Name).ToList();
+      var ovl = entityInfo.OriginalValuesMap.ToList();
+      for (var i = 0; i< ovl.Count; i++) {
+        var kvp = ovl[i];
+        var propName = kvp.Key;
+        // keys should be ignored
+        if (keyPropertyNames.Contains(propName)) continue;       
+        var pi = entityType.GetProperty(propName);
+        // unmapped properties should be ignored.
+        if (pi == null) continue;          
+        var nnPropType = TypeFns.GetNonNullableType(pi.PropertyType);
+        // presumption here is that only a predefined type could be a fk or concurrency property
+        if (TypeFns.IsPredefinedType(nnPropType)) { 
+          SetPropertyValue(entity, propName, kvp.Value);
+        }
+      }
 
       return entityInfo;
+    }
+
+    private static EntityType GetEntityType(MetadataWorkspace mws, Type entityType) {
+      EntityType et =
+        mws.GetItems<EntityType>(DataSpace.OSpace)
+          .Single(x => x.Name == entityType.Name);
+      return et;
     }
 
     private static void UpdateOriginalValues(ObjectStateEntry entry, EntityInfo entityInfo) {

@@ -91,6 +91,7 @@
     <Compile Include="NextId.cs">
       <DependentUpon>NorthwindIB_2012.tt</DependentUpon>
     </Compile>
+    <Compile Include="NorthwindIB_2012.partial.cs" />
     <Compile Include="Order.cs">
       <DependentUpon>NorthwindIB_2012.tt</DependentUpon>
     </Compile>

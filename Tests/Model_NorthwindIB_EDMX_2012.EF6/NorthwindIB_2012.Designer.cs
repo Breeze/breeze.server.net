@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\GitHub\Breeze\_Internal\Model_NorthwindIB_EDMX_2012.EF6\NorthwindIB_2012.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\GitHub\breeze.server.net\Tests\Model_NorthwindIB_EDMX_2012.EF6\NorthwindIB_2012.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
