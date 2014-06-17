@@ -18,6 +18,9 @@ namespace Inheritance.Models
 
         protected override void Seed(InheritanceContext context)
         {
+          System.Diagnostics.Debug.Write("** InheritanceContext connection: " +
+                context.Database.Connection.ConnectionString);
+
             _bankAccountTypes = AddAccountTypes(context);
             ResetDatabase(context);
         }
