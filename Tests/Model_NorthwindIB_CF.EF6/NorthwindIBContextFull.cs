@@ -225,20 +225,17 @@ namespace Foo {
     [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("CustomerID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Customer_CustomerID")]
     public System.Guid CustomerID { get; set; }
 
     /// <summary>Gets or sets the CustomerID_OLD. </summary>
     [DataMember]
     [Column("CustomerID_OLD")]
-    // [IbVal.StringLengthVerifier(MaxValue=5, IsRequired=false, ErrorMessageResourceName="Customer_CustomerID_OLD")]
     [MaxLength(5)]
     public string CustomerID_OLD { get; set; }
 
     /// <summary>Gets or sets the CompanyName. </summary>
     [DataMember]
     [Column("CompanyName")]
-    // [IbVal.StringLengthVerifier(MaxValue=40, IsRequired=true, ErrorMessageResourceName="Customer_CompanyName")]
     [MaxLength(40)]
     [Required]
     public string CompanyName { get; set; }
@@ -247,69 +244,59 @@ namespace Foo {
     [DataMember]
     [Column("ContactName")]
     [CustomValidator]
-    // [IbVal.StringLengthVerifier(MaxValue=30, IsRequired=false, ErrorMessageResourceName="Customer_ContactName")]
     [MaxLength(30)]
     public string ContactName { get; set; }
 
     /// <summary>Gets or sets the ContactTitle. </summary>
     [DataMember]
     [Column("ContactTitle")]
-    // [IbVal.StringLengthVerifier(MaxValue=30, IsRequired=false, ErrorMessageResourceName="Customer_ContactTitle")]
     [MaxLength(30)]
     public string ContactTitle { get; set; }
 
     /// <summary>Gets or sets the Address. </summary>
     [DataMember]
     [Column("Address")]
-    // [IbVal.StringLengthVerifier(MaxValue=60, IsRequired=false, ErrorMessageResourceName="Customer_Address")]
     [MaxLength(60)]
     public string Address { get; set; }
 
     /// <summary>Gets or sets the City. </summary>
     [DataMember]
     [Column("City")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Customer_City")]
     [MaxLength(15)]
     public string City { get; set; }
 
     /// <summary>Gets or sets the Region. </summary>
     [DataMember]
     [Column("Region")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Customer_Region")]
     [MaxLength(15)]
     public string Region { get; set; }
 
     /// <summary>Gets or sets the PostalCode. </summary>
     [DataMember]
     [Column("PostalCode")]
-    // [IbVal.StringLengthVerifier(MaxValue=10, IsRequired=false, ErrorMessageResourceName="Customer_PostalCode")]
     [MaxLength(10)]
     public string PostalCode { get; set; }
 
     /// <summary>Gets or sets the Country. </summary>
     [DataMember]
     [Column("Country")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Customer_Country")]
     [MaxLength(15)]
     public string Country { get; set; }
 
     /// <summary>Gets or sets the Phone. </summary>
     [DataMember]
     [Column("Phone")]
-    // [IbVal.StringLengthVerifier(MaxValue=24, IsRequired=false, ErrorMessageResourceName="Customer_Phone")]
     [MaxLength(24)]
     public string Phone { get; set; }
 
     /// <summary>Gets or sets the Fax. </summary>
     [DataMember]
     [Column("Fax")]
-    // [IbVal.StringLengthVerifier(MaxValue=24, IsRequired=false, ErrorMessageResourceName="Customer_Fax")]
     [MaxLength(24)]
     public string Fax { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
     [DataMember]
-    // [IbEm.ConcurrencyStrategy(IbEm.ConcurrencyStrategy.AutoIncrement)]
     [Column("RowVersion")]
     [ConcurrencyCheck]
     public System.Nullable<int> RowVersion { get; set; }
