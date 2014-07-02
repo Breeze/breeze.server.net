@@ -170,7 +170,11 @@ namespace Breeze.ContextProvider.NH
                 if (error is LazyInitializationException || error is ObjectDisposedException)
                     args.ErrorContext.Handled = true;
             };
-            settings.Converters.Add(new NHibernateProxyJsonConverter());
+
+            if (!settings.Converters.Any(c => c is NHibernateProxyJsonConverter))
+            {
+                settings.Converters.Add(new NHibernateProxyJsonConverter());
+            }
         }
 
         /// <summary>
