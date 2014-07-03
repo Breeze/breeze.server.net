@@ -25,6 +25,7 @@ namespace Breeze.ContextProvider.NH
         private Dictionary<string, object> _resourceMap;
         private HashSet<string> _typeNames;
         private Dictionary<string, string> _fkMap;
+        private List<Dictionary<string, object>> _enumList;
 
         public static readonly string FK_MAP = "fkMap";
 
@@ -61,10 +62,12 @@ namespace Breeze.ContextProvider.NH
             _typeNames = new HashSet<string>();
             _resourceMap = new Dictionary<string, object>();
             _fkMap = new Dictionary<string, string>();
+            _enumList = new List<Dictionary<string, object>>();
             _map.Add("localQueryComparisonOptions", "caseInsensitiveSQL");
             _map.Add("structuralTypes", _typeList);
             _map.Add("resourceEntityTypeMap", _resourceMap);
             _map.Add(FK_MAP, _fkMap);
+            _map.Add("enumTypes", _enumList);
         }
 
         /// <summary>
@@ -167,10 +170,29 @@ namespace Breeze.ContextProvider.NH
                         var columnNameString = GetPropertyColumnNames(persister, propName, propType);
                         if (relatedDataPropertyMap.ContainsKey(columnNameString))
                         {
-                            throw new ArgumentException("Data property for column '" + columnNameString + "' is '" 
+                            throw new ArgumentException("Data property for column '" + columnNameString + "' is '"
                                 + relatedDataPropertyMap[columnNameString]["nameOnServer"] + "' and cannot also be '" + propName + "'");
                         }
                         relatedDataPropertyMap.Add(columnNameString, dmap);
+                    }
+                }
+
+                // Expose enum types
+                if (propType is AbstractEnumType)
+                {
+                    var types = propType.GetType().GetGenericArguments();
+                    if (types.Length > 0)
+                    {
+                        var realType = types[0];
+                        string[] enumNames = Enum.GetNames(realType);
+                        var p = new Dictionary<string, object>();
+                        p.Add("shortName", realType.Name);
+                        p.Add("namespace", realType.Namespace);
+                        p.Add("values", enumNames);
+                        if (!_enumList.Exists(x => x.ContainsValue(realType.Name)))
+                        {
+                            _enumList.Add(p);
+                        }
                     }
                 }
             }
@@ -481,7 +503,7 @@ namespace Breeze.ContextProvider.NH
                     throw new ArgumentException("Could not find matching fk for property " + entityRelationship);
                 }
             }
-            
+
             return nmap;
         }
 
@@ -508,6 +530,11 @@ namespace Breeze.ContextProvider.NH
             {
                 // this happens when the property is part of the key
                 propColumnNames = persister.KeyColumnNames;
+            }
+            // HACK for NHibernate formula: when using formula propColumnNames[0] equals null
+            if (propColumnNames[0] == null)
+            {
+                return propertyName;
             }
             return CatColumnNames(propColumnNames);
         }

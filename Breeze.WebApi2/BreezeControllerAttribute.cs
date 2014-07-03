@@ -48,6 +48,15 @@ namespace Breeze.WebApi2 {
     }
 
     /// <summary>
+    /// Gets or sets max expansion depth at controller level
+    /// </summary>
+    public int MaxExpansionDepth
+    {
+        get { return _queryableFilter.MaxExpansionDepth; }
+        set { _queryableFilter.MaxExpansionDepth = value; }
+    }
+
+    /// <summary>
     /// Gets or sets a value indicating whether query composition should
     /// alter the original query when necessary to ensure a stable sort order.
     /// </summary>
@@ -173,7 +182,7 @@ namespace Breeze.WebApi2 {
         return new EntityErrorsFilterProvider(entityErrorsFilter);
     }
 
-    private BreezeQueryableAttribute _queryableFilter = new BreezeQueryableAttribute() { AllowedQueryOptions = AllowedQueryOptions.All };
+    protected BreezeQueryableAttribute _queryableFilter = new BreezeQueryableAttribute() { AllowedQueryOptions = AllowedQueryOptions.All };
     private MetadataToHttpResponseAttribute _metadataFilter = new MetadataToHttpResponseAttribute();
     private EntityErrorsFilterAttribute  _entityErrorsFilter = new EntityErrorsFilterAttribute();
     private static object __lock = new object();
