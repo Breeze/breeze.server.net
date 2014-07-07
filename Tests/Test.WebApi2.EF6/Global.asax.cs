@@ -25,44 +25,13 @@ namespace Sample_WebApi2 {
   public class WebApiApplication : System.Web.HttpApplication {
     protected void Application_Start() {
 
-      // May be needed later when OData model builder is "fixed" and supports fks.
-
-      //var modelBuilder = new System.Web.Http.OData.Builder.ODataConventionModelBuilder();
-      //modelBuilder.EntitySet<Customer>("Customers");
-      //modelBuilder.EntitySet<Order>("Orders");
-      //modelBuilder.EntitySet<OrderDetail>("OrderDetails");
-      //modelBuilder.EntitySet<Employee>("Employees");
-      //modelBuilder.EntitySet<Product>("Products");
-      //modelBuilder.EntitySet<Category>("Categories");
-      //modelBuilder.EntitySet<Region>("Regions");
-      //modelBuilder.EntitySet<Territory>("Territories");
-      //modelBuilder.EntitySet<Role>("Roles");
-      //modelBuilder.EntitySet<Supplier>("Suppliers");
-      //modelBuilder.EntitySet<User>("Users");
-      //modelBuilder.EntitySet<TimeLimit>("TimeLimits");
-
-      //var model = modelBuilder.GetEdmModel();
-      //GlobalConfiguration.Configuration.Routes.MapODataRoute(
-      //  routeName: "OData",
-      //  routePrefix: "odata",
-      //  model: model);
-
       // standard Breeze routing
-
       var routes = GlobalConfiguration.Configuration.Routes;
-      
-
       routes.MapHttpRoute(
            name: "SampleApi",
            routeTemplate: "breeze/{controller}/{action}"
-       );
-
-
-     
+      );
     }
-
-
-
   }
 
 }

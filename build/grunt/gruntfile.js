@@ -81,17 +81,18 @@ module.exports = function(grunt) {
 
     updateFiles: {
       // copy breeze.*.js files to each of the nuget sources
-      nugetScripts: { 
+      scripts: { 
         src: [ jsBuildDir + 'breeze.*.js'] ,
         destFolders: [ nugetDir ]
       },
       // copy breeze dll files to each of the nuget sources
-      nugetLibs: {
+      dlls: {
         src: breezeDlls.map(function(x) {
-          return '../../' + x + '/*.dll';
+          return '../../' + x + '/bin/release/*.dll';
         }),
         destFolders: [ nugetDir]
       }
+      
     },
     
     // build all nuget packages 
@@ -189,7 +190,7 @@ module.exports = function(grunt) {
   grunt.registerTask('buildRelease', 
    ['newer:msBuild:source' ]);
   grunt.registerTask('packageNuget',   
-   [ 'buildBreezeJs', 'clean:nupkgs', 'newer:updateFiles', 'buildNupkg', 'copy:testNupkg']);
+   [ 'buildBreezeJs', 'clean:nupkgs', 'updateFiles', 'buildNupkg', 'copy:testNupkg']);
   
   grunt.registerTask('default', ['buildRelease', 'packageNuget']);
   
@@ -197,7 +198,7 @@ module.exports = function(grunt) {
     
   function getBreezeVersion() {
      var versionFile = grunt.file.read( jsSrcDir + '_head.jsfrag');    
-     var regex = /\s+version:\s*"(\d.\d\d*.?\d*)"/
+     var regex = /\s+version:\s*"(\d.\d\d*.?\d*.?\d*)"/
      var matches = regex.exec(versionFile);
      
      if (matches == null) {

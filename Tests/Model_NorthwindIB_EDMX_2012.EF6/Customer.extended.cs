@@ -39,6 +39,20 @@ namespace Models.NorthwindIB.EDMX_2012 {
   [MetadataType(typeof(CustomerMetaData))]
   [CustomerValidator]
   public partial class Customer {
+    
+    public string ExtraString {
+      get { return _extraString; }
+      set { _extraString = value; }
+    }
+
+    
+    public double ExtraDouble {
+      get { return _extraDouble; }
+      set { _extraDouble = value; }
+    }
+
+    private string _extraString = "fromServer";
+    private double _extraDouble = 3.14159;
 
   }
 

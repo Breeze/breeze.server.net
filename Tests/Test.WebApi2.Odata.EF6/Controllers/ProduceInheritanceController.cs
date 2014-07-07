@@ -20,6 +20,10 @@ namespace Test.WebApi2.OData.Controllers {
   public class ItemsOfProduceController : BaseProduceController<ItemOfProduce> {
 
   }
+
+  public class FruitsController : BaseProduceController<Fruit> {
+    
+  }
  
 
  
