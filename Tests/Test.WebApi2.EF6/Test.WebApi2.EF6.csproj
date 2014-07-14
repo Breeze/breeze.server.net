@@ -139,6 +139,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\breeze.js\src\breeze.modelLibrary.backbone.js">
+      <Link>breeze\breeze.modelLibrary.backbone.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\attachTests.js">
       <Link>tests\attachTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -229,7 +233,7 @@
     <Content Include="..\..\..\breeze.js\test\internal\saveInterceptorTests.js">
       <Link>tests\saveInterceptorTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>    
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\saveTests.js">
       <Link>tests\saveTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

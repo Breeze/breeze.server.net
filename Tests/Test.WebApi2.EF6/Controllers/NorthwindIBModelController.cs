@@ -1,6 +1,6 @@
 ﻿// Only one of the next 5 should be uncommented.
-//#define CODEFIRST_PROVIDER
-#define DATABASEFIRST_NEW
+#define CODEFIRST_PROVIDER
+//#define DATABASEFIRST_NEW
 //#define ORACLE_EDMX
 //#define NHIBERNATE
 
@@ -343,8 +343,7 @@ namespace Sample_WebApi2.Controllers {
       ContextProvider.BeforeSaveEntitiesDelegate = AddComment;
       return ContextProvider.SaveChanges(saveBundle);
     }
-
-
+    
     [HttpPost]
     public SaveResult SaveWithExit(JObject saveBundle) {
       return new SaveResult() { Entities = new List<Object>(), KeyMappings = new List<KeyMapping>() };

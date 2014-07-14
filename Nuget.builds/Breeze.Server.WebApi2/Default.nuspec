@@ -17,7 +17,7 @@
         <releaseNotes>Please review the BreezeJS release notes at http://www.breezejs.com/documentation/download</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
 		<dependencies>
-		    <dependency id="Microsoft.AspNet.WebApi.OData" version="[5.0, 6.0)"/>
+		    <dependency id="Microsoft.AspNet.WebApi.OData" version="[5.1, 6.0)"/>
         <dependency id="Microsoft.AspNet.WebApi.WebHost" version="[5.0, 6.0)" />			
         <dependency id="Breeze.Server.ContextProvider" version="[{{version}}]" />
         <dependency id="WebActivator" />
