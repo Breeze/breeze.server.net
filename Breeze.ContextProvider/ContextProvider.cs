@@ -441,6 +441,11 @@ namespace Breeze.ContextProvider {
     public SaveError(IEnumerable<EntityError> entityErrors) {
       EntityErrors = entityErrors.ToList();
     }
+    public SaveError(String message, IEnumerable<EntityError> entityErrors) {
+      Message = message;
+      EntityErrors = entityErrors.ToList();
+    }
+    public String Message { get; protected set; }
     public List<EntityError> EntityErrors { get; protected set; }
   }
 

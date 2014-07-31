@@ -1,0 +1,10 @@
+﻿ODataConventionModelBuilder is @!#$% up. ( version )
+
+- No foreign key properties
+- incorrect association names - ( inverse properties cannot be determined)
+- no info about store generated keys ( identity columns)
+- no maxLength for strings
+- no datatype nullability info - ( non-nullability is purely defined based on whether the field is part of the pk or has a 'required' on it.) 
+- no etag support
+- no enum support
+- json schema tag - puts entityContainer information in a seperate item from {entityType and complexType info} and uses a magic namespace of 'Default' ( undocumented anywhere)

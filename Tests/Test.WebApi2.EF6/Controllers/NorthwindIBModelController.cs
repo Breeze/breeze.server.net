@@ -709,6 +709,13 @@ namespace Sample_WebApi2.Controllers {
     }
 
     [HttpGet]
+    public Int32 OrdersCountForCustomer(string companyName) {
+      var customer =
+        ContextProvider.Context.Customers.Include("Orders").Where(c => c.CompanyName.StartsWith(companyName)).First();
+      return customer.Orders.Count;
+    }
+
+    [HttpGet]
     // AltCustomers will not be in the resourceName/entityType map;
     public IQueryable<Customer> AltCustomers() {
       return ContextProvider.Context.Customers;

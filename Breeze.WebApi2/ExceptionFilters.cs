@@ -15,10 +15,9 @@ namespace Breeze.WebApi2 {
         public override void OnException(HttpActionExecutedContext context) {
             if (context.Exception is EntityErrorsException) {
                 var e = (EntityErrorsException)context.Exception;
-                var error = new SaveError(e.EntityErrors);
+                var error = new SaveError(e.Message, e.EntityErrors);
                 var resp = new HttpResponseMessage(e.StatusCode) {
                   Content = new ObjectContent(typeof(SaveError), error, JsonFormatter.Create()),
-                  ReasonPhrase = e.Message ?? "Entity Errors exception"
                 };
                 context.Response = resp;
             }

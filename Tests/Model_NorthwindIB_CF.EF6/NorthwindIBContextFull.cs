@@ -1339,88 +1339,74 @@ namespace Foo {
     [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("Id")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="User_Id")]
     public long Id { get; set; }
 
     /// <summary>Gets or sets the UserName. </summary>
     [DataMember]
     [Column("UserName")]
-    // [IbVal.StringLengthVerifier(MaxValue=100, IsRequired=true, ErrorMessageResourceName="User_UserName")]
     [MaxLength(100)]
     public string UserName { get; set; }
 
     /// <summary>Gets or sets the UserPassword. </summary>
     [DataMember]
     [Column("UserPassword")]
-    // [IbVal.StringLengthVerifier(MaxValue=200, IsRequired=false, ErrorMessageResourceName="User_UserPassword")]
     [MaxLength(200)]
     public string UserPassword { get; set; }
 
     /// <summary>Gets or sets the FirstName. </summary>
     [DataMember]
     [Column("FirstName")]
-    // [IbVal.StringLengthVerifier(MaxValue=100, IsRequired=true, ErrorMessageResourceName="User_FirstName")]
     [MaxLength(100)]
     public string FirstName { get; set; }
 
     /// <summary>Gets or sets the LastName. </summary>
     [DataMember]
     [Column("LastName")]
-    // [IbVal.StringLengthVerifier(MaxValue=100, IsRequired=true, ErrorMessageResourceName="User_LastName")]
     [MaxLength(100)]
     public string LastName { get; set; }
 
     /// <summary>Gets or sets the Email. </summary>
     [DataMember]
     [Column("Email")]
-    // [IbVal.StringLengthVerifier(MaxValue=100, IsRequired=true, ErrorMessageResourceName="User_Email")]
     [MaxLength(100)]
     public string Email { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
     [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="User_RowVersion")]
     public decimal RowVersion { get; set; }
 
     /// <summary>Gets or sets the CreatedBy. </summary>
     [DataMember]
     [Column("CreatedBy")]
-    // [IbVal.StringLengthVerifier(MaxValue=100, IsRequired=true, ErrorMessageResourceName="User_CreatedBy")]
     [MaxLength(100)]
     public string CreatedBy { get; set; }
 
     /// <summary>Gets or sets the CreatedByUserId. </summary>
     [DataMember]
     [Column("CreatedByUserId")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="User_CreatedByUserId")]
     public long CreatedByUserId { get; set; }
 
     /// <summary>Gets or sets the CreatedDate. </summary>
     [DataMember]
     [Column("CreatedDate")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="User_CreatedDate")]
     public System.DateTime CreatedDate { get; set; }
 
     /// <summary>Gets or sets the ModifiedBy. </summary>
     [DataMember]
     [Column("ModifiedBy")]
-    // [IbVal.StringLengthVerifier(MaxValue=100, IsRequired=true, ErrorMessageResourceName="User_ModifiedBy")]
     [MaxLength(100)]
     public string ModifiedBy { get; set; }
 
     /// <summary>Gets or sets the ModifiedByUserId. </summary>
     [DataMember]
     [Column("ModifiedByUserId")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="User_ModifiedByUserId")]
     public long ModifiedByUserId { get; set; }
 
     /// <summary>Gets or sets the ModifiedDate. </summary>
     [DataMember]
-    // [IbEm.ConcurrencyStrategy(IbEm.ConcurrencyStrategy.Client)]
     [Column("ModifiedDate")]
     [ConcurrencyCheck]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="User_ModifiedDate")]
     public System.DateTime ModifiedDate { get; set; }
 
     #endregion Data Properties
@@ -1434,26 +1420,6 @@ namespace Foo {
 
     #endregion Navigation properties
 
-    #region EntityPropertyNames
-
-    public partial class EntityPropertyNames {
-      public const String Id = "Id";
-      public const String UserName = "UserName";
-      public const String UserPassword = "UserPassword";
-      public const String FirstName = "FirstName";
-      public const String LastName = "LastName";
-      public const String Email = "Email";
-      public const String RowVersion = "RowVersion";
-      public const String CreatedBy = "CreatedBy";
-      public const String CreatedByUserId = "CreatedByUserId";
-      public const String CreatedDate = "CreatedDate";
-      public const String ModifiedBy = "ModifiedBy";
-      public const String ModifiedByUserId = "ModifiedByUserId";
-      public const String ModifiedDate = "ModifiedDate";
-      public const String UserRoles = "UserRoles";
-    }
-
-    #endregion EntityPropertyNames
   }
 
   #endregion User class
@@ -1472,21 +1438,18 @@ namespace Foo {
     [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("ID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="UserRole_ID")]
     public long ID { get; set; }
 
     /// <summary>Gets or sets the UserId. </summary>
     [DataMember]
     // [ForeignKey("User")]
     [Column("UserId")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="UserRole_UserId")]
     public long UserId { get; set; }
 
     /// <summary>Gets or sets the RoleId. </summary>
     [DataMember]
     // [ForeignKey("Role")]
     [Column("RoleId")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="UserRole_RoleId")]
     public long RoleId { get; set; }
 
     #endregion Data Properties
@@ -1526,26 +1489,22 @@ namespace Foo {
     [ForeignKey("Order")]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Column("OrderID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="InternationalOrder_OrderID")]
     public int OrderID { get; set; }
 
     /// <summary>Gets or sets the CustomsDescription. </summary>
     [DataMember]
     [Column("CustomsDescription")]
-    // [IbVal.StringLengthVerifier(MaxValue=100, IsRequired=true, ErrorMessageResourceName="InternationalOrder_CustomsDescription")]
     [MaxLength(100)]
     public string CustomsDescription { get; set; }
 
     /// <summary>Gets or sets the ExciseTax. </summary>
     [DataMember]
     [Column("ExciseTax")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="InternationalOrder_ExciseTax")]
     public decimal ExciseTax { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
     [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="InternationalOrder_RowVersion")]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
