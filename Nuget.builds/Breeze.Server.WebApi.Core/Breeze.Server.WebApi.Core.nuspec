@@ -19,7 +19,7 @@
 		<dependencies>
 			<dependency id="Microsoft.AspNet.WebApi" version="[4.0,5)"/>
             <dependency id="Microsoft.AspNet.WebApi.OData" version="[4.0,5)"/>
-            <dependency id="WebActivator" />
+            <dependency id="WebActivatorEx" />
 		</dependencies>
     </metadata>
     <files>
