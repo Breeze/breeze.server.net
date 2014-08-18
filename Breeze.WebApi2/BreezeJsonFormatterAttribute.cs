@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Breeze.ContextProvider;
+using System;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Web.Http.Controllers;
-using System.Xml;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Net.Http;
-
-using Breeze.ContextProvider;
 
 namespace Breeze.WebApi2 {
 

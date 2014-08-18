@@ -14,7 +14,6 @@ using System.Web.OData;
 using System.Web.Http;
 
 #if CODEFIRST_PROVIDER
-using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.CF;
 using Foo;
 using System.ComponentModel.DataAnnotations;

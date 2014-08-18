@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Breeze.ContextProvider;
+using System;
 using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http.OData.Query;
-
-using Breeze.ContextProvider;
-using System.Collections.Generic;
 
 namespace Breeze.WebApi2 {
   public class QueryHelper {

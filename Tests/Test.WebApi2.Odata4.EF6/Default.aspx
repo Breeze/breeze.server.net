@@ -24,7 +24,8 @@
     <script src="vendor/underscore.js"></script>
     <script src="vendor/backbone.js"></script>
     <script src="vendor/jquery-2.0.3.js"></script>
-    <script src="vendor/datajs-1.1.2.js"></script>
+    <script src="vendor/datajs-2.0.0.js"></script>
+    <%--<script src="vendor/datajs-1.1.2.js"></script>--%>
  
     <!-- Test helper scripts  --> 
     <!-- These two must come first -->    
@@ -34,8 +35,8 @@
     
     <script>
         // -- Initialize Test vars  
-        breezeTestFns.setDataService("OData", "WebApi2");
-        // breezeTestFns.setDataService("OData", "WebApi2.2");
+        breezeTestFns.setDataService("OData4", "WebApi2");
+        
     </script>
        
     <script src="tests/attachTests.js"></script> 

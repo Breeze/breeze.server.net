@@ -10,6 +10,7 @@ namespace Test.WebApi2.OData4.Controllers {
     internal readonly InheritanceContext _context = new InheritanceContext();
 
     [EnableQuery]
+    // [ODataRoute]
     public virtual IQueryable<T> Get() {
       return _context.Set<T>();
     }

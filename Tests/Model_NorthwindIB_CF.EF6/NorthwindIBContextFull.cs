@@ -1,7 +1,9 @@
 
 using Foo;
-using Microsoft.Data.Edm;
-using Microsoft.Data.Edm.Csdl;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+//using Microsoft.Data.Edm;
+//using Microsoft.Data.Edm.Csdl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -548,7 +550,6 @@ namespace Foo {
     [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("OrderID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Order_OrderID")]
     public int OrderID { get; set; }
 
     /// <summary>Gets or sets the CustomerID. </summary>

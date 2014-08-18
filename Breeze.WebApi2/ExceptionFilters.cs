@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using System.Net;
+﻿using Breeze.ContextProvider;
 using System.Net.Http;
 using System.Web.Http.Filters;
-
-using Breeze.ContextProvider;
 
 namespace Breeze.WebApi2 {
 

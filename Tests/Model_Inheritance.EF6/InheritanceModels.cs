@@ -78,7 +78,7 @@ namespace Inheritance.Models
 
     #region TPH
 
-    public abstract class BillingDetailTPH : EntityBase, IBillingDetail
+    public abstract partial class BillingDetailTPH : EntityBase, IBillingDetail
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set;  }
@@ -102,7 +102,7 @@ namespace Inheritance.Models
         public string ExpiryYear { get; set; }
     }
 
-    public class DepositTPH : EntityBase, IDeposit
+    public partial class DepositTPH : EntityBase, IDeposit
     {
         public int Id { get; set; }
         public int BankAccountId { get; set; }
@@ -115,7 +115,7 @@ namespace Inheritance.Models
 
     #region TPT
 
-    public abstract class BillingDetailTPT : EntityBase, IBillingDetail
+    public abstract partial class BillingDetailTPT : EntityBase, IBillingDetail
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -139,7 +139,7 @@ namespace Inheritance.Models
         public string ExpiryYear { get; set; }
     }
 
-    public class DepositTPT : EntityBase, IDeposit
+    public partial class DepositTPT : EntityBase, IDeposit
     {
         public int Id { get; set; }
         public int BankAccountId { get; set; }
@@ -151,7 +151,7 @@ namespace Inheritance.Models
 
     #region TPC
 
-    public abstract class BillingDetailTPC : EntityBase, IBillingDetail
+    public abstract partial class BillingDetailTPC : EntityBase, IBillingDetail
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -177,7 +177,7 @@ namespace Inheritance.Models
         public string ExpiryYear { get; set; }
     }
 
-    public class DepositTPC : EntityBase, IDeposit
+    public partial class DepositTPC : EntityBase, IDeposit
     {
         public int Id { get; set; }
         public int BankAccountId { get; set; }
