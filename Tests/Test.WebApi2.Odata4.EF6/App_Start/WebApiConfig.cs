@@ -78,8 +78,8 @@ namespace Test.WebApi2.OData4 {
       empType.Property(t => t.OData4BirthDate).Name = "BirthDate";
       empType.Ignore(t => t.HireDate);
       empType.Property(t => t.OData4HireDate).Name = "HireDate";
-      var x = empType.HasMany(t => t.Orders).
-      builder.EntitySet<Employee>("Employees");
+      //var x = empType.HasMany(t => t.Orders).
+      //builder.EntitySet<Employee>("Employees");
 
       var orderType = builder.EntityType<Order>();
       orderType.Ignore(t => t.OrderDate);

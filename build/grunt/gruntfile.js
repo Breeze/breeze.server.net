@@ -16,7 +16,7 @@ module.exports = function(grunt) {
   
   var nugetPackageNames = [
  	   'Breeze.Client',
-     'Breeze.WebApi', 
+//     'Breeze.WebApi', 
      'Breeze.WebApi2.EF6',
      'Breeze.WebApi2.NH',
 	   'Breeze.Server.WebApi2',
@@ -26,9 +26,9 @@ module.exports = function(grunt) {
 	];
   
   var breezeDlls = [
-    'Breeze.WebApi', 
-    'Breeze.WebApi.EF', 
-    'Breeze.WebApi.NH',
+//    'Breeze.WebApi', 
+//    'Breeze.WebApi.EF', 
+//    'Breeze.WebApi.NH',
     'Breeze.ContextProvider', 
     'Breeze.ContextProvider.EF6',
     'Breeze.ContextProvider.NH',
