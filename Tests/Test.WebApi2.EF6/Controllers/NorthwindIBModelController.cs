@@ -486,7 +486,9 @@ namespace Sample_WebApi2.Controllers {
     }
 
     private bool CheckUnmappedProperty(EntityInfo entityInfo) {
-      var unmappedValue = entityInfo.UnmappedValuesMap["myUnmappedProperty"];
+      var unmappedValue = entityInfo.UnmappedValuesMap["MyUnmappedProperty"];
+      // fixed in v 1.4.18
+      // var unmappedValue = entityInfo.UnmappedValuesMap["myUnmappedProperty"];
       if ((String)unmappedValue != "anything22") {
         throw new Exception("wrong value for unmapped property:  " + unmappedValue);
       }
@@ -502,11 +504,11 @@ namespace Sample_WebApi2.Controllers {
     }
 
     private bool CheckUnmappedPropertySerialized(EntityInfo entityInfo) {
-      var unmappedValue = entityInfo.UnmappedValuesMap["myUnmappedProperty"];
+      var unmappedValue = entityInfo.UnmappedValuesMap["MyUnmappedProperty"];
       if ((String)unmappedValue != "ANYTHING22") {
         throw new Exception("wrong value for unmapped property:  " + unmappedValue);
       }
-      var anotherOne = entityInfo.UnmappedValuesMap["anotherOne"];
+      var anotherOne = entityInfo.UnmappedValuesMap["AnotherOne"];
 
       if (((dynamic) anotherOne).z[5].foo.Value != 4) {
         throw new Exception("wrong value for 'anotherOne.z[5].foo'");
