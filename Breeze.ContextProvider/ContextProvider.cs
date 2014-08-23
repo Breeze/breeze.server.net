@@ -9,11 +9,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Transactions;
 using System.Xml.Linq;
 
 namespace Breeze.ContextProvider {
-  // Base for EFContextProvider
+  // Base for ContextProvide and ContextProvideAsync
   public abstract class ContextProvider {
 
     public IKeyGenerator KeyGenerator { get; set; }
@@ -53,69 +54,16 @@ namespace Breeze.ContextProvider {
       return jsonText;
     }
 
-    public SaveResult SaveChanges(JObject saveBundle, TransactionSettings transactionSettings = null) {
-      JsonSerializer = CreateJsonSerializer();
-
-      var dynSaveBundle = (dynamic)saveBundle;
-      var entitiesArray = (JArray)dynSaveBundle.entities;
-      var dynSaveOptions = dynSaveBundle.saveOptions;
-      SaveOptions = (SaveOptions) JsonSerializer.Deserialize(new JTokenReader(dynSaveOptions), typeof(SaveOptions));
-      SaveWorkState = new SaveWorkState(this, entitiesArray);
-
-      transactionSettings = transactionSettings ?? BreezeConfig.Instance.GetTransactionSettings();
-      try {
-        if (transactionSettings.TransactionType == TransactionType.TransactionScope) {
-          var txOptions = transactionSettings.ToTransactionOptions();
-          using (var txScope = new TransactionScope(TransactionScopeOption.Required, txOptions)) {           
-            OpenAndSave(SaveWorkState);           
-            txScope.Complete();
-          }
-        } else if (transactionSettings.TransactionType == TransactionType.DbTransaction) {
-          this.OpenDbConnection();
-          using (IDbTransaction tran = BeginTransaction(transactionSettings.IsolationLevelAs)) {
-            try {
-              OpenAndSave(SaveWorkState);
-              tran.Commit();
-            } catch {
-              tran.Rollback();
-              throw;
-            }
-          }          
-        } else {
-          OpenAndSave(SaveWorkState);
-        }
-      } catch (EntityErrorsException e) {
-        SaveWorkState.EntityErrors = e.EntityErrors;
-        throw; 
-      } catch(Exception e2) {
-        if (!HandleSaveException(e2, SaveWorkState)) {
-          throw;
-        }
-      } finally {
-        CloseDbConnection();
-      }
-
-      return SaveWorkState.ToSaveResult();
-
-    }
-
+   
     // allows subclasses to plug in own save exception handling
     // either throw an exception here, return false or return true and modify the saveWorkState.
     protected virtual bool HandleSaveException(Exception e, SaveWorkState saveWorkState) {
       return false;
     }
 
-    private void OpenAndSave(SaveWorkState saveWorkState) {
-      
-      OpenDbConnection();    // ensure connection is available for BeforeSaveEntities
-      saveWorkState.BeforeSave();
-      SaveChangesCore(saveWorkState);
-      saveWorkState.AfterSave();
-    }
-
     
 
-    private static JsonSerializer CreateJsonSerializer() {
+    internal static JsonSerializer CreateJsonSerializer() {
       var serializerSettings = BreezeConfig.Instance.GetJsonSerializerSettings();
       var jsonSerializer = JsonSerializer.Create(serializerSettings);
       return jsonSerializer;
@@ -129,18 +77,12 @@ namespace Breeze.ContextProvider {
     /// <returns>Open DbConnection used by the ContextProvider's implementation</returns>
     public abstract IDbConnection GetDbConnection();
 
-    /// <summary>
-    /// Internal use only.  Should only be called by ContextProvider during SaveChanges.
-    /// Opens the DbConnection used by the ContextProvider's implementation.
-    /// Method must be idempotent; after it is called the first time, subsequent calls have no effect.
-    /// </summary>
-    protected abstract void OpenDbConnection();
+	/// <summary>
+	/// Internal use only.  Should only be called by ContextProvider during SaveChanges.
+	/// Closes the DbConnection used by the ContextProvider's implementation.
+	/// </summary>
+	protected abstract void CloseDbConnection();
 
-    /// <summary>
-    /// Internal use only.  Should only be called by ContextProvider during SaveChanges.
-    /// Closes the DbConnection used by the ContextProvider's implementation.
-    /// </summary>
-    protected abstract void CloseDbConnection();
 
     protected virtual IDbTransaction BeginTransaction(System.Data.IsolationLevel isolationLevel) {
       var conn = GetDbConnection();
@@ -149,8 +91,6 @@ namespace Breeze.ContextProvider {
     }
 
     protected abstract String BuildJsonMetadata();
-
-    protected abstract void SaveChangesCore(SaveWorkState saveWorkState);
 
     public virtual object[] GetKeyValues(EntityInfo entityInfo) {
       throw new NotImplementedException();
@@ -278,13 +218,112 @@ namespace Breeze.ContextProvider {
       return generatorTypes.First();
     });
 
-    protected SaveWorkState SaveWorkState  { get; private set; }
+
+
+	
+    
+	protected SaveWorkState SaveWorkState  { get; private set; }
     protected JsonSerializer JsonSerializer { get; private set; }
 
 
     private object _metadataLock = new object();
     private string _jsonMetadata;
 
+
+	 protected void HandleSaveBundle(JObject saveBundle)
+	{
+		JsonSerializer = CreateJsonSerializer();
+
+		var dynSaveBundle = (dynamic)saveBundle;
+		var entitiesArray = (JArray)dynSaveBundle.entities;
+		var dynSaveOptions = dynSaveBundle.saveOptions;
+		SaveOptions = (SaveOptions)JsonSerializer.Deserialize(new JTokenReader(dynSaveOptions), typeof(SaveOptions));
+		SaveWorkState = new SaveWorkState(this, entitiesArray);
+	}
+
+
+	  #region sync
+
+
+	public SaveResult SaveChanges(JObject saveBundle, TransactionSettings transactionSettings = null)
+	{
+		HandleSaveBundle(saveBundle);
+
+		transactionSettings = transactionSettings ?? BreezeConfig.Instance.GetTransactionSettings();
+		try
+		{
+			if (transactionSettings.TransactionType == TransactionType.TransactionScope)
+			{
+				var txOptions = transactionSettings.ToTransactionOptions();
+				using (var txScope = new TransactionScope(TransactionScopeOption.Required, txOptions))
+				{
+					OpenAndSave(SaveWorkState);
+					txScope.Complete();
+				}
+			}
+			else if (transactionSettings.TransactionType == TransactionType.DbTransaction)
+			{
+				this.OpenDbConnection();
+				using (IDbTransaction tran = BeginTransaction(transactionSettings.IsolationLevelAs))
+				{
+					try
+					{
+						OpenAndSave(SaveWorkState);
+						tran.Commit();
+					}
+					catch
+					{
+						tran.Rollback();
+						throw;
+					}
+				}
+			}
+			else
+			{
+				OpenAndSave(SaveWorkState);
+			}
+		}
+		catch (EntityErrorsException e)
+		{
+			SaveWorkState.EntityErrors = e.EntityErrors;
+			throw;
+		}
+		catch (Exception e2)
+		{
+			if (!HandleSaveException(e2, SaveWorkState))
+			{
+				throw;
+			}
+		}
+		finally
+		{
+			CloseDbConnection();
+		}
+
+		return SaveWorkState.ToSaveResult();
+
+	}
+
+
+	private void OpenAndSave(SaveWorkState saveWorkState)
+	{
+
+		OpenDbConnection();    // ensure connection is available for BeforeSaveEntities
+		saveWorkState.BeforeSave();
+		SaveChangesCore(saveWorkState);
+		saveWorkState.AfterSave();
+	}
+	protected abstract void SaveChangesCore(SaveWorkState saveWorkState);
+
+	/// <summary>
+	/// Internal use only.  Should only be called by ContextProvider during SaveChanges.
+	/// Opens the DbConnection used by the ContextProvider's implementation.
+	/// Method must be idempotent; after it is called the first time, subsequent calls have no effect.
+	/// </summary>
+	protected abstract void OpenDbConnection();
+
+
+	  #endregion
   }
 
   public class SaveWorkState {

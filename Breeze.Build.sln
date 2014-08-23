@@ -18,9 +18,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider", "B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.EF6", "Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.NH", "Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj", "{15246B9C-5558-4BCE-894F-52C4F785BBCC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.WebApi2", "Breeze.WebApi2\Breeze.WebApi2.csproj", "{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5A2F2087-BB38-4CB3-B097-2E62019A39D7}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.NH", "Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj", "{15246B9C-5558-4BCE-894F-52C4F785BBCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,21 +72,6 @@ Global
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Release|x86.ActiveCfg = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Any CPU.ActiveCfg = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Any CPU.Build.0 = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Mixed Platforms.Build.0 = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|x86.ActiveCfg = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|x86.ActiveCfg = Release|Any CPU
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -95,6 +87,21 @@ Global
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Any CPU.ActiveCfg = OData-debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Any CPU.Build.0 = OData-debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Mixed Platforms.ActiveCfg = OData-debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|Mixed Platforms.Build.0 = OData-debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.OData-debug|x86.ActiveCfg = OData-debug|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{15246B9C-5558-4BCE-894F-52C4F785BBCC}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
