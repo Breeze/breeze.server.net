@@ -448,10 +448,8 @@ xcopy /Y /E "$(TargetDir)tests"     "$(ProjectDir)tests"
 xcopy /Y /E "$(TargetDir)vendor" "$(ProjectDir)vendor"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>// run breeze.js build
-cd $(SolutionDir)
-cd ../breeze.js/build/grunt
-grunt</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
