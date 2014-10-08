@@ -193,6 +193,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\breeze.js\test\internal\ajaxAdapterTests.js">
+      <Link>tests\ajaxAdapterTests.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\attachTests.js">
       <Link>tests\attachTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -38,6 +38,7 @@
         breezeTestFns.setDataService("OData", "WCF");
     </script>
        
+    <script src="tests/ajaxAdapterTests.js"></script>
     <script src="tests/attachTests.js"></script> 
     <script src="tests/classRewriteTests.js"></script> 
     <script src="tests/complexTypeTests.js"></script> 
