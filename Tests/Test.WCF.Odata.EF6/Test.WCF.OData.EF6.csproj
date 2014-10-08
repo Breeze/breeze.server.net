@@ -167,6 +167,10 @@
       <Link>vendor\qunit-1.11.0.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\vendor\sinon.js">
+      <Link>vendor\sinon.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>    
     <Content Include="..\..\..\breeze.js\test\vendor\r.js">
       <Link>vendor\r.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
