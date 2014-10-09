@@ -804,7 +804,7 @@ namespace Breeze.ContextProvider.EF6 {
         this.EntityTypeName = entityInfo.Entity.GetType().FullName;
         this.KeyValues = GetKeyValues(entityInfo);
       }
-      ErrorName = ErrorName;
+      ErrorName = errorName;
       ErrorMessage = errorMessage;
       PropertyName = propertyName;
     }
