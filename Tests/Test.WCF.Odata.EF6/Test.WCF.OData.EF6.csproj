@@ -171,10 +171,6 @@
       <Link>vendor\sinon.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\sinon-qunit.js">
-      <Link>vendor\sinon-qunit.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>        
     <Content Include="..\..\..\breeze.js\test\vendor\r.js">
       <Link>vendor\r.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -276,7 +272,7 @@
     <Content Include="..\..\..\breeze.js\test\internal\saveInterceptorTests.js">
       <Link>tests\saveInterceptorTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>    
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\saveTests.js">
       <Link>tests\saveTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

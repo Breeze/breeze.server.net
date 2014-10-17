@@ -146,7 +146,7 @@
     <Content Include="..\..\..\breeze.js\test\internal\ajaxAdapterTests.js">
       <Link>tests\ajaxAdapterTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>    
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\attachTests.js">
       <Link>tests\attachTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -328,10 +328,6 @@
       <Link>vendor\sinon.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\sinon-qunit.js">
-      <Link>vendor\sinon-qunit.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\..\..\breeze.js\test\vendor\r.js">
       <Link>vendor\r.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -440,7 +436,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>7149</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
