@@ -5,6 +5,7 @@ using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using System.Web.Http.OData;
 using System.Web.Http.OData.Query;
 
 namespace Breeze.WebApi2 {
@@ -15,7 +16,7 @@ namespace Breeze.WebApi2 {
   /// Clears all <see cref="MediaTypeFormatter"/>s and 
   /// adds the Breeze formatter for JSON content.
   /// Removes the competing ASP.NET Web API's QueryFilterProvider if present. 
-  /// Adds <see cref="BreezeQueryableFilterProvider"/> for OData query processing
+  /// Adds <see cref="EnableBreezeQueryFilterProvider"/> for OData query processing
   /// Adds <see cref="MetadataFilterProvider"/> returning a Metadata action filter
   /// which (by default) converts a Metadata string response to
   /// an HTTP response with string content.
@@ -30,11 +31,11 @@ namespace Breeze.WebApi2 {
     public void Initialize(HttpControllerSettings settings, HttpControllerDescriptor descriptor) {
       lock (__lock) {
         // Remove the Web API's "QueryFilterProvider" 
-        // and any previously added BreezeQueryableFilterProvider.
+        // and any previously added EnableBreezeQueryFilterProvider.
         // Add the value from BreezeFilterProvider()
         settings.Services.RemoveAll(typeof(IFilterProvider),
                                     f => (f.GetType().Name == "QueryFilterProvider")
-                                         || (f is BreezeQueryableFilterProvider));
+                                         || (f is EnableBreezeQueryFilterProvider));
         settings.Services.Add(typeof(IFilterProvider), GetQueryableFilterProvider(_queryableFilter));
         settings.Services.Add(typeof(IFilterProvider), GetMetadataFilterProvider(_metadataFilter));
         settings.Services.Add(typeof(IFilterProvider), GetEntityErrorsFilterProvider(_entityErrorsFilter));
@@ -148,11 +149,11 @@ namespace Breeze.WebApi2 {
     /// Return the IQueryable <see cref="IFilterProvider"/> for a Breeze Controller
     /// </summary>
     /// <remarks>
-    /// By default returns an <see cref="BreezeQueryableFilterProvider"/>.
+    /// By default returns an <see cref="EnableBreezeQueryFilterProvider"/>.
     /// Override to substitute a custom provider.
     /// </remarks>
-    protected virtual IFilterProvider GetQueryableFilterProvider(BreezeQueryableAttribute defaultFilter) {
-      return new BreezeQueryableFilterProvider(defaultFilter);
+    protected virtual IFilterProvider GetQueryableFilterProvider(EnableBreezeQueryAttribute defaultFilter) {
+      return new EnableBreezeQueryFilterProvider(defaultFilter);
     }
 
     /// <summary>
@@ -182,7 +183,7 @@ namespace Breeze.WebApi2 {
         return new EntityErrorsFilterProvider(entityErrorsFilter);
     }
 
-    protected BreezeQueryableAttribute _queryableFilter = new BreezeQueryableAttribute() { AllowedQueryOptions = AllowedQueryOptions.All };
+    protected EnableBreezeQueryAttribute _queryableFilter = new EnableBreezeQueryAttribute() { AllowedQueryOptions = AllowedQueryOptions.All };
     private MetadataToHttpResponseAttribute _metadataFilter = new MetadataToHttpResponseAttribute();
     private EntityErrorsFilterAttribute  _entityErrorsFilter = new EntityErrorsFilterAttribute();
     private static object __lock = new object();
@@ -192,16 +193,16 @@ namespace Breeze.WebApi2 {
     private static readonly MediaTypeFormatter DefaultJsonFormatter = JsonFormatter.Create();
   }
 
-  internal class BreezeQueryableFilterProvider : IFilterProvider {
+  internal class EnableBreezeQueryFilterProvider : IFilterProvider {
 
-    public BreezeQueryableFilterProvider(BreezeQueryableAttribute filter) {
+    public EnableBreezeQueryFilterProvider(EnableBreezeQueryAttribute filter) {
       _filter = filter;
     }
 
     public IEnumerable<FilterInfo> GetFilters(HttpConfiguration configuration, HttpActionDescriptor actionDescriptor) {
       if (actionDescriptor == null ||
         (!IsIQueryable(actionDescriptor.ReturnType)) ||
-        actionDescriptor.GetCustomAttributes<QueryableAttribute>().Any() || // if method already has a QueryableAttribute (or subclass) then skip it.
+        actionDescriptor.GetCustomAttributes<EnableQueryAttribute>().Any() || // if method already has a QueryableAttribute (or subclass) then skip it.
         actionDescriptor.GetParameters().Any(parameter => typeof(ODataQueryOptions).IsAssignableFrom(parameter.ParameterType))
       ) {
         return Enumerable.Empty<FilterInfo>();
@@ -218,7 +219,7 @@ namespace Breeze.WebApi2 {
       return false;
     }
 
-    private readonly BreezeQueryableAttribute _filter;
+    private readonly EnableBreezeQueryAttribute _filter;
   }
 
   internal class MetadataFilterProvider : IFilterProvider {

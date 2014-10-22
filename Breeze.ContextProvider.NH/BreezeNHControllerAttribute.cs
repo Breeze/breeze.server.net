@@ -1,4 +1,5 @@
-﻿using Breeze.WebApi2;
+﻿using System.Web.Http.OData;
+using Breeze.WebApi2;
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Breeze.ContextProvider.NH
             this._queryableFilter = new BreezeNHQueryableAttribute();
         }
 
-        protected override IFilterProvider GetQueryableFilterProvider(BreezeQueryableAttribute defaultFilter)
+        protected override IFilterProvider GetQueryableFilterProvider(EnableBreezeQueryAttribute defaultFilter)
         {
             return new BreezeNHQueryableFilterProvider(defaultFilter);
         }
@@ -31,7 +32,7 @@ namespace Breeze.ContextProvider.NH
 
     internal class BreezeNHQueryableFilterProvider : IFilterProvider
     {
-        public BreezeNHQueryableFilterProvider(BreezeQueryableAttribute filter)
+        public BreezeNHQueryableFilterProvider(EnableBreezeQueryAttribute filter)
         {
             _filter = filter;
         }
@@ -39,7 +40,7 @@ namespace Breeze.ContextProvider.NH
         public IEnumerable<FilterInfo> GetFilters(HttpConfiguration configuration, HttpActionDescriptor actionDescriptor)
         {
             if (actionDescriptor == null ||
-              actionDescriptor.GetCustomAttributes<QueryableAttribute>().Any() || // if method already has a QueryableAttribute (or subclass) then skip it.
+              actionDescriptor.GetCustomAttributes<EnableQueryAttribute>().Any() || // if method already has a QueryableAttribute (or subclass) then skip it.
               actionDescriptor.GetParameters().Any(parameter => typeof(ODataQueryOptions).IsAssignableFrom(parameter.ParameterType))
             )
             {
@@ -49,7 +50,7 @@ namespace Breeze.ContextProvider.NH
             return new[] { new FilterInfo(_filter, FilterScope.Global) };
         }
 
-        private readonly BreezeQueryableAttribute _filter;
+        private readonly EnableBreezeQueryAttribute _filter;
     }
 
 }
