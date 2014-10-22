@@ -567,7 +567,7 @@ namespace Sample_WebApi2.Controllers {
 #if NHIBERNATE
     [BreezeNHQueryable(MaxAnyAllExpressionDepth = 3)]
 #else
-    [BreezeQueryable(MaxAnyAllExpressionDepth = 3)]
+    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
 #endif
     public IQueryable<Customer> Customers() {
       var custs = ContextProvider.Context.Customers;
@@ -609,7 +609,7 @@ namespace Sample_WebApi2.Controllers {
 #if NHIBERNATE
     [BreezeNHQueryable(MaxExpansionDepth = 3)]
 #else
-    [BreezeQueryable(MaxExpansionDepth = 3)]
+    [EnableBreezeQuery(MaxExpansionDepth = 3)]
 #endif
     public IQueryable<Order> Orders() {
       var orders = ContextProvider.Context.Orders;
@@ -622,7 +622,7 @@ namespace Sample_WebApi2.Controllers {
     }
 
     [HttpGet]
-    [BreezeQueryable]
+    [EnableBreezeQuery]
     public IEnumerable<Employee> EnumerableEmployees() {
       return ContextProvider.Context.Employees.ToList();
     }
@@ -924,7 +924,7 @@ namespace Sample_WebApi2.Controllers {
 #if NHIBERNATE
     [BreezeNHQueryable]
 #else
-    [BreezeQueryable]
+    [EnableBreezeQuery]
 #endif
     public HttpResponseMessage CustomersAsHRM() {
       var customers = ContextProvider.Context.Customers.Cast<Customer>();

@@ -9,7 +9,7 @@ namespace Test.WebApi2.OData.Controllers {
   public abstract class BaseBillingController<T> : ODataController where T : class {
     internal readonly InheritanceContext _context = new InheritanceContext();
 
-    [Queryable]
+    [EnableQuery]
     public virtual IQueryable<T> Get() {
       return _context.Set<T>();
     }
@@ -27,7 +27,7 @@ namespace Test.WebApi2.OData.Controllers {
 
   public class BankAccountTPHsController : BaseBillingController<BankAccountTPH> {
 
-    [Queryable]
+    [EnableQuery]
     public override IQueryable<BankAccountTPH> Get() {
       return _context.Set<BillingDetailTPH>().OfType<BankAccountTPH>();
     }
@@ -35,7 +35,7 @@ namespace Test.WebApi2.OData.Controllers {
   }
 
   public class CreditCardTPHsController : BaseBillingController<CreditCardTPH> {
-    [Queryable]
+    [EnableQuery]
     public override IQueryable<CreditCardTPH> Get() {
       return _context.Set<BillingDetailTPH>().OfType<CreditCardTPH>();
     }
@@ -50,14 +50,14 @@ namespace Test.WebApi2.OData.Controllers {
   }
 
   public class BankAccountTPTsController : BaseBillingController<BankAccountTPT> {
-    [Queryable]
+    [EnableQuery]
     public override IQueryable<BankAccountTPT> Get() {
       return _context.Set<BillingDetailTPT>().OfType<BankAccountTPT>();
     }
   }
 
   public class CreditCardTPTsController : BaseBillingController<CreditCardTPT> {
-    [Queryable]
+    [EnableQuery]
     public override IQueryable<CreditCardTPT> Get() {
       return _context.Set<BillingDetailTPT>().OfType<CreditCardTPT>();
     }

@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="BreezeControllerAttribute.cs" />
     <Compile Include="BreezeQueryableAttribute.cs" />
+    <Compile Include="EnableBreezeQueryAttribute.cs" />
     <Compile Include="ExceptionFilters.cs" />
     <Compile Include="MetadataToHttpResponseAttribute.cs" />
     <Compile Include="BreezeJsonFormatterAttribute.cs" />
