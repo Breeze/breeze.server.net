@@ -135,7 +135,37 @@ namespace Breeze.ContextProvider.NH {
         return entitiesToPersist;
     }
 
+    /// <summary>
+    /// If TypeFilter function is defined, returns TypeFilter(entityInfo.Entity.GetType())
+    /// </summary>
+    /// <param name="entityInfo"></param>
+    /// <returns>true if the entity should be saved, false if not</returns>
+    protected override bool BeforeSaveEntity(EntityInfo entityInfo)
+    {
+        if (!base.BeforeSaveEntity(entityInfo)) return false;
+        if (this.TypeFilter == null) return true;
+        return this.TypeFilter(entityInfo.Entity.GetType());
+    }
+
     #region Metadata
+
+    /// <summary>
+    /// Sets a function to filter types from metadata generation and SaveChanges.
+    /// The function returns true if a Type should be included, false otherwise.
+    /// </summary><example>
+    /// // exclude the LogRecord entity
+    /// MyNHContext.TypeFilter = (type) => type.Name != "LogRecord";
+    /// </example><example>
+    /// // exclude certain entities, and all Audit* entities
+    /// var excluded = new string[] { "Comment", "LogRecord", "UserPermission" };
+    /// MyNHContext.TypeFilter = (type) =>
+    /// {
+    ///   if (excluded.Contains(type.Name)) return false;
+    ///   if (type.Name.StartsWith("Audit")) return false;
+    ///   return true;
+    /// };
+    /// </example>
+    public Func<Type, bool> TypeFilter { get; set; }
 
     protected override string BuildJsonMetadata() {
       var meta = GetMetadata();
@@ -155,8 +185,8 @@ namespace Breeze.ContextProvider.NH {
               if (!_factoryMetadata.TryGetValue(session.SessionFactory, out _metadata)) {
                   //var builder = new NHBreezeMetadata(session.SessionFactory, configuration);
                   var builder = new NHMetadataBuilder(session.SessionFactory);
-                  _metadata = builder.BuildMetadata();
-                  _factoryMetadata.Add(session.SessionFactory, _metadata);
+                  _metadata = builder.BuildMetadata(TypeFilter);
+                  //_factoryMetadata.Add(session.SessionFactory, _metadata);
               }
           }
       }

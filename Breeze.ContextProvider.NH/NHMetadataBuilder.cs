@@ -41,12 +41,38 @@ namespace Breeze.ContextProvider.NH
         /// <returns></returns>
         public IDictionary<string, object> BuildMetadata()
         {
-            InitMap();
+            return BuildMetadata((Func<Type, bool>) null);
+        }
 
+        /// <summary>
+        /// Build the Breeze metadata as a nested Dictionary.  
+        /// The result can be converted to JSON and sent to the Breeze client.
+        /// </summary>
+        /// <param name="includeFilter">Function that returns true if a Type should be included in metadata, false otherwise</param>
+        /// <returns></returns>
+        public IDictionary<string, object> BuildMetadata(Func<Type, bool> includeFilter)
+        {
             // retrieves all mappings with the name property set on the class  (mapping with existing type, no duck typing)
             IDictionary<string, IClassMetadata> classMeta = _sessionFactory.GetAllClassMetadata().Where(p => ((IEntityPersister)p.Value).EntityMetamodel.Type != null).ToDictionary(p => p.Key, p => p.Value);
 
-            foreach (var meta in classMeta.Values)
+            if (includeFilter != null)
+            {
+                classMeta = classMeta.Where(p => includeFilter(((IEntityPersister)p.Value).EntityMetamodel.Type)).ToDictionary(p => p.Key, p => p.Value);
+            }
+            return BuildMetadata(classMeta.Values);
+        }
+
+        /// <summary>
+        /// Build the Breeze metadata as a nested Dictionary.  
+        /// The result can be converted to JSON and sent to the Breeze client.
+        /// </summary>
+        /// <param name="classMeta">Entity metadata types to include in the metadata</param>
+        /// <returns></returns>
+        public IDictionary<string, object> BuildMetadata(IEnumerable<IClassMetadata> classMeta)
+        {
+            InitMap();
+
+            foreach (var meta in classMeta)
             {
                 AddClass(meta);
             }
