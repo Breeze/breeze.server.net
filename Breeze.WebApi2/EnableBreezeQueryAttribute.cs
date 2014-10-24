@@ -101,6 +101,8 @@ namespace Breeze.WebApi2
             return;
           }
           var queryResult = responseObject as IQueryable;
+          if (queryResult == null && responseObject is IEnumerable) 
+              queryResult = (responseObject as IEnumerable).AsQueryable();
           queryHelper.WrapResult(request, response, queryResult);
         }
         // For non-IEnumerable results, post-processing must be done manually by the developer.

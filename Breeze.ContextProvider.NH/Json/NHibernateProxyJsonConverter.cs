@@ -22,7 +22,21 @@ namespace Breeze.ContextProvider.NH
                     value = proxy.HibernateLazyInitializer.GetImplementation();
                 }
 
-                serializer.Serialize(writer, value);
+                var resolver = serializer.ReferenceResolver;
+                if (resolver.IsReferenced(serializer, value))
+                {
+                    // we've already written the object once; this time, just write the reference
+                    // We have to do this manually because we have our own JsonConverter.
+                    var valueRef = resolver.GetReference(serializer, value);
+                    writer.WriteStartObject();
+                    writer.WritePropertyName("$ref");
+                    writer.WriteValue(valueRef);
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    serializer.Serialize(writer, value);
+                }
             }
             else
             {

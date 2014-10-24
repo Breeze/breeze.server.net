@@ -406,10 +406,14 @@ namespace Breeze.ContextProvider.NH
             var sqlTypes = type.SqlTypes((ISessionFactoryImplementor)this._sessionFactory);
             var sqlType = sqlTypes[0];
 
-            //if (col != null && col.DefaultValue != null)
-            //{
-            //    dmap.Add("defaultValue", col.DefaultValue);
+            // This doesn't work; NH does not pick up the default values from the property/column definition
+            //if (type is PrimitiveType && !(type is DateTimeOffsetType))
+            //{ 
+            //    var def = ((PrimitiveType)type).DefaultValue;
+            //    if (def != null && def.ToString() != "0")
+            //        dmap.Add("defaultValue", def);
             //}
+
             if (isKey)
             {
                 dmap.Add("isPartOfKey", true);
