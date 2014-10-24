@@ -63,7 +63,6 @@ gulp.task("copyDlls", ['breezeServerBuild'], function() {
 gulp.task('breezeServerBuild', function(done) {
   var solutionFileName = '../Breeze.Build.sln';
   msBuildSolution(solutionFileName, done);
-
 });
 
 gulp.task('nugetClean', function() {
@@ -74,14 +73,11 @@ gulp.task('nugetClean', function() {
 });
 
 gulp.task('nugetPack', ['copyBreezeJs', 'copyDlls', 'nugetClean'], function(done) {
-  glob(_nugetDir + '**/Default.nuspec', null, function (err, files) {
-    if (err) { gutil.log(err); throw err; }
-    gutil.log('Packing nugets...');
-
-    async.each(files, function (fileName, cb) {
-      packNuget(fileName, cb);
-    }, done);
-  });
+  gutil.log('Packing nugets...');
+  var fileNames = glob.sync(_nugetDir + '**/Default.nuspec');
+  async.each(fileNames, function (fileName, cb) {
+    packNuget(fileName, cb);
+  }, done);
 });
 
 gulp.task('nugetTestDeploy', ['nugetPack'], function() {
