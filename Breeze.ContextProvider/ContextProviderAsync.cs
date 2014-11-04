@@ -73,7 +73,7 @@ namespace Breeze.ContextProvider {
 	  {
 
 		  await OpenDbConnectionAsync();    // ensure connection is available for BeforeSaveEntities
-		  saveWorkState.BeforeSave();
+		  await saveWorkState.BeforeSaveAsync();
 		  await SaveChangesCoreAsync(saveWorkState);
 		  saveWorkState.AfterSave();
 	  }
