@@ -41,11 +41,38 @@ namespace Breeze.ContextProvider.NH
         /// <returns></returns>
         public IDictionary<string, object> BuildMetadata()
         {
+            return BuildMetadata((Func<Type, bool>) null);
+        }
+
+        /// <summary>
+        /// Build the Breeze metadata as a nested Dictionary.  
+        /// The result can be converted to JSON and sent to the Breeze client.
+        /// </summary>
+        /// <param name="includeFilter">Function that returns true if a Type should be included in metadata, false otherwise</param>
+        /// <returns></returns>
+        public IDictionary<string, object> BuildMetadata(Func<Type, bool> includeFilter)
+        {
+            // retrieves all mappings with the name property set on the class  (mapping with existing type, no duck typing)
+            IDictionary<string, IClassMetadata> classMeta = _sessionFactory.GetAllClassMetadata().Where(p => ((IEntityPersister)p.Value).EntityMetamodel.Type != null).ToDictionary(p => p.Key, p => p.Value);
+
+            if (includeFilter != null)
+            {
+                classMeta = classMeta.Where(p => includeFilter(((IEntityPersister)p.Value).EntityMetamodel.Type)).ToDictionary(p => p.Key, p => p.Value);
+            }
+            return BuildMetadata(classMeta.Values);
+        }
+
+        /// <summary>
+        /// Build the Breeze metadata as a nested Dictionary.  
+        /// The result can be converted to JSON and sent to the Breeze client.
+        /// </summary>
+        /// <param name="classMeta">Entity metadata types to include in the metadata</param>
+        /// <returns></returns>
+        public IDictionary<string, object> BuildMetadata(IEnumerable<IClassMetadata> classMeta)
+        {
             InitMap();
 
-            IDictionary<string, IClassMetadata> classMeta = _sessionFactory.GetAllClassMetadata();
-
-            foreach (var meta in classMeta.Values)
+            foreach (var meta in classMeta)
             {
                 AddClass(meta);
             }
@@ -379,10 +406,14 @@ namespace Breeze.ContextProvider.NH
             var sqlTypes = type.SqlTypes((ISessionFactoryImplementor)this._sessionFactory);
             var sqlType = sqlTypes[0];
 
-            //if (col != null && col.DefaultValue != null)
-            //{
-            //    dmap.Add("defaultValue", col.DefaultValue);
+            // This doesn't work; NH does not pick up the default values from the property/column definition
+            //if (type is PrimitiveType && !(type is DateTimeOffsetType))
+            //{ 
+            //    var def = ((PrimitiveType)type).DefaultValue;
+            //    if (def != null && def.ToString() != "0")
+            //        dmap.Add("defaultValue", def);
             //}
+
             if (isKey)
             {
                 dmap.Add("isPartOfKey", true);

@@ -17,7 +17,7 @@
         <releaseNotes>Please review the BreezeJS release notes at http://www.breezejs.com/documentation/download</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
 		<dependencies>
-			<dependency id="NewtonSoft.Json" version="[4.5.11,]"/>
+			<dependency id="NewtonSoft.Json" version="[6.0.4,]"/>
 		</dependencies>
     </metadata>
     <files>

@@ -25,5 +25,21 @@ namespace Models.NorthwindIB.NH
         public virtual Nullable<int> RowVersion { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
+
+        // Unmapped properties.  These are unknown to the metadata, but still are serialized.
+        public virtual string ExtraString
+        {
+            get { return _extraString; }
+            set { _extraString = value; }
+        }
+
+        public virtual double ExtraDouble
+        {
+            get { return _extraDouble; }
+            set { _extraDouble = value; }
+        }
+
+        private string _extraString = "fromServer";
+        private double _extraDouble = 3.14159;
     }
 }

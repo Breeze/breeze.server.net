@@ -46,7 +46,8 @@ namespace Breeze.ContextProvider.NH
         {
             InitMap();
 
-            IDictionary<string, IClassMetadata> classMeta = _sessionFactory.GetAllClassMetadata();
+            // retrieves all mappings with the name property set on the class  (mapping with existing type, no duck typing)
+            IDictionary<string, IClassMetadata> classMeta = _sessionFactory.GetAllClassMetadata().Where(p => ((IEntityPersister)p.Value).EntityMetamodel.Type != null).ToDictionary(p => p.Key, p => p.Value);
             //IDictionary<string, ICollectionMetadata> collectionMeta = _sessionFactory.GetAllCollectionMetadata();
 
             foreach (var meta in classMeta.Values)

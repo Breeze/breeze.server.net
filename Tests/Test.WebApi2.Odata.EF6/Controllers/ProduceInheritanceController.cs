@@ -11,7 +11,7 @@ namespace Test.WebApi2.OData.Controllers {
   public abstract class BaseProduceController<T> : ODataController where T : class {
     internal readonly ProduceTPHContext _context = new ProduceTPHContext();
 
-    [Queryable]
+    [EnableQuery]
     public virtual IQueryable<T> Get() {
       return _context.Set<T>();
     }

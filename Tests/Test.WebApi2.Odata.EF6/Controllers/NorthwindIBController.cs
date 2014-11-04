@@ -138,7 +138,7 @@ namespace Test.WebApi2.OData.Controllers {
       }
     }
 
-    [Queryable]
+    [EnableQuery]
     public virtual IQueryable<TEntity> Get() {
       return _context.Set<TEntity>();
     }
@@ -174,7 +174,7 @@ namespace Test.WebApi2.OData.Controllers {
 
   public class OrdersController : BaseController1<Order, Int32> {
 
-    [Queryable(MaxExpansionDepth = 5)]
+    [EnableQuery(MaxExpansionDepth = 5)]
     public override IQueryable<Order> Get() {
       return base.Get();
     }
@@ -494,7 +494,7 @@ namespace Test.WebApi2.OData.Controllers {
 ////#if NHIBERNATE
 ////    [BreezeNHQueryable(MaxAnyAllExpressionDepth = 3)]
 ////#else
-////    [BreezeQueryable(MaxAnyAllExpressionDepth = 3)]
+////    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
 ////#endif
 //    public IQueryable<Customer> Customers() {
 //      var custs = _context.Customers;
@@ -536,7 +536,7 @@ namespace Test.WebApi2.OData.Controllers {
 ////#if NHIBERNATE
 ////    [BreezeNHQueryable(MaxExpansionDepth = 3)]
 ////#else
-////    [BreezeQueryable(MaxExpansionDepth = 3)]
+////    [EnableBreezeQuery(MaxExpansionDepth = 3)]
 ////#endif
 //    public IQueryable<Order> Orders() {
 //      var orders = _context.Orders;
@@ -549,7 +549,7 @@ namespace Test.WebApi2.OData.Controllers {
 //    }
 
 //    [HttpGet]
-//    //[BreezeQueryable]
+//    //[EnableBreezeQuery]
 //    public IEnumerable<Employee> EnumerableEmployees() {
 //      return _context.Employees.ToList();
 //    }
@@ -845,7 +845,7 @@ namespace Test.WebApi2.OData.Controllers {
 ////#if NHIBERNATE
 ////    [BreezeNHQueryable]
 ////#else
-////    [BreezeQueryable]
+////    [EnableBreezeQuery]
 ////#endif
 //    public HttpResponseMessage CustomersAsHRM() {
 //      var customers = _context.Customers.Cast<Customer>();

@@ -19,6 +19,9 @@
     
     <!-- load 3rd party libs -->
     <script src="vendor/qunit-1.11.0.js"></script> 
+    <script src="vendor/sinon.js"></script>
+    <!-- DO NOT USE sinon-qunit. Breaks our tests for some reason. Don't need anyway-->
+    <!--<script src="vendor/sinon-qunit.js"></script>-->
     <script src="vendor/q.min.js"></script>
     <script src="vendor/knockout-2.3.0.debug.js"></script>
     <script src="vendor/underscore.js"></script>
@@ -36,6 +39,7 @@
         breezeTestFns.setDataService("OData", "WCF");
     </script>
        
+    <script src="tests/ajaxAdapterTests.js"></script>
     <script src="tests/attachTests.js"></script> 
     <script src="tests/classRewriteTests.js"></script> 
     <script src="tests/complexTypeTests.js"></script> 
