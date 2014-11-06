@@ -55,7 +55,7 @@ namespace Breeze.ContextProvider.NH
             var propInfo = type.GetProperty(propName);
             if (propInfo == null)
             {
-                throw new ArgumentException("Property " + propName + " not found on type " + type.Name);
+                throw new ArgumentException("Cannot expand property " + propName + " on type " + type.Name);
             }
             var methInfo = propInfo.GetGetMethod();
             var child = methInfo.Invoke(parent, null);

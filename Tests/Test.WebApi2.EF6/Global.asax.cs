@@ -31,6 +31,12 @@ namespace Sample_WebApi2 {
            name: "SampleApi",
            routeTemplate: "breeze/{controller}/{action}"
       );
+
+      routes.MapHttpRoute(
+          name: "config",
+          routeTemplate: "api/testconfig",
+          defaults: new { controller = "testconfig" }
+      );
     }
   }
 

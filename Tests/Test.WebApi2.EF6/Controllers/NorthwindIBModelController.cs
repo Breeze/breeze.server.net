@@ -51,18 +51,23 @@ namespace Sample_WebApi2.Controllers {
 
 #if CODEFIRST_PROVIDER
   public class NorthwindContextProvider: EFContextProvider<NorthwindIBContext_CF>  {
+    public const string CONFIG_VERSION = "CODEFIRST_PROVIDER";
     public NorthwindContextProvider() : base() { }
 #elif DATABASEFIRST_OLD
   public class NorthwindContextProvider: EFContextProvider<NorthwindIBContext_EDMX>  {
+    public const string CONFIG_VERSION = "DATABASEFIRST_OLD";
     public NorthwindContextProvider() : base() { }
 #elif DATABASEFIRST_NEW
   public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_EDMX_2012> {
+    public const string CONFIG_VERSION = "DATABASEFIRST_NEW";
     public NorthwindContextProvider() : base() { }
 #elif ORACLE_EDMX
   public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_EDMX_Oracle> {
+    public const string CONFIG_VERSION = "ORACLE_EDMX";
     public NorthwindContextProvider() : base() { }
 #elif NHIBERNATE
   public class NorthwindContextProvider : NorthwindNHContext {
+    public const string CONFIG_VERSION = "NHIBERNATE";
 #endif
 
     protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {

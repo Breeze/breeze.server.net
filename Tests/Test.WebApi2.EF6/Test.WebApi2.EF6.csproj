@@ -133,6 +133,7 @@
     <Compile Include="Controllers\NonEFModels.cs" />
     <Compile Include="Controllers\NonEFModelController.cs" />
     <Compile Include="Controllers\NorthwindIBModelController.cs" />
+    <Compile Include="Controllers\TestConfigController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
