@@ -292,6 +292,7 @@ namespace Breeze.ContextProvider.NH {
       }
 
       if (state == EntityState.Modified) {
+        CheckForKeyUpdate(entityInfo, classMeta);
         session.Update(entity);
       } else if (state == EntityState.Added) {
         session.Save(entity);
@@ -300,6 +301,21 @@ namespace Breeze.ContextProvider.NH {
       } else {
         // Ignore EntityState.Unchanged.  Too many problems using session.Lock or session.Merge
         //session.Lock(entity, LockMode.None);
+      }
+    }
+
+    protected void CheckForKeyUpdate(EntityInfo entityInfo, IClassMetadata classMeta) {
+      if (classMeta.HasIdentifierProperty && entityInfo.OriginalValuesMap != null
+        && entityInfo.OriginalValuesMap.ContainsKey(classMeta.IdentifierPropertyName)) {
+        var errors = new EntityError[1] {
+            new EntityError() {
+              EntityTypeName = entityInfo.Entity.GetType().FullName,
+              ErrorMessage = "Cannot update part of the entity's key",
+              ErrorName = "KeyUpdateException",
+              KeyValues = GetIdentifierAsArray(entityInfo.Entity, classMeta),
+              PropertyName = classMeta.IdentifierPropertyName
+            }};
+        throw new EntityErrorsException("Cannot update part of the entity's key", errors);
       }
     }
 
