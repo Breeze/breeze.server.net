@@ -15,7 +15,7 @@ namespace Breeze.ContextProvider.NH {
   public class NHContext : Breeze.ContextProvider.ContextProvider, IDisposable {
     private ISession session;
     //protected Configuration configuration;
-    private static Dictionary<ISessionFactory, IDictionary<string, object>> _factoryMetadata = new Dictionary<ISessionFactory, IDictionary<string, object>>();
+    private static Dictionary<ISessionFactory, Metadata> _factoryMetadata = new Dictionary<ISessionFactory, Metadata>();
     private static object _metadataLock = new object();
 
     /// <summary>
@@ -179,14 +179,14 @@ namespace Breeze.ContextProvider.NH {
       return json;
     }
 
-    protected IDictionary<string, object> GetMetadata() {
+    protected Metadata GetMetadata() {
       if (_metadata == null) {
           lock (_metadataLock) {
               if (!_factoryMetadata.TryGetValue(session.SessionFactory, out _metadata)) {
                   //var builder = new NHBreezeMetadata(session.SessionFactory, configuration);
                   var builder = new NHMetadataBuilder(session.SessionFactory);
                   _metadata = builder.BuildMetadata(TypeFilter);
-                  //_factoryMetadata.Add(session.SessionFactory, _metadata);
+                  _factoryMetadata.Add(session.SessionFactory, _metadata);
               }
           }
       }
@@ -198,7 +198,7 @@ namespace Breeze.ContextProvider.NH {
 
     private Dictionary<EntityInfo, KeyMapping> EntityKeyMapping = new Dictionary<EntityInfo, KeyMapping>();
     private List<EntityError> entityErrors = new List<EntityError>();
-    private IDictionary<string, object> _metadata;
+    private Metadata _metadata;
 
     /// <summary>
     /// Persist the changes to the entities in the saveMap.
@@ -257,7 +257,7 @@ namespace Breeze.ContextProvider.NH {
     /// <returns></returns>
     protected NHRelationshipFixer GetRelationshipFixer(Dictionary<Type, List<EntityInfo>> saveMap) {
         // Get the map of foreign key relationships from the metadata
-        var fkMap = (IDictionary<string, string>)GetMetadata()[NHMetadataBuilder.FK_MAP];
+        var fkMap = GetMetadata().ForeignKeyMap;
         return new NHRelationshipFixer(saveMap, fkMap, session);
     }
 

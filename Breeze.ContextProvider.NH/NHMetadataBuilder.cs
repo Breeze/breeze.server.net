@@ -20,14 +20,11 @@ namespace Breeze.ContextProvider.NH
     public class NHMetadataBuilder
     {
         private ISessionFactory _sessionFactory;
-        private Dictionary<string, object> _map;
+        private Metadata _map;
         private List<Dictionary<string, object>> _typeList;
         private Dictionary<string, object> _resourceMap;
         private HashSet<string> _typeNames;
-        private Dictionary<string, string> _fkMap;
         private List<Dictionary<string, object>> _enumList;
-
-        public static readonly string FK_MAP = "fkMap";
 
         public NHMetadataBuilder(ISessionFactory sessionFactory)
         {
@@ -39,7 +36,7 @@ namespace Breeze.ContextProvider.NH
         /// The result can be converted to JSON and sent to the Breeze client.
         /// </summary>
         /// <returns></returns>
-        public IDictionary<string, object> BuildMetadata()
+        public Metadata BuildMetadata()
         {
             return BuildMetadata((Func<Type, bool>) null);
         }
@@ -50,7 +47,7 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         /// <param name="includeFilter">Function that returns true if a Type should be included in metadata, false otherwise</param>
         /// <returns></returns>
-        public IDictionary<string, object> BuildMetadata(Func<Type, bool> includeFilter)
+        public Metadata BuildMetadata(Func<Type, bool> includeFilter)
         {
             // retrieves all mappings with the name property set on the class  (mapping with existing type, no duck typing)
             IDictionary<string, IClassMetadata> classMeta = _sessionFactory.GetAllClassMetadata().Where(p => ((IEntityPersister)p.Value).EntityMetamodel.Type != null).ToDictionary(p => p.Key, p => p.Value);
@@ -68,7 +65,7 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         /// <param name="classMeta">Entity metadata types to include in the metadata</param>
         /// <returns></returns>
-        public IDictionary<string, object> BuildMetadata(IEnumerable<IClassMetadata> classMeta)
+        public Metadata BuildMetadata(IEnumerable<IClassMetadata> classMeta)
         {
             InitMap();
 
@@ -84,16 +81,15 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         void InitMap()
         {
-            _map = new Dictionary<string, object>();
+            _map = new Metadata();
             _typeList = new List<Dictionary<string, object>>();
             _typeNames = new HashSet<string>();
             _resourceMap = new Dictionary<string, object>();
-            _fkMap = new Dictionary<string, string>();
+            _map.ForeignKeyMap = new Dictionary<string, string>();
             _enumList = new List<Dictionary<string, object>>();
             _map.Add("localQueryComparisonOptions", "caseInsensitiveSQL");
             _map.Add("structuralTypes", _typeList);
             _map.Add("resourceEntityTypeMap", _resourceMap);
-            _map.Add(FK_MAP, _fkMap);
             _map.Add("enumTypes", _enumList);
         }
 
@@ -517,7 +513,7 @@ namespace Breeze.ContextProvider.NH
                 var entityRelationship = containingType.FullName + '.' + propName;
                 if (relatedDataProperty != null)
                 {
-                    _fkMap.Add(entityRelationship, fkName);
+                    _map.ForeignKeyMap.Add(entityRelationship, fkName);
                     if (isKey)
                     {
                         if (!relatedDataProperty.ContainsKey("isPartOfKey"))
@@ -530,7 +526,7 @@ namespace Breeze.ContextProvider.NH
                 {
                     nmap.Add("foreignKeyNamesOnServer", columnNames);
                     nmap.Add("ERROR", "Could not find matching fk for property " + entityRelationship);
-                    _fkMap.Add(entityRelationship, columnNames);
+                    _map.ForeignKeyMap.Add(entityRelationship, columnNames);
                     throw new ArgumentException("Could not find matching fk for property " + entityRelationship);
                 }
             }
@@ -710,5 +706,15 @@ namespace Breeze.ContextProvider.NH
 
     }
 
-
+    /// <summary>
+    /// Metadata describing the entity model.  Converted to JSON to send to Breeze client.
+    /// </summary>
+    public class Metadata : Dictionary<string, object>
+    {
+        /// <summary>
+        /// Map of relationship name -> foreign key name, e.g. "Customer" -> "CustomerID".
+        /// Used for re-establishing the entity relationships from the foreign key values during save.
+        /// </summary>
+        public IDictionary<string, string> ForeignKeyMap;
+    }
 }
