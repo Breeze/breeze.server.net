@@ -191,6 +191,10 @@
       <Link>tests\miscTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\internal\northwindIBMetadata.js">
+      <Link>tests\northwindIBMetadata.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\notrackingTests.js">
       <Link>tests\notrackingTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -285,6 +289,10 @@
       <Link>vendor\backbone.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\vendor\changesets.js">
+      <Link>vendor\changesets.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\vendor\jquery-2.0.3.js">
       <Link>vendor\jquery-2.0.3.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -303,6 +311,10 @@
     </Content>
     <Content Include="..\..\..\breeze.js\test\vendor\knockout-2.3.0.debug.js">
       <Link>vendor\knockout-2.3.0.debug.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\breeze.js\test\vendor\lodash.js">
+      <Link>vendor\lodash.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\breeze.js\test\vendor\modernizr-2.0.6-development-only.js">
