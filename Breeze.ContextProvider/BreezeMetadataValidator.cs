@@ -124,7 +124,7 @@ namespace Breeze.ContextProvider {
       object validators;
       if (data.TryGetValue("validators", out validators)) {
         dp.validators = new List<Validator>();
-        var validatorData = (List<Dictionary<string, string>>)validators;
+        var validatorData = (List<Dictionary<string, object>>)validators;
         foreach (var vd in validatorData) {
           dp.validators.Add(BuildValidator(vd));
         }
@@ -132,13 +132,13 @@ namespace Breeze.ContextProvider {
       return dp;
     }
 
-    private Validator BuildValidator(Dictionary<string, string> data) {
+    private Validator BuildValidator(Dictionary<string, object> data) {
       var name = data["name"];
       Validator v;
       if (name == "required") v = new RequiredValidator();
       else if (name == "maxLength") v = new MaxLengthValidator();
       else v = new Validator();
-      v.name = name;
+      v.name = name.ToString();
       if (data.Count > 1) {
         v.properties = data;
       }
@@ -161,7 +161,7 @@ namespace Breeze.ContextProvider {
 
     internal class Validator {
       internal string name;
-      internal Dictionary<string, string> properties;
+      internal Dictionary<string, object> properties;
       internal virtual string Validate(object value) {
         return null;
       }

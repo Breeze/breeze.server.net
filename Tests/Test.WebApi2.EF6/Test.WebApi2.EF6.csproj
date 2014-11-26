@@ -359,6 +359,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\metadata.codefirst_provider.json" />
+    <Content Include="App_Data\metadata.databasefirst_new.json" />
     <None Include="App_Data\metadata.json" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -372,6 +374,8 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="App_Data\metadata.nhibernate.json" />
+    <Content Include="App_Data\metadata.oracle_edmx.json" />
     <None Include="App_Data\metadataTest.json" />
   </ItemGroup>
   <ItemGroup />
