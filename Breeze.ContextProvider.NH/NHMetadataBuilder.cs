@@ -419,11 +419,11 @@ namespace Breeze.ContextProvider.NH
                 dmap.Add("concurrencyMode", "Fixed");
             }
 
-            var validators = new List<Dictionary<string, string>>();
+            var validators = new List<Dictionary<string, object>>();
 
             if (!isNullable)
             {
-                validators.Add(new Dictionary<string, string>() {
+                validators.Add(new Dictionary<string, object>() {
                     {"name", "required" },
                 });
             }
@@ -431,8 +431,8 @@ namespace Breeze.ContextProvider.NH
             {
                 dmap.Add("maxLength", sqlType.Length);
 
-                validators.Add(new Dictionary<string, string>() {
-                    {"maxLength", sqlType.Length.ToString() },
+                validators.Add(new Dictionary<string, object>() {
+                    {"maxLength", sqlType.Length },
                     {"name", "maxLength" }
                 });
             }
@@ -440,7 +440,7 @@ namespace Breeze.ContextProvider.NH
             string validationType;
             if (ValidationTypeMap.TryGetValue(typeName, out validationType))
             {
-                validators.Add(new Dictionary<string, string>() {
+                validators.Add(new Dictionary<string, object>() {
                     {"name", validationType },
                 });
             }
