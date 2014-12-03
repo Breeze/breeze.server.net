@@ -191,10 +191,6 @@
       <Link>tests\miscTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\northwindIBMetadata.js">
-      <Link>tests\northwindIBMetadata.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\notrackingTests.js">
       <Link>tests\notrackingTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -365,6 +361,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Index.html" />
+    <Content Include="TestApp\TestApp.html" />
+    <Content Include="TestApp\dataservice.js" />
+    <Content Include="TestApp\viewModel.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

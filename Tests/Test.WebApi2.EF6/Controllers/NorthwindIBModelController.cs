@@ -937,6 +937,37 @@ namespace Sample_WebApi2.Controllers {
       return response;
     }
 
+    [HttpGet]
+    public IQueryable<OrderDetail> OrderDetailsMultiple(int multiple, string expands)
+    {
+        var query = ContextProvider.Context.OrderDetails.OfType<OrderDetail>();
+        if (!string.IsNullOrWhiteSpace(expands)) {
+            var segs = expands.Split(',').ToList();
+            segs.ForEach(s => {
+                query = ((System.Data.Entity.Infrastructure.DbQuery<OrderDetail>) query).Include(s);
+            });
+        }
+        var orig = query.ToList();
+        var list = new List<OrderDetail>(orig.Count * multiple);
+        for (var i = 0; i < multiple; i++)
+        {
+            orig.ForEach(od =>
+            {
+                var clone = new OrderDetail();
+                clone.Order = od.Order;
+                clone.OrderID = od.OrderID;
+                clone.Product = od.Product;
+                clone.ProductID = od.ProductID;
+                clone.RowVersion = od.RowVersion;
+                clone.UnitPrice = od.UnitPrice;
+                clone.Quantity = (short)multiple;
+                clone.Discount = i;
+                list.Add(clone);
+            });
+        }
+        return list.AsQueryable();
+    }
+
     #endregion
   }
 
