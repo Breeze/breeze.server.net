@@ -951,19 +951,41 @@ namespace Sample_WebApi2.Controllers {
         var list = new List<OrderDetail>(orig.Count * multiple);
         for (var i = 0; i < multiple; i++)
         {
-            orig.ForEach(od =>
+            for (var j = 0; j < orig.Count; j++)
             {
+                var od = orig[j];
+                var newProductID = i * j + 1;
                 var clone = new OrderDetail();
                 clone.Order = od.Order;
                 clone.OrderID = od.OrderID;
-                clone.Product = od.Product;
-                clone.ProductID = od.ProductID;
                 clone.RowVersion = od.RowVersion;
                 clone.UnitPrice = od.UnitPrice;
                 clone.Quantity = (short)multiple;
                 clone.Discount = i;
+                clone.ProductID = newProductID;
+
+                if (od.Product != null) {
+                    var p = new Product();
+                    var op = od.Product;
+                    p.ProductID = newProductID;
+                    p.Category = op.Category;
+                    p.CategoryID = op.CategoryID;
+                    p.Discontinued = op.Discontinued;
+                    p.DiscontinuedDate = op.DiscontinuedDate;
+                    p.ProductName = op.ProductName;
+                    p.QuantityPerUnit = op.QuantityPerUnit;
+                    p.ReorderLevel = op.ReorderLevel;
+                    p.RowVersion = op.RowVersion;
+                    p.Supplier = op.Supplier;
+                    p.SupplierID = op.SupplierID;
+                    p.UnitPrice = op.UnitPrice;
+                    p.UnitsInStock = op.UnitsInStock;
+                    p.UnitsOnOrder = op.UnitsOnOrder;
+                    clone.Product = p;
+                }
+
                 list.Add(clone);
-            });
+            }
         }
         return list.AsQueryable();
     }

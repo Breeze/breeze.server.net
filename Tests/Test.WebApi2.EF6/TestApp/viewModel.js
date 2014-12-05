@@ -12,6 +12,8 @@ testApp.viewModel = (function (dataservice) {
     dataservice.queryOrderDetails(multiple, expands).then(function (data) {
       var count = data.retrievedEntities.length;
       document.getElementById("entityCount").value = count;
+    }).fail(function (err) {
+      console.error(err);
     });
   }
 
