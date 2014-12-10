@@ -954,7 +954,7 @@ namespace Sample_WebApi2.Controllers {
             for (var j = 0; j < orig.Count; j++)
             {
                 var od = orig[j];
-                var newProductID = i * j + 1;
+                
                 var clone = new OrderDetail();
                 clone.Order = od.Order;
                 clone.OrderID = od.OrderID;
@@ -962,9 +962,10 @@ namespace Sample_WebApi2.Controllers {
                 clone.UnitPrice = od.UnitPrice;
                 clone.Quantity = (short)multiple;
                 clone.Discount = i;
-                clone.ProductID = newProductID;
-
+                
                 if (od.Product != null) {
+                  var newProductID = od.ProductID + (100 * (i+1) * od.OrderID);
+                    clone.ProductID = newProductID;
                     var p = new Product();
                     var op = od.Product;
                     p.ProductID = newProductID;

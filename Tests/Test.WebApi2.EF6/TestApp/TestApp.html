@@ -19,19 +19,17 @@
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
     <div id="test-dev"></div>
-    <div>
-        Multiple (cloned OrderDetails): <input type="text" name="multiple" id="multiple" value="10" />
-    </div>
-    <div>
-        Expands (comma-separated list): <input type="text" name="expands" id="expands" size="50" value="Product,Order,Order.Customer" />
-    </div>
-
+    <div>  Iterations:  <input type="text" name="iterations" id="iterations" value="1" /> </div>
+    <div>  Multiple of orderDetails/order (cloned OrderDetails) : <input type="text" name="multiple" id="multiple" value="1" />   </div>
+    <div>  Expands (comma-separated list): <input type="text" name="expands" id="expands" size="50" value="Product,Order,Order.Customer" />  </div>
+    <div> ------------  </div>
     <button onclick="testApp.viewModel.loadOrderDetails()">Load OrderDetails</button>
-
-    <div>
-        Entities Loaded: <input type="text" name="entityCount" id="entityCount" value="" disabled="disabled" />
-    </div>
-
+    <button onclick="testApp.viewModel.clearEm()">Clear EntityManager</button>
+    <div> -------------- </div>
+    <div>Entities loaded   : <input type="text" name="entityCount" id="entityCount" value="" disabled="disabled" /></div>
+    <div>Entities in cache: <input type="text" name="entitiesInCache" id="entitiesInCache" value="" disabled="disabled" /></div>
+    <div> ------------- </div>
+    <div>Status: <span id="status" ></span> </div>
 
     <!-- load 3rd party libs -->
     <script src="../vendor/qunit-1.11.0.js"></script>

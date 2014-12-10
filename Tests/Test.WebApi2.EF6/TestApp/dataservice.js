@@ -5,7 +5,9 @@ testApp.dataservice = (function (breeze, testFns) {
   QUnit.config.testTimeout = 300000; // 5 minutes
 
   return {
-    queryOrderDetails: queryOrderDetails
+    queryOrderDetails: queryOrderDetails,
+    getEmEntityCount: getEmEntityCount,
+    clearEm: clearEm
   };
 
   function queryOrderDetails(multiple, expands) {
@@ -13,6 +15,14 @@ testApp.dataservice = (function (breeze, testFns) {
         .withParameters({ multiple: multiple, expands: expands });
 
     return getEm().executeQuery(query);
+  }
+
+  function getEmEntityCount() {
+    return getEm().getEntities().length;
+  }
+
+  function clearEm() {
+    return getEm().clear();
   }
 
   function getEm() {
