@@ -8,6 +8,7 @@
     "glob": "^4.0.6",
     "gulp": "^3.8.8",
     "gulp-flatten": "0.0.4",
+    "gulp-task-listing": "^0.3.0",
     "gulp-util": "^3.0.1"
   }
 }

@@ -29,6 +29,11 @@ var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
 var _versionNum = getBreezeVersion();
 gutil.log('LocalAppData dir: ' + process.env.LOCALAPPDATA);
 
+/**
+ * List the available gulp tasks
+ */
+gulp.task('help', require('gulp-task-listing'));
+
 // copy production versions of the breeze.*.js files into the nuget breeze.client.
 gulp.task("copyBreezeJs", ['breezeClientBuild'], function() {
   return gulp.src( mapPath( _jsBuildDir, [ 'breeze.*.js' ]))
