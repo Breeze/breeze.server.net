@@ -125,6 +125,7 @@
     <Compile Include="Controllers\BreezeConfig.cs" />
     <Compile Include="Controllers\MetadataTestController.cs" />
     <Compile Include="Controllers\InheritanceController.cs" />
+    <Compile Include="Controllers\NorthwindIBDoNotSaveContext.cs" />
     <Compile Include="Controllers\NorthwindNHConfig.cs" />
     <Compile Include="Controllers\NorthwindNHContext.cs" />
     <Compile Include="Controllers\ProduceNHConfig.cs" />

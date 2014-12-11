@@ -92,7 +92,7 @@ namespace Sample_WebApi2.Controllers {
       base.AfterSaveEntities(saveMap, keyMappings);
     }
 
-    public Dictionary<Type, List<EntityInfo>> CreateSaveMapFromSaveBundle(JObject saveBundle) {
+    public Dictionary<Type, List<EntityInfo>> GetSaveMapFromSaveBundle(JObject saveBundle) {
       InitializeSaveState(saveBundle); // Sets initial EntityInfos
       SaveWorkState.BeforeSave();      // Creates the SaveMap as byproduct of BeforeSave logic
       return SaveWorkState.SaveMap;
@@ -357,7 +357,9 @@ namespace Sample_WebApi2.Controllers {
 
     [HttpPost]
     public SaveResult SaveWithExit(JObject saveBundle) {
-      var saveMap =  ContextProvider.CreateSaveMapFromSaveBundle(saveBundle); // set break to inspect
+      // set break points here to see how these two approaches give you a SaveMap w/o saving.
+      var saveMap =  ContextProvider.GetSaveMapFromSaveBundle(saveBundle);
+      saveMap = new NorthwindIBDoNotSaveContext().GetSaveMapFromSaveBundle(saveBundle);
       return new SaveResult() { Entities = new List<Object>(), KeyMappings = new List<KeyMapping>() };
     }
 
