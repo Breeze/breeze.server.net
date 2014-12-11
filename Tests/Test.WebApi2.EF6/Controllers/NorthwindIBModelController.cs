@@ -92,6 +92,12 @@ namespace Sample_WebApi2.Controllers {
       base.AfterSaveEntities(saveMap, keyMappings);
     }
 
+    public Dictionary<Type, List<EntityInfo>> CreateSaveMapFromSaveBundle(JObject saveBundle) {
+      InitializeSaveState(saveBundle); // Sets initial EntityInfos
+      SaveWorkState.BeforeSave();      // Creates the SaveMap as byproduct of BeforeSave logic
+      return SaveWorkState.SaveMap;
+    }
+
 #if (CODEFIRST_PROVIDER || DATABASEFIRST_NEW || DATABASEFIRST_OLD)
     /* hack to set the current DbTransaction onto the DbCommand.  Transaction comes from EF private properties. */
     public void SetCurrentTransaction(System.Data.Common.DbCommand command) {
@@ -348,9 +354,10 @@ namespace Sample_WebApi2.Controllers {
       ContextProvider.BeforeSaveEntitiesDelegate = AddComment;
       return ContextProvider.SaveChanges(saveBundle);
     }
-    
+
     [HttpPost]
     public SaveResult SaveWithExit(JObject saveBundle) {
+      var saveMap =  ContextProvider.CreateSaveMapFromSaveBundle(saveBundle); // set break to inspect
       return new SaveResult() { Entities = new List<Object>(), KeyMappings = new List<KeyMapping>() };
     }
 
@@ -954,7 +961,7 @@ namespace Sample_WebApi2.Controllers {
             for (var j = 0; j < orig.Count; j++)
             {
                 var od = orig[j];
-                
+                var newProductID = i * j + 1;
                 var clone = new OrderDetail();
                 clone.Order = od.Order;
                 clone.OrderID = od.OrderID;
@@ -962,10 +969,9 @@ namespace Sample_WebApi2.Controllers {
                 clone.UnitPrice = od.UnitPrice;
                 clone.Quantity = (short)multiple;
                 clone.Discount = i;
-                
+                clone.ProductID = newProductID;
+
                 if (od.Product != null) {
-                  var newProductID = od.ProductID + (100 * (i+1) * od.OrderID);
-                    clone.ProductID = newProductID;
                     var p = new Product();
                     var op = od.Product;
                     p.ProductID = newProductID;

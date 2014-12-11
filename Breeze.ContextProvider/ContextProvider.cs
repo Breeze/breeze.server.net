@@ -53,14 +53,20 @@ namespace Breeze.ContextProvider {
       return jsonText;
     }
 
-    public SaveResult SaveChanges(JObject saveBundle, TransactionSettings transactionSettings = null) {
+    protected void InitializeSaveState(JObject saveBundle)
+    {
       JsonSerializer = CreateJsonSerializer();
 
       var dynSaveBundle = (dynamic)saveBundle;
       var entitiesArray = (JArray)dynSaveBundle.entities;
       var dynSaveOptions = dynSaveBundle.saveOptions;
-      SaveOptions = (SaveOptions) JsonSerializer.Deserialize(new JTokenReader(dynSaveOptions), typeof(SaveOptions));
+      SaveOptions = (SaveOptions)JsonSerializer.Deserialize(new JTokenReader(dynSaveOptions), typeof(SaveOptions));
       SaveWorkState = new SaveWorkState(this, entitiesArray);
+    }
+
+    public SaveResult SaveChanges(JObject saveBundle, TransactionSettings transactionSettings = null) {
+
+      if (SaveWorkState == null) { InitializeSaveState(saveBundle); }
 
       transactionSettings = transactionSettings ?? BreezeConfig.Instance.GetTransactionSettings();
       try {
