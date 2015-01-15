@@ -665,10 +665,7 @@
                     "name": "territories",
                     "entityTypeName": "Territory:#Models.NorthwindIB.NH",
                     "isScalar": false,
-                    "associationName": "AN_Employee_Territory_EmployeeID",
-                    "invForeignKeyNames": [
-                        "territoryID"
-                    ]
+                    "associationName": "AN_Employee_Territory_EmployeeID"
                 },
                 {
                     "name": "orders",

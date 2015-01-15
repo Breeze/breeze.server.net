@@ -352,11 +352,19 @@ namespace Breeze.ContextProvider.NH
             {
                 // compound key
                 var compType = meta.IdentifierType as ComponentType;
-                var index = Array.IndexOf<string>(compType.PropertyNames, foreignKeyName);
-                if (index >= 0)
+                var idComp = meta.GetIdentifier(entity, EntityMode.Poco);
+                string joinedNames = string.Join(",", compType.PropertyNames);
+                if (joinedNames == foreignKeyName)
                 {
-                    var idComp = meta.GetIdentifier(entity, EntityMode.Poco);
-                    id = compType.GetPropertyValue(idComp, index, EntityMode.Poco);
+                    id = idComp;
+                } 
+                else
+                {
+                    var index = Array.IndexOf<string>(compType.PropertyNames, foreignKeyName);
+                    if (index >= 0)
+                    {
+                        id = compType.GetPropertyValue(idComp, index, EntityMode.Poco);
+                    }
                 }
             }
 

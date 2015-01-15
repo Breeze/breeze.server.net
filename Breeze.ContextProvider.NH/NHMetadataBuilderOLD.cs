@@ -17,7 +17,7 @@ namespace Breeze.ContextProvider.NH
     /// Builds a data structure containing the metadata required by Breeze.
     /// <see cref="http://www.breezejs.com/documentation/breeze-metadata-format"/>
     /// </summary>
-    public class NHMetadataBuilder2
+    public class NHMetadataBuilderOLD
     {
         private ISessionFactory _sessionFactory;
         private Metadata _map;
@@ -26,7 +26,7 @@ namespace Breeze.ContextProvider.NH
         private HashSet<string> _typeNames;
         private List<Dictionary<string, object>> _enumList;
 
-        public NHMetadataBuilder2(ISessionFactory sessionFactory)
+        public NHMetadataBuilderOLD(ISessionFactory sessionFactory)
         {
             _sessionFactory = sessionFactory;
         }
@@ -148,6 +148,9 @@ namespace Breeze.ContextProvider.NH
         /// <param name="navList">will be populated with the navigation properties of the entity</param>
         void AddClassProperties(IClassMetadata meta, List<Dictionary<string, object>> dataList, List<Dictionary<string, object>> navList)
         {
+            // maps column names to their related data properties.  Used in MakeAssociationProperty to convert FK column names to entity property names.
+            var relatedDataPropertyMap = new Dictionary<string, Dictionary<string, object>>();
+
             var persister = meta as AbstractEntityPersister;
             var metaModel = persister.EntityMetamodel;
             var type = metaModel.Type;
@@ -186,6 +189,14 @@ namespace Breeze.ContextProvider.NH
 
                         var dmap = MakeDataProperty(propName, propType, propNull[i], isKey, isVersion);
                         dataList.Add(dmap);
+
+                        var columnNameString = GetPropertyColumnNames(persister, propName, propType);
+                        if (relatedDataPropertyMap.ContainsKey(columnNameString))
+                        {
+                            throw new ArgumentException("Data property for column '" + columnNameString + "' is '"
+                                + relatedDataPropertyMap[columnNameString]["nameOnServer"] + "' and cannot also be '" + propName + "'");
+                        }
+                        relatedDataPropertyMap.Add(columnNameString, dmap);
                     }
                 }
 
@@ -215,6 +226,14 @@ namespace Breeze.ContextProvider.NH
             {
                 var dmap = MakeDataProperty(meta.IdentifierPropertyName, meta.IdentifierType, false, true, false);
                 dataList.Insert(0, dmap);
+
+                var columnNameString = GetPropertyColumnNames(persister, meta.IdentifierPropertyName, meta.IdentifierType);
+                if (relatedDataPropertyMap.ContainsKey(columnNameString))
+                {
+                    throw new ArgumentException("Data property for column '" + columnNameString + "' is '"
+                        + relatedDataPropertyMap[columnNameString]["nameOnServer"] + "' and cannot also be '" + meta.IdentifierPropertyName + "'");
+                }
+                relatedDataPropertyMap.Add(columnNameString, dmap);
             }
             else if (meta.IdentifierType != null && meta.IdentifierType.IsComponentType)
             {
@@ -239,7 +258,7 @@ namespace Breeze.ContextProvider.NH
                         {
                             var propColumnNames = GetPropertyColumnNames(persister, compName, propType);
 
-                            var assProp = MakeAssociationProperty(persister, (IAssociationType)propType, compName, propColumnNames, dataList, true);
+                            var assProp = MakeAssociationProperty(type, (IAssociationType)propType, compName, propColumnNames, relatedDataPropertyMap, true);
                             navList.Add(assProp);
                         }
                     }
@@ -257,11 +276,22 @@ namespace Breeze.ContextProvider.NH
                 {
                     // navigation property
                     var propColumnNames = GetPropertyColumnNames(persister, propName, propType);
-                    var assProp = MakeAssociationProperty(persister, (IAssociationType)propType, propName, propColumnNames, dataList, false);
+                    var assProp = MakeAssociationProperty(type, (IAssociationType)propType, propName, propColumnNames, relatedDataPropertyMap, false);
                     navList.Add(assProp);
                 }
             }
         }
+
+        /// <param name="type"></param>
+        /// <param name="propName"></param>
+        /// <returns>True if the type declares the given property, false otherwise.</returns>
+        //bool hasOwnProperty(Type type, string propName)
+        //{
+        //    // this doesn't work: return persister.GetSubclassPropertyDeclarer(propName) == Declarer.Class;
+        //    var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
+        //    var hasProperty = type.GetProperty(propName, flags) != null || type.GetField(propName, flags) != null;
+        //    return hasProperty;
+        //}
 
         /// <summary>
         /// Return names of all properties that are defined in the mapped ancestors of the 
@@ -426,14 +456,14 @@ namespace Breeze.ContextProvider.NH
         /// Make association property metadata for the entity.
         /// Also populates the _fkMap which is used for related-entity fixup in NHContext.FixupRelationships
         /// </summary>
-        /// <param name="containingPersister">Entity Persister containing the property</param>
+        /// <param name="containingType">Type containing the property</param>
         /// <param name="propType">Association property</param>
         /// <param name="propName">Name of the property</param>
         /// <param name="columnNames">Names of the columns for the property</param>
-        /// <param name="dataProperties">Data properties already collected for the containingType.  "isPartOfKey" may be added to a property.</param>
+        /// <param name="relatedDataPropertyMap"></param>
         /// <param name="isKey">Whether the property is part of the key</param>
         /// <returns></returns>
-        private Dictionary<string, object> MakeAssociationProperty(AbstractEntityPersister containingPersister, IAssociationType propType, string propName, string columnNames, List<Dictionary<string, object>> dataProperties, bool isKey)
+        private Dictionary<string, object> MakeAssociationProperty(Type containingType, IAssociationType propType, string propName, string columnNames, Dictionary<string, Dictionary<string, object>> relatedDataPropertyMap, bool isKey)
         {
             var nmap = new Dictionary<string, object>();
             nmap.Add("nameOnServer", propName);
@@ -443,24 +473,20 @@ namespace Breeze.ContextProvider.NH
             nmap.Add("isScalar", !propType.IsCollectionType);
 
             // the associationName must be the same at both ends of the association.
-            Type containingType = containingPersister.EntityMetamodel.Type;
             nmap.Add("associationName", GetAssociationName(containingType.Name, relatedEntityType.Name, columnNames));
 
-            string fkName = null;
-            var joinable = propType.GetAssociatedJoinable((ISessionFactoryImplementor)this._sessionFactory);
             if (propType.IsCollectionType)
             {
                 // inverse foreign key
-                var collectionPersister = joinable as AbstractCollectionPersister;
-                if (collectionPersister != null)
+                var joinable = propType.GetAssociatedJoinable((ISessionFactoryImplementor)this._sessionFactory) as AbstractCollectionPersister;
+                if (joinable != null)
                 {
                     // many-to-many relationships do not have a direct connection on the client or in metadata
-                    var elementPersister = collectionPersister.ElementPersister as AbstractEntityPersister;
+                    var elementPersister = joinable.ElementPersister as AbstractEntityPersister;
                     if (elementPersister != null)
                     {
-                        fkName = GetPropertyNameForColumn(elementPersister, columnNames);
-                        if (fkName != null)
-                            nmap.Add("invForeignKeyNamesOnServer", new string[] { fkName });
+                        var joinProp = GetPropertyNameForColumn(elementPersister, columnNames);
+                        nmap.Add("invForeignKeyNamesOnServer", new string[] { joinProp });
                     }
                 }
             }
@@ -468,9 +494,11 @@ namespace Breeze.ContextProvider.NH
             {
                 // Not a collection type - a many-to-one or one-to-one association
                 // Look up the related foreign key name using the column name
-                fkName = GetPropertyNameForColumn(containingPersister, columnNames);
-                if (fkName != null)
+                Dictionary<string, object> relatedDataProperty = null;
+                string fkName = null;
+                if (relatedDataPropertyMap.TryGetValue(columnNames, out relatedDataProperty))
                 {
+                    fkName = (string)relatedDataProperty["nameOnServer"];
                     if (propType.ForeignKeyDirection == ForeignKeyDirection.ForeignKeyFromParent)
                     {
                         nmap.Add("foreignKeyNamesOnServer", new string[] { fkName });
@@ -479,24 +507,22 @@ namespace Breeze.ContextProvider.NH
                     {
                         nmap.Add("invForeignKeyNamesOnServer", new string[] { fkName });
                     }
-
                 }
 
-                // For many-to-one and one-to-one associations, save the relationship in ForeignKeyMap for re-establishing relationships during save
+                // For many-to-one and one-to-one associations, save the relationship in _fkMap for re-establishing relationships during save
                 var entityRelationship = containingType.FullName + '.' + propName;
-                if (fkName != null)
+                if (relatedDataProperty != null)
                 {
                     _map.ForeignKeyMap.Add(entityRelationship, fkName);
                     if (isKey)
                     {
-                        var relatedDataProperty = FindPropertyByName(dataProperties, fkName);
                         if (!relatedDataProperty.ContainsKey("isPartOfKey"))
                         {
                             relatedDataProperty.Add("isPartOfKey", true);
                         }
                     }
                 }
-                else if (fkName == null)
+                else
                 {
                     nmap.Add("foreignKeyNamesOnServer", columnNames);
                     nmap.Add("ERROR", "Could not find matching fk for property " + entityRelationship);
@@ -515,7 +541,6 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         /// <param name="persister"></param>
         /// <param name="propertyName"></param>
-        /// <param name="propType"></param>
         /// <returns></returns>
         string GetPropertyColumnNames(AbstractEntityPersister persister, string propertyName, IType propType)
         {
@@ -542,14 +567,13 @@ namespace Breeze.ContextProvider.NH
         }
 
         /// <summary>
-        /// Gets the property that has the given columns.  May be a component, but will not be an association.
+        /// Gets the simple (non-Entity) property that has the given columns
         /// </summary>
         /// <param name="persister"></param>
         /// <param name="columnNames">Comma-delimited column name string</param>
         /// <returns></returns>
         string GetPropertyNameForColumn(AbstractEntityPersister persister, string columnNames)
         {
-            columnNames = columnNames.ToLower();
             var propNames = persister.PropertyNames;
             var propTypes = persister.PropertyTypes;
             for (int i = 0; i < propNames.Length; i++)
@@ -558,27 +582,10 @@ namespace Breeze.ContextProvider.NH
                 var propType = propTypes[i];
                 if (propType.IsAssociationType) continue;
                 var columnArray = persister.GetPropertyColumnNames(i);
-                var columns = CatColumnNames(columnArray).ToLower();
+                var columns = CatColumnNames(columnArray);
                 if (columns == columnNames) return propName;
             }
-
-            // If we got here, maybe the property is the identifier
-            var keyColumnArray = persister.KeyColumnNames;
-            var keyColumns = CatColumnNames(keyColumnArray).ToLower();
-            if (keyColumns == columnNames)
-            {
-                if (persister.IdentifierPropertyName != null)
-                {
-                    return persister.IdentifierPropertyName;
-                }
-                if (persister.IdentifierType.IsComponentType)
-                {
-                    var compType = (ComponentType)persister.IdentifierType;
-                    var compProperties = CatColumnNames(compType.PropertyNames);
-                    return compProperties;
-                }
-            }
-            return null;
+            return persister.IdentifierPropertyName;
         }
 
         /// <summary>
@@ -596,20 +603,6 @@ namespace Breeze.ContextProvider.NH
         }
 
         /// <summary>
-        /// return true if the two arrays contain the same names, false otherwise.
-        /// Names are compared after UnBracket(), and are case-insensitive.
-        /// </summary>
-        bool ArrayEqual(string[] a, string[] b)
-        {
-            if (a.Length != b.Length) return false;
-            for (int i=0; i<a.Length; i++)
-            {
-                if (UnBracket(a[i]).ToLower() != UnBracket(b[i]).ToLower()) return false;
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Get the column name without square brackets or quotes around it.  E.g. "[OrderID]" -> OrderID
         /// Because sometimes Hibernate gives us brackets, and sometimes it doesn't.
         /// Double-quotes happen with SQL CE.  Backticks happen with MySQL.
@@ -622,38 +615,6 @@ namespace Breeze.ContextProvider.NH
             name = (name[0] == '"') ? name.Substring(1, name.Length - 2) : name;
             name = (name[0] == '`') ? name.Substring(1, name.Length - 2) : name;
             return name;
-        }
-
-        /// <summary>
-        /// Return a new array containing the UnBracketed names
-        /// </summary>
-        string[] UnBracket(string[] names)
-        {
-            var u = new string[names.Length];
-            for (int i = 0; i < names.Length; i++)
-            {
-                u[i] = UnBracket(names[i]);
-            }
-            return u;
-        }
-
-        /// <summary>
-        /// Find the property in the list that has the given name
-        /// </summary>
-        /// <param name="properties">list of DataProperty or NavigationProperty maps</param>
-        /// <param name="name">matched against the nameOnServer value of entries in the list</param>
-        /// <returns></returns>
-        Dictionary<string, object> FindPropertyByName(List<Dictionary<string, object>> properties, string name)
-        {
-            object nameOnServer;
-            foreach(var prop in properties) 
-            {
-                if (prop.TryGetValue("nameOnServer", out nameOnServer))
-                {
-                    if (((string) nameOnServer) == name) return prop;
-                }
-            }
-            return null;
         }
 
         /// <summary>
@@ -745,4 +706,16 @@ namespace Breeze.ContextProvider.NH
 
     }
 
+    /// <summary>
+    /// Metadata describing the entity model.  Converted to JSON to send to Breeze client.
+    /// </summary>
+    public class Metadata : Dictionary<string, object>
+    {
+        /// <summary>
+        /// Map of relationship name -> foreign key name, e.g. "Customer" -> "CustomerID".
+        /// Used for re-establishing the entity relationships from the foreign key values during save.
+        /// This part is not sent to the client because it is separate from the base dictionary implementation.
+        /// </summary>
+        public IDictionary<string, string> ForeignKeyMap;
+    }
 }
