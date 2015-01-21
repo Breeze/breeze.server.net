@@ -34,15 +34,16 @@ gutil.log('LocalAppData dir: ' + process.env.LOCALAPPDATA);
  */
 gulp.task('help', require('gulp-task-listing'));
 
-// copy production versions of the breeze.*.js files into the nuget breeze.client.
-gulp.task("copyBreezeJs", ['breezeClientBuild'], function() {
-  return gulp.src( mapPath( _jsBuildDir, [ 'breeze.*.js' ]))
-    .pipe(gulp.dest(_nugetDir + 'Breeze.Client/content/scripts'));
-});
-
 gulp.task('breezeClientBuild', function(done) {
   execCommands(['gulp'], { cwd: _jsBuildDir }, done);
 });
+
+// copy production versions of the breeze.*.js files into the nuget breeze.client.
+gulp.task("copyBreezeJs", ['breezeClientBuild'], function() {
+  return gulp.src( mapPath( _jsBuildDir, [ 'breeze.*.*', 'adapters/*.*' ]), { base: _jsBuildDir })
+    .pipe(gulp.dest(_nugetDir + 'Breeze.Client/content/scripts'));
+});
+
 
 // look for all .dll files in the nuget dir and try to find
 // the most recent production version of the same file and copy
