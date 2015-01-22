@@ -167,6 +167,9 @@ function execCommands(cmds, options, cb) {
   options.shouldLog = options.shouldLog == null ? true : options.shouldLog;
   if (!cmds || cmds.length == 0) cb(null, null, null);
   var exec = require('child_process').exec;  // just to make it more portable.
+  if (options.shouldLog && options.cwd){
+    gutil.log('executing command ' + cmds[0] + ' in directory ' + options.cwd);
+  }
   exec(cmds[0], options, function(err, stdout, stderr) {
     if (err == null) {
       if (options.shouldLog) {
