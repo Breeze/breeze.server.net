@@ -38,8 +38,9 @@ gulp.task('breezeClientBuild', function(done) {
   execCommands(['gulp'], { cwd: _jsBuildDir }, done);
 });
 
-// copy production versions of the breeze.*.js files into the nuget breeze.client.
+// copy production versions of the breeze.*.js files and adapters into the nuget breeze.client.
 gulp.task("copyBreezeJs", ['breezeClientBuild'], function() {
+  // 'base' arg in next line allows dir structure from jsBuildDir to be preserved.
   return gulp.src( mapPath( _jsBuildDir, [ 'breeze.*.*', 'adapters/*.*' ]), { base: _jsBuildDir })
     .pipe(gulp.dest(_nugetDir + 'Breeze.Client/content/scripts'));
 });
