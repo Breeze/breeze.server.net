@@ -93,7 +93,9 @@ namespace Breeze.WebApi2 {
       } else if (ManuallyExpand && !string.IsNullOrWhiteSpace(expandQueryString))  {
         newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
       }
-
+      if (newQueryOptions.InlineCount != null) {
+          newQueryOptions = QueryHelper.RemoveInlineCount(newQueryOptions);
+      }
 
       if (newQueryOptions == queryOptions) {
         return queryOptions.ApplyTo(queryable, querySettings);
@@ -125,6 +127,11 @@ namespace Breeze.WebApi2 {
     public static ODataQueryOptions RemoveSelectExpandOrderBy(ODataQueryOptions queryOptions) {
       var optionsToRemove = new List<String>() { "$select", "$expand", "$orderby", "$top", "$skip" };
       return RemoveOptions(queryOptions, optionsToRemove);
+    }
+
+    public static ODataQueryOptions RemoveInlineCount(ODataQueryOptions queryOptions) {
+       var optionsToRemove = new List<String>() { "$inlinecount" };
+       return RemoveOptions(queryOptions, optionsToRemove);
     }
 
     public static ODataQueryOptions RemoveOptions(ODataQueryOptions queryOptions, List<String> optionNames) {
