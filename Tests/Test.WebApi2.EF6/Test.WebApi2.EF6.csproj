@@ -145,6 +145,9 @@
       <Link>breeze\breeze.modelLibrary.backbone.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\Index.net.html">
+      <Link>Index.net.html</Link>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\internal\ajaxAdapterTests.js">
       <Link>tests\ajaxAdapterTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -168,9 +171,6 @@
     <Content Include="..\..\..\breeze.js\test\internal\entityTests.js">
       <Link>tests\entityTests.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\Index.net.html">
-      <Link>Index.net.html</Link>
     </Content>
     <Content Include="..\..\..\breeze.js\test\internal\inheritBillingTests.js">
       <Link>tests\inheritBillingTests.js</Link>
@@ -314,6 +314,10 @@
       <Link>vendor\lodash.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\..\breeze.js\test\vendor\lodash.min.js">
+      <Link>vendor\lodash.min.js</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\..\breeze.js\test\vendor\modernizr-2.0.6-development-only.js">
       <Link>vendor\modernizr-2.0.6-development-only.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -346,14 +350,6 @@
       <Link>vendor\require.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\underscore.js">
-      <Link>vendor\underscore.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\underscore.min.js">
-      <Link>vendor\underscore.min.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\metadata.codefirst_provider.json" />
@@ -361,7 +357,8 @@
     <None Include="App_Data\metadata.json" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Index.html" />
+    <Content Include="index.html" />
+    <Content Include="Index.html.DO.NOT.EDIT.txt" />
     <Content Include="TestApp\TestApp.html" />
     <Content Include="TestApp\dataservice.js" />
     <Content Include="TestApp\viewModel.js" />
@@ -473,8 +470,7 @@ xcopy /Y /E "$(TargetDir)tests"     "$(ProjectDir)tests"
 xcopy /Y /E "$(TargetDir)vendor" "$(ProjectDir)vendor"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>copy "$(ProjectDir)..\..\..\breeze.js\test\index.net.html" "$(ProjectDir)\index.html"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,5 @@
-﻿// Only one of the next 4 should be uncommented.
+﻿// Only one of the next 3 should be uncommented.
 #define CODEFIRST_PROVIDER 
-//#define DATABASEFIRST_OLD
 //#define DATABASEFIRST_NEW
 //#define NHIBERNATE
 
@@ -12,8 +11,6 @@ using System.Web.Routing;
 using Models.NorthwindIB.CF;
 using Foo;
 using System.ComponentModel.DataAnnotations;
-#elif DATABASEFIRST_OLD
-ERROR - DOESNT EXIST FOR EF6
 #elif DATABASEFIRST_NEW
 using Models.NorthwindIB.EDMX_2012;
 #endif
