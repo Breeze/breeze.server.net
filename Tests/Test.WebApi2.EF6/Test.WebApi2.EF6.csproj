@@ -29,7 +29,7 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>2</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -326,12 +326,12 @@
       <Link>vendor\q.min.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\qunit-1.11.0.css">
-      <Link>vendor\qunit-1.11.0.css</Link>
+    <Content Include="..\..\..\breeze.js\test\vendor\qunit-1.17.1.css">
+      <Link>vendor\qunit-1.17.1.css</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\qunit-1.11.0.js">
-      <Link>vendor\qunit-1.11.0.js</Link>
+    <Content Include="..\..\..\breeze.js\test\vendor\qunit-1.17.1.js">
+      <Link>vendor\qunit-1.17.1.js</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\breeze.js\test\vendor\sinon.js">
@@ -453,11 +453,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>7149</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:7150/</IISUrl>
+          <IISUrl>http://localhost:7149/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

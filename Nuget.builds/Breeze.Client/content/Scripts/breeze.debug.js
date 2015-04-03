@@ -758,6 +758,8 @@ var Param = (function () {
       fn: isTypeOf,
       typeName: typeName,
       msg: __formatString("must be a '%1'", typeName)
+      // alternative
+      // msg: function(context) { return __formatString("must be a '%1'", context.typeName)}
     });
   };
 
