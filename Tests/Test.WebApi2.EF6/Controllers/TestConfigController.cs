@@ -13,7 +13,7 @@ namespace Sample_WebApi2.Controllers
         public IDictionary<string, object> Get()
         {
             var map = new Dictionary<string, object>();
-            map.Add("value", "WebApi");
+            map.Add("value", "DotNetWebApi");
             map.Add("version", NorthwindContextProvider.CONFIG_VERSION);
             map.Add("metadata", LoadMetadata());
             return map;

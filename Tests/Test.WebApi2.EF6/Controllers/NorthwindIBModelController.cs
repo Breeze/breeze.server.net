@@ -48,258 +48,12 @@ using Models.NorthwindIB.NH;
 
 namespace Sample_WebApi2.Controllers {
 
-
-#if CODEFIRST_PROVIDER
-  public class NorthwindContextProvider: EFContextProvider<NorthwindIBContext_CF>  {
-    public const string CONFIG_VERSION = "CODEFIRST_PROVIDER";
-    public NorthwindContextProvider() : base() { }
-#elif DATABASEFIRST_OLD
-  public class NorthwindContextProvider: EFContextProvider<NorthwindIBContext_EDMX>  {
-    public const string CONFIG_VERSION = "DATABASEFIRST_OLD";
-    public NorthwindContextProvider() : base() { }
-#elif DATABASEFIRST_NEW
-  public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_EDMX_2012> {
-    public const string CONFIG_VERSION = "DATABASEFIRST_NEW";
-    public NorthwindContextProvider() : base() { }
-#elif ORACLE_EDMX
-  public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_EDMX_Oracle> {
-    public const string CONFIG_VERSION = "ORACLE_EDMX";
-    public NorthwindContextProvider() : base() { }
-#elif NHIBERNATE
-  public class NorthwindContextProvider : NorthwindNHContext {
-    public const string CONFIG_VERSION = "NHIBERNATE";
-#endif
-
-    protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {
-      var tag = (string)SaveOptions.Tag;
-      if (tag == "CommentKeyMappings.After") {
-
-        foreach (var km in keyMappings) {
-          var realint = Convert.ToInt32(km.RealValue);
-          byte seq = (byte)(realint % 512);
-          AddComment(km.EntityTypeName + ':' + km.RealValue, seq);
-        }
-      } else if (tag == "UpdateProduceKeyMapping.After") {
-        if (!keyMappings.Any()) throw new Exception("UpdateProduce.After: No key mappings available");
-        var km = keyMappings[0];
-        UpdateProduceDescription(km.EntityTypeName + ':' + km.RealValue);
-
-      } else if (tag == "LookupEmployeeInSeparateContext.After") {
-        LookupEmployeeInSeparateContext(false);
-      } else if (tag == "LookupEmployeeInSeparateContext.SameConnection.After") {
-        LookupEmployeeInSeparateContext(true);
-      }
-      base.AfterSaveEntities(saveMap, keyMappings);
-    }
-
-    public Dictionary<Type, List<EntityInfo>> GetSaveMapFromSaveBundle(JObject saveBundle) {
-      InitializeSaveState(saveBundle); // Sets initial EntityInfos
-      SaveWorkState.BeforeSave();      // Creates the SaveMap as byproduct of BeforeSave logic
-      return SaveWorkState.SaveMap;
-    }
-
-#if (CODEFIRST_PROVIDER || DATABASEFIRST_NEW || DATABASEFIRST_OLD)
-    /* hack to set the current DbTransaction onto the DbCommand.  Transaction comes from EF private properties. */
-    public void SetCurrentTransaction(System.Data.Common.DbCommand command) {
-      if (EntityTransaction != null) {
-        // get private member via reflection
-        var bindingFlags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance;
-        var etype = EntityTransaction.GetType();
-        var stProp = etype.GetProperty("StoreTransaction", bindingFlags);
-        var transaction = stProp.GetValue(EntityTransaction, null);
-        var dbTransaction = transaction as System.Data.Common.DbTransaction;
-        if (dbTransaction != null) {
-          command.Transaction = dbTransaction;
-        }
-      }
-    }
-#endif
-
-    // Test performing a raw db insert to NorthwindIB using the base connection
-    private int AddComment(string comment, byte seqnum) {
-#if ORACLE_EDMX
-      var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-      var text = String.Format("insert into COMMENT_ (CreatedOn, Comment1, SeqNum) values (TO_DATE('{0}','YYYY-MM-DD HH24:MI:SS'), '{1}', {2})",
-          time, comment, seqnum);
-#else
-      var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-      var text = String.Format("insert into Comment (CreatedOn, Comment1, SeqNum) values ('{0}', '{1}', {2})",
-          time, comment, seqnum);
-#endif
-#if NHIBERNATE
-      var cmd = Session.CreateSQLQuery(text);
-      var result = cmd.ExecuteUpdate();
-#else
-      var conn = StoreConnection;
-      var cmd = conn.CreateCommand();
-#if !ORACLE_EDMX
-      SetCurrentTransaction(cmd);
-#endif
-      cmd.CommandText = text;
-      var result = cmd.ExecuteNonQuery();
-#endif
-      return result;
-    }
-
-    // Test performing a raw db update to ProduceTPH using the ProduceTPH connection.  Requires DTC.
-    private int UpdateProduceDescription(string comment) {
-      using (var conn = new SqlConnection("data source=.;initial catalog=ProduceTPH;integrated security=True;multipleactiveresultsets=True;application name=EntityFramework")) {
-        conn.Open();
-        var cmd = conn.CreateCommand();
-        cmd.CommandText = String.Format("update ItemOfProduce set Description='{0}' where id='{1}'",
-            comment, "13F1C9F5-3189-45FA-BA6E-13314FAFAA92");
-        var result = cmd.ExecuteNonQuery();
-        conn.Close();
-        return result;
-      }
-    }
-
-    // Use another Context to simulate lookup.  Returns Margaret Peacock if employeeId is not specified.
-    private Employee LookupEmployeeInSeparateContext(bool existingConnection, int employeeId = 4) {
-      var context2 = existingConnection
-#if CODEFIRST_PROVIDER
-        ? new NorthwindIBContext_CF(EntityConnection)
-        : new NorthwindIBContext_CF();
-#elif DATABASEFIRST_OLD
-        ? new NorthwindIBContext_EDMX((System.Data.EntityClient.EntityConnection)EntityConnection)
-        : new NorthwindIBContext_EDMX();
-#elif DATABASEFIRST_NEW
-        ? new NorthwindIBContext_EDMX_2012(EntityConnection)
-        : new NorthwindIBContext_EDMX_2012();
-#elif ORACLE_EDMX
-        ? new NorthwindIBContext_EDMX_Oracle(EntityConnection)
-        : new NorthwindIBContext_EDMX_Oracle();
-#elif NHIBERNATE
-        ? new NorthwindNHContext(this)
-        : new NorthwindNHContext();
-#endif
-
-      var query = context2.Employees.Where(e => e.EmployeeID == employeeId);
-      var employee = query.FirstOrDefault();
-      return employee;
-    }
-
-    protected override bool BeforeSaveEntity(EntityInfo entityInfo) {
-      if ((string)SaveOptions.Tag == "addProdOnServer") {
-        Supplier supplier = entityInfo.Entity as Supplier;
-        Product product = new Product() {
-          ProductName = "Product added on server"
-        };
-#if CODEFIRST_PROVIDER
-        if (supplier.Products == null) supplier.Products = new List<Product>();
-#endif
-        supplier.Products.Add(product);
-        return true;
-      }
-
-      // prohibit any additions of entities of type 'Region'
-      if (entityInfo.Entity.GetType() == typeof(Region) && entityInfo.EntityState == EntityState.Added) {
-        var region = entityInfo.Entity as Region;
-        if (region.RegionDescription.ToLowerInvariant().StartsWith("error")) return false;
-      }
-
-#if ORACLE_EDMX
-      // Convert GUIDs in Customer and Order to be compatible with Oracle
-      if (entityInfo.Entity.GetType() == typeof(Customer)) {
-        var cust = entityInfo.Entity as Customer;
-        if (cust.CustomerID != null) {
-          cust.CustomerID = cust.CustomerID.ToUpperInvariant();
-        }
-      } else if (entityInfo.Entity.GetType() == typeof(Order)) {
-        var order = entityInfo.Entity as Order;
-        if (order.CustomerID != null) {
-          order.CustomerID = order.CustomerID.ToUpperInvariant();
-        }
-      }
-#endif
-
-      return base.BeforeSaveEntity(entityInfo);
-    }
-
-    protected override Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap) {
-
-      var tag = (string)SaveOptions.Tag;
-
-      if (tag == "CommentOrderShipAddress.Before") {
-        var orderInfos = saveMap[typeof(Order)];
-        byte seq = 1;
-        foreach (var info in orderInfos) {
-          var order = (Order)info.Entity;
-          AddComment(order.ShipAddress, seq++);
-        }
-      } else if (tag == "UpdateProduceShipAddress.Before") {
-        var orderInfos = saveMap[typeof(Order)];
-        var order = (Order)orderInfos[0].Entity;
-        UpdateProduceDescription(order.ShipAddress);
-      } else if (tag == "LookupEmployeeInSeparateContext.Before") {
-        LookupEmployeeInSeparateContext(false);
-      } else if (tag == "LookupEmployeeInSeparateContext.SameConnection.Before") {
-        LookupEmployeeInSeparateContext(true);
-      } else if (tag == "ValidationError.Before") {
-        foreach (var type in saveMap.Keys) {
-          var list = saveMap[type];
-          foreach (var entityInfo in list) {
-            var entity = entityInfo.Entity;
-            var entityError = new EntityError() {
-              EntityTypeName = type.Name,
-              ErrorMessage = "Error message for " + type.Name,
-              ErrorName = "Server-Side Validation",
-            };
-            if (entity is Order) {
-              var order = (Order)entity;
-              entityError.KeyValues = new object[] { order.OrderID };
-              entityError.PropertyName = "OrderDate";
-            }
-
-          }
-        }
-      } else if (tag == "increaseProductPrice") {
-        Dictionary<Type, List<EntityInfo>> saveMapAdditions = new Dictionary<Type, List<EntityInfo>>();
-        foreach (var type in saveMap.Keys) {
-          if (type == typeof(Category)) {
-            foreach (var entityInfo in saveMap[type]) {
-              if (entityInfo.EntityState == EntityState.Modified) {
-                Category category = (entityInfo.Entity as Category);
-                var products = this.Context.Products.Where(p => p.CategoryID == category.CategoryID);
-                foreach (var product in products) {
-                  if (!saveMapAdditions.ContainsKey(typeof(Product)))
-                    saveMapAdditions[typeof(Product)] = new List<EntityInfo>();
-
-                  var ei = this.CreateEntityInfo(product, EntityState.Modified);
-                  ei.ForceUpdate = true;
-                  var incr = (Convert.ToInt64(product.UnitPrice) % 2) == 0 ? 1 : -1;
-                  product.UnitPrice += incr;
-                  saveMapAdditions[typeof(Product)].Add(ei);
-                }
-              }
-            }
-          }
-        }
-        foreach (var type in saveMapAdditions.Keys) {
-          if (!saveMap.ContainsKey(type)) {
-            saveMap[type] = new List<EntityInfo>();
-          }
-          foreach (var enInfo in saveMapAdditions[type]) {
-            saveMap[type].Add(enInfo);
-          }
-        }
-      }
-
-#if DATABASEFIRST_OLD
-      DataAnnotationsValidator.AddDescriptor(typeof(Customer), typeof(CustomerMetaData));
-      var validator = new DataAnnotationsValidator(this);
-      validator.ValidateEntities(saveMap, true);
-#endif
-      return base.BeforeSaveEntities(saveMap);
-    }
-
-  }
-
 #if NHIBERNATE
   [BreezeNHController]
 #else
   [BreezeController]
 #endif
+
   public class NorthwindIBModelController : ApiController {
     private NorthwindContextProvider ContextProvider;
 
@@ -331,6 +85,7 @@ namespace Sample_WebApi2.Controllers {
       return ContextProvider.SaveChanges(saveBundle);
     }
 
+    #region Save interceptors 
     [HttpPost]
     public SaveResult SaveWithTransactionScope(JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.TransactionScope };
@@ -538,44 +293,9 @@ namespace Sample_WebApi2.Controllers {
       }
       return false;
     }
-
+    #endregion
 
     #region standard queries
-
-    [HttpGet]
-    public List<Employee> QueryInvolvingMultipleEntities() {
-#if NHIBERNATE
-        // need to figure out what to do here
-        //return new List<Employee>();
-        var dc0 = new NorthwindNHContext();
-        var dc = new NorthwindNHContext();
-#elif CODEFIRST_PROVIDER
-        var dc0 = new NorthwindIBContext_CF();
-        var dc = new EFContextProvider<NorthwindIBContext_CF>();
-#elif DATABASEFIRST_OLD
-        var dc0 = new NorthwindIBContext_EDMX();
-        var dc = new EFContextProvider<NorthwindIBContext_EDMX>();
-#elif DATABASEFIRST_NEW
-      var dc0 = new NorthwindIBContext_EDMX_2012();
-      var dc = new EFContextProvider<NorthwindIBContext_EDMX_2012>();
-#elif ORACLE_EDMX
-      var dc0 = new NorthwindIBContext_EDMX_Oracle();
-      var dc = new EFContextProvider<NorthwindIBContext_EDMX_Oracle>();
-#endif
-      //the query executes using pure EF 
-      var query0 = (from t1 in dc0.Employees
-                    where (from t2 in dc0.Orders select t2.EmployeeID).Distinct().Contains(t1.EmployeeID)
-                    select t1);
-      var result0 = query0.ToList();
-
-      //the same query fails if using EFContextProvider
-      dc0 = dc.Context;
-      var query = (from t1 in dc0.Employees
-                   where (from t2 in dc0.Orders select t2.EmployeeID).Distinct().Contains(t1.EmployeeID)
-                   select t1);
-      var result = query.ToList();
-      return result;
-    }
 
     [HttpGet]
 #if NHIBERNATE
@@ -584,39 +304,7 @@ namespace Sample_WebApi2.Controllers {
     [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
 #endif
     public IQueryable<Customer> Customers() {
-      var custs = ContextProvider.Context.Customers;
-      return custs;
-    }
-
-    [HttpGet]
-    public IQueryable<Customer> CustomersStartingWith(string companyName) {
-      if (companyName == "null") {
-        throw new Exception("nulls should not be passed as 'null'");
-      }
-      if (String.IsNullOrEmpty(companyName)) {
-        companyName = "";
-      }
-      var custs = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith(companyName));
-      return custs;
-    }
-
-    [HttpGet]
-    public Object CustomerCountsByCountry() {
-      return ContextProvider.Context.Customers.GroupBy(c => c.Country).Select(g => new { g.Key, Count = g.Count() });
-    }
-
-
-    [HttpGet]
-    public Customer CustomerWithScalarResult() {
-      return ContextProvider.Context.Customers.First();
-    }
-
-    [HttpGet]
-    public IQueryable<Customer> CustomersWithHttpError() {
-      var responseMsg = new HttpResponseMessage(HttpStatusCode.NotFound);
-      responseMsg.Content = new StringContent("Custom error message");
-      responseMsg.ReasonPhrase = "Custom Reason";
-      throw new HttpResponseException(responseMsg);
+      return ContextProvider.Context.Customers;
     }
 
     [HttpGet]
@@ -626,24 +314,12 @@ namespace Sample_WebApi2.Controllers {
     [EnableBreezeQuery(MaxExpansionDepth = 3)]
 #endif
     public IQueryable<Order> Orders() {
-      var orders = ContextProvider.Context.Orders;
-      return orders;
+      return ContextProvider.Context.Orders;
     }
 
     [HttpGet]
     public IQueryable<Employee> Employees() {
       return ContextProvider.Context.Employees;
-    }
-
-    [HttpGet]
-    [EnableBreezeQuery]
-    public IEnumerable<Employee> EnumerableEmployees() {
-      return ContextProvider.Context.Employees.ToList();
-    }
-
-    [HttpGet]
-    public IQueryable<Employee> EmployeesFilteredByCountryAndBirthdate(DateTime birthDate, string country) {
-      return ContextProvider.Context.Employees.Where(emp => emp.BirthDate >= birthDate && emp.Country == country);
     }
 
     [HttpGet]
@@ -665,7 +341,6 @@ namespace Sample_WebApi2.Controllers {
     public IQueryable<Region> Regions() {
       return ContextProvider.Context.Regions;
     }
-
 
     [HttpGet]
     public IQueryable<Territory> Territories() {
@@ -717,6 +392,83 @@ namespace Sample_WebApi2.Controllers {
     #endregion
 
     #region named queries
+
+    [HttpGet]
+    public IQueryable<Customer> CustomersStartingWith(string companyName) {
+      if (companyName == "null") {
+        throw new Exception("nulls should not be passed as 'null'");
+      }
+      if (String.IsNullOrEmpty(companyName)) {
+        companyName = "";
+      }
+      var custs = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith(companyName));
+      return custs;
+    }
+
+    [HttpGet]
+    public Object CustomerCountsByCountry() {
+      return ContextProvider.Context.Customers.GroupBy(c => c.Country).Select(g => new { g.Key, Count = g.Count() });
+    }
+
+
+    [HttpGet]
+    public Customer CustomerWithScalarResult() {
+      return ContextProvider.Context.Customers.First();
+    }
+
+    [HttpGet]
+    public IQueryable<Customer> CustomersWithHttpError() {
+      var responseMsg = new HttpResponseMessage(HttpStatusCode.NotFound);
+      responseMsg.Content = new StringContent("Custom error message");
+      responseMsg.ReasonPhrase = "Custom Reason";
+      throw new HttpResponseException(responseMsg);
+    }
+
+    [HttpGet]
+    [EnableBreezeQuery]
+    public IEnumerable<Employee> EnumerableEmployees() {
+      return ContextProvider.Context.Employees.ToList();
+    }
+
+    [HttpGet]
+    public IQueryable<Employee> EmployeesFilteredByCountryAndBirthdate(DateTime birthDate, string country) {
+      return ContextProvider.Context.Employees.Where(emp => emp.BirthDate >= birthDate && emp.Country == country);
+    }
+
+    [HttpGet]
+    public List<Employee> QueryInvolvingMultipleEntities() {
+#if NHIBERNATE
+        // need to figure out what to do here
+        //return new List<Employee>();
+        var dc0 = new NorthwindNHContext();
+        var dc = new NorthwindNHContext();
+#elif CODEFIRST_PROVIDER
+      var dc0 = new NorthwindIBContext_CF();
+      var dc = new EFContextProvider<NorthwindIBContext_CF>();
+#elif DATABASEFIRST_OLD
+        var dc0 = new NorthwindIBContext_EDMX();
+        var dc = new EFContextProvider<NorthwindIBContext_EDMX>();
+#elif DATABASEFIRST_NEW
+      var dc0 = new NorthwindIBContext_EDMX_2012();
+      var dc = new EFContextProvider<NorthwindIBContext_EDMX_2012>();
+#elif ORACLE_EDMX
+      var dc0 = new NorthwindIBContext_EDMX_Oracle();
+      var dc = new EFContextProvider<NorthwindIBContext_EDMX_Oracle>();
+#endif
+      //the query executes using pure EF 
+      var query0 = (from t1 in dc0.Employees
+                    where (from t2 in dc0.Orders select t2.EmployeeID).Distinct().Contains(t1.EmployeeID)
+                    select t1);
+      var result0 = query0.ToList();
+
+      //the same query fails if using EFContextProvider
+      dc0 = dc.Context;
+      var query = (from t1 in dc0.Employees
+                   where (from t2 in dc0.Orders select t2.EmployeeID).Distinct().Contains(t1.EmployeeID)
+                   select t1);
+      var result = query.ToList();
+      return result;
+    }
 
     [HttpGet]
     public Customer CustomerFirstOrDefault() {
@@ -1002,6 +754,250 @@ namespace Sample_WebApi2.Controllers {
     #endregion
   }
 
+#if CODEFIRST_PROVIDER
+  public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_CF> {
+    public const string CONFIG_VERSION = "CODEFIRST_PROVIDER";
+    public NorthwindContextProvider() : base() { }
+#elif DATABASEFIRST_OLD
+  public class NorthwindContextProvider: EFContextProvider<NorthwindIBContext_EDMX>  {
+    public const string CONFIG_VERSION = "DATABASEFIRST_OLD";
+    public NorthwindContextProvider() : base() { }
+#elif DATABASEFIRST_NEW
+  public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_EDMX_2012> {
+    public const string CONFIG_VERSION = "DATABASEFIRST_NEW";
+    public NorthwindContextProvider() : base() { }
+#elif ORACLE_EDMX
+  public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_EDMX_Oracle> {
+    public const string CONFIG_VERSION = "ORACLE_EDMX";
+    public NorthwindContextProvider() : base() { }
+#elif NHIBERNATE
+  public class NorthwindContextProvider : NorthwindNHContext {
+    public const string CONFIG_VERSION = "NHIBERNATE";
+#endif
 
+    protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {
+      var tag = (string)SaveOptions.Tag;
+      if (tag == "CommentKeyMappings.After") {
+
+        foreach (var km in keyMappings) {
+          var realint = Convert.ToInt32(km.RealValue);
+          byte seq = (byte)(realint % 512);
+          AddComment(km.EntityTypeName + ':' + km.RealValue, seq);
+        }
+      } else if (tag == "UpdateProduceKeyMapping.After") {
+        if (!keyMappings.Any()) throw new Exception("UpdateProduce.After: No key mappings available");
+        var km = keyMappings[0];
+        UpdateProduceDescription(km.EntityTypeName + ':' + km.RealValue);
+
+      } else if (tag == "LookupEmployeeInSeparateContext.After") {
+        LookupEmployeeInSeparateContext(false);
+      } else if (tag == "LookupEmployeeInSeparateContext.SameConnection.After") {
+        LookupEmployeeInSeparateContext(true);
+      }
+      base.AfterSaveEntities(saveMap, keyMappings);
+    }
+
+    public Dictionary<Type, List<EntityInfo>> GetSaveMapFromSaveBundle(JObject saveBundle) {
+      InitializeSaveState(saveBundle); // Sets initial EntityInfos
+      SaveWorkState.BeforeSave();      // Creates the SaveMap as byproduct of BeforeSave logic
+      return SaveWorkState.SaveMap;
+    }
+
+#if (CODEFIRST_PROVIDER || DATABASEFIRST_NEW || DATABASEFIRST_OLD)
+    /* hack to set the current DbTransaction onto the DbCommand.  Transaction comes from EF private properties. */
+    public void SetCurrentTransaction(System.Data.Common.DbCommand command) {
+      if (EntityTransaction != null) {
+        // get private member via reflection
+        var bindingFlags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance;
+        var etype = EntityTransaction.GetType();
+        var stProp = etype.GetProperty("StoreTransaction", bindingFlags);
+        var transaction = stProp.GetValue(EntityTransaction, null);
+        var dbTransaction = transaction as System.Data.Common.DbTransaction;
+        if (dbTransaction != null) {
+          command.Transaction = dbTransaction;
+        }
+      }
+    }
+#endif
+
+    // Test performing a raw db insert to NorthwindIB using the base connection
+    private int AddComment(string comment, byte seqnum) {
+#if ORACLE_EDMX
+      var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+      var text = String.Format("insert into COMMENT_ (CreatedOn, Comment1, SeqNum) values (TO_DATE('{0}','YYYY-MM-DD HH24:MI:SS'), '{1}', {2})",
+          time, comment, seqnum);
+#else
+      var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+      var text = String.Format("insert into Comment (CreatedOn, Comment1, SeqNum) values ('{0}', '{1}', {2})",
+          time, comment, seqnum);
+#endif
+#if NHIBERNATE
+      var cmd = Session.CreateSQLQuery(text);
+      var result = cmd.ExecuteUpdate();
+#else
+      var conn = StoreConnection;
+      var cmd = conn.CreateCommand();
+#if !ORACLE_EDMX
+      SetCurrentTransaction(cmd);
+#endif
+      cmd.CommandText = text;
+      var result = cmd.ExecuteNonQuery();
+#endif
+      return result;
+    }
+
+    // Test performing a raw db update to ProduceTPH using the ProduceTPH connection.  Requires DTC.
+    private int UpdateProduceDescription(string comment) {
+      using (var conn = new SqlConnection("data source=.;initial catalog=ProduceTPH;integrated security=True;multipleactiveresultsets=True;application name=EntityFramework")) {
+        conn.Open();
+        var cmd = conn.CreateCommand();
+        cmd.CommandText = String.Format("update ItemOfProduce set Description='{0}' where id='{1}'",
+            comment, "13F1C9F5-3189-45FA-BA6E-13314FAFAA92");
+        var result = cmd.ExecuteNonQuery();
+        conn.Close();
+        return result;
+      }
+    }
+
+    // Use another Context to simulate lookup.  Returns Margaret Peacock if employeeId is not specified.
+    private Employee LookupEmployeeInSeparateContext(bool existingConnection, int employeeId = 4) {
+      var context2 = existingConnection
+#if CODEFIRST_PROVIDER
+ ? new NorthwindIBContext_CF(EntityConnection)
+        : new NorthwindIBContext_CF();
+#elif DATABASEFIRST_OLD
+        ? new NorthwindIBContext_EDMX((System.Data.EntityClient.EntityConnection)EntityConnection)
+        : new NorthwindIBContext_EDMX();
+#elif DATABASEFIRST_NEW
+        ? new NorthwindIBContext_EDMX_2012(EntityConnection)
+        : new NorthwindIBContext_EDMX_2012();
+#elif ORACLE_EDMX
+        ? new NorthwindIBContext_EDMX_Oracle(EntityConnection)
+        : new NorthwindIBContext_EDMX_Oracle();
+#elif NHIBERNATE
+        ? new NorthwindNHContext(this)
+        : new NorthwindNHContext();
+#endif
+
+      var query = context2.Employees.Where(e => e.EmployeeID == employeeId);
+      var employee = query.FirstOrDefault();
+      return employee;
+    }
+
+    protected override bool BeforeSaveEntity(EntityInfo entityInfo) {
+      if ((string)SaveOptions.Tag == "addProdOnServer") {
+        Supplier supplier = entityInfo.Entity as Supplier;
+        Product product = new Product() {
+          ProductName = "Product added on server"
+        };
+#if CODEFIRST_PROVIDER
+        if (supplier.Products == null) supplier.Products = new List<Product>();
+#endif
+        supplier.Products.Add(product);
+        return true;
+      }
+
+      // prohibit any additions of entities of type 'Region'
+      if (entityInfo.Entity.GetType() == typeof(Region) && entityInfo.EntityState == EntityState.Added) {
+        var region = entityInfo.Entity as Region;
+        if (region.RegionDescription.ToLowerInvariant().StartsWith("error")) return false;
+      }
+
+#if ORACLE_EDMX
+      // Convert GUIDs in Customer and Order to be compatible with Oracle
+      if (entityInfo.Entity.GetType() == typeof(Customer)) {
+        var cust = entityInfo.Entity as Customer;
+        if (cust.CustomerID != null) {
+          cust.CustomerID = cust.CustomerID.ToUpperInvariant();
+        }
+      } else if (entityInfo.Entity.GetType() == typeof(Order)) {
+        var order = entityInfo.Entity as Order;
+        if (order.CustomerID != null) {
+          order.CustomerID = order.CustomerID.ToUpperInvariant();
+        }
+      }
+#endif
+
+      return base.BeforeSaveEntity(entityInfo);
+    }
+
+    protected override Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap) {
+
+      var tag = (string)SaveOptions.Tag;
+
+      if (tag == "CommentOrderShipAddress.Before") {
+        var orderInfos = saveMap[typeof(Order)];
+        byte seq = 1;
+        foreach (var info in orderInfos) {
+          var order = (Order)info.Entity;
+          AddComment(order.ShipAddress, seq++);
+        }
+      } else if (tag == "UpdateProduceShipAddress.Before") {
+        var orderInfos = saveMap[typeof(Order)];
+        var order = (Order)orderInfos[0].Entity;
+        UpdateProduceDescription(order.ShipAddress);
+      } else if (tag == "LookupEmployeeInSeparateContext.Before") {
+        LookupEmployeeInSeparateContext(false);
+      } else if (tag == "LookupEmployeeInSeparateContext.SameConnection.Before") {
+        LookupEmployeeInSeparateContext(true);
+      } else if (tag == "ValidationError.Before") {
+        foreach (var type in saveMap.Keys) {
+          var list = saveMap[type];
+          foreach (var entityInfo in list) {
+            var entity = entityInfo.Entity;
+            var entityError = new EntityError() {
+              EntityTypeName = type.Name,
+              ErrorMessage = "Error message for " + type.Name,
+              ErrorName = "Server-Side Validation",
+            };
+            if (entity is Order) {
+              var order = (Order)entity;
+              entityError.KeyValues = new object[] { order.OrderID };
+              entityError.PropertyName = "OrderDate";
+            }
+
+          }
+        }
+      } else if (tag == "increaseProductPrice") {
+        Dictionary<Type, List<EntityInfo>> saveMapAdditions = new Dictionary<Type, List<EntityInfo>>();
+        foreach (var type in saveMap.Keys) {
+          if (type == typeof(Category)) {
+            foreach (var entityInfo in saveMap[type]) {
+              if (entityInfo.EntityState == EntityState.Modified) {
+                Category category = (entityInfo.Entity as Category);
+                var products = this.Context.Products.Where(p => p.CategoryID == category.CategoryID);
+                foreach (var product in products) {
+                  if (!saveMapAdditions.ContainsKey(typeof(Product)))
+                    saveMapAdditions[typeof(Product)] = new List<EntityInfo>();
+
+                  var ei = this.CreateEntityInfo(product, EntityState.Modified);
+                  ei.ForceUpdate = true;
+                  var incr = (Convert.ToInt64(product.UnitPrice) % 2) == 0 ? 1 : -1;
+                  product.UnitPrice += incr;
+                  saveMapAdditions[typeof(Product)].Add(ei);
+                }
+              }
+            }
+          }
+        }
+        foreach (var type in saveMapAdditions.Keys) {
+          if (!saveMap.ContainsKey(type)) {
+            saveMap[type] = new List<EntityInfo>();
+          }
+          foreach (var enInfo in saveMapAdditions[type]) {
+            saveMap[type].Add(enInfo);
+          }
+        }
+      }
+
+#if DATABASEFIRST_OLD
+      DataAnnotationsValidator.AddDescriptor(typeof(Customer), typeof(CustomerMetaData));
+      var validator = new DataAnnotationsValidator(this);
+      validator.ValidateEntities(saveMap, true);
+#endif
+      return base.BeforeSaveEntities(saveMap);
+    }
+
+  }
 
 }
