@@ -27,11 +27,11 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CODEFIRST_PROVIDER,xNHIBERNATE,xDATABASEFIRST_NEW</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>2</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -153,7 +153,7 @@
     <Content Include="breezeTests\breeze\breeze.debug.js" />
     <Content Include="breezeTests\breeze\breeze.min.js" />
     <Content Include="breezeTests\breeze\breeze.modelLibrary.backbone.js" />
-    <Content Include="breezeTests\Index.net.html" />
+    <Content Include="breezeTests\Index.net.aspx" />
     <Content Include="breezeTests\internal\ajaxAdapterTests.js" />
     <Content Include="breezeTests\internal\attachTests.js" />
     <Content Include="breezeTests\internal\classRewriteTests.js" />

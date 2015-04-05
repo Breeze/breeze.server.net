@@ -1,5 +1,5 @@
 ﻿// Only one of the next few should be uncommented.
-//#define CODEFIRST_PROVIDER
+#define CODEFIRST_PROVIDER
 //#define DATABASEFIRST_NEW
 //#define ORACLE_EDMX
 //#define NHIBERNATE
