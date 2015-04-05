@@ -26,7 +26,7 @@ namespace Sample_WebApi2 {
       var routes = GlobalConfiguration.Configuration.Routes;
       routes.MapHttpRoute(
            name: "SampleApi",
-           routeTemplate: "breeze/{controller}/{action}"
+           routeTemplate: "breezeTests/breeze/{controller}/{action}"
       );
 
       routes.MapHttpRoute(
@@ -34,6 +34,8 @@ namespace Sample_WebApi2 {
           routeTemplate: "api/testconfig",
           defaults: new { controller = "testconfig" }
       );
+
+
     }
   }
 
