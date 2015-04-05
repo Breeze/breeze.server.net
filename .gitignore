@@ -8,6 +8,7 @@
 *.old
 *.suo
 
+breezeTests
 node_modules
 bin
 obj
