@@ -172,6 +172,7 @@
     <Content Include="breezeTests\vendor\sinon.js" />
     <Content Include="Global.asax" />
     <Content Include="ODataService.svc" />
+    <Content Include="ReadMe.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

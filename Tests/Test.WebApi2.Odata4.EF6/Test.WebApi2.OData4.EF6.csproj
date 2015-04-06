@@ -182,7 +182,7 @@
     <Content Include="__ODataIssues.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.aspx" />
+    <None Include="Default.aspx.old" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
