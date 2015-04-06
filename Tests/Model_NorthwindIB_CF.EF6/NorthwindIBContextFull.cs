@@ -1,3 +1,4 @@
+// #define ODATA
 
 using Foo;
 using Microsoft.OData.Edm;

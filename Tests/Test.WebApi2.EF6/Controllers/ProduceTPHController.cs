@@ -1,4 +1,4 @@
-﻿//#define NHIBERNATE
+﻿// #define NHIBERNATE
 
 using System;
 using System.Collections.Generic;

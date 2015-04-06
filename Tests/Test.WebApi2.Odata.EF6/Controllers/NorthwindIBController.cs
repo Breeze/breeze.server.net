@@ -23,9 +23,6 @@ using System.Net.Http;
 using System.Net;
 using System.Threading.Tasks;
 using System.Data.Entity.Infrastructure;
-#elif DATABASEFIRST_OLD
-using Breeze.ContextProvider.EF6;
-using Models.NorthwindIB.EDMX;
 #elif DATABASEFIRST_NEW
 using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.EDMX_2012;

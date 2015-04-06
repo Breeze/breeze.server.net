@@ -141,198 +141,84 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\breeze.js\build\breeze.base.debug.js">
-      <Link>breeze\breeze.base.debug.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\build\breeze.base.min.js">
-      <Link>breeze\breeze.base.min.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\build\breeze.debug.js">
-      <Link>breeze\breeze.debug.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\build\breeze.min.js">
-      <Link>breeze\breeze.min.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\almond.js">
-      <Link>vendor\almond.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\backbone.js">
-      <Link>vendor\backbone.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\backbone.min.js">
-      <Link>vendor\backbone.min.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\datajs-1.1.1.js">
-      <Link>vendor\datajs-1.1.1.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\jquery-2.0.3.intellisense.js">
-      <Link>vendor\jquery-2.0.3.intellisense.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\jquery-2.0.3.js">
-      <Link>vendor\jquery-2.0.3.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\jquery-2.0.3.min.js">
-      <Link>vendor\jquery-2.0.3.min.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\knockout-2.3.0.debug.js">
-      <Link>vendor\knockout-2.3.0.debug.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\modernizr-2.0.6-development-only.js">
-      <Link>vendor\modernizr-2.0.6-development-only.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\q.js">
-      <Link>vendor\q.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\q.min.js">
-      <Link>vendor\q.min.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\qunit-1.17.1.css">
-      <Link>vendor\qunit-1.17.1.css</Link>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\qunit-1.17.1.js">
-      <Link>vendor\qunit-1.17.1.js</Link>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\sinon.js">
-      <Link>vendor\sinon.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\r.js">
-      <Link>vendor\r.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\require.js">
-      <Link>vendor\require.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\underscore.js">
-      <Link>vendor\underscore.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\vendor\underscore.min.js">
-      <Link>vendor\underscore.min.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="breezeTests\.gitignore" />
+    <Content Include="breezeTests\breeze\breeze.base.debug.js" />
+    <Content Include="breezeTests\breeze\breeze.base.min.js" />
+    <Content Include="breezeTests\breeze\breeze.bridge.angular.js" />
+    <Content Include="breezeTests\breeze\breeze.dataService.mongo.js" />
+    <Content Include="breezeTests\breeze\breeze.debug.js" />
+    <Content Include="breezeTests\breeze\breeze.min.js" />
+    <Content Include="breezeTests\breeze\breeze.modelLibrary.backbone.js" />
+    <Content Include="breezeTests\Index.hibernate.html" />
+    <Content Include="breezeTests\Index.mongo.html" />
+    <Content Include="breezeTests\Index.odata.aspx" />
+    <Content Include="breezeTests\Index.net.aspx" />
+    <Content Include="breezeTests\Index.sequelize.html" />
+    <Content Include="breezeTests\internal\ajaxAdapterTests.js" />
+    <Content Include="breezeTests\internal\attachTests.js" />
+    <Content Include="breezeTests\internal\classRewriteTests.js" />
+    <Content Include="breezeTests\internal\complexTypeTests.js" />
+    <Content Include="breezeTests\internal\entityManagerTests.js" />
+    <Content Include="breezeTests\internal\entityTests.js" />
+    <Content Include="breezeTests\internal\inheritBillingTests.js" />
+    <Content Include="breezeTests\internal\inheritProduceTests.js" />
+    <Content Include="breezeTests\internal\koSpecificTests.js" />
+    <Content Include="breezeTests\internal\metadataTests.js" />
+    <Content Include="breezeTests\internal\miscTests.js" />
+    <Content Include="breezeTests\internal\mongoAnyAllTests.js" />
+    <Content Include="breezeTests\internal\mongoSpecificTests.js" />
+    <Content Include="breezeTests\internal\notrackingTests.js" />
+    <Content Include="breezeTests\internal\paramTests.js" />
+    <Content Include="breezeTests\internal\queryAnyAllTests.js" />
+    <Content Include="breezeTests\internal\queryCtorTests.js" />
+    <Content Include="breezeTests\internal\queryDatatypeTests.js" />
+    <Content Include="breezeTests\internal\queryLocalTests.js" />
+    <Content Include="breezeTests\internal\queryNamedTests.js" />
+    <Content Include="breezeTests\internal\queryNonEFTests.js" />
+    <Content Include="breezeTests\internal\queryRawOdataTests.js" />
+    <Content Include="breezeTests\internal\querySelectTests.js" />
+    <Content Include="breezeTests\internal\queryTests.js" />
+    <Content Include="breezeTests\internal\saveInterceptorTests.js" />
+    <Content Include="breezeTests\internal\saveTests.js" />
+    <Content Include="breezeTests\internal\saveTransactionTests.js" />
+    <Content Include="breezeTests\internal\testFns.js" />
+    <Content Include="breezeTests\internal\validateEntityTests.js" />
+    <Content Include="breezeTests\internal\validateTests.js" />
+    <Content Include="breezeTests\vendor\almond.js" />
+    <Content Include="breezeTests\vendor\angular-mocks.js" />
+    <Content Include="breezeTests\vendor\angular.js" />
+    <Content Include="breezeTests\vendor\angular.min.js" />
+    <Content Include="breezeTests\vendor\backbone.js" />
+    <Content Include="breezeTests\vendor\backbone.min.js" />
+    <Content Include="breezeTests\vendor\changesets.js" />
+    <Content Include="breezeTests\vendor\datajs-1.1.1.js" />
+    <Content Include="breezeTests\vendor\datajs-1.1.1.min.js" />
+    <Content Include="breezeTests\vendor\datajs-1.1.2.js" />
+    <Content Include="breezeTests\vendor\datajs-1.1.2.min.js" />
+    <None Include="breezeTests\vendor\jquery-2.0.3.intellisense.js" />
+    <Content Include="breezeTests\vendor\jquery-2.0.3.js" />
+    <Content Include="breezeTests\vendor\jquery-2.0.3.min.js" />
+    <Content Include="breezeTests\vendor\knockout-2.3.0.debug.js" />
+    <Content Include="breezeTests\vendor\knockout-2.3.0.js" />
+    <Content Include="breezeTests\vendor\lodash.js" />
+    <Content Include="breezeTests\vendor\lodash.min.js" />
+    <Content Include="breezeTests\vendor\modernizr-2.0.6-development-only.js" />
+    <Content Include="breezeTests\vendor\ngMidwayTester.js" />
+    <Content Include="breezeTests\vendor\q.js" />
+    <Content Include="breezeTests\vendor\q.min.js" />
+    <Content Include="breezeTests\vendor\qunit-1.17.1.css" />
+    <Content Include="breezeTests\vendor\qunit-1.17.1.js" />
+    <Content Include="breezeTests\vendor\r.js" />
+    <Content Include="breezeTests\vendor\require.js" />
+    <Content Include="breezeTests\vendor\sinon.js" />
     <Content Include="__ODataIssues.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\breeze.js\test\internal\ajaxAdapterTests.js">
-      <Link>tests\ajaxAdapterTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\attachTests.js">
-      <Link>tests\attachTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\classRewriteTests.js">
-      <Link>tests\classRewriteTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\complexTypeTests.js">
-      <Link>tests\complexTypeTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\entityManagerTests.js">
-      <Link>tests\entityManagerTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\entityTests.js">
-      <Link>tests\entityTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\inheritBillingTests.js">
-      <Link>tests\inheritBillingTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\inheritProduceTests.js">
-      <Link>tests\inheritProduceTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\koSpecificTests.js">
-      <Link>tests\koSpecificTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\metadataTests.js">
-      <Link>tests\metadataTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\miscTests.js">
-      <Link>tests\miscTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\paramTests.js">
-      <Link>tests\paramTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\queryCtorTests.js">
-      <Link>tests\queryCtorTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\queryDatatypeTests.js">
-      <Link>tests\queryDatatypeTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\queryLocalTests.js">
-      <Link>tests\queryLocalTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\queryNamedTests.js">
-      <Link>tests\queryNamedTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\queryNonEFTests.js">
-      <Link>tests\queryNonEFTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\queryRawOdataTests.js">
-      <Link>tests\queryRawOdataTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\querySelectTests.js">
-      <Link>tests\querySelectTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\queryTests.js">
-      <Link>tests\queryTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\saveInterceptorTests.js">
-      <Link>tests\saveInterceptorTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\saveTests.js">
-      <Link>tests\saveTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\testFns.js">
-      <Link>tests\testFns.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\validateEntityTests.js">
-      <Link>tests\validateEntityTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\breeze.js\test\internal\validateTests.js">
-      <Link>tests\validateTests.js</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Default.aspx" />
+    <Content Include="breezeTests\internal\sampleMetadata.json" />
+    <Content Include="breezeTests\vendor\angular.min.js.map" />
+    <Content Include="breezeTests\vendor\jquery-2.0.3.min.map" />
+    <Content Include="breezeTests\vendor\q.README.md" />
+    <Content Include="breezeTests\vendor\README.md" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -437,8 +323,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /E "$(TargetDir)breeze" "$(ProjectDir)breeze"
-    xcopy /Y /E "$(TargetDir)tests" "$(ProjectDir)tests"
-    xcopy /Y /E "$(TargetDir)vendor" "$(ProjectDir)vendor"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

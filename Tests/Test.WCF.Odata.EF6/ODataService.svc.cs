@@ -9,7 +9,7 @@ using System.Web;
 using System.Data.Services.Providers;
 
 
-// MAKE SURE YOU SET the ODATA define before running any ODATA tests.
+// MAKE SURE YOU SET the ODATA define in the Northwind models project(s) before running any ODATA tests.
 
 namespace Breeze_OData {
   // This attribute makes it possible to see errors on the client.
