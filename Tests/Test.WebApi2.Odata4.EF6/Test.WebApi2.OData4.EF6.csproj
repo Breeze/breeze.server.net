@@ -137,6 +137,7 @@
     <Content Include="breezeTests\internal\mongoSpecificTests.js" />
     <Content Include="breezeTests\internal\notrackingTests.js" />
     <Content Include="breezeTests\internal\paramTests.js" />
+    <Content Include="breezeTests\internal\predicateTests.js" />
     <Content Include="breezeTests\internal\queryAnyAllTests.js" />
     <Content Include="breezeTests\internal\queryCtorTests.js" />
     <Content Include="breezeTests\internal\queryDatatypeTests.js" />
@@ -182,7 +183,6 @@
     <Content Include="__ODataIssues.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Default.aspx.old" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
