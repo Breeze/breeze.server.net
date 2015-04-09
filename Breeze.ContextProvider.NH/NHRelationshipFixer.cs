@@ -73,8 +73,7 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         /// <param name="child">Entity that depends on parent (e.g. has a many-to-one relationship to parent)</param>
         /// <param name="parent">Entity that child depends on (e.g. one parent has one-to-many children)</param>
-        /// <param name="removeReverse">True to find and remove the reverse relationship.  Used for handling one-to-ones.</param>
-        private void AddToGraph(EntityInfo child, EntityInfo parent, bool removeReverse)
+        private void AddToGraph(EntityInfo child, EntityInfo parent)
         {
             List<EntityInfo> list;
             if (!dependencyGraph.TryGetValue(child, out list))
@@ -83,15 +82,6 @@ namespace Breeze.ContextProvider.NH
                 dependencyGraph.Add(child, list);
             }
             if (parent != null) list.Add(parent);
-
-            if (removeReverse)
-            {
-                List<EntityInfo> parentList;
-                if (dependencyGraph.TryGetValue(parent, out parentList))
-                {
-                    parentList.Remove(child);
-                }
-            }
         }
 
         /// <summary>
@@ -146,7 +136,7 @@ namespace Breeze.ContextProvider.NH
 
                 foreach (var entityInfo in kvp.Value)
                 {
-                    AddToGraph(entityInfo, null, false); // make sure every entity is in the graph
+                    AddToGraph(entityInfo, null); // make sure every entity is in the graph
                     FixupRelationships(entityInfo, classMeta);
                 }
             }
@@ -298,8 +288,10 @@ namespace Breeze.ContextProvider.NH
                 }
                 else
                 {
-                    bool removeReverseRelationship = propType.UseLHSPrimaryKey;
-                    AddToGraph(entityInfo, relatedEntityInfo, removeReverseRelationship);
+                    if (!(propType.IsOneToOne && propType.UseLHSPrimaryKey && (propType.ForeignKeyDirection == ForeignKeyDirection.ForeignKeyToParent)))
+                    {
+                        AddToGraph(entityInfo, relatedEntityInfo);
+                    }
                     relatedEntity = relatedEntityInfo.Entity;
                 }
             }
