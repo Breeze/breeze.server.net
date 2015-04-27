@@ -12,7 +12,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>The files and references that are essential for a Breeze ASP.NET Web API 2.2 client and server on NHibernate.</description>
         <summary>Breeze Client and Server - Javascript client with ASP.NET Web API 2.2 and NHibernate.</summary>
-        <copyright>Copyright IdeaBlade 2012, 2013, 2014</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2015</copyright>
         <language>en-US</language>
         <releaseNotes>Note that this package uses Microsoft's ASP.NET WebApi 2.2 and will attempt to upgrade any WebApi 2.1 dependencies in your project. Please review the BreezeJS release notes at http://www.breezejs.com/documentation/download</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
