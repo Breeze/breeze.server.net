@@ -37,28 +37,84 @@ namespace Test.WebApi2.OData4 {
   public static class WebApiConfig {
     public static void Register(HttpConfiguration config) {
 
+#if !ODATA_MODEL_BUILDER
 
+      config.Routes.MapODataRoute(
+              routeName: "NorthwindIB_ODATA",
+              routePrefix: "NorthwindIB_odata",
+              model: EdmBuilder.GetEdm<NorthwindIBContext_Aliased>(),
+              batchHandler: new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer)
+              );
+      
+      var billingModel = EdmBuilder.GetEdm<InheritanceContext>();
+      config.Routes.MapODataRoute(
+        routeName: "BillingInheritance_ODATA",
+        routePrefix: "BillingInheritance_odata",
+        model: billingModel,
+        batchHandler: new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer)
+        );
+
+      var produceModel = EdmBuilder.GetEdm<ProduceTPHContext>();
+      config.Routes.MapODataRoute(
+        routeName: "ProduceInheritance_ODATA",
+        routePrefix: "ProduceInheritance_odata",
+        model: produceModel,
+        batchHandler: new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer)
+        );
+#else 
       // If using ODataConventionModelBuilder
       var builder = new ODataConventionModelBuilder();
       
       var productType = builder.EntityType<Product>();
+      productType.Ignore(t => t.DiscontinuedDate);
+      productType.Property(t => t.OData4DiscontinuedDate).Name = "DiscontinuedDate";
       builder.EntitySet<Product>("Products");
+
+      
       builder.EntitySet<Customer>("Customers");
+
+      var empType = builder.EntityType<Employee>();
+      empType.Ignore(t => t.BirthDate);
+      empType.Property(t => t.OData4BirthDate).Name = "BirthDate";
+      empType.Ignore(t => t.HireDate);
+      empType.Property(t => t.OData4HireDate).Name = "HireDate";
+      //var x = empType.HasMany(t => t.Orders).
+      //builder.EntitySet<Employee>("Employees");
+
+      var orderType = builder.EntityType<Order>();
+      orderType.Ignore(t => t.OrderDate);
+      orderType.Property(t => t.OData4OrderDate).Name = "OrderDate";
+      orderType.Ignore(t => t.RequiredDate);
+      orderType.Property(t => t.OData4RequiredDate).Name = "RequiredDate";
+      orderType.Ignore(t => t.ShippedDate);
+      orderType.Property(t => t.OData4ShippedDate).Name = "ShippedDate";
       builder.EntitySet<Order>("Orders");
+
       builder.EntitySet<OrderDetail>("OrderDetails");
       builder.EntitySet<Category>("Categories");
       builder.EntitySet<Supplier>("Suppliers");
       builder.EntitySet<Region>("Regions");
-      builder.EntitySet<Territory>("Territories");    
+      builder.EntitySet<Territory>("Territories");
+      
+      var userType = builder.EntityType<User>();
+      userType.Ignore(t => t.CreatedDate);
+      userType.Property(t => t.OData4CreatedDate).Name = "CreatedDate";
+      userType.Ignore(t => t.ModifiedDate);
+      userType.Property(t => t.OData4ModifiedDate).Name = "ModifiedDate";
       builder.EntitySet<User>("Users");
+
       builder.EntitySet<InternationalOrder>("InternationalOrders");
       builder.EntitySet<TimeLimit>("TimeLimits");
       builder.EntitySet<TimeGroup>("TimeGroups");
       builder.EntitySet<EmployeeTerritory>("EmployeeTerritories");
       builder.EntitySet<UserRole>("UserRoles");
+
+      var commentType = builder.EntityType<Comment>();
+      commentType.Ignore(t => t.CreatedOn);
+      commentType.Property(t => t.OData4CreatedOn).Name = "CreatedOn";
       builder.EntitySet<Comment>("Comments");
 
-      builder.EntitySet<Role>("Roles");
+      // builder.EntitySet<Role>("Roles");
 
       config.MapODataServiceRoute(
         routeName: "NorthwindIB_ODATA",
@@ -154,7 +210,7 @@ namespace Test.WebApi2.OData4 {
         model: builder.GetEdmModel(),
         batchHandler: new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer)
       );
-
+#endif
 
     }
   }

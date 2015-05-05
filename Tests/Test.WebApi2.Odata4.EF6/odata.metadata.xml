@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Foo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="ProductID" />
+        </Key>
+        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ProductName" Type="Edm.String" />
+        <Property Name="SupplierID" Type="Edm.Int32" />
+        <Property Name="CategoryID" Type="Edm.Int32" />
+        <Property Name="QuantityPerUnit" Type="Edm.String" />
+        <Property Name="UnitPrice" Type="Edm.Decimal" />
+        <Property Name="UnitsInStock" Type="Edm.Int16" />
+        <Property Name="UnitsOnOrder" Type="Edm.Int16" />
+        <Property Name="ReorderLevel" Type="Edm.Int16" />
+        <Property Name="Discontinued" Type="Edm.Boolean" />
+        <Property Name="DiscontinuedDate" Type="Edm.DateTimeOffset" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Category" Type="Foo.Category" />
+        <NavigationProperty Name="Supplier" Type="Foo.Supplier" />
+      </EntityType>
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="CustomerID" />
+        </Key>
+        <Property Name="CustomerID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="CustomerID_OLD" Type="Edm.String" />
+        <Property Name="CompanyName" Type="Edm.String" Nullable="false" />
+        <Property Name="ContactName" Type="Edm.String" />
+        <Property Name="ContactTitle" Type="Edm.String" />
+        <Property Name="Address" Type="Edm.String" />
+        <Property Name="City" Type="Edm.String" />
+        <Property Name="Region" Type="Edm.String" />
+        <Property Name="PostalCode" Type="Edm.String" />
+        <Property Name="Country" Type="Edm.String" />
+        <Property Name="Phone" Type="Edm.String" />
+        <Property Name="Fax" Type="Edm.String" />
+        <Property Name="RowVersion" Type="Edm.Int32" ConcurrencyMode="Fixed" />
+        <NavigationProperty Name="Orders" Type="Collection(Foo.Order)" />
+      </EntityType>
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="OrderID" />
+        </Key>
+        <Property Name="OrderID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CustomerID" Type="Edm.Guid" />
+        <Property Name="EmployeeID" Type="Edm.Int32" />
+        <Property Name="OrderDate" Type="Edm.DateTimeOffset" />
+        <Property Name="RequiredDate" Type="Edm.DateTimeOffset" />
+        <Property Name="ShippedDate" Type="Edm.DateTimeOffset" />
+        <Property Name="Freight" Type="Edm.Decimal" />
+        <Property Name="ShipName" Type="Edm.String" />
+        <Property Name="ShipAddress" Type="Edm.String" />
+        <Property Name="ShipCity" Type="Edm.String" />
+        <Property Name="ShipRegion" Type="Edm.String" />
+        <Property Name="ShipPostalCode" Type="Edm.String" />
+        <Property Name="ShipCountry" Type="Edm.String" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Customer" Type="Foo.Customer" />
+        <NavigationProperty Name="Employee" Type="Foo.Employee" />
+        <NavigationProperty Name="OrderDetails" Type="Collection(Foo.OrderDetail)" />
+        <NavigationProperty Name="InternationalOrder" Type="Foo.InternationalOrder" />
+      </EntityType>
+      <EntityType Name="OrderDetail">
+        <Key>
+          <PropertyRef Name="OrderID" />
+          <PropertyRef Name="ProductID" />
+        </Key>
+        <Property Name="OrderID" Type="Edm.Int32" />
+        <Property Name="ProductID" Type="Edm.Int32" />
+        <Property Name="UnitPrice" Type="Edm.Decimal" />
+        <Property Name="Quantity" Type="Edm.Int16" />
+        <Property Name="Discount" Type="Edm.Single" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Order" Type="Foo.Order">
+          <ReferentialConstraint Property="OrderID" ReferencedProperty="OrderID" />
+        </NavigationProperty>
+        <NavigationProperty Name="Product" Type="Foo.Product">
+          <ReferentialConstraint Property="ProductID" ReferencedProperty="ProductID" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="CategoryID" />
+        </Key>
+        <Property Name="CategoryID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CategoryName" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Picture" Type="Edm.Binary" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Products" Type="Collection(Foo.Product)" />
+      </EntityType>
+      <EntityType Name="Supplier">
+        <Key>
+          <PropertyRef Name="SupplierID" />
+        </Key>
+        <Property Name="SupplierID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CompanyName" Type="Edm.String" Nullable="false" />
+        <Property Name="ContactName" Type="Edm.String" />
+        <Property Name="ContactTitle" Type="Edm.String" />
+        <Property Name="Location" Type="Foo.Location" />
+        <Property Name="Phone" Type="Edm.String" />
+        <Property Name="Fax" Type="Edm.String" />
+        <Property Name="HomePage" Type="Edm.String" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Products" Type="Collection(Foo.Product)" />
+      </EntityType>
+      <EntityType Name="Region">
+        <Key>
+          <PropertyRef Name="RegionID" />
+        </Key>
+        <Property Name="RegionID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="RegionDescription" Type="Edm.String" Nullable="false" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Territories" Type="Collection(Foo.Territory)" />
+      </EntityType>
+      <EntityType Name="Territory">
+        <Key>
+          <PropertyRef Name="TerritoryID" />
+        </Key>
+        <Property Name="TerritoryID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="TerritoryDescription" Type="Edm.String" Nullable="false" />
+        <Property Name="RegionID" Type="Edm.Int32" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="EmployeeTerritories" Type="Collection(Foo.EmployeeTerritory)" />
+        <NavigationProperty Name="Region" Type="Foo.Region">
+          <ReferentialConstraint Property="RegionID" ReferencedProperty="RegionID" />
+        </NavigationProperty>
+        <NavigationProperty Name="Employees" Type="Collection(Foo.Employee)" />
+      </EntityType>
+      <EntityType Name="User">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int64" Nullable="false" />
+        <Property Name="UserName" Type="Edm.String" />
+        <Property Name="UserPassword" Type="Edm.String" />
+        <Property Name="FirstName" Type="Edm.String" />
+        <Property Name="LastName" Type="Edm.String" />
+        <Property Name="Email" Type="Edm.String" />
+        <Property Name="RowVersion" Type="Edm.Decimal" />
+        <Property Name="CreatedBy" Type="Edm.String" />
+        <Property Name="CreatedByUserId" Type="Edm.Int64" />
+        <Property Name="CreatedDate" Type="Edm.DateTimeOffset" />
+        <Property Name="ModifiedBy" Type="Edm.String" />
+        <Property Name="ModifiedByUserId" Type="Edm.Int64" />
+        <Property Name="ModifiedDate" Type="Edm.DateTimeOffset" ConcurrencyMode="Fixed" />
+        <NavigationProperty Name="UserRoles" Type="Collection(Foo.UserRole)" />
+      </EntityType>
+      <EntityType Name="InternationalOrder">
+        <Key>
+          <PropertyRef Name="OrderID" />
+        </Key>
+        <Property Name="OrderID" Type="Edm.Int32" />
+        <Property Name="CustomsDescription" Type="Edm.String" />
+        <Property Name="ExciseTax" Type="Edm.Decimal" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Order" Type="Foo.Order">
+          <ReferentialConstraint Property="OrderID" ReferencedProperty="OrderID" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="TimeLimit">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="MaxTime" Type="Edm.Duration" />
+        <Property Name="MinTime" Type="Edm.Duration" />
+        <Property Name="TimeGroupId" Type="Edm.Int32" />
+        <NavigationProperty Name="TimeGroup" Type="Foo.TimeGroup" />
+      </EntityType>
+      <EntityType Name="TimeGroup">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Comment" Type="Edm.String" />
+        <NavigationProperty Name="TimeLimits" Type="Collection(Foo.TimeLimit)" />
+      </EntityType>
+      <EntityType Name="EmployeeTerritory">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="EmployeeID" Type="Edm.Int32" />
+        <Property Name="TerritoryID" Type="Edm.Int32" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <NavigationProperty Name="Employee" Type="Foo.Employee">
+          <ReferentialConstraint Property="EmployeeID" ReferencedProperty="EmployeeID" />
+        </NavigationProperty>
+        <NavigationProperty Name="Territory" Type="Foo.Territory">
+          <ReferentialConstraint Property="TerritoryID" ReferencedProperty="TerritoryID" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="UserRole">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Int64" Nullable="false" />
+        <Property Name="UserId" Type="Edm.Int64" />
+        <Property Name="RoleId" Type="Edm.Int64" />
+        <NavigationProperty Name="Role" Type="Foo.Role">
+          <ReferentialConstraint Property="RoleId" ReferencedProperty="Id" />
+        </NavigationProperty>
+        <NavigationProperty Name="User" Type="Foo.User">
+          <ReferentialConstraint Property="UserId" ReferencedProperty="Id" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Comment">
+        <Key>
+          <PropertyRef Name="CreatedOn" />
+          <PropertyRef Name="SeqNum" />
+        </Key>
+        <Property Name="CreatedOn" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="SeqNum" Type="Edm.Byte" Nullable="false" />
+        <Property Name="Comment1" Type="Edm.String" />
+      </EntityType>
+      <ComplexType Name="Location">
+        <Property Name="Address" Type="Edm.String" />
+        <Property Name="City" Type="Edm.String" />
+        <Property Name="Region" Type="Edm.String" />
+        <Property Name="PostalCode" Type="Edm.String" />
+        <Property Name="Country" Type="Edm.String" />
+      </ComplexType>
+      <EntityType Name="Employee">
+        <Key>
+          <PropertyRef Name="EmployeeID" />
+        </Key>
+        <Property Name="EmployeeID" Type="Edm.Int32" />
+        <Property Name="LastName" Type="Edm.String" Nullable="false" />
+        <Property Name="FirstName" Type="Edm.String" Nullable="false" />
+        <Property Name="Title" Type="Edm.String" />
+        <Property Name="TitleOfCourtesy" Type="Edm.String" />
+        <Property Name="BirthDate" Type="Edm.DateTimeOffset" />
+        <Property Name="HireDate" Type="Edm.DateTimeOffset" />
+        <Property Name="Address" Type="Edm.String" />
+        <Property Name="City" Type="Edm.String" />
+        <Property Name="Region" Type="Edm.String" />
+        <Property Name="PostalCode" Type="Edm.String" />
+        <Property Name="Country" Type="Edm.String" />
+        <Property Name="HomePhone" Type="Edm.String" />
+        <Property Name="Extension" Type="Edm.String" />
+        <Property Name="Photo" Type="Edm.Binary" />
+        <Property Name="Notes" Type="Edm.String" />
+        <Property Name="PhotoPath" Type="Edm.String" />
+        <Property Name="ReportsToEmployeeID" Type="Edm.Int32" />
+        <Property Name="RowVersion" Type="Edm.Int32" />
+        <Property Name="FullName" Type="Edm.String" />
+        <NavigationProperty Name="DirectReports" Type="Collection(Foo.Employee)" />
+        <NavigationProperty Name="Manager" Type="Foo.Employee">
+          <ReferentialConstraint Property="EmployeeID" ReferencedProperty="EmployeeID" />
+        </NavigationProperty>
+        <NavigationProperty Name="EmployeeTerritories" Type="Collection(Foo.EmployeeTerritory)" />
+        <NavigationProperty Name="Orders" Type="Collection(Foo.Order)" />
+        <NavigationProperty Name="Territories" Type="Collection(Foo.Territory)" />
+      </EntityType>
+      <EntityType Name="Role">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int64" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Ts" Type="Edm.Binary" ConcurrencyMode="Fixed" Nullable="false" />
+        <Property Name="RoleType" Type="Models.NorthwindIB.RoleType" />
+        <NavigationProperty Name="UserRoles" Type="Collection(Foo.UserRole)" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="Models.NorthwindIB" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EnumType Name="RoleType">
+        <Member Name="Guest" Value="0" />
+        <Member Name="Restricted" Value="1" />
+        <Member Name="Standard" Value="2" />
+        <Member Name="Admin" Value="3" />
+      </EnumType>
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="Container">
+        <EntitySet Name="Products" EntityType="Foo.Product">
+          <NavigationPropertyBinding Path="Category" Target="Categories" />
+          <NavigationPropertyBinding Path="Supplier" Target="Suppliers" />
+        </EntitySet>
+        <EntitySet Name="Customers" EntityType="Foo.Customer">
+          <NavigationPropertyBinding Path="Orders" Target="Orders" />
+        </EntitySet>
+        <EntitySet Name="Orders" EntityType="Foo.Order">
+          <NavigationPropertyBinding Path="Customer" Target="Customers" />
+          <NavigationPropertyBinding Path="OrderDetails" Target="OrderDetails" />
+          <NavigationPropertyBinding Path="InternationalOrder" Target="InternationalOrders" />
+        </EntitySet>
+        <EntitySet Name="OrderDetails" EntityType="Foo.OrderDetail">
+          <NavigationPropertyBinding Path="Order" Target="Orders" />
+          <NavigationPropertyBinding Path="Product" Target="Products" />
+        </EntitySet>
+        <EntitySet Name="Categories" EntityType="Foo.Category">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+        </EntitySet>
+        <EntitySet Name="Suppliers" EntityType="Foo.Supplier">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+        </EntitySet>
+        <EntitySet Name="Regions" EntityType="Foo.Region">
+          <NavigationPropertyBinding Path="Territories" Target="Territories" />
+        </EntitySet>
+        <EntitySet Name="Territories" EntityType="Foo.Territory">
+          <NavigationPropertyBinding Path="EmployeeTerritories" Target="EmployeeTerritories" />
+          <NavigationPropertyBinding Path="Region" Target="Regions" />
+        </EntitySet>
+        <EntitySet Name="Users" EntityType="Foo.User">
+          <NavigationPropertyBinding Path="UserRoles" Target="UserRoles" />
+        </EntitySet>
+        <EntitySet Name="InternationalOrders" EntityType="Foo.InternationalOrder">
+          <NavigationPropertyBinding Path="Order" Target="Orders" />
+        </EntitySet>
+        <EntitySet Name="TimeLimits" EntityType="Foo.TimeLimit">
+          <NavigationPropertyBinding Path="TimeGroup" Target="TimeGroups" />
+        </EntitySet>
+        <EntitySet Name="TimeGroups" EntityType="Foo.TimeGroup">
+          <NavigationPropertyBinding Path="TimeLimits" Target="TimeLimits" />
+        </EntitySet>
+        <EntitySet Name="EmployeeTerritories" EntityType="Foo.EmployeeTerritory">
+          <NavigationPropertyBinding Path="Territory" Target="Territories" />
+        </EntitySet>
+        <EntitySet Name="UserRoles" EntityType="Foo.UserRole">
+          <NavigationPropertyBinding Path="User" Target="Users" />
+        </EntitySet>
+        <EntitySet Name="Comments" EntityType="Foo.Comment" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

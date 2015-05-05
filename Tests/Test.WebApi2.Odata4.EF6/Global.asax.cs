@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System.Web;
+using System.Web.Http;
+using System.Web.Routing;
 
 namespace Test.WebApi2.OData4 {
   // Note: For instructions on enabling IIS6 or IIS7 classic mode, 

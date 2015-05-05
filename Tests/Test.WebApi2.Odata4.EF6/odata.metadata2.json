@@ -1,0 +1,1202 @@
+{
+  "version": "4.0",
+  "dataServices": {
+    "schema": [
+      {
+        "namespace": "Foo",
+        "entityType": [
+          {
+            "name": "Product",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "ProductID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "ProductID",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "ProductName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "SupplierID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "CategoryID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "QuantityPerUnit",
+                "type": "Edm.String"
+              },
+              {
+                "name": "UnitPrice",
+                "type": "Edm.Decimal"
+              },
+              {
+                "name": "UnitsInStock",
+                "type": "Edm.Int16"
+              },
+              {
+                "name": "UnitsOnOrder",
+                "type": "Edm.Int16"
+              },
+              {
+                "name": "ReorderLevel",
+                "type": "Edm.Int16"
+              },
+              {
+                "name": "Discontinued",
+                "type": "Edm.Boolean"
+              },
+              {
+                "name": "DiscontinuedDate",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Category",
+                "type": "Foo.Category"
+              },
+              {
+                "name": "Supplier",
+                "type": "Foo.Supplier"
+              }
+            ]
+          },
+          {
+            "name": "Customer",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "CustomerID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "CustomerID",
+                "nullable": "false",
+                "type": "Edm.Guid"
+              },
+              {
+                "name": "CustomerID_OLD",
+                "type": "Edm.String"
+              },
+              {
+                "name": "CompanyName",
+                "nullable": "false",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ContactName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ContactTitle",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Address",
+                "type": "Edm.String"
+              },
+              {
+                "name": "City",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Region",
+                "type": "Edm.String"
+              },
+              {
+                "name": "PostalCode",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Country",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Phone",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Fax",
+                "type": "Edm.String"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Orders",
+                "type": "Collection(Foo.Order)"
+              }
+            ]
+          },
+          {
+            "name": "Order",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "OrderID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "OrderID",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "CustomerID",
+                "type": "Edm.Guid"
+              },
+              {
+                "name": "EmployeeID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "OrderDate",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "RequiredDate",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "ShippedDate",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "Freight",
+                "type": "Edm.Decimal"
+              },
+              {
+                "name": "ShipName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ShipAddress",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ShipCity",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ShipRegion",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ShipPostalCode",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ShipCountry",
+                "type": "Edm.String"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Customer",
+                "type": "Foo.Customer"
+              },
+              {
+                "name": "Employee",
+                "type": "Foo.Employee"
+              },
+              {
+                "name": "OrderDetails",
+                "type": "Collection(Foo.OrderDetail)"
+              },
+              {
+                "name": "InternationalOrder",
+                "type": "Foo.InternationalOrder"
+              }
+            ]
+          },
+          {
+            "name": "OrderDetail",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "OrderID"
+                  },
+                  {
+                    "name": "ProductID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "OrderID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "ProductID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "UnitPrice",
+                "type": "Edm.Decimal"
+              },
+              {
+                "name": "Quantity",
+                "type": "Edm.Int16"
+              },
+              {
+                "name": "Discount",
+                "type": "Edm.Single"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Order",
+                "type": "Foo.Order",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "OrderID",
+                    "property": "OrderID"
+                  }
+                ]
+              },
+              {
+                "name": "Product",
+                "type": "Foo.Product",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "ProductID",
+                    "property": "ProductID"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Category",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "CategoryID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "CategoryID",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "CategoryName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Description",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Picture",
+                "type": "Edm.Binary"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Products",
+                "type": "Collection(Foo.Product)"
+              }
+            ]
+          },
+          {
+            "name": "Supplier",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "SupplierID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "SupplierID",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "CompanyName",
+                "nullable": "false",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ContactName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ContactTitle",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Location",
+                "type": "Foo.Location"
+              },
+              {
+                "name": "Phone",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Fax",
+                "type": "Edm.String"
+              },
+              {
+                "name": "HomePage",
+                "type": "Edm.String"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Products",
+                "type": "Collection(Foo.Product)"
+              }
+            ]
+          },
+          {
+            "name": "Region",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "RegionID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "RegionID",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "RegionDescription",
+                "nullable": "false",
+                "type": "Edm.String"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Territories",
+                "type": "Collection(Foo.Territory)"
+              }
+            ]
+          },
+          {
+            "name": "Territory",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "TerritoryID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "TerritoryID",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "TerritoryDescription",
+                "nullable": "false",
+                "type": "Edm.String"
+              },
+              {
+                "name": "RegionID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "EmployeeTerritories",
+                "type": "Collection(Foo.EmployeeTerritory)"
+              },
+              {
+                "name": "Region",
+                "type": "Foo.Region",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "RegionID",
+                    "property": "RegionID"
+                  }
+                ]
+              },
+              {
+                "name": "Employees",
+                "type": "Collection(Foo.Employee)"
+              }
+            ]
+          },
+          {
+            "name": "User",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "Id"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "Id",
+                "nullable": "false",
+                "type": "Edm.Int64"
+              },
+              {
+                "name": "UserName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "UserPassword",
+                "type": "Edm.String"
+              },
+              {
+                "name": "FirstName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "LastName",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Email",
+                "type": "Edm.String"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Decimal"
+              },
+              {
+                "name": "CreatedBy",
+                "type": "Edm.String"
+              },
+              {
+                "name": "CreatedByUserId",
+                "type": "Edm.Int64"
+              },
+              {
+                "name": "CreatedDate",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "ModifiedBy",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ModifiedByUserId",
+                "type": "Edm.Int64"
+              },
+              {
+                "name": "ModifiedDate",
+                "type": "Edm.DateTimeOffset"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "UserRoles",
+                "type": "Collection(Foo.UserRole)"
+              }
+            ]
+          },
+          {
+            "name": "InternationalOrder",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "OrderID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "OrderID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "CustomsDescription",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ExciseTax",
+                "type": "Edm.Decimal"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Order",
+                "type": "Foo.Order",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "OrderID",
+                    "property": "OrderID"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "TimeLimit",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "Id"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "Id",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "MaxTime",
+                "type": "Edm.Duration"
+              },
+              {
+                "name": "MinTime",
+                "type": "Edm.Duration"
+              },
+              {
+                "name": "TimeGroupId",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "TimeGroup",
+                "type": "Foo.TimeGroup"
+              }
+            ]
+          },
+          {
+            "name": "TimeGroup",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "Id"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "Id",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "Comment",
+                "type": "Edm.String"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "TimeLimits",
+                "type": "Collection(Foo.TimeLimit)"
+              }
+            ]
+          },
+          {
+            "name": "EmployeeTerritory",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "ID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "ID",
+                "nullable": "false",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "EmployeeID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "TerritoryID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Employee",
+                "type": "Foo.Employee",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "EmployeeID",
+                    "property": "EmployeeID"
+                  }
+                ]
+              },
+              {
+                "name": "Territory",
+                "type": "Foo.Territory",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "TerritoryID",
+                    "property": "TerritoryID"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "UserRole",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "ID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "ID",
+                "nullable": "false",
+                "type": "Edm.Int64"
+              },
+              {
+                "name": "UserId",
+                "type": "Edm.Int64"
+              },
+              {
+                "name": "RoleId",
+                "type": "Edm.Int64"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "Role",
+                "type": "Foo.Role",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "Id",
+                    "property": "RoleId"
+                  }
+                ]
+              },
+              {
+                "name": "User",
+                "type": "Foo.User",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "Id",
+                    "property": "UserId"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Comment",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "CreatedOn"
+                  },
+                  {
+                    "name": "SeqNum"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "CreatedOn",
+                "nullable": "false",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "SeqNum",
+                "nullable": "false",
+                "type": "Edm.Byte"
+              },
+              {
+                "name": "Comment1",
+                "type": "Edm.String"
+              }
+            ]
+          },
+          {
+            "name": "Employee",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "EmployeeID"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "EmployeeID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "LastName",
+                "nullable": "false",
+                "type": "Edm.String"
+              },
+              {
+                "name": "FirstName",
+                "nullable": "false",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Title",
+                "type": "Edm.String"
+              },
+              {
+                "name": "TitleOfCourtesy",
+                "type": "Edm.String"
+              },
+              {
+                "name": "BirthDate",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "HireDate",
+                "type": "Edm.DateTimeOffset"
+              },
+              {
+                "name": "Address",
+                "type": "Edm.String"
+              },
+              {
+                "name": "City",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Region",
+                "type": "Edm.String"
+              },
+              {
+                "name": "PostalCode",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Country",
+                "type": "Edm.String"
+              },
+              {
+                "name": "HomePhone",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Extension",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Photo",
+                "type": "Edm.Binary"
+              },
+              {
+                "name": "Notes",
+                "type": "Edm.String"
+              },
+              {
+                "name": "PhotoPath",
+                "type": "Edm.String"
+              },
+              {
+                "name": "ReportsToEmployeeID",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "RowVersion",
+                "type": "Edm.Int32"
+              },
+              {
+                "name": "FullName",
+                "type": "Edm.String"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "DirectReports",
+                "type": "Collection(Foo.Employee)"
+              },
+              {
+                "name": "Manager",
+                "type": "Foo.Employee",
+                "referentialConstraint": [
+                  {
+                    "referencedProperty": "EmployeeID",
+                    "property": "EmployeeID"
+                  }
+                ]
+              },
+              {
+                "name": "EmployeeTerritories",
+                "type": "Collection(Foo.EmployeeTerritory)"
+              },
+              {
+                "name": "Orders",
+                "type": "Collection(Foo.Order)"
+              },
+              {
+                "name": "Territories",
+                "type": "Collection(Foo.Territory)"
+              }
+            ]
+          },
+          {
+            "name": "Role",
+            "key": [
+              {
+                "propertyRef": [
+                  {
+                    "name": "Id"
+                  }
+                ]
+              }
+            ],
+            "property": [
+              {
+                "name": "Id",
+                "nullable": "false",
+                "type": "Edm.Int64"
+              },
+              {
+                "name": "Name",
+                "nullable": "false",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Description",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Ts",
+                "nullable": "false",
+                "type": "Edm.Binary"
+              },
+              {
+                "name": "RoleType",
+                "type": "Models.NorthwindIB.RoleType"
+              }
+            ],
+            "navigationProperty": [
+              {
+                "name": "UserRoles",
+                "type": "Collection(Foo.UserRole)"
+              }
+            ]
+          }
+        ],
+        "complexType": [
+          {
+            "name": "Location",
+            "property": [
+              {
+                "name": "Address",
+                "type": "Edm.String"
+              },
+              {
+                "name": "City",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Region",
+                "type": "Edm.String"
+              },
+              {
+                "name": "PostalCode",
+                "type": "Edm.String"
+              },
+              {
+                "name": "Country",
+                "type": "Edm.String"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "namespace": "Models.NorthwindIB",
+        "enumType": [
+          {
+            "name": "RoleType",
+            "member": [
+              {
+                "name": "Guest",
+                "value": "0"
+              },
+              {
+                "name": "Restricted",
+                "value": "1"
+              },
+              {
+                "name": "Standard",
+                "value": "2"
+              },
+              {
+                "name": "Admin",
+                "value": "3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "namespace": "Default",
+        "entityContainer": {
+          "name": "Container",
+          "entitySet": [
+            {
+              "name": "Products",
+              "entityType": "Foo.Product",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Categories",
+                  "path": "Category"
+                },
+                {
+                  "target": "Suppliers",
+                  "path": "Supplier"
+                }
+              ]
+            },
+            {
+              "name": "Customers",
+              "entityType": "Foo.Customer",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Orders",
+                  "path": "Orders"
+                }
+              ]
+            },
+            {
+              "name": "Orders",
+              "entityType": "Foo.Order",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Customers",
+                  "path": "Customer"
+                },
+                {
+                  "target": "OrderDetails",
+                  "path": "OrderDetails"
+                },
+                {
+                  "target": "InternationalOrders",
+                  "path": "InternationalOrder"
+                }
+              ]
+            },
+            {
+              "name": "OrderDetails",
+              "entityType": "Foo.OrderDetail",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Orders",
+                  "path": "Order"
+                },
+                {
+                  "target": "Products",
+                  "path": "Product"
+                }
+              ]
+            },
+            {
+              "name": "Categories",
+              "entityType": "Foo.Category",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Products",
+                  "path": "Products"
+                }
+              ]
+            },
+            {
+              "name": "Suppliers",
+              "entityType": "Foo.Supplier",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Products",
+                  "path": "Products"
+                }
+              ]
+            },
+            {
+              "name": "Regions",
+              "entityType": "Foo.Region",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Territories",
+                  "path": "Territories"
+                }
+              ]
+            },
+            {
+              "name": "Territories",
+              "entityType": "Foo.Territory",
+              "navigationPropertyBinding": [
+                {
+                  "target": "EmployeeTerritories",
+                  "path": "EmployeeTerritories"
+                },
+                {
+                  "target": "Regions",
+                  "path": "Region"
+                }
+              ]
+            },
+            {
+              "name": "Users",
+              "entityType": "Foo.User",
+              "navigationPropertyBinding": [
+                {
+                  "target": "UserRoles",
+                  "path": "UserRoles"
+                }
+              ]
+            },
+            {
+              "name": "InternationalOrders",
+              "entityType": "Foo.InternationalOrder",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Orders",
+                  "path": "Order"
+                }
+              ]
+            },
+            {
+              "name": "TimeLimits",
+              "entityType": "Foo.TimeLimit",
+              "navigationPropertyBinding": [
+                {
+                  "target": "TimeGroups",
+                  "path": "TimeGroup"
+                }
+              ]
+            },
+            {
+              "name": "TimeGroups",
+              "entityType": "Foo.TimeGroup",
+              "navigationPropertyBinding": [
+                {
+                  "target": "TimeLimits",
+                  "path": "TimeLimits"
+                }
+              ]
+            },
+            {
+              "name": "EmployeeTerritories",
+              "entityType": "Foo.EmployeeTerritory",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Territories",
+                  "path": "Territory"
+                }
+              ]
+            },
+            {
+              "name": "UserRoles",
+              "entityType": "Foo.UserRole",
+              "navigationPropertyBinding": [
+                {
+                  "target": "Users",
+                  "path": "User"
+                }
+              ]
+            },
+            {
+              "name": "Comments",
+              "entityType": "Foo.Comment"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
