@@ -554,6 +554,11 @@ namespace Breeze.ContextProvider.NH
                 var propType = propTypes[i];
                 if (propType.IsAssociationType) continue;
                 var columnArray = persister.GetPropertyColumnNames(i);
+                // HACK for NHibernate formula: when using formula GetPropertyColumnNames(i) returns an array with the first element null
+                if (columnArray[0] == null)
+                {
+                    continue;
+                }
                 if (NamesEqual(columnArray, columnNames)) return new string[] { propName };
             }
 
