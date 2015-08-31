@@ -241,7 +241,7 @@ namespace Breeze.ContextProvider.NH {
         });
         saveWorkState.EntityErrors = entityErrors;
       } catch (Exception) {
-        if (tx.IsActive) tx.Rollback();
+        if (!hasExistingTransaction) tx.Rollback();
         throw;
       } finally {
         if (!hasExistingTransaction) tx.Dispose();
