@@ -137,7 +137,7 @@ namespace Breeze.ContextProvider.NH
                 foreach (var entityInfo in kvp.Value)
                 {
                     AddToGraph(entityInfo, null); // make sure every entity is in the graph
-                    FixupRelationships(entityInfo, classMeta);
+                    ProcessRelationships(entityInfo, classMeta);
                 }
             }
         }
@@ -148,36 +148,34 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         /// <param name="entityInfo">Entity that will be saved</param>
         /// <param name="meta">Metadata about the entity type</param>
-        private void FixupRelationships(EntityInfo entityInfo, IClassMetadata meta)
+        private void ProcessRelationships(EntityInfo entityInfo, IClassMetadata meta)
         {
             var propNames = meta.PropertyNames;
             var propTypes = meta.PropertyTypes;
             
-
             if (meta.IdentifierType != null)
             {
-                var propType = meta.IdentifierType;
-                if (propType.IsAssociationType && propType.IsEntityType)
-                {
-                    FixupRelationship(meta.IdentifierPropertyName, (EntityType)propType, entityInfo, meta);
-                }
-                else if (propType.IsComponentType)
-                {
-                    FixupComponentRelationships(meta.IdentifierPropertyName, (ComponentType)propType, entityInfo, meta);
-                }
+                ProcessRelationship(meta.IdentifierPropertyName, meta.IdentifierType, entityInfo, meta);
             }
 
             for (int i = 0; i < propNames.Length; i++)
             {
-                var propType = propTypes[i];
-                if (propType.IsAssociationType && propType.IsEntityType)
-                {
-                    FixupRelationship(propNames[i], (EntityType)propTypes[i], entityInfo, meta);
-                }
-                else if (propType.IsComponentType)
-                {
-                    FixupComponentRelationships(propNames[i], (ComponentType)propType, entityInfo, meta);
-                }
+                ProcessRelationship(propNames[i], propTypes[i], entityInfo, meta);
+            }
+        }
+
+        /// <summary>
+        /// Handle a specific property if it is a Association or Component relationship.
+        /// </summary>
+        private void ProcessRelationship(string propName, IType propType, EntityInfo entityInfo, IClassMetadata meta)
+        {
+            if (propType.IsAssociationType && propType.IsEntityType)
+            {
+                FixupRelationship(propName, (EntityType)propType, entityInfo, meta);
+            }
+            else if (propType.IsComponentType)
+            {
+                FixupComponentRelationships(propName, (ComponentType)propType, entityInfo, meta);
             }
         }
 
@@ -248,7 +246,13 @@ namespace Breeze.ContextProvider.NH
                 return;
             }
             object relatedEntity = GetPropertyValue(meta, entity, propName);
-            if (relatedEntity != null) return;    // entities are already connected
+            if (relatedEntity != null)
+            {
+                // entities are already connected - still need to add to dependency graph
+                EntityInfo relatedEntityInfo = FindInSaveMapByEntity(propType.ReturnedClass, relatedEntity);
+                MaybeAddToGraph(entityInfo, relatedEntityInfo, propType);
+                return;
+            }
 
             relatedEntity = GetRelatedEntity(propName, propType, entityInfo, meta);
 
@@ -275,7 +279,7 @@ namespace Breeze.ContextProvider.NH
 
             if (id != null)
             {
-                EntityInfo relatedEntityInfo = FindInSaveMap(propType.ReturnedClass, id);
+                EntityInfo relatedEntityInfo = FindInSaveMapById(propType.ReturnedClass, id);
 
                 if (relatedEntityInfo == null) 
                 {
@@ -288,14 +292,20 @@ namespace Breeze.ContextProvider.NH
                 }
                 else
                 {
-                    if (!(propType.IsOneToOne && propType.UseLHSPrimaryKey && (propType.ForeignKeyDirection == ForeignKeyDirection.ForeignKeyToParent)))
-                    {
-                        AddToGraph(entityInfo, relatedEntityInfo);
-                    }
+                    MaybeAddToGraph(entityInfo, relatedEntityInfo, propType);
                     relatedEntity = relatedEntityInfo.Entity;
                 }
             }
             return relatedEntity;
+        }
+
+        /// <summary>Add the parent-child relationship for certain propType conditions</summary>
+        private void MaybeAddToGraph(EntityInfo child, EntityInfo parent, EntityType propType)
+        {
+            if (!(propType.IsOneToOne && propType.UseLHSPrimaryKey && (propType.ForeignKeyDirection == ForeignKeyDirection.ForeignKeyToParent)))
+            {
+                AddToGraph(child, parent);
+            }
         }
 
         /// <summary>
@@ -388,8 +398,8 @@ namespace Breeze.ContextProvider.NH
         /// </summary>
         /// <param name="entityType">Type of entity, e.g. Order.  The saveMap will be searched for this type and its subtypes.</param>
         /// <param name="entityId">Key value of the entity</param>
-        /// <returns>The entity, or null if not found</returns>
-        private EntityInfo FindInSaveMap(Type entityType, object entityId)
+        /// <returns>The EntityInfo, or null if not found</returns>
+        private EntityInfo FindInSaveMapById(Type entityType, object entityId)
         {
             List<EntityInfo> entityInfoList = saveMap.Where(p => entityType.IsAssignableFrom(p.Key)).SelectMany(p => p.Value).ToList();
             if (entityInfoList != null && entityInfoList.Count != 0)
@@ -405,6 +415,18 @@ namespace Breeze.ContextProvider.NH
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Find the matching entity in the saveMap.  This is for relationship fixup.
+        /// </summary>
+        /// <param name="entityType">Type of entity, e.g. Order.  The saveMap will be searched for this type and its subtypes.</param>
+        /// <param name="entityId">The entity being found</param>
+        /// <returns>The EntityInfo, or null if not found</returns>
+        private EntityInfo FindInSaveMapByEntity(Type entityType, object entity)
+        {
+            List<EntityInfo> entityInfoList = saveMap.Where(p => entityType.IsAssignableFrom(p.Key)).SelectMany(p => p.Value).ToList();
+            return entityInfoList.Where(info => info.Entity == entity).FirstOrDefault();
         }
 
     }
