@@ -61,7 +61,7 @@ namespace Breeze.ContextProvider.NH
             var child = methInfo.Invoke(parent, null);
             pathIndex++;
 
-            var collection = child as System.Collections.ICollection;
+            var collection = child as IEnumerable;
             if (collection != null)
             {
                 System.Collections.IEnumerator iter = collection.GetEnumerator();
