@@ -250,6 +250,8 @@ namespace Breeze.ContextProvider {
         var val = jprop.Value as JValue;
         if (val != null) {
           return val.Value;
+        } else if (jprop.Value as JArray != null){
+          return jprop.Value as JArray;
         } else {
           return jprop.Value as JObject;
         }
