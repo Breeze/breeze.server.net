@@ -98,6 +98,11 @@ namespace Breeze.WebApi2 {
       if (newQueryOptions == queryOptions) {
         return queryOptions.ApplyTo(queryable, querySettings);
       } else {
+        // remove inlinecount or it will be executed two times
+        if (newQueryOptions.InlineCount != null) {
+          newQueryOptions = QueryHelper.RemoveInlineCount(newQueryOptions);
+        }
+
         // apply default processing first with "unsupported" stuff removed. 
         var q = newQueryOptions.ApplyTo(queryable, querySettings);
         // then apply unsupported stuff. 
@@ -124,6 +129,11 @@ namespace Breeze.WebApi2 {
 
     public static ODataQueryOptions RemoveSelectExpandOrderBy(ODataQueryOptions queryOptions) {
       var optionsToRemove = new List<String>() { "$select", "$expand", "$orderby", "$top", "$skip" };
+      return RemoveOptions(queryOptions, optionsToRemove);
+    }
+
+    public static ODataQueryOptions RemoveInlineCount(ODataQueryOptions queryOptions) {
+      var optionsToRemove = new List<String>() { "$inlinecount" };
       return RemoveOptions(queryOptions, optionsToRemove);
     }
 
