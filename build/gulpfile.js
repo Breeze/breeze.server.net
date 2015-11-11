@@ -50,12 +50,22 @@ gulp.task("copyBreezeJs", ['breezeClientBuild'], function() {
 // the most recent production version of the same file and copy
 // it if found over the one in the nuget dir.
 gulp.task("copyDlls", ['breezeServerBuild'], function() {
-  gutil.log('copying dlls...')
-  var fileNames = glob.sync(_nugetDir + '**/*.dll');
   var streams = [];
+  gutil.log('copying dlls...')
+  updateFiles(streams, ".dll");
+  gutil.log('copying XMLs...')
+  updateFiles(streams, ".XML");
+  return eventStream.concat.apply(null, streams);
+});
+
+// for each file in nuget dir, copy existing file from the release dir.
+// @param streams[] - array that will be filled with streams
+// @param ext - file extension (with .) of files to copy.
+function updateFiles(streams, ext) {
+  var fileNames = glob.sync(_nugetDir + '**/*' + ext);
   fileNames.forEach(function(fileName) {
-    var baseName = path.basename(fileName, '.dll');
-    var src = '../' + baseName +  '/bin/release/' + baseName + '.dll'
+    var baseName = path.basename(fileName, ext);
+    var src = '../' + baseName +  '/bin/release/' + baseName + ext
     if (fs.existsSync(src)) {
       var dest = path.dirname(fileName);
       gutil.log("Processing " + fileName);
@@ -64,8 +74,7 @@ gulp.task("copyDlls", ['breezeServerBuild'], function() {
       gutil.log("skipped: " + src);
     }
   });
-  return eventStream.concat.apply(null, streams);
-});
+}
 
 gulp.task('breezeServerBuild', function(done) {
   var solutionFileName = '../Breeze.Build.sln';

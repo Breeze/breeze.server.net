@@ -1,0 +1,764 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Breeze.ContextProvider</name>
+    </assembly>
+    <members>
+        <member name="T:Breeze.ContextProvider.BreezeMetadataValidator">
+            <summary>
+            Validates entities using Breeze metadata.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.BreezeMetadataValidator.#ctor(Breeze.ContextProvider.ContextProvider,System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}})">
+            <summary>
+            Create a new instance.  
+            </summary>
+            <param name="contextProvider">Used for getting entity keys for building EntityError objects.</param>
+            <param name="structuralTypeList">Contains the validator information for properties of entity and complex types.</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.BreezeMetadataValidator.#ctor(Breeze.ContextProvider.ContextProvider,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Create a new instance.  
+            </summary>
+            <param name="contextProvider">Used for getting entity keys for building EntityError objects.</param>
+            <param name="breezeMetadata">Contains breeze metadata. The structuralTypeList is extracted from it.</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.BreezeMetadataValidator.ValidateEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}},System.Boolean)">
+            <summary>
+            Validate all the entities in the saveMap.
+            </summary>
+            <param name="saveMap">Map of type to entities.</param>
+            <param name="throwIfInvalid">If true, throws an EntityErrorsException if any entity is invalid</param>
+            <exception cref="T:Breeze.ContextProvider.EntityErrorsException">Contains all the EntityErrors.  Only thrown if throwIfInvalid is true.</exception>
+            <returns>List containing an EntityError for each failed validation.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.BreezeMetadataValidator.ValidateEntity(Breeze.ContextProvider.EntityInfo,System.Collections.Generic.List{Breeze.ContextProvider.EntityError})">
+            <summary>
+            Validates a single entity.
+            Skips validation (returns true) if entity is marked Deleted.
+            </summary>
+            <param name="entityInfo">contains the entity to validate</param>
+            <param name="entityErrors">An EntityError is added to this list for each error found in the entity</param>
+            <returns>true if entity is valid, false if invalid.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DataAnnotationsValidator.#ctor(Breeze.ContextProvider.ContextProvider)">
+            <summary>
+            Create a new instance.  
+            </summary>
+            <param name="contextProvider">Used for getting entity keys for building EntityError objects.</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.DataAnnotationsValidator.ValidateEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}},System.Boolean)">
+            <summary>
+            Validate all the entities in the saveMap.
+            </summary>
+            <param name="saveMap">Map of type to entities.</param>
+            <param name="throwIfInvalid">If true, throws an EntityErrorsException if any entity is invalid</param>
+            <exception cref="T:Breeze.ContextProvider.EntityErrorsException">Contains all the EntityErrors.  Only thrown if throwIfInvalid is true.</exception>
+            <returns>List containing an EntityError for each failed validation.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DataAnnotationsValidator.ValidateEntity(Breeze.ContextProvider.EntityInfo,System.Collections.Generic.List{Breeze.ContextProvider.EntityError})">
+            <summary>
+            Validates a single entity.
+            Skips validation (returns true) if entity is marked Deleted.
+            </summary>
+            <param name="entityInfo">contains the entity to validate</param>
+            <param name="entityErrors">An EntityError is added to this list for each error found in the entity</param>
+            <returns>true if entity is valid, false if invalid.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.GetDbConnection">
+            <summary>
+            Should only be called from BeforeSaveEntities and AfterSaveEntities.
+            </summary>
+            <returns>Open DbConnection used by the ContextProvider's implementation</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.OpenDbConnection">
+            <summary>
+            Internal use only.  Should only be called by ContextProvider during SaveChanges.
+            Opens the DbConnection used by the ContextProvider's implementation.
+            Method must be idempotent; after it is called the first time, subsequent calls have no effect.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.CloseDbConnection">
+            <summary>
+            Internal use only.  Should only be called by ContextProvider during SaveChanges.
+            Closes the DbConnection used by the ContextProvider's implementation.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.BeforeSaveEntity(Breeze.ContextProvider.EntityInfo)">
+            <summary>
+            The method is called for each entity to be saved before the save occurs.  If this method returns 'false'
+            then the entity will be excluded from the save.  The base implementation returns the result of BeforeSaveEntityDelegate,
+            or 'true' if BeforeSaveEntityDelegate is null.
+            </summary>
+            <param name="entityInfo"></param>
+            <returns>true to include the entity in the save, false to exclude</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.BeforeSaveEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}})">
+            <summary>
+            Called after BeforeSaveEntity, and before saving the entities to the persistence layer.
+            Allows adding, changing, and removing entities prior to save.
+            The base implementation returns the result of BeforeSaveEntitiesDelegate, or the unchanged
+            saveMap if BeforeSaveEntitiesDelegate is null.
+            </summary>
+            <param name="saveMap">A List of EntityInfo for each Type</param>
+            <returns>The EntityInfo for each entity that should be saved</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.AfterSaveEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}},System.Collections.Generic.List{Breeze.ContextProvider.KeyMapping})">
+            <summary>
+            Called after the entities have been saved, and all the temporary keys have been replaced by real keys.
+            The base implementation calls AfterSaveEntitiesDelegate, or does nothing if AfterSaveEntitiesDelegate is null.
+            </summary>
+            <param name="saveMap">The same saveMap that was returned from BeforeSaveEntities</param>
+            <param name="keyMappings">The mapping of temporary keys to real keys</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.BreezeConfig.CreateJsonSerializerSettings">
+            <summary>
+            Override to use a specialized JsonSerializer implementation.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.BreezeConfig.GetTransactionSettings">
+            <summary>
+            Returns TransactionSettings.Default.  Override to return different settings.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Breeze.ContextProvider.QueryBuilder">
+            <summary>
+            Used to build up a Queryable.
+            </summary>
+            <remarks>
+            Remember to add it to the Filters for your configuration
+            </remarks>
+        </member>
+        <member name="T:Breeze.ContextProvider.DynamicTypeBase">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeBase.#ctor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicGenericTypeBuilder.CreateType(Breeze.ContextProvider.DynamicTypeInfo)">
+            <summary>
+            Constructs a new dynamic entity type from the specified DynamicTypeInfo.
+            </summary>
+            <param name="info">An DynamicTypeInfo instance</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException">Thrown if the dynamic type key name is already defined.</exception>
+        </member>
+        <member name="T:Breeze.ContextProvider.DynamicTypeInfo">
+            <summary>
+            Internal use only.
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.DynamicTypeInfo.DynamicAssemblyNameSuffix">
+            <summary>
+            Suffix added to all dynamic assemblies constructed here.
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.DynamicTypeInfo.CSharpAnonPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.DynamicTypeInfo.CSharpDynamicPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.DynamicTypeInfo.VBAnonPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.DynamicTypeInfo.VBDynamicPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.DynamicTypeInfo.BaseDynamicPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.FindOrCreate(System.Type)">
+            <summary>
+            Either finds a dynamic type that matches the specified anon or dynamic type or 
+            creates a new DynamicTypeInfo that does.
+            </summary>
+            <param name="anonOrDynType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.FindOrCreate(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Either finds a dynamic type that matches the specified propertyNames and propertyTypes or creates a 
+            new DynamicType that does.  
+            </summary>
+            <param name="propertyNames"></param>
+            <param name="propertyTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.#ctor(System.Type)">
+            <summary>
+            For internal use only. Builds a dynamic type from an anonymous type.
+            </summary>
+            <param name="anonType"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.#ctor(Breeze.ContextProvider.DynamicTypeInfo.TypeShape)">
+            <summary>
+            Called by FindOrCreate to create a new dynamictypeinfo based on the selected properties and types  
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.Equals(System.Object)">
+            <summary>
+            For internal use only.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.GetHashCode">
+            <summary>
+            For internal use only.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.FindByAssemblyName(System.String)">
+            <summary>
+            Return the DynamicTypeInfo for the specified assembly name containing a dynamic type.
+            </summary>
+            <param name="pAssemblyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.FindByDynamicTypeName(System.String)">
+            <summary>
+            Return the DynamicTypeInfo for the specified dynamic type name.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.IsDynamicType(System.Type)">
+            <summary>
+            For internal use only.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.ConvertDynamicAssemblyNameToDynamicTypeName(System.String)">
+            <summary>
+            Return the dynamic type name for the specified assembly name containing the dynamic type.
+            </summary>
+            <param name="pAssemblyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.FindByTypeShape(Breeze.ContextProvider.DynamicTypeInfo.TypeShape)">
+            <summary>
+            For internal use only.
+            </summary>
+            <param name="typeShape"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.BuildDynamicTypeName">
+            <summary>
+            The type name generated must be the same even if generated during different sessions
+            ( so no part can be random or based on the current time)
+            because this same name may be sent to the server by multiple clients and
+            the server needs to understand that these are all the same type. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.DynamicTypeInfo.CalcStringHash(System.String,System.Int32)">
+            <summary>
+            Returns a hash encoded as a string with the chars (A-Z,A-z,0-9,_) only.
+            Under the covers this method returns an 128 bit hash code calculated
+            using SHA1.  This code is then encoded into an approx Base64 encode
+            of the chars listed above.  This will usually be approx 28 chars in length,
+            which may then be truncated based on the maxChars parameter. This
+            method can process approx 100K 300 char strings a second.
+            </summary>
+            <param name="stringToHash"></param>
+            <param name="maxChars"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.OriginalType">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicType">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.TypeName">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeName">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyNames">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyTypes">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.Properties">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicConstructor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicEmptyConstructor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeShouldSave">
+            <summary>
+            Should this dynamic type's assembly be written out as a file.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeFileDirectory">
+            <summary>
+            File directory to write out the dynamic types assembly.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyNameWrappers">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="T:Breeze.ContextProvider.DynamicTypeInfo.TypeShape">
+             <summary>
+            Used for shape comparison.
+             </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.#ctor">
+            <summary>
+            Create a TransactionSettings object using default settings.
+            </summary>
+            <remarks>
+            Defaults the <see cref="P:Breeze.ContextProvider.TransactionSettings.IsolationLevel"/> to ReadCommitted, 
+            the <see cref="P:Breeze.ContextProvider.TransactionSettings.Timeout"/> to TransactionManager.DefaultTimeout (which is usually 1 minute),
+            and <see cref="P:Breeze.ContextProvider.TransactionSettings.TransactionType"/> to TransactionType.None (which means the other settings have no effect).  
+            These settings are not Breeze requirements and can be changed using the appropriate constructor or setter.
+            </remarks>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.#ctor(System.Transactions.IsolationLevel,System.TimeSpan,Breeze.ContextProvider.TransactionType)">
+            <summary>
+            Create a TransactionSettings object with the specified settings.
+            </summary>
+            <remarks>
+            Note that IsolationLevel and Timeout have no affect if TransactionType is None.
+            </remarks>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.ToTransactionOptions">
+            <summary>
+            Converts the TransactionSettings to a <see cref="T:System.Transactions.TransactionOptions"/> instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.Equals(System.Object)">
+            <summary>
+            See <see cref="M:System.Object.Equals(System.Object)"/>.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.GetHashCode">
+            <summary>
+            See <see cref="M:System.Object.GetHashCode"/>.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"></see>.
+            </returns>
+        </member>
+        <member name="F:Breeze.ContextProvider.TransactionSettings.IsolationMap">
+            <summary>
+            Maps the System.Transactions.IsolationLevel to System.Data.IsolationLevel
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.TransactionSettings.Default">
+            <summary>
+            Default settings for all saves. 
+            </summary>
+            <remarks>
+            The <b>Default</b> provides default transaction settings for all SaveChanges actions.  
+            Override BreezeConfig to return a different TransactionSettings value.
+            You can supply settings for a particular save with the TransactionSettings passed in the SaveChanges call. 
+            </remarks>
+        </member>
+        <member name="P:Breeze.ContextProvider.TransactionSettings.TransactionType">
+            <summary>
+            What type of transaction to use when performing saves.
+            The transaction wraps the BeforeSaveEntity/ies, SaveChangesCore, and AfterSaveEntities methods
+            so all work can be commited or rolled back together.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.TransactionSettings.IsolationLevel">
+            <summary>
+            Gets the transaction locking behavior.
+            </summary>
+            <remarks>
+            Only applicable if <see cref="P:Breeze.ContextProvider.TransactionSettings.TransactionType"/> is not <code>None</code>.  The default IsolationLevel is ReadCommitted.
+            </remarks>
+        </member>
+        <member name="P:Breeze.ContextProvider.TransactionSettings.IsolationLevelAs">
+            <summary>
+            Gets the transaction locking behavior as a System.Data.IsolationLevel.
+            </summary>
+            <remarks>
+            Only applicable if <see cref="P:Breeze.ContextProvider.TransactionSettings.TransactionType"/> is not <code>None</code>.  The default IsolationLevel is ReadCommitted.
+            </remarks>
+        </member>
+        <member name="P:Breeze.ContextProvider.TransactionSettings.Timeout">
+            <summary>
+            Gets the timeout period for the TransactionScope transaction. 
+            </summary>
+            <remarks>
+            Only applicable if <see cref="P:Breeze.ContextProvider.TransactionSettings.TransactionType"/> is <code>TransactionScope</code>. 
+            The default Timeout is TransactionManager.DefaultTimeout which is usually 1 minute.
+            See http://stackoverflow.com/questions/6402031/transactionscope-maximumtimeout
+            </remarks>
+        </member>
+        <member name="T:Breeze.ContextProvider.TransactionType">
+            <summary><list>
+             TransactionScope - Use the ambient .NET TransactionScope object.  Necessary for distributed transactions.
+             DbTransaction - Use the transaction from the DbConnection.  Only works against the single connection.
+             None - BeforeSaveEntity/ies, SaveChangesCore, and AfterSaveEntities are not executed in the same transaction.
+            </list></summary>
+        </member>
+        <member name="T:Breeze.ContextProvider.TypeFns">
+            <summary>
+            A collection of static methods used to provide additional <see cref="T:System.Type"/> related services.
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.TypeFns.NumericTypes">
+            <summary>
+            Returns an array of numeric types.
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.TypeFns.IntegerTypes">
+            <summary>
+            Returns an array of integer types.
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.TypeFns.DecimalTypes">
+            <summary>
+            Returns an array of decimal types.
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.TypeFns.PredefinedTypes">
+            <summary>
+            Returns an array of predefined types.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetTypeName(System.Type)">
+            <summary>
+            Returns the name of either the specified type or its non-nullable counterpart.
+            </summary>
+            <param name="type"></param>
+            <returns>the name of the given type</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsEnumType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents an enumeration.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type represents an enumeration; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsNumericType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents a numeric type.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type is numeric; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsIntegralType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents an integer type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsSignedIntegralType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents a signed integer type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsUnsignedIntegralType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents an unsigned integer type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsGenericQueryableType(System.Type)">
+            <summary>
+            Think about making public if used again.
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsGroupingType(System.Type)">
+            <summary>
+            Returns true if the Type is an IGrouping.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetGroupingInterface(System.Type)">
+            <summary>
+            Returns the IGrouping interface implemented by the type.
+            </summary>
+            <param name="type"></param>
+            <returns>May return null if the specified type is not a grouping type</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetGenericArgument(System.Type)">
+            <summary>
+            Gets a single generic argument from a specified type.
+            </summary>
+            <param name="type"></param>
+            <returns>null if it can't find one or result is ambiguous</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetNullableType(System.Type)">
+            <summary>
+            Gets the nullable type that corresponds to the given type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetNonNullableType(System.Type)">
+            <summary>
+            Returns either the specified type or its non-nullable counterpart.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetElementType(System.Type)">
+            <summary>
+            Returns the element type of any enumerable type;
+            </summary>
+            <param name="seqType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindIEnumerable(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="seqType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsPredefinedType(System.Type)">
+            <summary>
+            Returns whether the specified type is one of the <see cref="F:Breeze.ContextProvider.TypeFns.PredefinedTypes"/>.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type is a predefined type; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsPredefinedType(System.Type,System.Boolean)">
+            <summary>
+            Returns whether the specified type is one of the <see cref="F:Breeze.ContextProvider.TypeFns.PredefinedTypes"/> and
+            optionally includes nullable versions of the same in the check.
+            </summary>
+            <param name="type"></param>
+            <param name="includeNullable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsNullableType(System.Type)">
+            <summary>
+            Returns whether the specified type is a nullable generic type, i.e. Nullable{T}.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type is a nullable generic type; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetDefaultValue(System.Type)">
+            <summary>
+            Gets the default value for a specified type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetMethodByExample``2(System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Type[])">
+            <summary>
+            For internal use only.
+            </summary>
+            <typeparam name="TIn"></typeparam>
+            <typeparam name="TOut"></typeparam>
+            <param name="prototypeLambda"></param>
+            <param name="resolvedTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindPropertyOrField(System.Type,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Finds a specific public property or field. Will be automatically restricted as well by execution environment restrictions ( e.g. Silverlight).
+            </summary>
+            <param name="type"></param>
+            <param name="memberName"></param>
+            <param name="isPublic"></param>
+            <param name="isStatic"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindPropertyOrField(System.Type,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Finds a specific property or field
+            </summary>
+            <param name="type"></param>
+            <param name="memberName"></param>
+            <param name="bindingFlags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindMethod(System.Type,System.String,System.Type[])">
+            <summary>
+            Finds a specific public method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindMethod(System.Type,System.String,System.Reflection.BindingFlags,System.Type[],System.Type[])">
+            <summary>
+            Finds a specific method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="genericArgTypes"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindMethods(System.Type,System.String,System.Reflection.BindingFlags,System.Type[],System.Type[])">
+            <summary>
+            Finds all the methods that match specific criteria.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="genericArgTypes"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindMethods(System.Type,System.String,System.Reflection.BindingFlags,System.Type[])">
+            <summary>
+            Finds specific methods.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindMethod(System.Type,System.String,System.Boolean,System.Type[])">
+            <summary>
+            Finds a specific method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="isStatic"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindMethod(System.Type,System.String,System.Reflection.BindingFlags,System.Type[])">
+            <summary>
+            Finds a specific method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.FindGenericMethods(System.Type,System.String,System.Reflection.BindingFlags,System.Type[])">
+            <summary>
+            Finds a collection of generic methods. 
+            </summary>
+            <param name="type"></param>
+            <param name="methodName">Is case insensitive</param>
+            <param name="flags"></param>
+            <param name="genericArgTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetSelfAndBaseTypes(System.Type)">
+            <summary>
+            Returns a collection of types from which the given type directly inherits or implements.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.GetSelfAndBaseClasses(System.Type)">
+            <summary>
+            Returns a collection of classes (not interfaces) from which the given type directly inherits.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.IsCompatibleWith(System.Type,System.Type)">
+            <summary>
+            Determines whether the source type is compatible with the given target type.
+            </summary>
+            <remarks>This is a better implementation than <see cref="M:System.Type.IsAssignableFrom(System.Type)"/>.</remarks>
+            <param name="source"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.ConstructGenericInstance(System.Type,System.Type[])">
+            <summary>
+            Constructs a generic instance.
+            </summary>
+            <param name="genericType"></param>
+            <param name="argTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.MakeGenericList(System.Type)">
+            <summary>
+            Constructs a generic list.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TypeFns.ConstructGenericInstance(System.Type,System.Type[],System.Object[])">
+            <summary>
+            Constructs a generic instance. Can only access public constructors.
+            </summary>
+            <param name="genericType"></param>
+            <param name="argTypes"></param>
+            <param name="constructorParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.EnumerableExtns.GetAggregateHashCode(System.Collections.IEnumerable)">
+            <summary>
+            Returns a hashcode for a collection that 
+            uses a similar algorithm to that used by the .NET Tuple class.
+            Order matters.
+            </summary>
+            <remarks>
+            </remarks>
+            <param name="items"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.EnumerableExtns.ToAggregateString(System.Collections.IEnumerable,System.String)">
+            <summary>
+            Concatenates the string version of each element in a collection using the delimiter provided.
+            </summary>
+            <param name="items">The enumerated items whose string formated elements will be concatenated</param>
+            <param name="delimiter">Delimiter</param>
+            <returns>A delimited string</returns>
+        </member>
+    </members>
+</doc>

@@ -4,7 +4,7 @@
   } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
     // CommonJS or Node: hard-coded dependency on "breeze"
     factory(require("breeze"));
-  } else if (typeof define === "function" && define["amd"] && !breeze) {
+  } else if (typeof define === "function" && define["amd"]) {
     // AMD anonymous module with hard-coded dependency on "breeze"
     define(["breeze"], factory);
   }
@@ -34,10 +34,29 @@
   proto.changeRequestInterceptor = abstractDsaProto.changeRequestInterceptor;
   proto._createChangeRequestInterceptor = abstractDsaProto._createChangeRequestInterceptor;
   proto.headers = { "DataServiceVersion": "2.0" };
+
+  proto.getAbsoluteUrl = function (dataService, url){
+    var serviceName = dataService.qualifyUrl('');
+    // only prefix with serviceName if not already on the url
+    var base = (core.stringStartsWith(url, serviceName)) ? '' : serviceName;
+    // If no protocol, turn base into an absolute URI
+    if (window && serviceName.indexOf('//') < 0) { 
+      // no protocol; make it absolute
+      base = window.location.protocol + '//' + window.location.host + 
+            (core.stringStartsWith(serviceName, '/') ? '' : '/') +
+            base;
+    }
+    return base + url;
+  };
+
+  // getRoutePrefix deprecated in favor of getAbsoluteUrl which seems to work for all OData providers; doubt anyone ever changed it; we'll see
+  // TODO: Remove from code base soon (15 June 2015)
+  // proto.getRoutePrefix = function (dataService) { return '';}   
+
   proto.executeQuery = function (mappingContext) {
 
     var deferred = Q.defer();
-    var url = mappingContext.getUrl();
+    var url = this.getAbsoluteUrl(mappingContext.dataService, mappingContext.getUrl());
 
     OData.read({
           requestUri: url,
@@ -64,7 +83,8 @@
     var deferred = Q.defer();
 
     var serviceName = dataService.serviceName;
-    var url = dataService.qualifyUrl('$metadata');
+    //var url = dataService.qualifyUrl('$metadata');
+    var url = this.getAbsoluteUrl(dataService, '$metadata');
     // OData.read(url,
     OData.read({
           requestUri: url,
@@ -105,15 +125,15 @@
 
   };
 
-  proto.getRoutePrefix = function (/*dataService*/) {
-    return '';
-  } // see webApiODataCtor
+
 
   proto.saveChanges = function (saveContext, saveBundle) {
     var adapter = saveContext.adapter = this;
     var deferred = Q.defer();
-    saveContext.routePrefix = adapter.getRoutePrefix(saveContext.dataService);
-    var url = saveContext.dataService.qualifyUrl("$batch");
+    //saveContext.routePrefix = adapter.getRoutePrefix(saveContext.dataService);
+    //var url = saveContext.dataService.qualifyUrl("$batch");
+    saveContext.routePrefix = adapter.getAbsoluteUrl(saveContext.dataService, ''); 
+    var url = saveContext.routePrefix + '$batch';                   
 
     var requestData = createChangeRequests(saveContext, saveBundle);
     var tempKeys = saveContext.tempKeys;
@@ -190,7 +210,7 @@
           if (uriKey) {
             // Strip baseUri to make uriKey a relative uri
             // Todo: why is this necessary when absolute works for every OData source tested?
-            var re = new RegExp('^' + mappingContext.dataService.serviceName, 'i')
+            var re = new RegExp('^' + mappingContext.dataService.serviceName, 'i');
             uriKey = uriKey.replace(re, '');
           }
           result.extraMetadata = {
@@ -288,7 +308,7 @@
     }
     request.requestUri =
       // use routePrefix if uriKey lacks protocol (i.e., relative uri)
-            uriKey.indexOf('//') > 0 ? uriKey : routePrefix + uriKey;
+      uriKey.indexOf('//') > 0 ? uriKey : routePrefix + uriKey;
   }
 
   function getUriKey(aspect) {
@@ -371,14 +391,18 @@
 
   breeze.core.extend(webApiODataCtor.prototype, proto);
 
+/*
+  // Deprecated in favor of getAbsoluteUrl
+  // TODO: Remove from code base soon (15 June 2015)
   webApiODataCtor.prototype.getRoutePrefix = function (dataService) {
     // Get the routePrefix from a Web API OData service name.
     // The routePrefix is presumed to be the pathname within the dataService.serviceName
     // Examples of servicename -> routePrefix:
     //   'http://localhost:55802/odata/' -> 'odata/'
     //   'http://198.154.121.75/service/odata/' -> 'service/odata/'
+    var parser;
     if (typeof document === 'object') { // browser
-      var parser = document.createElement('a');
+      parser = document.createElement('a');
       parser.href = dataService.serviceName;
     } else { // node
       parser = url.parse(dataService.serviceName);
@@ -392,6 +416,7 @@
     }      // ensure trailing '/'
     return prefix;
   };
+  */
 
   breeze.config.registerAdapter("dataService", webApiODataCtor);
   // OData 4 adapter

@@ -13,7 +13,7 @@ The all-in-one scripts include every AJAX, ModelLibrary and Dataservice adapter 
 
 Therefore this package also includes a "base" Breeze version (breeze.base.debug.js) with no adapters (breeze.base.min.js) is the minified version). You can deploy this script and the adapter scripts you need, drawn from the Adapters folder.
 
-Finally, the Scripts folder includes the "Q" promises library (plain and minified) from https://github.com/kriskowal/q. Breeze depends on "Q".
+Finally, the Scripts folder includes the "Q" promises library (plain and minified) from https://github.com/kriskowal/q. Breeze depends on "Q" or another promise implementation, such as Angular's $q.
 
 Breeze Runtime Server Files
 ----------------------------

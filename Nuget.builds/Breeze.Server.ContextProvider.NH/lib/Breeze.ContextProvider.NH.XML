@@ -1,0 +1,997 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Breeze.ContextProvider.NH</name>
+    </assembly>
+    <members>
+        <member name="T:Breeze.ContextProvider.NH.BreezeNHControllerAttribute">
+            <summary>
+            Applies the BreezeNHQueryableAttribute to all controller methods except those
+            that already have a QueryableAttribute or an ODataQueryOptions parameter.
+            </summary>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.BreezeNHQueryableAttribute">
+            <summary>
+            Override the EnableBreezeQueryAttribute to use NHQueryHelper, which applies OData syntax to NHibernate queries.
+            Use this attribute on each method in your WebApi controller that uses Nhibernate's IQueryable.
+            <see cref="!:http://www.breezejs.com/sites/all/apidocs/classes/EntityQuery.html#method_expand"/>
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.BreezeNHQueryableAttribute.#ctor">
+            <summary>
+            Sets HandleNullPropagation = false on the base class.  Otherwise it's true for non-EF, and that
+            complicates the query expressions and breaks NH's query parser.
+            </summary>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHibernateProxyJsonConverter">
+            <summary>
+            JsonConverter for handling NHibernate proxies.  
+            Only serializes the object if it is initialized, i.e. the proxied object has been loaded.
+            </summary>
+            <see cref="!:http://james.newtonking.com/projects/json/help/html/T_Newtonsoft_Json_JsonConverter.htm"/>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHIncludingContractResolver">
+            <summary>
+            Newtonsoft.Json ContractResolver that can be configured to include properties by name.
+            Allows JSON serializer to skip certain properties, thus preventing the serializer from trying to 
+            serialize the entire object graph.
+            Uses the ClassMetaData from the SessionFactory to determine which types should be serialized by default.
+            Excludes association properties by default, unless explicitly included.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHIncludingContractResolver.#ctor(NHibernate.ISessionFactory,System.String[])">
+            <summary>
+            Configure the included property names using an array of strings
+            </summary>
+            <param name="includedMembers">Names of properties to be included</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHIncludingContractResolver.#ctor(NHibernate.ISessionFactory,System.Collections.Generic.IDictionary{System.Type,System.Collections.Generic.List{System.String}})">
+            <summary>
+            Configure the included property names using a dictionary of { Type -> List of property names to include }
+            </summary>
+            <param name="includedTypeMembers"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHIncludingContractResolver.GetSerializableMembers(System.Type)">
+            <summary>
+            Returns the list of property and field names that should be serialized on a given type.
+            </summary>
+            <param name="objectType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHIncludingContractResolver.IsIncluded(NHibernate.Metadata.IClassMetadata,System.Type,System.Type,System.String)">
+            <summary>
+            For a given property type, containing type, and property name, return true if it should
+            be serialized and false if not.  By default, value types and system types are serialized,
+            but collections and custom types are not.
+            </summary>
+            <param name="meta"></param>
+            <param name="propertyType"></param>
+            <param name="containingType"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.ExcludingContractResolver">
+            <summary>
+            Newtonsoft.Json ContractResolver that can be configured to exclude certain properties by name.
+            Allows JSON serializer to skip certain properties, thus preventing the serializer from trying to 
+            serialize the entire object graph.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.ExcludingContractResolver.#ctor(System.String[])">
+            <summary>
+            Define the properties that should be excluded.  Two different methods can be used: 
+            1. The simple property name, e.g. "Orders".  This will exclude properties with that name from anywhere in the object graph.
+            2. The declaring type name + '.' + property name, e.g. "Customer.Orders".  This will exclude the property name from that type only.
+            </summary>
+            <param name="excludedMembers"></param>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.IncludingContractResolver">
+            <summary>
+            Newtonsoft.Json ContractResolver that can be configured to include properties by name.
+            Allows JSON serializer to skip certain properties, thus preventing the serializer from trying to 
+            serialize the entire object graph.
+            Serializes value types and System types by default, but excludes all collections and other
+            types unless explicitly included.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.IncludingContractResolver.#ctor(System.String[])">
+            <summary>
+            Configure the included property names using an array of strings
+            </summary>
+            <param name="includedMembers">Names of properties to be included</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.IncludingContractResolver.#ctor(System.Collections.Generic.IDictionary{System.Type,System.Collections.Generic.List{System.String}})">
+            <summary>
+            Configure the included property names using a dictionary of { Type -> List of property names to include }
+            </summary>
+            <param name="includedTypeMembers"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.IncludingContractResolver.GetSerializableMembers(System.Type)">
+            <summary>
+            Returns the list of property and field names that should be serialized on a given type.
+            </summary>
+            <param name="objectType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.IncludingContractResolver.IsIncluded(System.Type,System.Type,System.String)">
+            <summary>
+            For a given property type, containing type, and property name, return true if it should
+            be serialized and false if not.  By default, value types and system types are serialized,
+            but collections and custom types are not.
+            </summary>
+            <param name="propertyType"></param>
+            <param name="containingType"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHibernateContractResolver">
+            <summary>
+            Newtonsoft.Json ContractResolver for NHibernate objects.
+            Allows JSON serializer to skip properties that are not already resolved, thus preventing the 
+            serializer from trying to serialize the entire object graph.
+            Code copied from https://github.com/PeteGoo/NHibernate.QueryService
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHibernateContractResolver.CreateProperty(System.Reflection.MemberInfo,Newtonsoft.Json.MemberSerialization)">
+            <summary>
+            Control serialization NHibernate collections by using JsonProperty.ShouldSerialize.
+            Serialization should only be attempted on collections that are initialized.
+            </summary>
+            <param name="member"></param>
+            <param name="memberSerialization"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.TypeContractResolver">
+            <summary>
+            Newtonsoft.Json ContractResolver that only includes certain types from a given assembly.
+            All other types from that assembly are excluded.  This allows control over which custom
+            types are serialized.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.TypeContractResolver.#ctor(System.Type[])">
+            <summary>
+            Define included types.  All other types from the same assembly as the first type will be excluded.
+            </summary>
+            <param name="includedTypes"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.TypeContractResolver.#ctor(System.Reflection.Assembly,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Define the assembly and the included types.  All other types from the assembly will be excluded.
+            </summary>
+            <param name="entityAssembly"></param>
+            <param name="includedTypes"></param>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHBreezeMetadata">
+            <summary>
+            Builds a data structure containing the metadata required by Breeze.
+            <see cref="!:http://www.breezejs.com/documentation/breeze-metadata-format"/>
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.BuildMetadata">
+            <summary>
+            Build the Breeze metadata as a nested Dictionary.  
+            The result can be converted to JSON and sent to the Breeze client.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.InitMap">
+            <summary>
+            Populate the metadata header.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.AddClass(NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Add the metadata for an entity.
+            </summary>
+            <param name="meta"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.AddClassProperties(NHibernate.Metadata.IClassMetadata,NHibernate.Mapping.PersistentClass,System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}},System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}})">
+            <summary>
+            Add the properties for an entity.
+            </summary>
+            <param name="meta"></param>
+            <param name="pClass"></param>
+            <param name="dataList">will be populated with the data properties of the entity</param>
+            <param name="navList">will be populated with the navigation properties of the entity</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.AddComponent(NHibernate.Type.ComponentType,System.Collections.Generic.List{NHibernate.Mapping.ISelectable})">
+            <summary>
+            Adds a complex type definition
+            </summary>
+            <param name="compType">The complex type</param>
+            <param name="propColumns">The columns which the complex type spans.  These are used to get the length and defaultValues</param>
+            <returns>The class name and namespace in the form "Location:#Breeze.Nhibernate.NorthwindIBModel"</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.MakeDataProperty(System.String,System.String,System.Boolean,NHibernate.Mapping.Column,System.Boolean,System.Boolean)">
+            <summary>
+            Make data property metadata for the entity
+            </summary>
+            <param name="propName">name of the property on the server</param>
+            <param name="typeName">data type of the property, e.g. Int32</param>
+            <param name="isNullable">whether the property is nullable in the database</param>
+            <param name="col">Column object, used for maxLength and defaultValue</param>
+            <param name="isKey">true if this property is part of the key for the entity</param>
+            <param name="isVersion">true if this property contains the version of the entity (for a concurrency strategy)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.MakeAssociationProperty(System.Type,NHibernate.Type.IAssociationType,System.String,System.String,NHibernate.Mapping.PersistentClass,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.Object}},System.Boolean)">
+            <summary>
+            Make association property metadata for the entity.
+            Also populates the _fkMap which is used for related-entity fixup in NHContext.FixupRelationships
+            </summary>
+            <param name="propType"></param>
+            <param name="propName"></param>
+            <param name="pClass"></param>
+            <param name="relatedDataPropertyMap"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.GetPropertyColumnNames(NHibernate.Persister.Entity.AbstractEntityPersister,System.String)">
+            <summary>
+            Get the column names for a given property as a comma-delimited string of unbracketed names.
+            </summary>
+            <param name="persister"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.UnBracket(System.String)">
+            <summary>
+            Get the column name without square brackets or quotes around it.  E.g. "[OrderID]" -> OrderID 
+            Because sometimes Hibernate gives us brackets, and sometimes it doesn't.
+            Double-quotes happen with SQL CE.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.GetEntityType(System.Type,System.Boolean)">
+            <summary>
+            Get the Breeze name of the entity type.
+            For collections, Breeze expects the name of the element type.
+            </summary>
+            <param name="type"></param>
+            <param name="isCollectionType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.Pluralize(System.String)">
+            <summary>
+            lame pluralizer.  Assumes we just need to add a suffix.
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHBreezeMetadata.GetAssociationName(System.String,System.String,System.Boolean)">
+            <summary>
+            Creates an association name from two entity names.
+            For consistency, puts the entity names in alphabetical order.
+            </summary>
+            <param name="name1"></param>
+            <param name="name2"></param>
+            <param name="isOneToOne">if true, adds the one-to-one suffix</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.#ctor(NHibernate.ISession)">
+            <summary>
+            Create a new context for the given session.  
+            Each thread should have its own NHContext and Session.
+            </summary>
+            <param name="session">Used for queries and updates</param>
+            <param name="configuration">Used for metadata generation</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.#ctor(Breeze.ContextProvider.NH.NHContext)">
+            <summary>
+            Creates a new context using the session and metadata from the sourceContext
+            </summary>
+            <param name="sourceContext">source of the Session and metadata used by this new context.</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.GetQuery``1(System.Boolean)">
+            <summary>
+            Return a query for the given entity
+            </summary>
+            <typeparam name="T">Entity type</typeparam>
+            <param name="cacheable">Whether to mark the query Cacheable.  Default is false.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.GetQuery``1(System.String)">
+            <summary>
+            Return a cacheable query for the given entity, using the given cache region
+            </summary>
+            <typeparam name="T">Entity type</typeparam>
+            <param name="cacheRegion">Cache region to use.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.Close">
+            <summary>
+            Close the session
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.Dispose">
+            <summary>
+            Close the session
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.GetDbConnection">
+            <returns>The connection from the session.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.CloseDbConnection">
+            <summary>
+            Close the session and its associated db connection
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.BeforeSaveEntityGraph(System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo})">
+            <summary>
+            Allows subclasses to process entities before they are saved.  This method is called
+            after BeforeSaveEntities(saveMap), and before any session.Save methods are called.
+            The foreign-key associations on the entities have been resolved, relating the entities
+            to each other, and attaching proxies for other many-to-one associations.
+            </summary>
+            <param name="entitiesToPersist">List of entities in the order they will be saved</param>
+            <returns>The same entitiesToPersist.  Overrides of this method may modify the list.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.BeforeSaveEntity(Breeze.ContextProvider.EntityInfo)">
+            <summary>
+            If TypeFilter function is defined, returns TypeFilter(entityInfo.Entity.GetType())
+            </summary>
+            <param name="entityInfo"></param>
+            <returns>true if the entity should be saved, false if not</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.SaveChangesCore(Breeze.ContextProvider.SaveWorkState)">
+            <summary>
+            Persist the changes to the entities in the saveMap.
+            This implements the abstract method in ContextProvider.
+            Assigns saveWorkState.KeyMappings, which map the temporary keys to their real generated keys.
+            Note that this method sets session.FlushMode = FlushMode.Never, so manual flushes are required.
+            </summary>
+            <param name="saveMap">Map of Type -> List of entities of that type</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.GetRelationshipFixer(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}})">
+            <summary>
+            Get a new NHRelationshipFixer using the saveMap and the foreign-key map from the metadata.
+            </summary>
+            <param name="saveMap"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.ProcessSaves(System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo})">
+            <summary>
+            Persist the changes to the entities in the saveOrder.
+            </summary>
+            <param name="saveOrder"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.ProcessEntity(Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Add, update, or delete the entity according to its EntityState.
+            </summary>
+            <param name="entityInfo"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.RestoreOldVersionValue(Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Restore the old value of the concurrency column so Hibernate will save the entity.
+            Otherwise it will complain because Breeze has already changed the value.
+            </summary>
+            <param name="entityInfo"></param>
+            <param name="classMeta"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.AddKeyMapping(Breeze.ContextProvider.EntityInfo,System.Type,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Record the value of the temporary key in EntityKeyMapping
+            </summary>
+            <param name="entityInfo"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.GetIdentifier(System.Object,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Get the identifier value for the entity.  If the entity does not have an
+            identifier property, or natural identifiers defined, then the entity itself is returned.
+            </summary>
+            <param name="entity"></param>
+            <param name="meta"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.GetIdentifierAsArray(System.Object,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Get the identier value for the entity as an object[].
+            This is needed for creating an EntityError.
+            </summary>
+            <param name="entity"></param>
+            <param name="meta"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.UpdateAutoGeneratedKeys(System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo})">
+            <summary>
+            Update the KeyMappings with their real values.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHContext.RefreshFromSession(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}})">
+            <summary>
+            Refresh the entities from the database.  This picks up changes due to triggers, etc.
+            </summary>
+            TODO make this faster
+            TODO make this optional
+            <param name="saveMap"></param>
+        </member>
+        <member name="P:Breeze.ContextProvider.NH.NHContext.TypeFilter">
+            <summary>
+            Sets a function to filter types from metadata generation and SaveChanges.
+            The function returns true if a Type should be included, false otherwise.
+            </summary><example>
+            // exclude the LogRecord entity
+            MyNHContext.TypeFilter = (type) => type.Name != "LogRecord";
+            </example><example>
+            // exclude certain entities, and all Audit* entities
+            var excluded = new string[] { "Comment", "LogRecord", "UserPermission" };
+            MyNHContext.TypeFilter = (type) =>
+            {
+              if (excluded.Contains(type.Name)) return false;
+              if (type.Name.StartsWith("Audit")) return false;
+              return true;
+            };
+            </example>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHEagerFetch">
+            <summary>
+            Converts OData-style $expand clauses into NHibernate Fetch commands.
+            Adapted from NhQueryableEnumeratorAttribute.cs found in https://github.com/PeteGoo/NHibernate.QueryService
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHEagerFetch.ApplyExpansions(System.Linq.IQueryable,System.String,Breeze.ContextProvider.NH.ExpandTypeMap,System.Boolean)">
+            <summary>
+            Add the Fetch clauses to the query according to the given expand paths
+            </summary>
+            <param name="queryable">The query to expand</param>
+            <param name="expandsQueryString">Comma-separated list of properties to expand.  May include nested paths of the form "Property/SubProperty"</param>
+            <param name="sessionFactory">Provides the NHibernate metadata for the classes</param>
+            <param name="expandMap">Will be populated with the names of the expanded properties for each type.</param>
+            <param name="expandCollections">If true, eagerly fetch collections. Caution: this causes problems with $skip and $top operations.  
+                Default is false.  expandMap will still be populated with the collection property, so it will be lazy loaded.
+                Be sure to set default_batch_fetch_size in the configuration for lazy loaded collections.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHEagerFetch.ApplyExpansions(System.Linq.IQueryable,System.String[],Breeze.ContextProvider.NH.ExpandTypeMap,System.Boolean)">
+            <summary>
+            Add the Fetch clauses to the query according to the given expand paths
+            </summary>
+            <param name="queryable">The query to expand</param>
+            <param name="expandPaths">The names of the properties to expand.  May include nested paths of the form "Property/SubProperty"</param>
+            <param name="sessionFactory">Provides the NHibernate metadata for the classes</param>
+            <param name="expandMap">Will be populated with the names of the expanded properties for each type.</param>
+            <param name="expandCollections">If true, eagerly fetch collections. Caution: this causes problems with $skip and $top operations.  
+                Default is false.  expandMap will still be populated with the collection property, so it will be lazy loaded.
+                Be sure to set default_batch_fetch_size in the configuration for lazy loaded collections.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHEagerFetch.MapExpansions(System.Type,System.String[])">
+            <summary>
+            Create an ExpandTypeMap populated according to the expandPaths.
+            </summary>
+            <param name="type">The type of the root element.</param>
+            <param name="expandPaths">The names of the properties to expand.  May include nested paths of the form "Property/SubProperty"</param>
+            <returns>expandMap</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHEagerFetch.MapExpansions(System.Type,System.String[],Breeze.ContextProvider.NH.ExpandTypeMap)">
+            <summary>
+            Create an ExpandTypeMap populated according to the expandPaths.
+            </summary>
+            <param name="type">The type of the root element.</param>
+            <param name="expandPaths">The names of the properties to expand.  May include nested paths of the form "Property/SubProperty"</param>
+            <param name="expandMap">Will be populated with the names of the expanded properties for each type.  If null, a new one is created.</param>
+            <returns>expandMap</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHEagerFetch.ApplyExpansions(NHibernate.ICriteria,System.String[],NHibernate.ISessionFactory,System.Collections.Generic.IDictionary{System.Type,System.Collections.Generic.List{System.String}})">
+            <summary>
+            Add the Fetch clauses to the query according to the given expand paths, using the ICriteria API
+            </summary>
+            <param name="criteria">The query to expand</param>
+            <param name="expandPaths">The names of the properties to expand.  May include nested paths of the form "Property/SubProperty"</param>
+            <param name="sessionFactory">Provides the NHibernate metadata for the classes</param>
+            <param name="expandMap">If provided, will be populated with the names of the expanded properties for each type.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.ExpandTypeMap">
+            <summary>
+            Keeps track of the types and methods used by a query, so it can control the lazy loaded in the JsonFormatter.
+            </summary>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHExpander">
+            <summary>
+            Initializes Hibernate proxies and collections prior to serialization.
+            This is used to implement the OData $expand operation.
+            
+            Be sure to set the default_batch_fetch_size property in your NH config file (or Web.config), e.g.
+            <![CDATA[
+            <property name="default_batch_fetch_size">32</property>
+            ]]>
+            so that lazy loading happens in batches, instead of one at a time.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHExpander.InitializeList(System.Collections.IEnumerable,System.String[])">
+            <summary>
+            Cause initialization of properties on the objects in the collection.
+            The properties to initialize are specified in the expandPaths.  For example,
+            if roots is a collection of Orders, expandPaths might be 
+            [ "Customer", "OrderDetails/Product/Supplier" ]
+            </summary>
+            <param name="roots">Collection of Hibernate-mapped objects</param>
+            <param name="expandPaths">properties relative to the roots</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHExpander.InitializeObjectPath(System.Object,System.String[],System.Int32)">
+            <summary>
+            Recursively forces loading of each Hibernate proxy in the tree that matches an entry in the expandPath.
+            </summary>
+            <param name="parent">Top-level object containing the properties</param>
+            <param name="expandPath">Path of properties to initialize for each type</param>
+            <param name="pathIndex">Where we are in the path</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHExpander.SplitPaths(System.String[])">
+            <summary>
+            Split the strings into their path components.
+            E.g. "OrderDetails/Product" becomes [ "OrderDetails", "Product" ]
+            </summary>
+            <param name="expandPaths"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHInitializer.InitializeList``1(System.Collections.Generic.IEnumerable{``0},System.String[])">
+            <summary>
+            Recursively forces loading of each NHibernate proxy in the tree that matches an entry in the map.
+            </summary>
+            <param name="list">Top-level collection of objects</param>
+            <param name="expandMap">Properties to initialize for each type</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHInitializer.InitializeList(System.Collections.IEnumerable,Breeze.ContextProvider.NH.ExpandTypeMap)">
+            <summary>
+            Recursively forces loading of each NHibernate proxy in the tree that matches an entry in the map.
+            </summary>
+            <param name="list">Top-level collection of objects</param>
+            <param name="expandMap">Properties to initialize for each type</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHInitializer.InitializeList(System.Collections.IEnumerable,System.Collections.Generic.IDictionary{System.Type,System.Collections.Generic.List{System.String}},System.Int32)">
+            <summary>
+            Recursively forces loading of each NHibernate proxy in the tree that matches an entry in the map.
+            </summary>
+            <param name="list">Top-level collection of objects</param>
+            <param name="map">Map of properties to initialize for each type</param>
+            <param name="remainingDepth">How deep to follow the tree; prevents infinite looping</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHInitializer.InitializeWithCascade(System.Object,System.Collections.Generic.IDictionary{System.Type,System.Collections.Generic.List{System.String}},System.Int32)">
+            <summary>
+            Recursively forces loading of each NHibernate proxy in the tree that matches an entry in the map.
+            </summary>
+            <param name="parent">Top-level object</param>
+            <param name="map">Map of properties to initialize for each type</param>
+            <param name="remainingDepth">How deep to follow the tree; prevents infinite looping</param>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHMetadataBuilder">
+            <summary>
+            Builds a data structure containing the metadata required by Breeze.
+            <see cref="!:http://www.breezejs.com/documentation/breeze-metadata-format"/>
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.BuildMetadata">
+            <summary>
+            Build the Breeze metadata as a nested Dictionary.  
+            The result can be converted to JSON and sent to the Breeze client.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.BuildMetadata(System.Func{System.Type,System.Boolean})">
+            <summary>
+            Build the Breeze metadata as a nested Dictionary.  
+            The result can be converted to JSON and sent to the Breeze client.
+            </summary>
+            <param name="includeFilter">Function that returns true if a Type should be included in metadata, false otherwise</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.BuildMetadata(System.Collections.Generic.IEnumerable{NHibernate.Metadata.IClassMetadata})">
+            <summary>
+            Build the Breeze metadata as a nested Dictionary.  
+            The result can be converted to JSON and sent to the Breeze client.
+            </summary>
+            <param name="classMeta">Entity metadata types to include in the metadata</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.InitMap">
+            <summary>
+            Populate the metadata header.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.AddClass(NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Add the metadata for an entity.
+            </summary>
+            <param name="meta"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.AddClassProperties(NHibernate.Metadata.IClassMetadata,System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}},System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}})">
+            <summary>
+            Add the properties for an entity.
+            </summary>
+            <param name="meta"></param>
+            <param name="dataList">will be populated with the data properties of the entity</param>
+            <param name="navList">will be populated with the navigation properties of the entity</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.GetSuperProperties(NHibernate.Persister.Entity.AbstractEntityPersister)">
+            <summary>
+            Return names of all properties that are defined in the mapped ancestors of the 
+            given persister.  Note that unmapped superclasses are deliberately ignored, because
+            they shouldn't affect the metadata.
+            </summary>
+            <param name="persister"></param>
+            <returns>set of property names.  Empty if the persister doesn't have a superclass.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.AddComponent(NHibernate.Type.ComponentType,System.String[])">
+            <summary>
+            Adds a complex type definition
+            </summary>
+            <param name="compType">The complex type</param>
+            <param name="columnNames">The names of the columns which the complex type spans.</param>
+            <returns>The class name and namespace of the complex type, in the form "Location:#Breeze.Nhibernate.NorthwindIBModel"</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.MakeDataProperty(System.String,NHibernate.Type.IType,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Make data property metadata for the entity
+            </summary>
+            <param name="propName">name of the property on the server</param>
+            <param name="type">data type of the property, e.g. Int32</param>
+            <param name="isNullable">whether the property is nullable in the database</param>
+            <param name="isKey">true if this property is part of the key for the entity</param>
+            <param name="isVersion">true if this property contains the version of the entity (for a concurrency strategy)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.MakeAssociationProperty(NHibernate.Persister.Entity.AbstractEntityPersister,NHibernate.Type.IAssociationType,System.String,System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}},System.Boolean)">
+            <summary>
+            Make association property metadata for the entity.
+            Also populates the ForeignKeyMap which is used for related-entity fixup in NHContext.FixupRelationships
+            </summary>
+            <param name="containingPersister">Entity Persister containing the property</param>
+            <param name="propType">Association property</param>
+            <param name="propName">Name of the property</param>
+            <param name="dataProperties">Data properties already collected for the containingType.  "isPartOfKey" may be added to a property.</param>
+            <param name="isKey">Whether the property is part of the key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.GetPropertyColumnNames(NHibernate.Persister.Entity.AbstractEntityPersister,System.String,NHibernate.Type.IType)">
+            <summary>
+            Get the column names for a given property as a comma-delimited string of unbracketed names.
+            For a collection property, the column name is the inverse foreign key (i.e. the column on 
+            the other table that points back to the persister's table)
+            </summary>
+            <param name="persister"></param>
+            <param name="propertyName"></param>
+            <param name="propType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.GetPropertyNamesForColumns(NHibernate.Persister.Entity.AbstractEntityPersister,System.String[])">
+            <summary>
+            Gets the properties matching the given columns.  May be a component, but will not be an association.
+            </summary>
+            <param name="persister"></param>
+            <param name="columnNames">Array of column names</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.CatColumnNames(System.String[],System.Char)">
+            <summary>
+            Unbrackets the column names and concatenates them into a comma-delimited string
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.NamesEqual(System.String[],System.String[])">
+            <summary>
+            return true if the two arrays contain the same names, false otherwise.
+            Names are compared after UnBracket(), and are case-insensitive.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.UnBracket(System.String)">
+            <summary>
+            Get the column name without square brackets or quotes around it.  E.g. "[OrderID]" -> OrderID
+            Because sometimes Hibernate gives us brackets, and sometimes it doesn't.
+            Double-quotes happen with SQL CE.  Backticks happen with MySQL.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.UnBracket(System.String[])">
+            <summary>
+            Return a new array containing the UnBracketed names
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.FindPropertyByName(System.Collections.Generic.List{System.Collections.Generic.Dictionary{System.String,System.Object}},System.String)">
+            <summary>
+            Find the property in the list that has the given name.
+            </summary>
+            <param name="properties">list of DataProperty or NavigationProperty maps</param>
+            <param name="name">matched against the nameOnServer value of entries in the list</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.GetEntityType(System.Type,System.Boolean)">
+            <summary>
+            Get the Breeze name of the entity type.
+            For collections, Breeze expects the name of the element type.
+            </summary>
+            <param name="type"></param>
+            <param name="isCollectionType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.Pluralize(System.String)">
+            <summary>
+            lame pluralizer.  Assumes we just need to add a suffix.
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHMetadataBuilder.GetAssociationName(System.String,System.String,System.String[])">
+            <summary>
+            Creates an association name from two entity names.
+            For consistency, puts the entity names in alphabetical order.
+            </summary>
+            <param name="name1"></param>
+            <param name="name2"></param>
+            <param name="propType">Used to ensure the association name is unique for a type</param>
+            <returns></returns>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.Metadata">
+            <summary>
+            Metadata describing the entity model.  Converted to JSON to send to Breeze client.
+            </summary>
+        </member>
+        <member name="F:Breeze.ContextProvider.NH.Metadata.ForeignKeyMap">
+            <summary>
+            Map of relationship name -> foreign key name, e.g. "Customer" -> "CustomerID".
+            Used for re-establishing the entity relationships from the foreign key values during save.
+            This part is not sent to the client because it is separate from the base dictionary implementation.
+            </summary>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NhQueryableInclude`1">
+            <summary>
+            Extends NhQueryable to add an Include function.  
+            
+            Include supports the OData $expand implementation, which retrieves related entities by following navigation properties.
+            Note that Include is not the same as Fetch.  Fetch performs a join operation, while Include causes as second query.
+            Fetch can be faster, but Include preserves the row count sematics of the original query.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NhQueryableInclude`1.#ctor(NHibernate.Engine.ISessionImplementor,System.Boolean)">
+            <summary>
+            Create a query which may be marked cachable.
+            
+            Calls the base constructor, setting the Expression using NhQueryable.
+            Needed because the NHibernate Linq parser chokes if NhQueryableInclude is in the expression.
+            </summary>
+            <remarks>Note that some combinations of operations (.Select with .Where) result in errors 
+            from the NHibernate LINQ provider when using cacheable queries.</remarks>
+            <param name="si">Session</param>
+            <param name="cacheable">True to set the query as cachable, false as not cacheable.  Defaults to false.</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NhQueryableInclude`1.#ctor(NHibernate.Engine.ISessionImplementor,System.String)">
+            <summary>
+            Create a cacheable query using the given cache region.
+            
+            Calls the base constructor, setting the Expression using NhQueryable.
+            Needed because the NHibernate Linq parser chokes if NhQueryableInclude is in the expression.
+            </summary>
+            <remarks>Note that some combinations of operations (.Select with .Where) result in errors 
+            from the NHibernate LINQ provider when using cacheable queries.</remarks>
+            <param name="si">Session</param>
+            <param name="cacheRegion">Cache Region to use for caching the query.  
+            <see cref="!:http://nhforge.org/doc/nh/en/#performance-querycache"/> and
+            <see cref="!:http://nhforge.org/doc/nh/en/#caches"/></param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Breeze.ContextProvider.NH.NhQueryableInclude`1.Include(System.String)" -->
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.BeforeApplyQuery(System.Linq.IQueryable,System.Web.Http.OData.Query.ODataQueryOptions)">
+            <summary>
+            Before applying the queryOptions to the queryable, perform special processing to handle
+            $expand and work around the NHibernate IQueryable limitations
+            </summary>
+            <param name="queryable"></param>
+            <param name="queryOptions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.NHApplyExpand(Breeze.ContextProvider.NH.IQueryableInclude)">
+            <summary>
+            Saves the expand path strings from queryable.GetIncludes(),
+            for later lazy initialization and serialization.
+            </summary>
+            <param name="queryable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.NHApplyExpand(System.Linq.IQueryable,System.Web.Http.OData.Query.ODataQueryOptions)">
+            <summary>
+            Saves the expand path string from the queryOptions, 
+            for later lazy initialization and serialization.
+            </summary>
+            <param name="queryable"></param>
+            <param name="expandsQueryString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.ApplyExpand(System.Linq.IQueryable,System.Web.Http.OData.Query.ODataQueryOptions)">
+            <summary>
+            Override ApplyExpand to do nothing.  NHApplyExpand takes care of expands for NH, and 
+            it is executed earlier in the query processing (in BeforeApplyQuery)
+            </summary>
+            <param name="queryable"></param>
+            <param name="queryOptions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.GetSession(System.Linq.IQueryable)">
+            <summary>
+            Get the ISession from the IQueryable.
+            </summary>
+            <param name="queryable"></param>
+            <returns>the session if queryable.Provider is NHibernate.Linq.DefaultQueryProvider, else null</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.PostExecuteQuery(System.Collections.IEnumerable)">
+            <summary>
+            Perform the lazy loading allowed in the expandPaths.
+            </summary>
+            <param name="list"></param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.ConfigureFormatter(System.Net.Http.Formatting.JsonMediaTypeFormatter,System.Linq.IQueryable)">
+            <summary>
+            Configure the JsonFormatter to limit the object serialization of the response.
+            Even with no IQueryable, we still need to configure the formatter to prevent runaway serialization.
+            We have to rely on the controller to close the session in this case.
+            </summary>
+            <param name="jsonFormatter"></param>
+            <param name="queryable">Used to obtain the ISession</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.ConfigureFormatter(System.Net.Http.Formatting.JsonMediaTypeFormatter,NHibernate.ISession)">
+            <summary>
+            Configure the JsonFormatter to limit the object serialization of the response.
+            </summary>
+            <param name="jsonFormatter">request.GetConfiguration().Formatters.JsonFormatter</param>
+            <param name="session">If not null, will be closed by this method.  Otherwise, the session must be closed by the Controller.</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHQueryHelper.Close(System.Object)">
+            <summary>
+            Release any resources associated with this QueryHelper.
+            </summary>
+            <param name="responseObject">Response payload, which may have associated resources.</param>
+        </member>
+        <member name="T:Breeze.ContextProvider.NH.NHRelationshipFixer">
+            <summary>
+            Utility class for re-establishing the relationships between entities prior to saving them in Nhibernate.
+            
+            Breeze requires many-to-one relationships to have properties both the related entity and its ID, and it 
+            sends only the ID in the save bundle.  To make it work with NH, we map the <code>many-to-one</code> entity, and map the 
+            foreign key ID with <code> insert="false" update="false" </code>, so the <code>many-to-one</code> entity must
+            be populated in order for the foreign key value to be saved in the DB.  To work
+            around this problem, this class uses the IDs sent by Breeze to re-connect the related entities.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.#ctor(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}},System.Collections.Generic.IDictionary{System.String,System.String},NHibernate.ISession)">
+            <summary>
+            Create new instance with the given saveMap and fkMap.  Since the saveMap is unique per save, 
+            this instance will be useful for processing one entire save bundle only.
+            </summary>
+            <param name="saveMap">Map of entity types -> entity instances to save.  This is provided by Breeze in the SaveChanges call.</param>
+            <param name="fkMap">Map of relationship name -> foreign key name.  This is built in the NHBreezeMetadata class.</param>
+            <param name="session">NHibernate session that will save the entities</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.FixupRelationships">
+            <summary>
+            Connect the related entities in the saveMap to other entities.  If the related entities
+            are not in the saveMap, they are loaded from the session.
+            </summary>
+            <returns>The list of entities in the order they should be save, according to their relationships.</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.RemoveRelationships">
+            <summary>
+            Remove the navigations between entities in the saveMap.  This flattens the JSON
+            result so Breeze can handle it.
+            </summary>
+            <param name="saveMap">Map of entity types -> entity instances to save</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.AddToGraph(Breeze.ContextProvider.EntityInfo,Breeze.ContextProvider.EntityInfo)">
+            <summary>
+            Add the relationship to the dependencyGraph
+            </summary>
+            <param name="child">Entity that depends on parent (e.g. has a many-to-one relationship to parent)</param>
+            <param name="parent">Entity that child depends on (e.g. one parent has one-to-many children)</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.SortDependencies">
+            <summary>
+            Sort the entries in the dependency graph according to their dependencies.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.AddToSaveOrder(Breeze.ContextProvider.EntityInfo,System.Int32)">
+            <summary>
+            Recursively add entities to the saveOrder or deleteOrder according to their dependencies
+            </summary>
+            <param name="entityInfo">Entity to be added.  Its dependencies will be added depth-first.</param>
+            <param name="depth">prevents infinite recursion in case of cyclic dependencies</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.ProcessRelationships">
+            <summary>
+            Add or remove the entity relationships according to the removeMode.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.ProcessRelationships(Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Connect the related entities based on the foreign key values.
+            Note that this may cause related entities to be loaded from the DB if they are not already in the session.
+            </summary>
+            <param name="entityInfo">Entity that will be saved</param>
+            <param name="meta">Metadata about the entity type</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.ProcessRelationship(System.String,NHibernate.Type.IType,Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Handle a specific property if it is a Association or Component relationship.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.FixupComponentRelationships(System.String,NHibernate.Type.ComponentType,Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Connect the related entities based on the foreign key values found in a component type.
+            This updates the values of the component's properties.
+            </summary>
+            <param name="propName">Name of the (component) property of the entity.  May be null if the property is the entity's identifier.</param>
+            <param name="compType">Type of the component</param>
+            <param name="entityInfo">Breeze EntityInfo</param>
+            <param name="meta">Metadata for the entity class</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.FixupRelationship(System.String,NHibernate.Type.EntityType,Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Set an association value based on the value of the foreign key.  This updates the property of the entity.
+            </summary>
+            <param name="propName">Name of the navigation/association property of the entity, e.g. "Customer".  May be null if the property is the entity's identifier.</param>
+            <param name="propType">Type of the property</param>
+            <param name="entityInfo">Breeze EntityInfo</param>
+            <param name="meta">Metadata for the entity class</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.GetRelatedEntity(System.String,NHibernate.Type.EntityType,Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Get a related entity based on the value of the foreign key.  Attempts to find the related entity in the
+            saveMap; if its not found there, it is loaded via the Session (which should create a proxy, not actually load 
+            the entity from the database).
+            Related entities are Promoted in the saveOrder according to their state.
+            </summary>
+            <param name="propName">Name of the navigation/association property of the entity, e.g. "Customer".  May be null if the property is the entity's identifier.</param>
+            <param name="propType">Type of the property</param>
+            <param name="entityInfo">Breeze EntityInfo</param>
+            <param name="meta">Metadata for the entity class</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.MaybeAddToGraph(Breeze.ContextProvider.EntityInfo,Breeze.ContextProvider.EntityInfo,NHibernate.Type.EntityType)">
+            <summary>Add the parent-child relationship for certain propType conditions</summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.FindForeignKey(System.String,NHibernate.Metadata.IClassMetadata)">
+            <summary>
+            Find a foreign key matching the given property, by looking in the fkMap.
+            The property may be defined on the class or a superclass, so this function calls itself recursively.
+            </summary>
+            <param name="propName">Name of the property e.g. "Product"</param>
+            <param name="meta">Class metadata, for traversing the class hierarchy</param>
+            <returns>The name of the foreign key, e.g. "ProductID"</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.GetForeignKeyValue(Breeze.ContextProvider.EntityInfo,NHibernate.Metadata.IClassMetadata,System.String)">
+            <summary>
+            Get the value of the foreign key property.  This comes from the entity, but if that value is
+            null, and the entity is deleted, we try to get it from the originalValuesMap.
+            </summary>
+            <param name="entityInfo">Breeze EntityInfo</param>
+            <param name="meta">Metadata for the entity class</param>
+            <param name="foreignKeyName">Name of the foreign key property of the entity, e.g. "CustomerID"</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.GetPropertyValue(NHibernate.Metadata.IClassMetadata,System.Object,System.String)">
+            <summary>
+            Return the property value for the given entity.
+            </summary>
+            <param name="meta"></param>
+            <param name="entity"></param>
+            <param name="propName">If null, the identifier property will be returned.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.FindInSaveMapById(System.Type,System.Object)">
+            <summary>
+            Find the matching entity in the saveMap.  This is for relationship fixup.
+            </summary>
+            <param name="entityType">Type of entity, e.g. Order.  The saveMap will be searched for this type and its subtypes.</param>
+            <param name="entityId">Key value of the entity</param>
+            <returns>The EntityInfo, or null if not found</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.NH.NHRelationshipFixer.FindInSaveMapByEntity(System.Type,System.Object)">
+            <summary>
+            Find the matching entity in the saveMap.  This is for relationship fixup.
+            </summary>
+            <param name="entityType">Type of entity, e.g. Order.  The saveMap will be searched for this type and its subtypes.</param>
+            <param name="entityId">The entity being found</param>
+            <returns>The EntityInfo, or null if not found</returns>
+        </member>
+    </members>
+</doc>
