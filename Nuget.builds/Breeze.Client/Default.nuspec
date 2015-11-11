@@ -6,15 +6,15 @@
         <title>Breeze Client - Javascript</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
-        <licenseUrl>http://www.breezejs.com/license</licenseUrl>
-        <projectUrl>http://www.breezejs.com</projectUrl>
-        <iconUrl>http://www.breezejs.com/sites/all/images/breezeJsB.png</iconUrl>
+        <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
+        <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
+        <iconUrl>http://breeze.github.io/images/logos/BreezeJsB.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>The files and references that are essential for a Breeze client side javascript application. </description>
         <summary>Breeze Client - Javascript.  This package works with both Breeze.WebApi 2 servers as well as legacy Breeze.WebApi servers.</summary>
         <copyright>Copyright © IdeaBlade 2012-2015</copyright>
         <language>en-US</language>
-        <releaseNotes>Please review the BreezeJS release notes at http://www.breezejs.com/documentation/download</releaseNotes>        
+        <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
         <tags>javascript Breeze SPA</tags>
 		<dependencies>
         <dependency id="Q" />
