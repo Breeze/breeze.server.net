@@ -502,7 +502,16 @@ namespace Breeze.ContextProvider.EF6 {
       } else {
         // Guids fail above - try this
         TypeConverter typeConverter = TypeDescriptor.GetConverter(toType);
-        result = typeConverter.ConvertFrom(val);
+        if (typeConverter.CanConvertFrom(val.GetType())) {
+          result = typeConverter.ConvertFrom(val);
+        }
+        else if (val is DateTime && toType == typeof(DateTimeOffset)) {
+          // handle case where JSON deserializes to DateTime, but toType is DateTimeOffset.  DateTimeOffsetConverter doesn't work!
+          result = new DateTimeOffset((DateTime) val);
+        }
+        else {
+          result = val;
+        }
       }
       return result;
     }
