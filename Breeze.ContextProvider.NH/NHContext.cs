@@ -231,7 +231,7 @@ namespace Breeze.ContextProvider.NH {
       catch (PropertyValueException pve)
       {
         // NHibernate can throw this
-        if (tx.IsActive) tx.Rollback();
+        if (!hasExistingTransaction) tx.Rollback();
         entityErrors.Add(new EntityError() {
             EntityTypeName = pve.EntityName,
             ErrorMessage = pve.Message,
