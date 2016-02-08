@@ -56,14 +56,18 @@ gulp.task("copyDlls", ['breezeServerBuild'], function() {
   updateFiles(streams, ".dll");
   gutil.log('copying XMLs...')
   updateFiles(streams, ".XML");
+  gutil.log('copying PDBs...')
+  updateFiles(streams, ".pdb");
   return eventStream.concat.apply(null, streams);
 });
 
 // create a zip file of all the .dll and .xml files
 gulp.task("zipDlls", ["copyDlls"], function() {
-    var fileNames = glob.sync(_nugetDir + '**/*.XML').concat(glob.sync(_nugetDir + '**/*.dll'));
+    var fileNames = glob.sync(_nugetDir + '**/*.XML')
+        .concat(glob.sync(_nugetDir + '**/*.dll'))
+        .concat(glob.sync(_nugetDir + '**/*.pdb'));
     return gulp.src(fileNames)
-            .pipe(zip('breeze-server-net.zip'))
+        .pipe(zip('breeze-server-net.zip'))
         .pipe(gulp.dest('../build'));
 });
 
