@@ -26,6 +26,6 @@ The runtime-plus-samples package includes everything in the runtime package plus
 -------------------------------------------------------------------------------------
 
 Please visit the
-[Breezejs download](http://www.breezejs.com/documentation/download) page for more information about this package.
+[Breeze Nuget](http://breeze.github.io/doc-net/nuget-packages.html) page for more information about this package.
 
-Copyright 2013 IdeaBlade, Inc.
+Copyright 2012-2016 IdeaBlade, Inc.

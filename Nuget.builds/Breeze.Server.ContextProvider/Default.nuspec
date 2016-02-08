@@ -12,9 +12,9 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Core data access library for any Breeze Server</description>
         <summary>Breeze Server - ContextProvider - Most commonly used in conjunction with Breeze.WebApi2 - You may want to use one of the extended versions of this nuget package in order to get support for EntityFramework, NHibernate etc</summary>
-        <copyright>Copyright © IdeaBlade 2012-2015</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2016</copyright>
         <language>en-US</language>
-        <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
+        <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
 		<dependencies>
 			<dependency id="Newtonsoft.Json" version="[6.0.4,]"/>

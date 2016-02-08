@@ -1,2 +1,2 @@
-Please visit http://www.breezejs.com/documentation/start-nuget to learn more.
+Please visit http://breeze.github.io/doc-net/nuget-packages.html to learn more.
 

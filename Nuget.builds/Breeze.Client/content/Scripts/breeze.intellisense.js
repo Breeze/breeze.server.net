@@ -1,4 +1,4 @@
-// Generated on: Wed Nov 11 2015 13:47:13 GMT-0800 (Pacific Standard Time)
+// Generated on: Sun Feb 07 2016 22:41:57 GMT-0800 (Pacific Standard Time)
 
 intellisense.annotate(breeze.core, {
 
@@ -1366,12 +1366,68 @@ intellisense.annotate(breeze.breeze.~relationArray, {
 
 intellisense.annotate(breeze.breeze.DataType.prototype, {
   
+  'parse': function() {
+    /// <signature>
+    ///   <summary>
+    ///   Function to convert a value from string to this DataType.  Note that this will be called each time a property is changed, so make it fast. }
+    ///   </summary>
+    ///   <param name="value" type="Any" optional="true"></param>
+    ///   <param name="sourceTypeName" type="String" optional="true"></param>
+    ///   <returns type="" >value appropriate for this DataType</returns>
+    /// </signature>
+  },
+  'fmtOData': function() {
+    /// <signature>
+    ///   <summary>
+    ///   Function to format this DataType for OData queries. }
+    ///   </summary>
+    ///   <returns type="" >value appropriate for OData query</returns>
+    /// </signature>
+  },
+  'getNext': function() {
+    /// <signature>
+    ///   <summary>
+    ///   Optional function to get the next value for key generation, if this datatype is used as a key.  Uses an internal table of previous values. }
+    ///   </summary>
+    ///   <returns type="" >value appropriate for this DataType</returns>
+    /// </signature>
+  },
+  'normalize': function() {
+    /// <signature>
+    ///   <summary>
+    ///   Optional function to normalize a data value for comparison, if its value cannot be used directly.  Note that this will be called each time a property is changed, so make it fast. }
+    ///   </summary>
+    ///   <param name="value" type="" optional="true"></param>
+    ///   <returns type="" >value appropriate for this DataType</returns>
+    /// </signature>
+  },
+  'getConcurrencyValue': function() {
+    /// <signature>
+    ///   <summary>
+    ///   Optional function to get the next value when the datatype is used as a concurrency property. }
+    ///   </summary>
+    ///   <param name="previousValue" type="" optional="true"></param>
+    ///   <returns type="" >the next concurrency value, which may be a function of the previousValue.</returns>
+    /// </signature>
+  },
+  'parseRawValue': function() {
+    /// <signature>
+    ///   <summary>
+    ///   Optional function to convert a raw (server) value from string to this DataType. }
+    ///   </summary>
+    ///   <param name="value" type="Any" optional="true"></param>
+    ///   <returns type="" >value appropriate for this DataType</returns>
+    /// </signature>
+  },
   
   /// <field name="defaultValue" type="Any" >The default value of this DataType.</field>
   'defaultValue': null,
   
   /// <field name="isNumeric" type="Boolean" >Whether this is a 'numeric' DataType.</field>
   'isNumeric': null,
+  
+  /// <field name="isInteger" type="Boolean" >Whether this is an 'integer' DataType.</field>
+  'isInteger': null,
   
 });
 intellisense.annotate(breeze.breeze.DataType, {
@@ -2628,7 +2684,6 @@ intellisense.annotate(breeze.breeze.EntityManager.prototype, {
     ///   </summary>
     ///   <param name="exportedString" type="String|Json" optional="true">The result of a previous 'export' call.</param>
     ///   <param name="config" type="Object" optional="true">A configuration object.</param>
-    ///   <param name="[config.metadataVersionFn}" type="Function" optional="true">A function that takes two arguments ( the current metadataVersion and the imported store's 'name'} and may be used to perform version checking.</param>
     ///   <returns type="Object" >result </returns>
     /// </signature>
   },
@@ -2867,7 +2922,6 @@ intellisense.annotate(breeze.breeze.EntityManager, {
     ///   </summary>
     ///   <param name="exportedString" type="String" optional="true">The result of a previous 'exportEntities' call.</param>
     ///   <param name="config" type="Object" optional="true">A configuration object.</param>
-    ///   <param name="[config.metadataVersionFn}" type="Function" optional="true">A function that takes two arguments ( the current metadataVersion and the imported store's 'name'} and may be used to perform version checking.</param>
     ///   <returns type="breeze.breeze.EntityManager >A new EntityManager.  Note that the return value of this method call is different from that provided by the same named method on an EntityManager instance. Use that method if you need additional information regarding the imported entities.</returns>
     /// </signature>
   },

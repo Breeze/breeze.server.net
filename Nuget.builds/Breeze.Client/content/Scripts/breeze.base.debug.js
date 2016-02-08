@@ -5006,7 +5006,7 @@ breeze.EntityState = EntityState;
   }
 
   // exit if no change - extra cruft is because dateTimes don't compare cleanly.
-  if (newValue === oldValue || (dataType && dataType.isDate && newValue && oldValue && newValue.valueOf() === oldValue.valueOf())) {
+  if (newValue === oldValue || (dataType && dataType.normalize && newValue && oldValue && dataType.normalize(newValue) === dataType.normalize(oldValue))) {
     return;
   }
 
@@ -5453,6 +5453,52 @@ var DataType = (function () {
   @property isNumeric {Boolean}
   **/
 
+  /**
+  Whether this is an 'integer' DataType.
+  @property isInteger {Boolean}
+  **/
+
+  /**
+  Function to convert a value from string to this DataType.  Note that this will be called each time a property is changed, so make it fast.
+  @method parse {Function}
+  @param value {any}
+  @param sourceTypeName {String}
+  @return value appropriate for this DataType
+  **/
+
+  /**
+  Function to format this DataType for OData queries.
+  @method fmtOData {Function}
+  @return value appropriate for OData query
+  **/
+
+  /**
+  Optional function to get the next value for key generation, if this datatype is used as a key.  Uses an internal table of previous values.
+  @method getNext {Function}
+  @return value appropriate for this DataType
+  **/
+
+  /**
+  Optional function to normalize a data value for comparison, if its value cannot be used directly.  Note that this will be called each time a property is changed, so make it fast.
+  @method normalize {Function}
+  @param value
+  @return value appropriate for this DataType
+  **/
+
+  /**
+  Optional function to get the next value when the datatype is used as a concurrency property.
+  @method getConcurrencyValue {Function}
+  @param previousValue
+  @return the next concurrency value, which may be a function of the previousValue.
+  **/
+
+  /**
+  Optional function to convert a raw (server) value from string to this DataType.
+  @method parseRawValue {Function}
+  @param value {any}
+  @return value appropriate for this DataType
+  **/
+
   var dataTypeMethods = {
     // default
   };
@@ -5484,6 +5530,16 @@ var DataType = (function () {
 
   var getNextDateTime = function () {
     return new Date();
+  };
+
+  var getConcurrencyDateTime = function(val) {
+    // use the current datetime but insure that it is different from previous call.
+    var dt = new Date();
+    var dt2 = new Date();
+    while (dt.getTime() === dt2.getTime()) {
+      dt2 = new Date();
+    }
+    return dt2;
   };
 
   var coerceToString = function (source, sourceTypeName) {
@@ -5624,6 +5680,20 @@ var DataType = (function () {
     throw new Error(msg);
   }
 
+  var parseRawDate = function(val) {
+    if (!__isDate(val)) {
+      val = DataType.parseDateFromServer(val);
+    }
+    return val;
+  }
+
+  var parseRawBinary = function(val) {
+    if (val && val.$value !== undefined) {
+      val = val.$value; // this will be a byte[] encoded as a string
+    }
+    return val;
+  }
+
   var DataType = new Enum("DataType", dataTypeMethods);
 
 
@@ -5633,10 +5703,10 @@ var DataType = (function () {
   @static
   **/
   DataType.String = DataType.addSymbol({
-  defaultValue: "",
-  parse: coerceToString,
-  fmtOData: fmtString,
-  getNext: getNextString
+    defaultValue: "",
+    parse: coerceToString,
+    fmtOData: fmtString,
+    getNext: getNextString
   });
   /**
   @property Int64 {DataType}
@@ -5644,10 +5714,13 @@ var DataType = (function () {
   @static
   **/
   DataType.Int64 = DataType.addSymbol({
-  defaultValue: 0, isNumeric: true, isInteger: true, quoteJsonOData: true,
-  parse: coerceToInt,
-  fmtOData: makeFloatFmt("L"),
-  getNext: getNextNumber
+    defaultValue: 0,
+    isNumeric: true,
+    isInteger: true,
+    quoteJsonOData: true,
+    parse: coerceToInt,
+    fmtOData: makeFloatFmt("L"),
+    getNext: getNextNumber
   });
   /**
   @property Int32 {DataType}
@@ -5655,10 +5728,12 @@ var DataType = (function () {
   @static
   **/
   DataType.Int32 = DataType.addSymbol({
-  defaultValue: 0, isNumeric: true, isInteger: true,
-  parse: coerceToInt,
-  fmtOData: fmtInt,
-  getNext: getNextNumber
+    defaultValue: 0,
+    isNumeric: true,
+    isInteger: true,
+    parse: coerceToInt,
+    fmtOData: fmtInt,
+    getNext: getNextNumber
   });
   /**
   @property Int16 {DataType}
@@ -5666,27 +5741,38 @@ var DataType = (function () {
   @static
   **/
   DataType.Int16 = DataType.addSymbol({
-  defaultValue: 0, isNumeric: true, isInteger: true,
-  parse: coerceToInt,
-  fmtOData: fmtInt,
-  getNext: getNextNumber
+    defaultValue: 0,
+    isNumeric: true,
+    isInteger: true,
+    parse: coerceToInt,
+    fmtOData: fmtInt,
+    getNext: getNextNumber
   });
   /**
   @property Byte {DataType}
   @final
   @static
   **/
-  DataType.Byte = DataType.addSymbol({ defaultValue: 0, isNumeric: true, isInteger: true, parse: coerceToInt, fmtOData: fmtInt });
+  DataType.Byte = DataType.addSymbol({
+    defaultValue: 0,
+    isNumeric: true,
+    isInteger: true,
+    parse: coerceToInt,
+    fmtOData: fmtInt
+  });
   /**
   @property Decimal {DataType}
   @final
   @static
   **/
   DataType.Decimal = DataType.addSymbol({
-  defaultValue: 0, isNumeric: true, quoteJsonOData: true, isFloat: true,
-  parse: coerceToFloat,
-  fmtOData: makeFloatFmt("m"),
-  getNext: getNextNumber
+    defaultValue: 0,
+    isNumeric: true,
+    quoteJsonOData: true,
+    isFloat: true,
+    parse: coerceToFloat,
+    fmtOData: makeFloatFmt("m"),
+    getNext: getNextNumber
   });
   /**
   @property Double {DataType}
@@ -5694,10 +5780,12 @@ var DataType = (function () {
   @static
   **/
   DataType.Double = DataType.addSymbol({
-  defaultValue: 0, isNumeric: true, isFloat: true,
-  parse: coerceToFloat,
-  fmtOData: makeFloatFmt("d"),
-  getNext: getNextNumber
+    defaultValue: 0,
+    isNumeric: true,
+    isFloat: true,
+    parse: coerceToFloat,
+    fmtOData: makeFloatFmt("d"),
+    getNext: getNextNumber
   });
   /**
   @property Single {DataType}
@@ -5705,10 +5793,12 @@ var DataType = (function () {
   @static
   **/
   DataType.Single = DataType.addSymbol({
-  defaultValue: 0, isNumeric: true, isFloat: true,
-  parse: coerceToFloat,
-  fmtOData: makeFloatFmt("f"),
-  getNext: getNextNumber
+    defaultValue: 0,
+    isNumeric: true,
+    isFloat: true,
+    parse: coerceToFloat,
+    fmtOData: makeFloatFmt("f"),
+    getNext: getNextNumber
   });
   /**
   @property DateTime {DataType}
@@ -5716,10 +5806,14 @@ var DataType = (function () {
   @static
   **/
   DataType.DateTime = DataType.addSymbol({
-  defaultValue: new Date(1900, 0, 1), isDate: true,
-  parse: coerceToDate,
-  fmtOData: fmtDateTime,
-  getNext: getNextDateTime
+    defaultValue: new Date(1900, 0, 1),
+    isDate: true,
+    parse: coerceToDate,
+    parseRawValue: parseRawDate,
+    normalize: function(value) { return value && value.getTime(); }, // dates don't perform equality comparisons properly
+    fmtOData: fmtDateTime,
+    getNext: getNextDateTime,
+    getConcurrencyValue: getConcurrencyDateTime
   });
 
   /**
@@ -5728,33 +5822,47 @@ var DataType = (function () {
   @static
   **/
   DataType.DateTimeOffset = DataType.addSymbol({
-  defaultValue: new Date(1900, 0, 1), isDate: true,
-  parse: coerceToDate,
-  fmtOData: fmtDateTimeOffset,
-  getNext: getNextDateTime
+    defaultValue: new Date(1900, 0, 1),
+    isDate: true,
+    parse: coerceToDate,
+    parseRawValue: parseRawDate,
+    normalize: function(value) { return value && value.getTime(); }, // dates don't perform equality comparisons properly
+    fmtOData: fmtDateTimeOffset,
+    getNext: getNextDateTime,
+    getConcurrencyValue: getConcurrencyDateTime
   });
   /**
   @property Time {DataType}
   @final
   @static
   **/
-  DataType.Time = DataType.addSymbol({ defaultValue: "PT0S", fmtOData: fmtTime });
+  DataType.Time = DataType.addSymbol({
+    defaultValue: "PT0S",
+    fmtOData: fmtTime,
+    parseRawValue: DataType.parseTimeFromServer
+  });
   /**
   @property Boolean {DataType}
   @final
   @static
   **/
-  DataType.Boolean = DataType.addSymbol({ defaultValue: false, parse: coerceToBool, fmtOData: fmtBoolean });
+  DataType.Boolean = DataType.addSymbol({
+    defaultValue: false,
+    parse: coerceToBool,
+    fmtOData: fmtBoolean
+  });
   /**
   @property Guid {DataType}
   @final
   @static
   **/
   DataType.Guid = DataType.addSymbol({
-  defaultValue: "00000000-0000-0000-0000-000000000000",
-  parse: coerceToGuid,
-  fmtOData: fmtGuid,
-  getNext: getNextGuid
+    defaultValue: "00000000-0000-0000-0000-000000000000",
+    parse: coerceToGuid,
+    fmtOData: fmtGuid,
+    getNext: getNextGuid,
+    parseRawValue: function(val) { return val.toLowerCase(); },
+    getConcurrencyValue: __getUuid
   });
 
   /**
@@ -5762,21 +5870,25 @@ var DataType = (function () {
   @final
   @static
   **/
-  DataType.Binary = DataType.addSymbol({ defaultValue: null, fmtOData: fmtBinary });
+  DataType.Binary = DataType.addSymbol({
+    defaultValue: null,
+    fmtOData: fmtBinary,
+    parseRawValue: parseRawBinary
+  });
   /**
   @property Undefined {DataType}
   @final
   @static
   **/
-  DataType.Undefined = DataType.addSymbol({ defaultValue: undefined, fmtOData: fmtUndefined});
+  DataType.Undefined = DataType.addSymbol({
+    defaultValue: undefined,
+    fmtOData: fmtUndefined
+  });
   DataType.resolveSymbols();
 
-  DataType.getComparableFn = function (dataType) {
-    if (dataType && dataType.isDate) {
-      // dates don't perform equality comparisons properly
-      return function (value) {
-        return value && value.getTime();
-      };
+  DataType.getComparableFn = function(dataType) {
+    if (dataType && dataType.normalize) {
+      return dataType.normalize;
     } else if (dataType === DataType.Time) {
       // durations must be converted to compare them
       return function (value) {
@@ -5884,18 +5996,9 @@ var DataType = (function () {
     // undefined values will be the default for most unmapped properties EXCEPT when they are set
     // in a jsonResultsAdapter ( an unusual use case).
     if (val === undefined) return undefined;
-    if (dataType.isDate && val) {
-      if (!__isDate(val)) {
-        val = DataType.parseDateFromServer(val);
-      }
-    } else if (dataType === DataType.Binary) {
-      if (val && val.$value !== undefined) {
-        val = val.$value; // this will be a byte[] encoded as a string
-      }
-    } else if (dataType === DataType.Time) {
-      val = DataType.parseTimeFromServer(val);
-    } else if (val && dataType === DataType.Guid) {
-      val = val.toLowerCase();
+    if (!val) return val;
+    if (dataType && dataType.parseRawValue) {
+      val = dataType.parseRawValue(val);
     }
     return val;
   }
@@ -8120,7 +8223,7 @@ var EntityType = (function () {
         return coEquals(v1, v2);
       } else {
         var dataType = dp.dataType; // this will be a complexType when dp is a complexProperty
-        return (v1 === v2 || (dataType && dataType.isDate && v1 && v2 && v1.valueOf() === v2.valueOf()));
+        return (v1 === v2 || (dataType && dataType.normalize && v1 && v2 && dataType.normalize(v1) === dataType.normalize(v2)));
       }
     });
     return areEqual;
@@ -8882,9 +8985,9 @@ var DataProperty = (function () {
 
   ctor.fromJSON = function (json) {
     json.dataType = DataType.fromName(json.dataType);
-    // dateTime instances require 'extra' work to deserialize properly.
-    if (json.defaultValue && json.dataType && json.dataType.isDate) {
-      json.defaultValue = new Date(Date.parse(json.defaultValue));
+    // Parse default value into correct data type. (dateTime instances require extra work to deserialize properly.)
+    if (json.defaultValue && json.dataType && json.dataType.parse) {
+      json.defaultValue = json.dataType.parse(json.defaultValue, typeof json.defaultValue);
     }
 
     if (json.validators) {
@@ -13026,7 +13129,7 @@ var EntityManager = (function () {
   @param [config] {Object} A configuration object.
   @param [config.mergeStrategy] {MergeStrategy} A  {{#crossLink "MergeStrategy"}}{{/crossLink}} to use when
   merging into an existing EntityManager.
-  @param [config.metadataVersionFn} {Function} A function that takes two arguments ( the current metadataVersion and the imported store's 'name'}
+  @param [config.metadataVersionFn] {Function} A function that takes two arguments (the current metadataVersion and the imported store's 'name')
   and may be used to perform version checking.
   @return {EntityManager} A new EntityManager.  Note that the return value of this method call is different from that
   provided by the same named method on an EntityManager instance. Use that method if you need additional information
@@ -13179,7 +13282,7 @@ var EntityManager = (function () {
   @param [config] {Object} A configuration object.
   @param [config.mergeStrategy] {MergeStrategy} A  {{#crossLink "MergeStrategy"}}{{/crossLink}} to use when
   merging into an existing EntityManager.
-  @param [config.metadataVersionFn} {Function} A function that takes two arguments ( the current metadataVersion and the imported store's 'name'}
+  @param [config.metadataVersionFn] {Function} A function that takes two arguments (the current metadataVersion and the imported store's 'name')
   and may be used to perform version checking.
   @return result {Object}
 
@@ -14961,17 +15064,10 @@ var EntityManager = (function () {
     if (!value) value = property.dataType.defaultValue;
     if (property.dataType.isNumeric) {
       entity.setProperty(property.name, value + 1);
-    } else if (property.dataType.isDate) {
-      // use the current datetime but insure that it
-      // is different from previous call.
-      var dt = new Date();
-      var dt2 = new Date();
-      while (dt.getTime() === dt2.getTime()) {
-        dt2 = new Date();
-      }
-      entity.setProperty(property.name, dt2);
-    } else if (property.dataType === DataType.Guid) {
-      entity.setProperty(property.name, __getUuid());
+    } else if (property.dataType.getConcurrencyValue) {
+      // DataType has its own implementation
+      var nextValue = property.dataType.getConcurrencyValue(value);
+      entity.setProperty(property.name, nextValue);
     } else if (property.dataType === DataType.Binary) {
       // best guess - that this is a timestamp column and is computed on the server during save
       // - so no need to set it here.

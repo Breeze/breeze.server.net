@@ -12,7 +12,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>The files and references that are essential for a Breeze ASP.NET Web API 2.2 client and server on Entity Framework 6.</description>
         <summary>Breeze Client and Server - Javascript client with ASP.NET Web API 2.2 and Entity Framework 6.</summary>
-        <copyright>Copyright © IdeaBlade 2012-2015</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2016</copyright>
         <language>en-US</language>
         <releaseNotes>Note that this package uses Microsoft's ASP.NET WebApi 2.2 and will attempt to upgrade any WebApi 2.1 dependencies in your project. Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA EntityFramework</tags>
