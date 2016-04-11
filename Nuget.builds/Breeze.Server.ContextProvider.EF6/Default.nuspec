@@ -23,6 +23,7 @@
     </metadata>
     <files>
         <file src="lib\Breeze.ContextProvider.EF6.dll" target="lib\Breeze.ContextProvider.EF6.dll" />
+		<file src="lib\Breeze.ContextProvider.EF6.pdb" target="lib\Breeze.ContextProvider.EF6.pdb" />
         <file src="lib\Breeze.ContextProvider.EF6.XML" target="lib\Breeze.ContextProvider.EF6.XML" />
         <file src="readme.txt" target="readme.txt" />
     </files>

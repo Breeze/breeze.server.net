@@ -23,6 +23,7 @@
     </metadata>
     <files>
         <file src="lib\Breeze.ContextProvider.NH.dll" target="lib\Breeze.ContextProvider.NH.dll" />
+		<file src="lib\Breeze.ContextProvider.NH.pdb" target="lib\Breeze.ContextProvider.NH.pdb" />
         <file src="lib\Breeze.ContextProvider.NH.XML" target="lib\Breeze.ContextProvider.NH.XML" />
         <file src="readme.txt" target="readme.txt" />
     </files>
