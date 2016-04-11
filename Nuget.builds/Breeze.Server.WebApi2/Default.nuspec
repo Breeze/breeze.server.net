@@ -26,6 +26,7 @@
     <files>
         <file src="content\App_Start\BreezeWebApiConfig.cs.pp" target="content\App_Start\BreezeWebApiConfig.cs.pp" />
         <file src="lib\Breeze.WebApi2.dll" target="lib\Breeze.WebApi2.dll" />
+		<file src="lib\Breeze.WebApi2.pdb" target="lib\Breeze.WebApi2.pdb" />
         <file src="lib\Breeze.WebApi2.XML" target="lib\Breeze.WebApi2.XML" />
         <file src="readme.txt" target="readme.txt" />
     </files>
