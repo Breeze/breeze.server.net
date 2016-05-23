@@ -85,23 +85,24 @@ namespace Test.WebApi2.OData.Controllers {
  
   #region Purge/Reset
 
-  //public class XXX {
-  //  // ~/breeze/inheritance//purge
-  //  [HttpPost]
-  //  public string Purge() {
-  //    InheritanceDbInitializer.PurgeDatabase(_contextProvider.Context);
-  //    return "purged";
-  //  }
+  public class InheritanceController : ApiController {
+    internal readonly InheritanceContext _context = new InheritanceContext();
+    // ~/breeze/inheritance//purge
+    [HttpPost]
+    public string Purge() {
+      InheritanceDbInitializer.PurgeDatabase(_context);
+      return "purged";
+    }
 
-  //  // ~/breeze/inheritance//reset
-  //  [HttpPost]
-  //  public string Reset() {
-  //    Purge();
-  //    InheritanceDbInitializer.ResetDatabase(_contextProvider.Context);
-  //    return "reset";
-  //  }
+    // ~/breeze/inheritance//reset
+    [HttpPost]
+    public string Reset() {
+      Purge();
+      InheritanceDbInitializer.ResetDatabase(_context);
+      return "reset";
+    }
 
-  //}
+  }
 
   #endregion
   

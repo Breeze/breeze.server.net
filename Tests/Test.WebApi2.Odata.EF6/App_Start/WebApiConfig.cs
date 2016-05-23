@@ -118,6 +118,12 @@ namespace Test.WebApi2.OData {
       );
 #endif
 
+        // For handling the reset route
+        config.Routes.MapHttpRoute(
+                name: "SampleApi",
+                routeTemplate: "breezeTests/breeze/{controller}/{action}"
+        );
+
+        }
     }
-  }
 }
