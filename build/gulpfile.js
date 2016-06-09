@@ -128,7 +128,17 @@ gulp.task('nugetDeploy', function(done) {
     var cmd = 'nuget push ' + fileName;
     execCommands([ cmd], null, cb);
   }, done);
+});
 
+gulp.task('nugetDeployClient', function(done) {
+  gutil.log('Deploying Nugets...');
+  var src = _nugetDir + '**/Breeze.Client.*.nupkg';
+  var fileNames = glob.sync( src);
+  async.each(fileNames, function (fileName, cb) {
+    gutil.log('Deploying nuspec file: ' + fileName);
+    var cmd = 'nuget push ' + fileName;
+    execCommands([ cmd], null, cb);
+  }, done);
 });
 
 gulp.task('default', ['nugetTestDeploy'] , function() {
