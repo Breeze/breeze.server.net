@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.25302.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{870357DE-CA2C-4B2E-9AF2-3B822E26D57B}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.NH", "Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj", "{15246B9C-5558-4BCE-894F-52C4F785BBCC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.WebApi2", "Breeze.WebApi2\Breeze.WebApi2.csproj", "{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.EFC1", "Breeze.ContextProvider.EFC1\Breeze.ContextProvider.EFC1.csproj", "{FDC51E4E-9C7A-424E-BA80-882102C3718D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +97,24 @@ Global
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Debug|x86.Build.0 = Debug|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.OData-debug|Any CPU.ActiveCfg = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.OData-debug|Any CPU.Build.0 = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.OData-debug|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.OData-debug|Mixed Platforms.Build.0 = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.OData-debug|x86.ActiveCfg = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.OData-debug|x86.Build.0 = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Release|x86.ActiveCfg = Release|Any CPU
+		{FDC51E4E-9C7A-424E-BA80-882102C3718D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
