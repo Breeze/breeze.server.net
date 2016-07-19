@@ -3,6 +3,8 @@ using System.Web.Http;
 
 using Inheritance.Models;
 using System.Web.Http.OData;
+using System.Threading.Tasks;
+using System.Net;
 
 namespace Test.WebApi2.OData.Controllers {
 
@@ -13,6 +15,21 @@ namespace Test.WebApi2.OData.Controllers {
     public virtual IQueryable<T> Get() {
       return _context.Set<T>();
     }
+
+    // DELETE odata/TodoItems(5)
+    public async Task<IHttpActionResult> Delete([FromODataUri] int key) {
+      var items = _context.Set<T>();
+      T item = await items.FindAsync(key);
+      if (item == null) {
+        return NotFound();
+      }
+
+      items.Remove(item);
+      await _context.SaveChangesAsync();
+
+      return StatusCode(HttpStatusCode.NoContent);
+    }
+
   }
 
   public class AccountTypesController : BaseBillingController<AccountType> {

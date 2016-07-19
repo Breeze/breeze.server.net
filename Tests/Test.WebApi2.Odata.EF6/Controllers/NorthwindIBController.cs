@@ -220,6 +220,9 @@ namespace Test.WebApi2.OData.Controllers {
 
   }
 
+  public class TimeGroupsController : BaseController1<TimeGroup, Int32> {
+
+  }
 
   
 
