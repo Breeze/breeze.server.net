@@ -2,11 +2,11 @@
   if (typeof breeze === "object") {
     factory(breeze);
   } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
-    // CommonJS or Node: hard-coded dependency on "breeze"
+    // CommonJS or Node: hard-coded dependency on "breeze-client"
     factory(require("breeze-client"));
   } else if (typeof define === "function" && define["amd"]) {
-    // AMD anonymous module with hard-coded dependency on "breeze"
-    define(["breeze"], factory);
+    // AMD anonymous module with hard-coded dependency on "breeze-client"
+    define(["breeze-client"], factory);
   }
 }(function (breeze) {
   "use strict";
@@ -120,7 +120,7 @@
 
     OData.read({
           requestUri: url,
-          headers: this.headers
+          headers: __extend({}, this.headers)
         },
         function (data, response) {
           var inlineCount;
@@ -163,7 +163,7 @@
     }
 
     var mheaders = __extend({}, this.headers);
-    mheaders.Accept = 'application/json;odata.metadata=full';
+    mheaders.Accept = 'application/*; odata.metadata=full';
 
     // OData.read(url,
     OData.read({
@@ -228,7 +228,7 @@
     var contentKeys = saveContext.contentKeys;
 
     OData.request({
-      headers: this.headers,
+      headers: __extend({}, this.headers),
       requestUri: url,
       method: "POST",
       data: requestData

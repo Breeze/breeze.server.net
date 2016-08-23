@@ -23,7 +23,7 @@
 })(this, function (global) {
     "use strict"; 
     var breeze = {
-        version: "1.5.10",
+        version: "1.5.11",
         metadataVersion: "1.0.5"
     };
     ;/**
@@ -7790,7 +7790,21 @@ var EntityType = (function () {
     assertParam(property, "property").isInstanceOf(DataProperty).or().isInstanceOf(NavigationProperty).check();
 
     // true is 2nd arg to force resolve of any navigation properties.
-    return this._addPropertyCore(property, true);
+    var newprop = this._addPropertyCore(property, true);
+
+    if (this.subtypes && this.subtypes.length) {
+      var stype = this;
+      stype.getSelfAndSubtypes().forEach(function (st) {
+        if (st !== stype) {
+          if (property.isNavigationProperty) {
+            st._addPropertyCore(new NavigationProperty(property), true);
+          } else {
+            st._addPropertyCore(new DataProperty(property), true);
+          }
+        }
+      });
+    }
+    return newprop;
   };
 
   proto._updateFromBase = function (baseEntityType) {
@@ -8467,7 +8481,7 @@ var EntityType = (function () {
           isUnmapped: true
         });
         newProp.isSettable = __isSettable(instance, pn);
-        if (stype.subtypes) {
+        if (stype.subtypes && stype.subtypes.length) {
           stype.getSelfAndSubtypes().forEach(function (st) {
             st._addPropertyCore(new DataProperty(newProp));
           });
@@ -15550,6 +15564,10 @@ var MappingContext = (function () {
 
   function updateEntityRef(mc, targetEntity, node) {
     var nodeId = node._$meta.nodeId;
+    if (!nodeId && node._$meta.extraMetadata) {
+      // odata case.  refMap isn't really used, but is returned as data.retrievedEntities, so we populated it anyway.
+      nodeId = node._$meta.extraMetadata.uriKey;
+    }
     if (nodeId != null) {
       mc.refMap[nodeId] = targetEntity;
     }
