@@ -333,6 +333,24 @@
             <param name="entityInfo"></param>
             <returns>true if the entity should be saved, false if not</returns>
         </member>
+        <member name="P:Breeze.ContextProvider.NH.NHContext.TypeFilter">
+            <summary>
+            Sets a function to filter types from metadata generation and SaveChanges.
+            The function returns true if a Type should be included, false otherwise.
+            </summary><example>
+            // exclude the LogRecord entity
+            MyNHContext.TypeFilter = (type) => type.Name != "LogRecord";
+            </example><example>
+            // exclude certain entities, and all Audit* entities
+            var excluded = new string[] { "Comment", "LogRecord", "UserPermission" };
+            MyNHContext.TypeFilter = (type) =>
+            {
+              if (excluded.Contains(type.Name)) return false;
+              if (type.Name.StartsWith("Audit")) return false;
+              return true;
+            };
+            </example>
+        </member>
         <member name="M:Breeze.ContextProvider.NH.NHContext.SaveChangesCore(Breeze.ContextProvider.SaveWorkState)">
             <summary>
             Persist the changes to the entities in the saveMap.
@@ -406,24 +424,6 @@
             TODO make this faster
             TODO make this optional
             <param name="saveMap"></param>
-        </member>
-        <member name="P:Breeze.ContextProvider.NH.NHContext.TypeFilter">
-            <summary>
-            Sets a function to filter types from metadata generation and SaveChanges.
-            The function returns true if a Type should be included, false otherwise.
-            </summary><example>
-            // exclude the LogRecord entity
-            MyNHContext.TypeFilter = (type) => type.Name != "LogRecord";
-            </example><example>
-            // exclude certain entities, and all Audit* entities
-            var excluded = new string[] { "Comment", "LogRecord", "UserPermission" };
-            MyNHContext.TypeFilter = (type) =>
-            {
-              if (excluded.Contains(type.Name)) return false;
-              if (type.Name.StartsWith("Audit")) return false;
-              return true;
-            };
-            </example>
         </member>
         <member name="T:Breeze.ContextProvider.NH.NHEagerFetch">
             <summary>

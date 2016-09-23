@@ -24,34 +24,6 @@
             and a single <see cref="T:System.Web.Http.Filters.IFilterProvider"/> for Breeze OData support
             </summary>
         </member>
-        <member name="M:Breeze.WebApi2.BreezeControllerAttribute.GetQueryableFilterProvider(Breeze.WebApi2.EnableBreezeQueryAttribute)">
-            <summary>
-            Return the IQueryable <see cref="T:System.Web.Http.Filters.IFilterProvider"/> for a Breeze Controller
-            </summary>
-            <remarks>
-            By default returns an <see cref="T:Breeze.WebApi2.EnableBreezeQueryFilterProvider"/>.
-            Override to substitute a custom provider.
-            </remarks>
-        </member>
-        <member name="M:Breeze.WebApi2.BreezeControllerAttribute.GetJsonFormatter">
-            <summary>
-            Return the Breeze-specific <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> that formats
-            content to JSON. This formatter must be tailored to work with Breeze clients. 
-            </summary>
-            <remarks>
-            By default returns the Breeze <see cref="T:Breeze.WebApi2.JsonFormatter"/>.
-            Override it to substitute a custom JSON formatter.
-            </remarks>
-        </member>
-        <member name="M:Breeze.WebApi2.BreezeControllerAttribute.GetMetadataFilterProvider(Breeze.WebApi2.MetadataToHttpResponseAttribute)">
-            <summary>
-            Return the Metadata <see cref="T:System.Web.Http.Filters.IFilterProvider"/> for a Breeze Controller
-            </summary>
-            <remarks>
-            By default returns an <see cref="T:Breeze.WebApi2.MetadataToHttpResponseAttribute"/>.
-            Override to substitute a custom provider.
-            </remarks>
-        </member>
         <member name="P:Breeze.WebApi2.BreezeControllerAttribute.MaxExpansionDepth">
             <summary>
             Gets or sets max expansion depth at controller level
@@ -96,6 +68,34 @@
             <value>
             The maximum number of query results to send back to clients.
             </value>
+        </member>
+        <member name="M:Breeze.WebApi2.BreezeControllerAttribute.GetQueryableFilterProvider(Breeze.WebApi2.EnableBreezeQueryAttribute)">
+            <summary>
+            Return the IQueryable <see cref="T:System.Web.Http.Filters.IFilterProvider"/> for a Breeze Controller
+            </summary>
+            <remarks>
+            By default returns an <see cref="T:Breeze.WebApi2.EnableBreezeQueryFilterProvider"/>.
+            Override to substitute a custom provider.
+            </remarks>
+        </member>
+        <member name="M:Breeze.WebApi2.BreezeControllerAttribute.GetJsonFormatter">
+            <summary>
+            Return the Breeze-specific <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter"/> that formats
+            content to JSON. This formatter must be tailored to work with Breeze clients. 
+            </summary>
+            <remarks>
+            By default returns the Breeze <see cref="T:Breeze.WebApi2.JsonFormatter"/>.
+            Override it to substitute a custom JSON formatter.
+            </remarks>
+        </member>
+        <member name="M:Breeze.WebApi2.BreezeControllerAttribute.GetMetadataFilterProvider(Breeze.WebApi2.MetadataToHttpResponseAttribute)">
+            <summary>
+            Return the Metadata <see cref="T:System.Web.Http.Filters.IFilterProvider"/> for a Breeze Controller
+            </summary>
+            <remarks>
+            By default returns an <see cref="T:Breeze.WebApi2.MetadataToHttpResponseAttribute"/>.
+            Override to substitute a custom provider.
+            </remarks>
         </member>
         <member name="T:Breeze.WebApi2.BreezeQueryableAttribute">
             <summary>

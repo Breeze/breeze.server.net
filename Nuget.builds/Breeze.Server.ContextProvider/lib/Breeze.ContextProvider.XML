@@ -211,6 +211,61 @@
             Called by FindOrCreate to create a new dynamictypeinfo based on the selected properties and types  
             </summary>
         </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.OriginalType">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicType">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.TypeName">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeName">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyNames">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyTypes">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.Properties">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicConstructor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicEmptyConstructor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeShouldSave">
+            <summary>
+            Should this dynamic type's assembly be written out as a file.
+            </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeFileDirectory">
+            <summary>
+            File directory to write out the dynamic types assembly.
+            </summary>
+        </member>
         <member name="M:Breeze.ContextProvider.DynamicTypeInfo.Equals(System.Object)">
             <summary>
             For internal use only.
@@ -281,61 +336,6 @@
             <param name="maxChars"></param>
             <returns></returns>
         </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.OriginalType">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicType">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.TypeName">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeName">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyNames">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyTypes">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.Properties">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicConstructor">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicEmptyConstructor">
-            <summary>
-            For internal use only.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeShouldSave">
-            <summary>
-            Should this dynamic type's assembly be written out as a file.
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.DynamicTypeInfo.DynamicTypeFileDirectory">
-            <summary>
-            File directory to write out the dynamic types assembly.
-            </summary>
-        </member>
         <member name="P:Breeze.ContextProvider.DynamicTypeInfo.PropertyNameWrappers">
             <summary>
             For internal use only.
@@ -345,6 +345,16 @@
              <summary>
             Used for shape comparison.
              </summary>
+        </member>
+        <member name="P:Breeze.ContextProvider.TransactionSettings.Default">
+            <summary>
+            Default settings for all saves. 
+            </summary>
+            <remarks>
+            The <b>Default</b> provides default transaction settings for all SaveChanges actions.  
+            Override BreezeConfig to return a different TransactionSettings value.
+            You can supply settings for a particular save with the TransactionSettings passed in the SaveChanges call. 
+            </remarks>
         </member>
         <member name="M:Breeze.ContextProvider.TransactionSettings.#ctor">
             <summary>
@@ -363,42 +373,6 @@
             </summary>
             <remarks>
             Note that IsolationLevel and Timeout have no affect if TransactionType is None.
-            </remarks>
-        </member>
-        <member name="M:Breeze.ContextProvider.TransactionSettings.ToTransactionOptions">
-            <summary>
-            Converts the TransactionSettings to a <see cref="T:System.Transactions.TransactionOptions"/> instance.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Breeze.ContextProvider.TransactionSettings.Equals(System.Object)">
-            <summary>
-            See <see cref="M:System.Object.Equals(System.Object)"/>.
-            </summary>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Breeze.ContextProvider.TransactionSettings.GetHashCode">
-            <summary>
-            See <see cref="M:System.Object.GetHashCode"/>.
-            </summary>
-            <returns>
-            A hash code for the current <see cref="T:System.Object"></see>.
-            </returns>
-        </member>
-        <member name="F:Breeze.ContextProvider.TransactionSettings.IsolationMap">
-            <summary>
-            Maps the System.Transactions.IsolationLevel to System.Data.IsolationLevel
-            </summary>
-        </member>
-        <member name="P:Breeze.ContextProvider.TransactionSettings.Default">
-            <summary>
-            Default settings for all saves. 
-            </summary>
-            <remarks>
-            The <b>Default</b> provides default transaction settings for all SaveChanges actions.  
-            Override BreezeConfig to return a different TransactionSettings value.
-            You can supply settings for a particular save with the TransactionSettings passed in the SaveChanges call. 
             </remarks>
         </member>
         <member name="P:Breeze.ContextProvider.TransactionSettings.TransactionType">
@@ -433,6 +407,32 @@
             The default Timeout is TransactionManager.DefaultTimeout which is usually 1 minute.
             See http://stackoverflow.com/questions/6402031/transactionscope-maximumtimeout
             </remarks>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.ToTransactionOptions">
+            <summary>
+            Converts the TransactionSettings to a <see cref="T:System.Transactions.TransactionOptions" /> instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.Equals(System.Object)">
+            <summary>
+            See <see cref="M:System.Object.Equals(System.Object)"/>.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.TransactionSettings.GetHashCode">
+            <summary>
+            See <see cref="M:System.Object.GetHashCode"/>.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"></see>.
+            </returns>
+        </member>
+        <member name="F:Breeze.ContextProvider.TransactionSettings.IsolationMap">
+            <summary>
+            Maps the System.Transactions.IsolationLevel to System.Data.IsolationLevel
+            </summary>
         </member>
         <member name="T:Breeze.ContextProvider.TransactionType">
             <summary><list>
