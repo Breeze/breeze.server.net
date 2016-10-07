@@ -125,7 +125,7 @@ gulp.task('nugetDeploy', function(done) {
   var fileNames = glob.sync( src);
   async.each(fileNames, function (fileName, cb) {
     gutil.log('Deploying nuspec file: ' + fileName);
-    var cmd = 'nuget push ' + fileName + ' -Source https://www.nuget.org/api/v2/package';
+    var cmd = 'nuget push ' + fileName + ' -Source https://www.nuget.org';
     execCommands([ cmd], null, cb);
   }, done);
 });
@@ -136,7 +136,7 @@ gulp.task('nugetDeployClient', function(done) {
   var fileNames = glob.sync( src);
   async.each(fileNames, function (fileName, cb) {
     gutil.log('Deploying nuspec file: ' + fileName);
-    var cmd = 'nuget push ' + fileName + ' -Source https://www.nuget.org/api/v2/package';
+    var cmd = 'nuget push ' + fileName + ' -Source https://www.nuget.org';
     execCommands([ cmd], null, cb);
   }, done);
 });
