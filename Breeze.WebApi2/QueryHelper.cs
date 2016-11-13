@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Reflection;
+using System.Web;
 using System.Web.Http.OData.Query;
 
 namespace Breeze.WebApi2 {
@@ -142,9 +143,10 @@ namespace Breeze.WebApi2 {
       var oldUri = request.RequestUri;
 
       var map = oldUri.ParseQueryString();
+      // after ParseQueryString, all the values are decoded. We need to encode everything before applying to odata
       var newQuery = map.Keys.Cast<String>()
                         .Where(k => (k.Trim().Length > 0) && !optionNames.Contains(k.Trim()))
-                        .Select(k => k + "=" + map[k])
+                        .Select(k => k + "=" + HttpUtility.UrlEncode(map[k]))
                         .ToAggregateString("&");
 
       var newUrl = oldUri.Scheme + "://" + oldUri.Authority + oldUri.AbsolutePath + "?" + newQuery;
