@@ -936,7 +936,7 @@ namespace Sample_WebApi2.Controllers {
       return base.BeforeSaveEntity(entityInfo);
     }
 
-    protected override Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap) {
+    protected override Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<EntityKey> deletes) {
 
       var tag = (string)SaveOptions.Tag;
 
@@ -1003,14 +1003,17 @@ namespace Sample_WebApi2.Controllers {
             saveMap[type].Add(enInfo);
           }
         }
+      } else if (tag == "deleteProductOnServer.Before") {
+        var t = typeof(Product);
+        var prod = (Product)saveMap[t].First().Entity;
+        deletes.Add(new EntityKey() { EntityTypeName = t.Name + ":#" + t.Namespace, KeyValue = prod.ProductID });
       }
-
 #if DATABASEFIRST_OLD
       DataAnnotationsValidator.AddDescriptor(typeof(Customer), typeof(CustomerMetaData));
       var validator = new DataAnnotationsValidator(this);
       validator.ValidateEntities(saveMap, true);
 #endif
-      return base.BeforeSaveEntities(saveMap);
+      return base.BeforeSaveEntities(saveMap, deletes);
     }
 
   }
