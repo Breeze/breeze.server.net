@@ -775,7 +775,7 @@ namespace Sample_WebApi2.Controllers {
     public const string CONFIG_VERSION = "NHIBERNATE";
 #endif
 
-    protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {
+    protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings, List<EntityKey> deletes) {
       var tag = (string)SaveOptions.Tag;
       if (tag == "CommentKeyMappings.After") {
 
@@ -793,8 +793,23 @@ namespace Sample_WebApi2.Controllers {
         LookupEmployeeInSeparateContext(false);
       } else if (tag == "LookupEmployeeInSeparateContext.SameConnection.After") {
         LookupEmployeeInSeparateContext(true);
+      } else if (tag == "deleteProductOnServer") {
+        var t = typeof(Product);
+        var prod = (Product) saveMap[t].First().Entity;
+        deletes.Add(new EntityKey() { EntityTypeName = t.Name + ":#" + t.Namespace, KeyValue = prod.ProductID });
+      } else if (tag != null && tag.StartsWith("deleteProductOnServer:")) {
+        var id = tag.Substring(tag.IndexOf(':') + 1);
+        var t = typeof(Product);
+        deletes.Add(new EntityKey() { EntityTypeName = t.Name + ":#" + t.Namespace, KeyValue = id });
+      } else if (tag == "deleteSupplierAndProductOnServer") {
+        var t = typeof(Product);
+        var prod = (Product)saveMap[t].First().Entity;
+        deletes.Add(new EntityKey() { EntityTypeName = t.Name + ":#" + t.Namespace, KeyValue = prod.ProductID });
+        t = typeof(Supplier);
+        var sup = (Supplier)saveMap[t].First().Entity;
+        deletes.Add(new EntityKey() { EntityTypeName = t.Name + ":#" + t.Namespace, KeyValue = sup.SupplierID });
       }
-      base.AfterSaveEntities(saveMap, keyMappings);
+      base.AfterSaveEntities(saveMap, keyMappings, deletes);
     }
 
     public Dictionary<Type, List<EntityInfo>> GetSaveMapFromSaveBundle(JObject saveBundle) {
