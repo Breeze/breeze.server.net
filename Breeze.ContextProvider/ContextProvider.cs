@@ -349,7 +349,7 @@ namespace Breeze.ContextProvider {
           .Select(entityInfo => entityInfo.Entity)).ToList();
         var deletes = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState == EntityState.Deleted || ei.EntityState == EntityState.Detached))
           .Select(entityInfo => new EntityKey(entityInfo.Entity, ContextProvider.GetKeyValues(entityInfo)))).ToList();
-        return new SaveResult() { Entities = entities, KeyMappings = KeyMappings, Deletes = deletes };
+        return new SaveResult() { Entities = entities, KeyMappings = KeyMappings, DeletedKeys = deletes };
       }
     }
   }
@@ -444,7 +444,7 @@ namespace Breeze.ContextProvider {
   public class SaveResult {
     public List<Object> Entities;
     public List<KeyMapping> KeyMappings;
-    public List<EntityKey> Deletes;
+    public List<EntityKey> DeletedKeys;
     public List<Object> Errors;
   }
 
