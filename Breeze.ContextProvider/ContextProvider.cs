@@ -345,7 +345,7 @@ namespace Breeze.ContextProvider {
       if (EntityErrors != null) {
         return new SaveResult() { Errors = EntityErrors.Cast<Object>().ToList() };
       } else {
-        var entities = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState != EntityState.Deleted && ei.EntityState != EntityState.Detached))
+        var entities = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState != EntityState.Detached))
           .Select(entityInfo => entityInfo.Entity)).ToList();
         var deletes = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState == EntityState.Deleted || ei.EntityState == EntityState.Detached))
           .Select(entityInfo => new EntityKey(entityInfo.Entity, ContextProvider.GetKeyValues(entityInfo)))).ToList();
