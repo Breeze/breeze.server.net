@@ -12,13 +12,13 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Core data access library for a Breeze Server working with NHibernate</description>
         <summary>Breeze Server - ContextProvider for NHibernate.  This package is usually used in conjunction with the Breeze.WebApi2 package.</summary>
-        <copyright>Copyright © IdeaBlade 2012-2015</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2016</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
 		<dependencies>
 		    <dependency id="Breeze.Server.ContextProvider" version="[{{version}}]"/>
-			<dependency id="NHibernate" version="[3.3, 4.0)" />
+			<dependency id="NHibernate" version="3.3" />
 		</dependencies>
     </metadata>
     <files>

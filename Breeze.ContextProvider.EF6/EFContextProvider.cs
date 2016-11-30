@@ -232,7 +232,7 @@ namespace Breeze.ContextProvider.EF6 {
           //For EF exceptions, this is often the most 'relevant' message.
           throw new Exception(nextException.Message, e);
         }
-      } catch (Exception e) {
+      } catch (Exception) {
         throw;
       }
 

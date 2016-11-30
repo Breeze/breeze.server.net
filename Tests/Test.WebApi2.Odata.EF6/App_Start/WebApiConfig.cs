@@ -17,8 +17,6 @@ using System.Web.Http.OData.Batch;
 using Models.NorthwindIB.CF;
 using Foo;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Http.OData.Batch;
-using Microsoft.Data.Edm;
 #elif DATABASEFIRST_NEW
 using Models.NorthwindIB.EDMX_2012;
 #endif

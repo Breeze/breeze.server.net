@@ -8,6 +8,7 @@ using System;
 using System.Net;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Web.Http;
 
 using Breeze.ContextProvider;
@@ -829,7 +830,7 @@ namespace Sample_WebApi2.Controllers {
     public void SetCurrentTransaction(System.Data.Common.DbCommand command) {
       if (EntityTransaction != null) {
         // get private member via reflection
-        var bindingFlags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance;
+        var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
         var etype = EntityTransaction.GetType();
         var stProp = etype.GetProperty("StoreTransaction", bindingFlags);
         var transaction = stProp.GetValue(EntityTransaction, null);
