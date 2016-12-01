@@ -109,13 +109,28 @@ gulp.task('nugetPack', ['copyBreezeJs', 'copyDlls', 'nugetClean'], function(done
   }, done);
 });
 
-gulp.task('nugetTestDeploy', ['nugetPack'], function() {
+// gulp.task('nugetTestDeploy', ['nugetPack'], function() {
+//   var src = _nugetDir + '**/*.nupkg';
+//   var dest = process.env.LOCALAPPDATA + '/Nuget/Cache'
+//   return gulp.src(src)
+//       .pipe(flatten())
+//       .pipe(gulp.dest(dest));
+// });
+
+// Deploy to nuget on local machine - NuGet 3.3+
+gulp.task('nugetTestDeploy', ['nugetPack'], function(done) {
+  gutil.log('Deploying Nugets...');
   var src = _nugetDir + '**/*.nupkg';
-  var dest = process.env.LOCALAPPDATA + '/Nuget/Cache'
-  return gulp.src(src)
-      .pipe(flatten())
-      .pipe(gulp.dest(dest));
+  var dest = process.env.LOCALAPPDATA + '/Nuget/Test';
+  var fileNames = glob.sync( src);
+  async.each(fileNames, function (fileName, cb) {
+    gutil.log('Deploying nuspec file: ' + fileName);
+    var cmd = 'nuget add ' + fileName + ' -Source ' + dest;
+    execCommands([cmd], null, cb);
+  }, done);
 });
+
+
 
 // should ONLY be called manually after testing locally installed nugets from nugetPack step.
 // deliberately does NOT have a dependency on nugetPack

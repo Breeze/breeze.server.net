@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.Server.ContextProvider</id>
-        <version>1.5.14</version>
+        <version>1.6.0</version>
         <title>Breeze Server - ContextProvider</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
@@ -17,7 +17,7 @@
         <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
 		<dependencies>
-			<dependency id="Newtonsoft.Json" version="[6.0.4,]"/>
+			<dependency id="Newtonsoft.Json" version="6.0.0"/>
 		</dependencies>
     </metadata>
     <files>

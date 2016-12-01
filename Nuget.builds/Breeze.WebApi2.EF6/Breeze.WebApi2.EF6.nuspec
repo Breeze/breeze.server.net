@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.WebApi2.EF6</id>
-        <version>1.5.14</version>
+        <version>1.6.0</version>
         <title>Breeze Client and Server - Javascript client with ASP.NET Web API 2.2 and Entity Framework 6.</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
@@ -17,9 +17,9 @@
         <releaseNotes>Note that this package uses Microsoft's ASP.NET WebApi 2.2 and will attempt to upgrade any WebApi 2.1 dependencies in your project. Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA EntityFramework</tags>
 		<dependencies>
-		    <dependency id="Breeze.Client" version="[1.5.14]"/>
-		    <dependency id="Breeze.Server.WebApi2" version="[1.5.14]"/>
-			<dependency id="Breeze.Server.ContextProvider.EF6" version="[1.5.14]" />
+		    <dependency id="Breeze.Client" version="[1.6.0]"/>
+		    <dependency id="Breeze.Server.WebApi2" version="[1.6.0]"/>
+			<dependency id="Breeze.Server.ContextProvider.EF6" version="[1.6.0]" />
 		</dependencies>
     </metadata>
     <files>

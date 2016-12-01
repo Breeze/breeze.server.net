@@ -23,7 +23,7 @@
 })(this, function (global) {
     "use strict"; 
     var breeze = {
-        version: "1.5.15",
+        version: "1.6.0",
         metadataVersion: "1.0.5"
     };
     ;/**
@@ -4260,7 +4260,7 @@ var EntityAspect = (function () {
 
   function removeFromRelationsCore(entity) {
     entity.entityType.navigationProperties.forEach(function (np) {
-      var inverseNp = np.inverse;
+      var inverseNp = np.getInverse();
       var npValue = entity.getProperty(np.name);
       if (np.isScalar) {
         if (npValue) {
@@ -4929,7 +4929,7 @@ breeze.EntityState = EntityState;
     var np = relationArray.navigationProperty;
     var addsInProcess = relationArray._addsInProcess;
 
-    var invNp = np.inverse;
+    var invNp = np.getInverse();
     var startIx = addsInProcess.length;
     try {
       adds.forEach(function (childEntity) {
@@ -4952,7 +4952,7 @@ breeze.EntityState = EntityState;
   }
 
   function processRemoves(relationArray, removes) {
-    var inp = relationArray.navigationProperty.inverse;
+    var inp = relationArray.navigationProperty.getInverse();
     if (inp) {
       removes.forEach(function (childEntity) {
         childEntity.setProperty(inp.name, null);
@@ -4964,7 +4964,7 @@ breeze.EntityState = EntityState;
     // don't allow dups in this array. - also prevents recursion
     var parentEntity = relationArray.parentEntity;
     var navProp = relationArray.navigationProperty;
-    var inverseProp = navProp.inverse || (navProp.baseProperty && navProp.baseProperty.inverse); // TODO climb hierarchy
+    var inverseProp = navProp.getInverse();
     var goodAdds;
     if (inverseProp) {
       goodAdds = adds.filter(function (a) {
@@ -5224,7 +5224,7 @@ function setDpValueSimple(context, rawAccessorFn) {
     // but won't handle product.productId => orderDetail.productId because product
     // doesn't have an orderDetails property.
     entityType.navigationProperties.forEach(function (np) {
-      var inverseNp = np.inverse;
+      var inverseNp = np.getInverse();
       var fkNames = inverseNp ? inverseNp.foreignKeyNames : np.invForeignKeyNames;
 
       if (fkNames.length === 0) return;
@@ -5298,7 +5298,7 @@ function setNpValue(context, rawAccessorFn) {
   }
 
   var entityManager = entityAspect.entityManager;
-  var inverseProp = property.inverse;
+  var inverseProp = property.getInverse();
 
   // manage attachment -
   if (newValue != null) {
@@ -6333,6 +6333,7 @@ var JsonResultsAdapter = (function () {
         .whereParam("extractResults").isFunction().isOptional().withDefault(extractResultsDefault)
         .whereParam("extractSaveResults").isFunction().isOptional().withDefault(extractSaveResultsDefault)
         .whereParam("extractKeyMappings").isFunction().isOptional().withDefault(extractKeyMappingsDefault)
+        .whereParam("extractDeletedKeys").isFunction().isOptional().withDefault(extractDeletedKeysDefault)
         .whereParam("visitNode").isFunction()
         .applyAll(this);
     __config._storeObject(this, proto._$typeName, this.name);
@@ -6348,9 +6349,13 @@ var JsonResultsAdapter = (function () {
   function extractSaveResultsDefault(data) {
     return data.entities || data.Entities || [];
   }
-
+  
   function extractKeyMappingsDefault(data) {
     return data.keyMappings || data.KeyMappings || [];
+  }
+
+  function extractDeletedKeysDefault(data) {
+    return data.deletedKeys || data.DeletedKeys || [];
   }
 
   return ctor;
@@ -9295,6 +9300,14 @@ var NavigationProperty = (function () {
 
   };
 
+  proto.getInverse = function() {
+    var np = this;
+    while(!np.inverse && np.baseProperty) {
+      np = np.baseProperty;
+    }
+    return np.inverse;
+  }
+
   proto.setInverse = function (inverseNp) {
     var invNp;
     if (typeof (inverseNp) === "string") {
@@ -12161,7 +12174,7 @@ breeze.Predicate = Predicate;
       var entityKey = new EntityKey(navigationProperty.entityType, relatedKeyValues);
       return buildKeyPredicate(entityKey);
     } else {
-      var inverseNp = navigationProperty.inverse;
+      var inverseNp = navigationProperty.getInverse();
       var foreignKeyNames = inverseNp ? inverseNp.foreignKeyNames : navigationProperty.invForeignKeyNames;
       if (foreignKeyNames.length === 0) return null;
       var keyValues = entity.entityAspect.getKey().values;
@@ -13973,8 +13986,8 @@ var EntityManager = (function () {
     function processSavedEntities(saveResult) {
 
       var savedEntities = saveResult.entities;
-
-      if (savedEntities.length === 0) {
+      var deletedKeys = saveResult.deletedKeys || [];
+      if (savedEntities.length === 0 && deletedKeys.length == 0) {
         return [];
       }
       var keyMappings = saveResult.keyMappings;
@@ -13996,6 +14009,17 @@ var EntityManager = (function () {
         // the save operation did not actually return the entity - i.e. during OData and Mongo updates and deletes.
         savedEntities = mappingContext.visitAndMerge(savedEntities, { nodeType: "root" });
       });
+
+      // detach any entities found in the em that appear in the deletedKeys list. 
+      
+      deletedKeys.forEach(function(key) {
+        var entityType = em.metadataStore._getEntityType(key.entityTypeName);
+        var ekey = new EntityKey(entityType, key.keyValues);
+        var entity = em.findEntityByKey(ekey);
+        if (entity) {
+          entity.entityAspect.setDetached();
+        }
+      })
 
       return savedEntities;
     }
@@ -14526,10 +14550,10 @@ var EntityManager = (function () {
           // except with unidirectional 1-n where it is parentToChildNp;
           var np = tpl.navigationProperty;
 
-          if (np.inverse) {
+          if (np.getInverse()) {
             // bidirectional
             childToParentNp = np;
-            parentToChildNp = np.inverse;
+            parentToChildNp = np.getInverse();
 
             if (parentToChildNp.isScalar) {
               var onlyChild = unattachedChildren[0];
@@ -15735,7 +15759,7 @@ var MappingContext = (function () {
     var relatedEntities = mergeRelatedEntitiesCore(mc, rawEntity, navigationProperty);
     if (relatedEntities == null) return;
 
-    var inverseProperty = navigationProperty.inverse;
+    var inverseProperty = navigationProperty.getInverse();
     if (!inverseProperty) return;
 
     var originalRelatedEntities = targetEntity.getProperty(navigationProperty.name);
@@ -15787,7 +15811,7 @@ var MappingContext = (function () {
     if (currentRelatedEntity !== relatedEntity) {
       // if not hook up both directions.
       targetEntity.setProperty(propName, relatedEntity);
-      var inverseProperty = navigationProperty.inverse;
+      var inverseProperty = navigationProperty.getInverse();
       if (!inverseProperty) return;
       if (inverseProperty.isScalar) {
         relatedEntity.setProperty(inverseProperty.name, targetEntity);
