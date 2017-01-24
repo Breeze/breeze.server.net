@@ -14,59 +14,47 @@ namespace Breeze.Query {
    *
    */
   public class BinaryPredicate : BasePredicate {
-    private Object _expr1Source;
-    private Object _expr2Source;
-    private BaseExpression _expr1;
-    private BaseExpression _expr2;
+    public Object Expr1Source { get; private set; }
+    public Object Expr2Source { get; private set; }
+    private BaseBlock _block1;
+    private BaseBlock _block2;
 
-    public BinaryPredicate(Operator op, Object expr1Source, Object expr2Source) {
-      _op = op;
-      _expr1Source = expr1Source;
-      _expr2Source = expr2Source;
-    }
-
-
-    public Object getExpr1Source() {
-      return _expr1Source;
-    }
-
-    public Object getExpr2Source() {
-      return _expr2Source;
-    }
-
-    public BaseExpression getExpr1() {
-      return _expr1;
-    }
-
-    public BaseExpression getExpr2() {
-      return _expr2;
+    public BinaryPredicate(Operator op, Object expr1Source, Object expr2Source) : base(op) {
+      Expr1Source = expr1Source;
+      Expr2Source = expr2Source;
     }
 
     public override void Validate(Type entityType) {
-      if (_expr1Source == null) {
-        throw new Exception("Unable to validate 1st expression: " + this._expr1Source);
+      if (Expr1Source == null) {
+        throw new Exception("Unable to validate 1st expression: " + this.Expr1Source);
       }
 
-      this._expr1 = BaseExpression.CreateLHSExpression(_expr1Source, entityType);
+      this._block1 = BaseBlock.CreateLHSBlock(Expr1Source, entityType);
 
-      if (_op == Operator.In && !(_expr2Source is IList)) {
+      if (_op == Operator.In && !(Expr2Source is IList)) {
         throw new Exception("The 'in' operator requires that its right hand argument be an array");
       }
 
       // Special purpose Enum handling
 
-      var enumType = GetEnumType(this._expr1);
-      if (enumType != null && _expr2Source != null) {
-        var expr2Enum = Enum.Parse(enumType, (String)_expr2Source);
-        this._expr2 = BaseExpression.CreateRHSExpression(expr2Enum, entityType, null);
+      var enumType = GetEnumType(this._block1);
+      if (enumType != null && Expr2Source != null) {
+        var expr2Enum = Enum.Parse(enumType, (String)Expr2Source);
+        this._block2 = BaseBlock.CreateRHSBlock(expr2Enum, entityType, null);
       } else {
-        this._expr2 = BaseExpression.CreateRHSExpression(_expr2Source, entityType, this._expr1.DataType);
+        this._block2 = BaseBlock.CreateRHSBlock(Expr2Source, entityType, this._block1.DataType);
       }
     }
 
-    private Type GetEnumType(BaseExpression expr) {
-      if (expr is PropExpression) {
-        PropExpression pExpr = (PropExpression)expr;
+
+
+    public override Expression ToExpression(ParameterExpression paramExpr) {
+      return BuildBinaryExpr(_block1.ToExpression(paramExpr), _block2.ToExpression(paramExpr), Operator);
+    }
+
+    private Type GetEnumType(BaseBlock block) {
+      if (block is PropBlock) {
+        PropBlock pExpr = (PropBlock)block;
         var prop = pExpr.Property;
         if (prop.IsDataProperty) {
           if (TypeFns.IsEnumType(prop.ReturnType)) {
@@ -75,10 +63,6 @@ namespace Breeze.Query {
         }
       }
       return null;
-    }
-
-    public override Expression ToExpression(ParameterExpression paramExpr) {
-      return BuildBinaryExpr(_expr1.ToExpression(paramExpr), _expr2.ToExpression(paramExpr), Operator);
     }
 
     private Expression BuildBinaryExpr(Expression expr1, Expression expr2, Operator op) {
@@ -97,8 +81,6 @@ namespace Breeze.Query {
         }
         
       }
-
-
 
       if (op == BinaryOperator.Equals) {
         return Expression.Equal(expr1, expr2);

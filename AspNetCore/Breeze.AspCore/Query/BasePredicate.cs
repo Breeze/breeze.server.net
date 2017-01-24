@@ -20,6 +20,9 @@ namespace Breeze.Query {
       get { return _op; }
     }
 
+    public BasePredicate(Operator op) {
+      _op = op;
+    }
 
     public abstract void Validate(Type entityType);
 
@@ -30,12 +33,6 @@ namespace Breeze.Query {
     }
 
     public static List<BasePredicate> PredicatesFromMap(IDictionary<string, object> map) {
-      //List<BasePredicate> preds = new List<BasePredicate>();
-      //foreach (var key in map.Keys) {
-      //  BasePredicate pred = BasePredicateFromKeyValue(key, map[key]);
-      //  preds.Add(pred);
-      //}
-      //return preds;
       return map.Keys.Select(k => PredicateFromKeyValue(k, map[k])).ToList();
     }
 

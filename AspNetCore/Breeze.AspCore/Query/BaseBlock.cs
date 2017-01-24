@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Breeze.Query {
 
-  public abstract class BaseExpression {
+  public abstract class BaseBlock {
 
-    // will return either a PropExpression or a FnExpression
-    public static BaseExpression CreateLHSExpression(Object exprSource,
+    // will return either a PropBlock or a FnBlock
+    public static BaseBlock CreateLHSBlock(Object exprSource,
         Type entityType) {
       if (exprSource == null) {
         throw new Exception(
@@ -35,20 +35,20 @@ namespace Breeze.Query {
 
       String source = (String)exprSource;
       if (source.IndexOf("(") == -1) {
-        return new PropExpression(source, entityType);
+        return new PropBlock(source, entityType);
       } else {
-        return FnExpression.CreateFrom(source, entityType);
+        return FnBlock.CreateFrom(source, entityType);
       }
 
 
     }
 
-    // will return either a PropExpression or a LitExpression
-    public static BaseExpression CreateRHSExpression(Object exprSource,
+    // will return either a PropBlock or a LitBlock
+    public static BaseBlock CreateRHSBlock(Object exprSource,
         Type entityType, DataType otherExprDataType) {
 
       if (exprSource == null) {
-        return new LitExpression(exprSource, otherExprDataType);
+        return new LitBlock(exprSource, otherExprDataType);
       }
 
       if (exprSource is String) {
@@ -56,18 +56,18 @@ namespace Breeze.Query {
         if (entityType == null) {
           // if entityType is unknown then assume that the rhs is a
           // literal
-          return new LitExpression(source, otherExprDataType);
+          return new LitBlock(source, otherExprDataType);
         }
 
         if (PropertySignature.IsProperty(entityType, source)) {
-          return new PropExpression(source, entityType);
+          return new PropBlock(source, entityType);
         } else { 
-          return new LitExpression(source, otherExprDataType);
+          return new LitBlock(source, otherExprDataType);
         } 
       }
 
       if (TypeFns.IsPredefinedType(exprSource.GetType())) {
-        return new LitExpression(exprSource, otherExprDataType);
+        return new LitBlock(exprSource, otherExprDataType);
       }
 
       if (exprSource is IDictionary<string, Object>) {
@@ -82,21 +82,21 @@ namespace Breeze.Query {
         Object value = exprMap["value"];
 
         if (exprMap.ContainsKey("isProperty")) {
-          return new PropExpression((String)value, entityType);
+          return new PropBlock((String)value, entityType);
         } else {
           String dt = (String)exprMap["dataType"];
           DataType dataType = (dt != null) ? DataType.FromName(dt) : otherExprDataType;
-          return new LitExpression(value, dataType);
+          return new LitBlock(value, dataType);
         }
       }
 
       if (exprSource is IList) {
         // right now this pretty much implies the values on an 'in' clause
-        return new LitExpression(exprSource, otherExprDataType);
+        return new LitBlock(exprSource, otherExprDataType);
       }
 
       if (TypeFns.IsEnumType(exprSource.GetType())) {
-        return new LitExpression(exprSource, otherExprDataType);
+        return new LitBlock(exprSource, otherExprDataType);
       }
 
       throw new Exception(

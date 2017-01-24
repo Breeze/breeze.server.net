@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Breeze.ContextProvider {
 
-  public class PropertySignature  {
+  public class PropertySignature {
     public PropertySignature(Type instanceType, String propertyPath) {
       InstanceType = instanceType;
       PropertyPath = propertyPath;
@@ -30,6 +30,12 @@ namespace Breeze.ContextProvider {
       get { return Properties.Last().PropertyType; }
     }
 
+    // returns null for scalar properties
+    public Type ElementType {
+      get { return TypeFns.GetElementType(ReturnType); }
+
+    }
+
     public bool IsDataProperty {
       get { return TypeFns.IsPredefinedType(ReturnType); }
     }
@@ -38,8 +44,10 @@ namespace Breeze.ContextProvider {
       get { return !IsDataProperty; }
     }
 
+
+
     // returns an IEnumerable<PropertyInfo> with nulls if invalid and throwOnError = true
-    public static IEnumerable<PropertyInfo> GetProperties(Type instanceType, String propertyPath, bool throwOnError=true) {
+    public static IEnumerable<PropertyInfo> GetProperties(Type instanceType, String propertyPath, bool throwOnError = true) {
       var propertyNames = propertyPath.Split('.');
 
       var nextInstanceType = instanceType;
@@ -81,9 +89,9 @@ namespace Breeze.ContextProvider {
       return Expression.Property(baseExpr, property);
     }
 
-    
-    
+
+
   }
 
- 
+
 }

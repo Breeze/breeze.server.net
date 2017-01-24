@@ -17,14 +17,17 @@ namespace Breeze.Query {
     public AndOrPredicate(Operator op, params BasePredicate[] predicates) : this(op, predicates.ToList()) {
     }
 
-    public AndOrPredicate(Operator op, List<BasePredicate> predicates) {
-      _op = op;
-      _predicates = predicates;
+    public AndOrPredicate(Operator op, IEnumerable<BasePredicate> predicates) : base(op) {
+      _predicates = predicates.ToList();
     }
 
     
     public IEnumerable<BasePredicate> Predicates {
       get { return _predicates.AsReadOnly(); }
+    }
+
+    public override void Validate(Type entityType) {
+      _predicates.ForEach(p => p.Validate(entityType));
     }
 
     public override Expression ToExpression(ParameterExpression paramExpr) {
@@ -42,8 +45,6 @@ namespace Breeze.Query {
         throw new Exception("Invalid AndOr operator" + op.Name);
       }
     }
-    public override void Validate(Type entityType) {
-      _predicates.ForEach(p => p.Validate(entityType));
-    }
+
   }
 }

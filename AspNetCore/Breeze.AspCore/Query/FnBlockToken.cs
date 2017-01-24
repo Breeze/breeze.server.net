@@ -8,52 +8,52 @@ using System.Threading.Tasks;
 namespace Breeze.Query {
 
   // local to this package
-  class FnExpressionToken {
+  class FnBlockToken {
     private StringBuilder _sb;
     private int _nextIx;
-    private List<FnExpressionToken> _fnArgs;
+    private List<FnBlockToken> _fnArgs;
 
-    private FnExpressionToken() {
+    private FnBlockToken() {
       _sb = new StringBuilder();
     }
 
-    public static FnExpression ToExpression(String source, Type entityType) {
-      FnExpressionToken token = ParseToken(source, 0);
-      return (FnExpression)token.ToExpression(entityType, null);
+    public static FnBlock ToExpression(String source, Type entityType) {
+      FnBlockToken token = ParseToken(source, 0);
+      return (FnBlock)token.ToExpression(entityType, null);
     }
 
-    private BaseExpression ToExpression(Type entityType, DataType returnDataType) {
+    private BaseBlock ToExpression(Type entityType, DataType returnDataType) {
       String text = _sb.ToString();
       if (this._fnArgs == null) {
 
         if (PropertySignature.IsProperty(entityType, text)) {
-          // TODO: we could check that the PropExpression dataType is compatible with the returnDataType
-          return new PropExpression(text, entityType);
+          // TODO: we could check that the PropBlock dataType is compatible with the returnDataType
+          return new PropBlock(text, entityType);
         } else {
-          return new LitExpression(text, returnDataType);
+          return new LitBlock(text, returnDataType);
         }
 
       } else {
         String fnName = text;
-        var argTypes = FnExpression.GetArgTypes(fnName);
+        var argTypes = FnBlock.GetArgTypes(fnName);
         if (argTypes.Count != _fnArgs.Count) {
           throw new Exception("Incorrect number of arguments to '" + fnName
                   + "' function; was expecting " + argTypes.Count);
         }
         var exprs = _fnArgs.Select((token, ix) => token.ToExpression(entityType, argTypes[ix])).ToList();
-        // TODO: we could check that the FnExpression dataType is compatible with the returnDataType
-        return new FnExpression(text, exprs);
+        // TODO: we could check that the FnBlock dataType is compatible with the returnDataType
+        return new FnBlock(text, exprs);
       }
 
     }
 
-    private static FnExpressionToken ParseToken(String source, int ix) {
+    private static FnBlockToken ParseToken(String source, int ix) {
       ix = SkipWhitespace(source, ix);
       var token = CollectQuotedToken(source, ix);
       if (token != null) {
         return token;
       }
-      token = new FnExpressionToken();
+      token = new FnBlockToken();
       String badChars = "'\"";
 
       while (ix < source.Length) {
@@ -81,8 +81,8 @@ namespace Breeze.Query {
 
     }
 
-    private static void ParseFnArgs(FnExpressionToken token, String source, int ix) {
-      token._fnArgs = new List<FnExpressionToken>();
+    private static void ParseFnArgs(FnBlockToken token, String source, int ix) {
+      token._fnArgs = new List<FnBlockToken>();
 
       while (ix < source.Length) {
         var argToken = ParseToken(source, ix);
@@ -111,10 +111,10 @@ namespace Breeze.Query {
       return ix;
     }
 
-    private static FnExpressionToken CollectQuotedToken(String source, int ix) {
+    private static FnBlockToken CollectQuotedToken(String source, int ix) {
       char c = source[ix];
       if (c != '\'' && c != '"') return null;
-      var token = new FnExpressionToken();
+      var token = new FnBlockToken();
       var quoteChar = c;
       ix++;
       while (ix < source.Length) {

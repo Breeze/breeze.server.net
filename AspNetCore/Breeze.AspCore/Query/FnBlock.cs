@@ -6,14 +6,14 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Breeze.Query {
-  public class FnExpression : BaseExpression {
-    private String _fnName;
-    private List<BaseExpression> _exprs;
+  public class FnBlock : BaseBlock {
+    public String FnName { get; private set; }
+    private List<BaseBlock> _exprs;
 
     // first DataType in the list is the return type the rest are argument
     // types;
     private static Dictionary<String, DataType[]> _fnMap = new Dictionary<String, DataType[]>();
-    static FnExpression() {
+    static FnBlock() {
       RegisterFn("toupper", DataType.String, DataType.String);
       RegisterFn("tolower", DataType.String, DataType.String);
       RegisterFn("trim", DataType.String, DataType.String);
@@ -43,26 +43,22 @@ namespace Breeze.Query {
               DataType.String);
     }
 
-    public FnExpression(String fnName, List<BaseExpression> exprs) {
-      _fnName = fnName;
+    public FnBlock(String fnName, List<BaseBlock> exprs) {
+      FnName = fnName;
       _exprs = exprs;
     }
 
-    public static FnExpression CreateFrom(String source, Type entityType) {
-      return FnExpressionToken.ToExpression(source, entityType);
+    public static FnBlock CreateFrom(String source, Type entityType) {
+      return FnBlockToken.ToExpression(source, entityType);
     }
 
-    public String FnName {
-      get { return _fnName; }
-    }
-
-    public List<BaseExpression> Expressions {
-      get { return _exprs; }
+    public IEnumerable<BaseBlock> Expressions {
+      get { return _exprs.AsReadOnly(); }
     }
 
     public override DataType DataType {
       get {
-        return GetReturnType(_fnName);
+        return GetReturnType(FnName);
       }
     }
 
