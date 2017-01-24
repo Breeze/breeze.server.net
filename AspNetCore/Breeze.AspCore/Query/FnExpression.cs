@@ -27,6 +27,7 @@ namespace Breeze.Query {
       RegisterFn("year", DataType.Int32, DataType.DateTime);
       RegisterFn("month", DataType.Int32, DataType.DateTime);
       RegisterFn("day", DataType.Int32, DataType.DateTime);
+      RegisterFn("hour", DataType.Int32, DataType.DateTime);
       RegisterFn("minute", DataType.Int32, DataType.DateTime);
       RegisterFn("second", DataType.Int32, DataType.DateTime);
 
@@ -84,7 +85,8 @@ namespace Breeze.Query {
     }
 
     public override Expression ToExpression(Expression inExpr) {
-      var expr = _exprs[0].ToExpression(inExpr);
+      var exprs = _exprs.Select(e => e.ToExpression(inExpr)).ToList();
+      var expr = exprs[0];
       // TODO: add the rest ...
       if (FnName == "toupper") {
         var mi = TypeFns.GetMethodByExample((String s) => s.ToUpper());
@@ -92,27 +94,56 @@ namespace Breeze.Query {
       } else if (FnName == "tolower") {
         var mi = TypeFns.GetMethodByExample((String s) => s.ToLower());
         return Expression.Call(expr, mi);
+      } else if (FnName == "trim") {
+        var mi = TypeFns.GetMethodByExample((String s) => s.Trim());
+        return Expression.Call(expr, mi);
       } else if (FnName == "length") {
         return GetPropertyExpression(expr, "Length", typeof(int));
+      } else if (FnName == "indexof") {
+        var mi = TypeFns.GetMethodByExample((String s) => s.IndexOf("xxx"));
+        return Expression.Call(exprs[0], mi, exprs[1]);
+      } else if (FnName == "concat") {
+        // TODO: check if this works...
+        var mi = TypeFns.GetMethodByExample((String s) => String.Concat(s, "xxx"));
+        return Expression.Call(mi, exprs[0], exprs[1]);
       } else if (FnName == "substring") {
-        var exprs = _exprs.Select(e => e.ToExpression(inExpr));
         var mi = TypeFns.GetMethodByExample((String s) => s.Substring(1, 5));
-        return Expression.Call(inExpr, mi, exprs);
+        return Expression.Call(exprs[0], mi, exprs.Skip(1));
+      } else if (FnName == "replace") {
+        // TODO: check if this works...
+        var mi = TypeFns.GetMethodByExample((String s) => s.Replace("aaa", "bbb"));
+        return Expression.Call(exprs[0], mi, exprs[1], exprs[2]);
       } else if (FnName == "year") {
         return GetPropertyExpression(expr, "Year", typeof(int));
-        //if (TypeFns.IsNullableType(expr.Type)) {
-        //  var nullBaseExpression = Expression.Constant(null, expr.Type);
-        //  var test = Expression.Equal(expr, nullBaseExpression);
-        //  expr = Expression.Convert(expr, TypeFns.GetNonNullableType(expr.Type));
-        //  Expression propExpr = Expression.PropertyOrField(expr, "Year");
-        //  propExpr = Expression.Convert(propExpr, TypeFns.GetNullableType(typeof(int)));
-        //  var nullExpr = Expression.Constant(null, TypeFns.GetNullableType(typeof(int)));
-        //  return Expression.Condition(test, nullExpr, propExpr);
-        //} else {
-        //  return Expression.PropertyOrField(expr, "Year");
-        //}
       } else if (FnName == "month") {
         return GetPropertyExpression(expr, "Month", typeof(int));
+      } else if (FnName == "day") {
+        return GetPropertyExpression(expr, "Day", typeof(int));
+      } else if (FnName == "hour") {
+        return GetPropertyExpression(expr, "Hour", typeof(int));
+      } else if (FnName == "minute") {
+        return GetPropertyExpression(expr, "Minute", typeof(int));
+      } else if (FnName == "second") {
+        return GetPropertyExpression(expr, "Second", typeof(int));
+      } else if (FnName == "round") {
+          // TODO: confirm that this works - is using static method.
+          var mi = TypeFns.GetMethodByExample((Double d) => Math.Round(d));
+          return Expression.Call(mi, expr);
+      } else if (FnName == "ceiling") {
+        var mi = TypeFns.GetMethodByExample((Double d) => Math.Ceiling(d));
+        return Expression.Call(mi, expr);
+      } else if (FnName == "floor") {
+        var mi = TypeFns.GetMethodByExample((Double d) => Math.Floor(d));
+        return Expression.Call(mi, expr);
+      } else if (FnName == "startswith") {
+        var mi = TypeFns.GetMethodByExample((String s) => s.StartsWith("xxx"));
+        return Expression.Call(exprs[0], mi, exprs[1]);
+      } else if (FnName == "endsWith") {
+        var mi = TypeFns.GetMethodByExample((String s) => s.EndsWith("xxx"));
+        return Expression.Call(exprs[0], mi, exprs[1]);
+      } else if (FnName == "substringof") {
+        var mi = TypeFns.GetMethodByExample((String s) => s.Contains("xxx"));
+        return Expression.Call(exprs[0], mi, exprs[1]);
       } else {
         throw new Exception("Unable to locate Fn: " + FnName);
       }

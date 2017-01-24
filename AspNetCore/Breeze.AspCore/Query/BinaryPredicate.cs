@@ -54,7 +54,7 @@ namespace Breeze.Query {
       }
 
       // Special purpose Enum handling
-      
+
       var enumType = GetEnumType(this._expr1);
       if (enumType != null && _expr2Source != null) {
         var expr2Enum = Enum.Parse(enumType, (String)_expr2Source);
@@ -69,7 +69,7 @@ namespace Breeze.Query {
         PropExpression pExpr = (PropExpression)expr;
         var prop = pExpr.Property;
         if (prop.IsDataProperty) {
-          if (TypeFns.IsEnumType(prop.ReturnType)) { 
+          if (TypeFns.IsEnumType(prop.ReturnType)) {
             return prop.ReturnType;
           }
         }
@@ -89,9 +89,16 @@ namespace Breeze.Query {
         } else if (TypeFns.IsNullableType(expr2.Type) && !TypeFns.IsNullableType(expr1.Type)) {
           expr1 = Expression.Convert(expr1, expr2.Type);
         }
+
+        if (HasNullValue(expr2) && CannotBeNull(expr1)) {
+          expr1 = Expression.Convert(expr1, TypeFns.GetNullableType(expr1.Type));
+        } else if (HasNullValue(expr1) && CannotBeNull(expr2)) {
+          expr2 = Expression.Convert(expr2, TypeFns.GetNullableType(expr2.Type));
+        }
+        
       }
 
-      
+
 
       if (op == BinaryOperator.Equals) {
         return Expression.Equal(expr1, expr2);
@@ -116,11 +123,21 @@ namespace Breeze.Query {
         return Expression.Call(expr1, mi, expr2);
       } else if (op == BinaryOperator.In) {
         // TODO: need to generalize this past just 'string'
-        var mi = TypeFns.GetMethodByExample((List<Object> list) => list.Contains("abc"));
+        var mi = TypeFns.GetMethodByExample((List<String> list) => list.Contains("abc"), expr1.Type);
         return Expression.Call(expr2, mi, expr1);
       }
 
       return null;
+    }
+    
+    private bool HasNullValue(Expression expr) {
+      var le = expr as ConstantExpression;
+      return le == null ? false : le.Value == null;
+    }
+
+    private bool CannotBeNull(Expression expr) {
+      var t = expr.Type;
+      return TypeFns.IsPredefinedType(t) && t != typeof(String);
     }
   }
 }

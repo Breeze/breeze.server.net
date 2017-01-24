@@ -33,6 +33,7 @@ namespace Breeze.AspCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
   [QueryFilter]
+  
   public class NorthwindIBModelController : Controller {
     private NorthwindContextProvider ContextProvider;
 

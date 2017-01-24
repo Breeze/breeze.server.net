@@ -19,6 +19,8 @@ using System.Runtime.Serialization.Formatters;
 using System.Xml;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Text;
 
 namespace Breeze.AspCore {
   public class Startup {
@@ -43,6 +45,7 @@ namespace Breeze.AspCore {
     public void ConfigureServices(IServiceCollection services) {
       // Add framework services.
       services.AddApplicationInsightsTelemetry(Configuration);
+
 
       services.AddMvc().AddJsonOptions(opt => {
         var ss = opt.SerializerSettings;
@@ -95,6 +98,24 @@ namespace Breeze.AspCore {
       });
 
 
+      app.UseExceptionHandler(errorApp => {
+        errorApp.Run(async context => {
+          context.Response.StatusCode = 500; // or another Status accordingly to Exception Type
+          context.Response.ContentType = "application/json";
+
+          var error = context.Features.Get<IExceptionHandlerFeature>();
+          if (error != null) {
+            var ex = error.Error;
+
+            await context.Response.WriteAsync(new ErrorDto() {
+              Code = 123,
+              Message = ex.Message // or your custom message
+                                   // other custom data
+            }.ToString(), Encoding.UTF8);
+          }
+        });
+      });
+
       app.UseMvc();
     }
 
@@ -104,6 +125,16 @@ namespace Breeze.AspCore {
 
   }
 
+  public class ErrorDto {
+    public int Code { get; set; }
+    public string Message { get; set; }
+
+    // other fields
+
+    public override string ToString() {
+      return JsonConvert.SerializeObject(this);
+    }
+  }
 
   public class DbConfig : DbConfiguration {
     public DbConfig() {

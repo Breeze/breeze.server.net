@@ -41,44 +41,50 @@ namespace Breeze.AspCore {
       var eq = new EntityQuery(q);
       var eleType = TypeFns.GetElementType(objResult.Value.GetType());
       eq.Validate(eleType);
+      // TODO: handle IEnumerable as well.
       var result = (IQueryable) objResult.Value;
+      int? inlineCount = null;
 
       if (eq.WherePredicate != null) {
-        var func = QueryBuilder.BuildWhereFunc(eleType, eq.WherePredicate);
-        result = func(result);
+        result = QueryBuilder.ApplyWhere(result, eleType, eq.WherePredicate);
+      }
+
+      if (eq.IsInlineCountEnabled) {
+        inlineCount = (int)Queryable.Count((dynamic)result);
       }
 
       if (eq.OrderByClause != null) {
-        var orderByItems = eq.OrderByClause.OrderByItems;
-        var isThenBy = false;
-        orderByItems.ToList().ForEach(obi => {
-          var funcOb = QueryBuilder.BuildOrderByFunc(isThenBy, eleType, obi.PropertyPath);
-          result = funcOb(result);
-          isThenBy = true;
-        });
+        result = QueryBuilder.ApplyOrderBy(result, eleType, eq.OrderByClause);
+      }
+
+      if (eq.SkipCount.HasValue) {
+        result = QueryBuilder.ApplySkip(result, eleType, eq.SkipCount.Value);
+      }
+
+      if (eq.TakeCount.HasValue) {
+        result = QueryBuilder.ApplyTake(result, eleType, eq.TakeCount.Value);
       }
 
       if (eq.SelectClause != null) {
-        var func = QueryBuilder.BuildSelectFunc(eleType, eq.SelectClause.PropertyPaths);
-        result = func(result);
+        result = QueryBuilder.ApplySelect(result, eleType, eq.SelectClause);
       }
 
       if (eq.ExpandClause != null) {
         eq.ExpandClause.PropertyPaths.ToList().ForEach(expand => {
           result = ((dynamic) result).Include(expand.Replace('/', '.'));
         });
-        
       }
 
       if (objResult.Value != result) {
-        context.Result = new ObjectResult(result);
+        // if a select or expand was encountered we need to
+        // execute the DbQueries here, so that any exceptions thrown can be properly returned.
+        // if we wait to have the query executed within the serializer, some exceptions will not
+        // serialize properly.
+        var listResult = Enumerable.ToList((dynamic)result);
+        var qr = new QueryResult(listResult, inlineCount);
+        context.Result = new ObjectResult(qr);
       }
-
-      // TODO:
-      // if a select or expand was encountered we need to
-      // execute the DbQueries here, so that any exceptions thrown can be properly returned.
-      // if we wait to have the query executed within the serializer, some exceptions will not
-      // serialize properly.
+      
 
       base.OnActionExecuted(context);
 
@@ -94,5 +100,13 @@ namespace Breeze.AspCore {
       var x = context;
     }
   }
+
+  //public class CustomExceptionFilterAttribute : ExceptionFilterAttribute {
+  //  public override void OnException(ExceptionContext context) {
+  //    var exception = context.Exception;
+  //    context.Result = new JsonResult(exception.Message);
+      
+  //  }
+  //}
 }
 

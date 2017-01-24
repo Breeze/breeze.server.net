@@ -12,8 +12,8 @@ namespace Breeze.Query {
     private OrderByClause _orderByClause;
     private ExpandClause _expandClause;
     private SelectClause _selectClause;
-    private long? _skipCount;
-    private long? _takeCount;
+    private int? _skipCount;
+    private int? _takeCount;
     private bool? _inlineCountEnabled;
     private Dictionary<String, Object> _parameters;
     private Type _entityType;
@@ -42,8 +42,8 @@ namespace Breeze.Query {
       }
 
       this._resourceName = GetMapValue<string>(qmap, "resourceName");
-      this._skipCount = GetMapValue<long?>(qmap, "skip");
-      this._takeCount = GetMapValue<long ?>(qmap, "take");
+      this._skipCount = GetMapInt(qmap, "skip");
+      this._takeCount = GetMapInt(qmap, "take");
       this._wherePredicate = BasePredicate.PredicateFromMap( GetMapValue<Dictionary<string, object>>(qmap, "where"));
       this._orderByClause = OrderByClause.From(GetMapValue<List<Object>>(qmap,"orderBy"));
       this._selectClause = SelectClause.From(GetMapValue<List<Object>>(qmap, "select"));
@@ -89,6 +89,14 @@ namespace Breeze.Query {
         return (T)map[key];
       } else {
         return default(T);
+      }
+    }
+
+    private int? GetMapInt(IDictionary<string, object> map, string key) {
+      if (map.ContainsKey(key)) {
+        return Convert.ToInt32(map[key]);
+      } else {
+        return null;
       }
     }
 
@@ -304,16 +312,16 @@ namespace Breeze.Query {
       get { return _selectClause; }
     }
 
-    public long? GetSkipCount() {
-      return _skipCount;
+    public int? SkipCount {
+      get { return _skipCount; }
     }
 
-    public long? GetTakeCount() {
-      return _takeCount;
+    public int? TakeCount {
+      get { return _takeCount; }
     }
 
-    public bool? IsInlineCountEnabled() {
-      return _inlineCountEnabled;
+    public bool IsInlineCountEnabled {
+      get { return _inlineCountEnabled.HasValue && _inlineCountEnabled.Value; }
     }
 
     public IDictionary<string, object> GetParameters() {

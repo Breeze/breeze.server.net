@@ -71,7 +71,9 @@ namespace Breeze.Query {
         return value;
       } else if (value is IList) {
         // this occurs with an 'In' clause
-        List<Object> newList = new List<Object>();
+        var itemType = dataType.GetUnderlyingType();
+        var listType = typeof(List<>).MakeGenericType(new[] { itemType });
+        var newList = (IList)Activator.CreateInstance(listType);
         foreach (var item in value as IList) {
           newList.Add(CoerceData(item, dataType));
         }
