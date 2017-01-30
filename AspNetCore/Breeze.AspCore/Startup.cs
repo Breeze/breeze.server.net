@@ -49,6 +49,7 @@ namespace Breeze.AspCore {
 
       services.AddMvc().AddJsonOptions(opt => {
         var ss = opt.SerializerSettings;
+        // ss.DateParseHandling = DateParseHandling.DateTimeOffset;
         ss.NullValueHandling = NullValueHandling.Include;
         ss.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
         ss.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

@@ -38,9 +38,14 @@ namespace Breeze.Query {
       // Special purpose Enum handling
 
       var enumType = GetEnumType(this._block1);
-      if (enumType != null && Expr2Source != null) {
-        var expr2Enum = Enum.Parse(enumType, (String)Expr2Source);
-        this._block2 = BaseBlock.CreateRHSBlock(expr2Enum, entityType, null);
+      if (enumType != null) { 
+        if (Expr2Source != null) {
+          var et = TypeFns.GetNonNullableType(enumType);
+          var expr2Enum = Enum.Parse(et, (String)Expr2Source);
+          this._block2 = BaseBlock.CreateRHSBlock(expr2Enum, entityType, null);
+        } else {
+          this._block2 = BaseBlock.CreateRHSBlock(null, entityType, null);
+        }
       } else {
         this._block2 = BaseBlock.CreateRHSBlock(Expr2Source, entityType, this._block1.DataType);
       }

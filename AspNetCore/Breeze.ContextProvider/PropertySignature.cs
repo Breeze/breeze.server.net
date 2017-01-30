@@ -37,7 +37,7 @@ namespace Breeze.ContextProvider {
     }
 
     public bool IsDataProperty {
-      get { return TypeFns.IsPredefinedType(ReturnType); }
+      get { return TypeFns.IsPredefinedType(ReturnType) || TypeFns.IsEnumType(ReturnType); }
     }
 
     public bool IsNavigationProperty {

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Breeze.Query {
   public class DataType {
@@ -81,6 +82,11 @@ namespace Breeze.Query {
 
       } else if (dataType == DataType.Guid) {
         return System.Guid.Parse(value.ToString());
+      } else if (dataType == DataType.DateTimeOffset && value is DateTime) {
+        DateTimeOffset result = (DateTime)value;
+        return result;
+      } else if (dataType == DataType.Time && value is String) {
+        return XmlConvert.ToTimeSpan((string)value);
       } else {
         return Convert.ChangeType(value, dataType.GetUnderlyingType());
       }

@@ -47,7 +47,7 @@ namespace Breeze.AspCore.Controllers {
       return Ok(ContextProvider.Metadata());
     }
     [HttpPost]
-    public SaveResult SaveChanges(JObject saveBundle) {
+    public SaveResult SaveChanges([FromBody] JObject saveBundle) {
       return ContextProvider.SaveChanges(saveBundle);
     }
 

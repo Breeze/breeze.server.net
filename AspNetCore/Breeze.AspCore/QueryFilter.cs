@@ -90,16 +90,8 @@ namespace Breeze.AspCore {
 
     }
   }
-
-  public class QueryResultFilterAttribute : ResultFilterAttribute {
-    public override void OnResultExecuting(ResultExecutingContext context) {
-      var y = context;
-    }
-
-    public override void OnResultExecuted(ResultExecutedContext context) {
-      var x = context;
-    }
-  }
+  
+  
 
   //public class CustomExceptionFilterAttribute : ExceptionFilterAttribute {
   //  public override void OnException(ExceptionContext context) {
