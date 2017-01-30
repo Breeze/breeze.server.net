@@ -190,7 +190,7 @@ namespace Breeze.ContextProvider {
     /// Default implementation returns GetDbConnection()
     /// </summary>
     /// <returns>Open DbConnection used by the ContextProvider's implementation</returns>
-    public Task<IDbConnection> GetDbConnectionAsync()
+    public virtual Task<IDbConnection> GetDbConnectionAsync()
     {
       return Task.FromResult(GetDbConnection());
     }
@@ -208,7 +208,7 @@ namespace Breeze.ContextProvider {
     /// Method must be idempotent; after it is called the first time, subsequent calls have no effect.
     /// Default implementation calls OpenDbConnection()
     /// </summary>
-    protected Task OpenDbConnectionAsync()
+    protected virtual Task OpenDbConnectionAsync()
     {
       OpenDbConnection();
       return Task.FromResult(0);
@@ -225,7 +225,7 @@ namespace Breeze.ContextProvider {
     /// Closes the DbConnection used by the ContextProvider's implementation.
     /// Default implementation calls CloseDbConnection()
     /// </summary>
-    protected Task CloseDbConnectionAsync()
+    protected virtual Task CloseDbConnectionAsync()
     {
       CloseDbConnection();
       return Task.FromResult(0);
