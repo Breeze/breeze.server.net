@@ -450,7 +450,7 @@ namespace Breeze.ContextProvider.EF6 {
       }
 
       // apply not-null values
-      notNullProperties.ToList().ForEach(kvp => {
+      notNullProperties.ForEach(kvp => {
         var ordinal = kvp.Item1;
         var propertyName = kvp.Item2;
         var originalValue = kvp.Item3;
