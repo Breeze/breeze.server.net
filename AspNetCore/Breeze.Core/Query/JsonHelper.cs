@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
 
 
   public static class JsonHelper {

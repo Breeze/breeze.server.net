@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_Inheritance.EF6", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_TPH.EF6", "..\Tests\Model_TPH.EF6\Model_TPH.EF6.csproj", "{CC83A834-EF3D-4E7D-98AE-B760BD3AE3B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Core", "Breeze.Core\Breeze.Core.csproj", "{1E234391-D1C2-46CA-89FE-D217F4442AE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,12 @@ Global
 		{CC83A834-EF3D-4E7D-98AE-B760BD3AE3B3}.OData-debug|Any CPU.Build.0 = OData-debug|Any CPU
 		{CC83A834-EF3D-4E7D-98AE-B760BD3AE3B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC83A834-EF3D-4E7D-98AE-B760BD3AE3B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E234391-D1C2-46CA-89FE-D217F4442AE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E234391-D1C2-46CA-89FE-D217F4442AE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E234391-D1C2-46CA-89FE-D217F4442AE7}.OData-debug|Any CPU.ActiveCfg = Release|Any CPU
+		{1E234391-D1C2-46CA-89FE-D217F4442AE7}.OData-debug|Any CPU.Build.0 = Release|Any CPU
+		{1E234391-D1C2-46CA-89FE-D217F4442AE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E234391-D1C2-46CA-89FE-D217F4442AE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

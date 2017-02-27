@@ -11,6 +11,8 @@ using Newtonsoft.Json.Converters;
 using System.Threading;
 using System.Collections.ObjectModel;
 
+using Breeze.Core;
+
 namespace Breeze.ContextProvider {
 
   public class BreezeConfig {

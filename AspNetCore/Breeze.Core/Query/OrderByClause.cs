@@ -1,4 +1,4 @@
-using Breeze.ContextProvider;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   /**
    * Represents a single orderBy clause that will be part of an EntityQuery. An orderBy 
    * clause represents either the name of a property or a path to the property of another entity via its navigation path 

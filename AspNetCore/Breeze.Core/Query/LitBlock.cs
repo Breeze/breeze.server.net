@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   public class LitBlock : BaseBlock {
 
     private Object _initialValue;

@@ -1,11 +1,11 @@
-using Breeze.ContextProvider;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   public class FnBlock : BaseBlock {
     public String FnName { get; private set; }
     private List<BaseBlock> _exprs;

@@ -1,11 +1,11 @@
-using Breeze.ContextProvider;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   public class Operator {
     public static Dictionary<String, Operator> _opMap = new Dictionary<String, Operator>();
 

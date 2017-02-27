@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
 
   public class UnaryPredicate : BasePredicate {
     

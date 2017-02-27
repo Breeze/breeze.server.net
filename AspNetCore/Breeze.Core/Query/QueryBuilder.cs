@@ -1,5 +1,5 @@
-﻿using Breeze.ContextProvider;
-using Breeze.Query;
+﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-namespace Breeze.Query {
+namespace Breeze.Core {
 
   /// <summary>
   /// Used to build up a Queryable.

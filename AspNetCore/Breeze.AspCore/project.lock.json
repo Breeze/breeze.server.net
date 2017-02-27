@@ -1602,6 +1602,9 @@
           "Breeze.ContextProvider": "1.0.0"
         }
       },
+      "Breeze.Core/1.0.0": {
+        "type": "project"
+      },
       "Model_Inheritance.EF6/1.0.0": {
         "type": "project"
       },
@@ -4459,6 +4462,10 @@
       "type": "project",
       "msbuildProject": "../Breeze.ContextProvider.EF6/Breeze.ContextProvider.EF6.csproj"
     },
+    "Breeze.Core/1.0.0": {
+      "type": "project",
+      "msbuildProject": "../Breeze.Core/Breeze.Core.csproj"
+    },
     "Model_Inheritance.EF6/1.0.0": {
       "type": "project",
       "msbuildProject": "../../Tests/Model_Inheritance.EF6/Model_Inheritance.EF6.csproj"
@@ -4493,6 +4500,7 @@
     ".NETFramework,Version=v4.5.2": [
       "Breeze.ContextProvider",
       "Breeze.ContextProvider.EF6",
+      "Breeze.Core",
       "Model_Inheritance.EF6",
       "Model_NorthwindIB_CF.EF6",
       "Model_TPH.EF6",

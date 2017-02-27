@@ -1,4 +1,4 @@
-using Breeze.ContextProvider;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   /**
    * Represents a where clause that compares two values given a specified operator, the two values are either a property
    * and a literal value, or two properties.  

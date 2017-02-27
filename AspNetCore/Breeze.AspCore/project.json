@@ -30,6 +30,9 @@
         "Breeze.ContextProvider.EF6": {
           "target": "project"
         },
+        "Breeze.Core": {
+          "target": "project"
+        },
         "Model_Inheritance.EF6": {
           "target": "project"
         },

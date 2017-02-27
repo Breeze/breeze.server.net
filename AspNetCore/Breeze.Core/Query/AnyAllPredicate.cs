@@ -1,4 +1,4 @@
-using Breeze.ContextProvider;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   public class AnyAllPredicate : BasePredicate {
 
     public Object ExprSource { get; private set; }

@@ -1,11 +1,11 @@
-using Breeze.ContextProvider;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
 
   // local to this package
   class FnBlockToken {

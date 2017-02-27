@@ -1,5 +1,5 @@
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   public enum OperatorType {
 
     AnyAll = 1,

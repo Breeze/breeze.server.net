@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Text;
 
 
-namespace Breeze.ContextProvider {
+namespace Breeze.Core {
 
  
   /// <summary>
@@ -440,7 +440,7 @@ namespace Breeze.ContextProvider {
         // return Assembly.GetExecutingAssembly(); // will allow caller throw a standard unable to resolve exception
         return null;
       } else {
-        return info.DynamicType.Assembly;
+        return info.DynamicType.GetTypeInfo().Assembly;
       }
     }
 

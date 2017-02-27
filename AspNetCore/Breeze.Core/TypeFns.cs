@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Diagnostics;
 using System.Text;
 
-namespace Breeze.ContextProvider {
+namespace Breeze.Core {
   /// <summary>
   /// A collection of static methods used to provide additional <see cref="System.Type"/> related services.
   /// </summary>
@@ -91,7 +91,7 @@ namespace Breeze.ContextProvider {
     /// <param name="type"></param>
     /// <returns>true if the specified type represents an enumeration; false otherwise</returns>
     public static bool IsEnumType(Type type) {
-      return GetNonNullableType(type).IsEnum;
+      return GetNonNullableType(type).GetTypeInfo().IsEnum;
     }
 
     /// <summary>
@@ -132,7 +132,7 @@ namespace Breeze.ContextProvider {
 
     private static int GetNumericTypeKind(Type type) {
       type = GetNonNullableType(type);
-      if (type.IsEnum) return 0;
+      if (type.GetTypeInfo().IsEnum) return 0;
       switch (Type.GetTypeCode(type)) {
       case TypeCode.Char:
       case TypeCode.Single:
@@ -185,7 +185,7 @@ namespace Breeze.ContextProvider {
     /// <param name="type"></param>
     /// <returns>May return null if the specified type is not a grouping type</returns>
     public static Type GetGroupingInterface(Type type) {
-      if (type.IsInterface && type.Name.StartsWith("IGrouping")) return type;
+      if (type.GetTypeInfo().IsInterface && type.Name.StartsWith("IGrouping")) return type;
       return type.GetInterfaces().FirstOrDefault(i => i.Name.StartsWith("IGrouping"));
     }
     
@@ -195,7 +195,7 @@ namespace Breeze.ContextProvider {
     /// <param name="type"></param>
     /// <returns>null if it can't find one or result is ambiguous</returns>
     public static Type GetGenericArgument(Type type) {
-      if (!type.IsGenericType) return null;
+      if (!type.GetTypeInfo().IsGenericType) return null;
       var genArgs = type.GetGenericArguments();
       if (genArgs.Length != 1) return null;
       return genArgs[0];
@@ -207,7 +207,7 @@ namespace Breeze.ContextProvider {
     /// <param name="type"></param>
     /// <returns></returns>
     public static Type GetNullableType(Type type) {
-      if (!type.IsValueType) {
+      if (!type.GetTypeInfo().IsValueType) {
         return type;
       }
       NullableInfo result;
@@ -252,7 +252,7 @@ namespace Breeze.ContextProvider {
         return typeof(IEnumerable<>).MakeGenericType(seqType.GetElementType());
       }
 
-      if (seqType.IsGenericType) {
+      if (seqType.GetTypeInfo().IsGenericType) {
         foreach (Type arg in seqType.GetGenericArguments()) {
           Type ienum = typeof(IEnumerable<>).MakeGenericType(arg);
           if (ienum.IsAssignableFrom(seqType)) {
@@ -268,8 +268,9 @@ namespace Breeze.ContextProvider {
           if (ienum != null) return ienum;
         }
       }
-      if (seqType.BaseType != null && seqType.BaseType != typeof(object)) {
-        return FindIEnumerable(seqType.BaseType);
+      var ti = seqType.GetTypeInfo();
+      if (ti.BaseType != null && ti.BaseType != typeof(object)) {
+        return FindIEnumerable(ti.BaseType);
       }
       return null;
     }
@@ -307,7 +308,7 @@ namespace Breeze.ContextProvider {
     /// <param name="type"></param>
     /// <returns>true if the specified type is a nullable generic type; false otherwise</returns>
     public static bool IsNullableType(Type type) {
-      return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+      return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
     /// <summary>
@@ -317,7 +318,7 @@ namespace Breeze.ContextProvider {
     /// <returns></returns>
     public static object GetDefaultValue(Type type) {
       if (type == null) return null;
-      if (!type.IsValueType) return null;
+      if (!type.GetTypeInfo().IsValueType) return null;
       
       NullableInfo result;
       if (NullableInfoMap.TryGetValue(type, out result )) {
@@ -381,7 +382,7 @@ namespace Breeze.ContextProvider {
     /// <returns></returns>
     public static MemberInfo FindPropertyOrField(Type type, string memberName, BindingFlags bindingFlags) {
       foreach (Type t in GetSelfAndBaseTypes(type)) {
-        MemberInfo[] members = t.FindMembers(MemberTypes.Property | MemberTypes.Field,
+        MemberInfo[] members = t.GetTypeInfo().FindMembers(MemberTypes.Property | MemberTypes.Field,
             bindingFlags, Type.FilterNameIgnoreCase, memberName);
         if (members.Length != 0) return members[0];
       }
@@ -441,7 +442,7 @@ namespace Breeze.ContextProvider {
     /// <returns></returns>
     public static IEnumerable<MethodInfo> FindMethods(Type type, string methodName, BindingFlags flags, Type[] genericArgTypes, Type[] parameterTypes) {
       foreach (Type t in GetSelfAndBaseTypes(type)) {
-        MemberInfo[] members = t.FindMembers(MemberTypes.Method,
+        MemberInfo[] members = t.GetTypeInfo().FindMembers(MemberTypes.Method,
             flags, Type.FilterNameIgnoreCase, methodName);
         foreach (MethodInfo method in members.OfType<MethodInfo>()) {
           MethodInfo resolvedMethod;
@@ -474,14 +475,14 @@ namespace Breeze.ContextProvider {
     /// <returns></returns>
     public static IEnumerable<MethodInfo> FindMethods(Type type, string methodName, BindingFlags flags, Type[] parameterTypes) {
       foreach (Type t in GetSelfAndBaseTypes(type)) {
-        MemberInfo[] members = t.FindMembers(MemberTypes.Method,
+        MemberInfo[] members = t.GetTypeInfo().FindMembers(MemberTypes.Method,
             flags, Type.FilterNameIgnoreCase, methodName);
         foreach (MethodBase method in members.Cast<MethodBase>()) {
           var parameters = method.GetParameters();
           if (parameters.Length != parameterTypes.Length) continue;
           var candidateParameterTypes = parameters.Select(p => p.ParameterType);
           candidateParameterTypes = candidateParameterTypes.Select((cpt, i) =>
-            parameterTypes[i].IsGenericTypeDefinition ? cpt.GetGenericTypeDefinition() : cpt);
+            parameterTypes[i].GetTypeInfo().IsGenericTypeDefinition ? cpt.GetGenericTypeDefinition() : cpt);
           var ok = parameterTypes.Zip(candidateParameterTypes, (p, cp) => cp.IsAssignableFrom(p)).All(x => x);
           if (ok) {
             yield return (MethodInfo)method;
@@ -527,7 +528,7 @@ namespace Breeze.ContextProvider {
     /// <returns></returns>
     public static IEnumerable<MethodInfo> FindGenericMethods(Type type, string methodName, BindingFlags flags, Type[] genericArgTypes) {
       foreach (Type t in GetSelfAndBaseTypes(type)) {
-        MemberInfo[] members = t.FindMembers(MemberTypes.Method,
+        MemberInfo[] members = t.GetTypeInfo().FindMembers(MemberTypes.Method,
             flags, Type.FilterNameIgnoreCase, methodName);
         foreach (MethodInfo method in members.OfType<MethodInfo>()) {
           MethodInfo resolvedMethod;
@@ -550,10 +551,10 @@ namespace Breeze.ContextProvider {
     /// <param name="type"></param>
     /// <returns></returns>
     public static IEnumerable<Type> GetSelfAndBaseTypes(Type type) {
-      if (type.IsInterface) return (new List<Type>() { type }).Concat(type.GetInterfaces());
+      if (type.GetTypeInfo().IsInterface) return (new List<Type>() { type }).Concat(type.GetInterfaces());
       if (type == typeof(Object)) return new List<Type>() { type };
       var ifaceTypes = type.GetInterfaces();
-      var baseTypes =  GetSelfAndBaseTypes(type.BaseType);
+      var baseTypes =  GetSelfAndBaseTypes(type.GetTypeInfo().BaseType);
       var results = new[] { type }.Concat(baseTypes).Concat(ifaceTypes).Distinct().ToList();
       return results;
     }
@@ -566,7 +567,7 @@ namespace Breeze.ContextProvider {
     public static IEnumerable<Type> GetSelfAndBaseClasses(Type type) {
       while (type != null) {
         yield return type;
-        type = type.BaseType;
+        type = type.GetTypeInfo().BaseType;
       }
     }
 
@@ -579,12 +580,12 @@ namespace Breeze.ContextProvider {
     /// <returns></returns>
     public static bool IsCompatibleWith(Type source, Type target) {
       if (source == target) return true;
-      if (!target.IsValueType) return target.IsAssignableFrom(source);
+      if (!target.GetTypeInfo().IsValueType) return target.IsAssignableFrom(source);
       Type st = GetNonNullableType(source);
       Type tt = GetNonNullableType(target);
       if (st != source && tt == target) return false;
-      TypeCode sc = st.IsEnum ? TypeCode.Object : Type.GetTypeCode(st);
-      TypeCode tc = tt.IsEnum ? TypeCode.Object : Type.GetTypeCode(tt);
+      TypeCode sc = st.GetTypeInfo().IsEnum ? TypeCode.Object : Type.GetTypeCode(st);
+      TypeCode tc = tt.GetTypeInfo().IsEnum ? TypeCode.Object : Type.GetTypeCode(tt);
       switch (sc) {
       case TypeCode.SByte:
         switch (tc) {

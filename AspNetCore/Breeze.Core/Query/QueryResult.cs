@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   public class QueryResult {
 
     public QueryResult(IEnumerable results, int? inlineCount = null) {

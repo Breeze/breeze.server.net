@@ -14,10 +14,10 @@ using System.Reflection.Emit;
 using System.Threading;
 
 using System.IO;
-using System.Runtime.Serialization;
+// using System.Runtime.Serialization;
 
 
-namespace Breeze.ContextProvider {
+namespace Breeze.Core {
 
   // This class is a hack because I can't get the IL Emit for Equals and GetHashCode to work in Silverlight becuase of a 
   // VerificationException.  

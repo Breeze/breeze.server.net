@@ -1,4 +1,4 @@
-﻿using Breeze.ContextProvider;
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
   public class DataType {
     private String _name;
     private Type _type;

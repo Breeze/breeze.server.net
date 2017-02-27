@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Collections.Generic;
 
 
-namespace Breeze.ContextProvider {
+namespace Breeze.Core {
 
   public class PropertySignature {
     public PropertySignature(Type instanceType, String propertyPath) {

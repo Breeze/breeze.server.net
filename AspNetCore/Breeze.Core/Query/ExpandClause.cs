@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Breeze.Query {
+namespace Breeze.Core {
 
   /**
    * Represents a single expand expand clause that will be part of an EntityQuery. An expand 
