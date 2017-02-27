@@ -8,6 +8,7 @@ using Breeze.ContextProvider;
 
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Breeze.AspNetCore;
 
 #if NHIBERNATE
 using Breeze.ContextProvider.NH;
@@ -23,7 +24,7 @@ using ProduceTPH;
 namespace Breeze.AspCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
-  [QueryFilter]
+  [BreezeQueryFilter]
   public class ProduceTPHController : Controller {
 
     private ProduceTPHContextProvider ContextProvider;

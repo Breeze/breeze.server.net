@@ -1,4 +1,4 @@
-﻿using Breeze.ContextProvider;
+﻿
 using Breeze.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -7,10 +7,10 @@ using System.Collections;
 using System.Linq;
 using System.Net;
 
-namespace Breeze.AspCore {
+namespace Breeze.AspNetCore {
 
 
-  public class QueryFilterAttribute : ActionFilterAttribute {
+  public class BreezeQueryFilterAttribute : ActionFilterAttribute {
     public override void OnActionExecuting(ActionExecutingContext context) {
       if (!context.ModelState.IsValid) {
         context.Result = new BadRequestObjectResult(context.ModelState);

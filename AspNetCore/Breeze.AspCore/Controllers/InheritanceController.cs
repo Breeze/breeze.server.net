@@ -9,11 +9,12 @@ using Newtonsoft.Json.Linq;
 
 using Inheritance.Models;
 using Microsoft.AspNetCore.Mvc;
+using Breeze.AspNetCore;
 
 namespace Breeze.AspCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
-  [QueryFilter]
+  [BreezeQueryFilter]
   public class InheritanceController : Controller {
 
     readonly EFContextProvider<InheritanceContext> _contextProvider =

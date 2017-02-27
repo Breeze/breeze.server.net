@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
+using Breeze.AspNetCore;
 
 namespace Breeze.AspCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
-  [QueryFilter]
+  [BreezeQueryFilter]
   public class MetadataTestController : Controller {
 
 

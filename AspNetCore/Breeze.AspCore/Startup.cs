@@ -1,27 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Breeze.AspNetCore;
+using Breeze.Core;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Models.NorthwindIB.CF;
+using Newtonsoft.Json.Serialization;
+using ProduceTPH;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using Breeze.AspCore.Controllers;
-using Microsoft.Extensions.FileProviders;
 using System.IO;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System.Runtime.Serialization.Formatters;
-using System.Xml;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
-using Microsoft.AspNetCore.Diagnostics;
-using System.Text;
-using ProduceTPH;
 
 namespace Breeze.AspCore {
   public class Startup {
@@ -47,27 +39,11 @@ namespace Breeze.AspCore {
       // Add framework services.
       services.AddApplicationInsightsTelemetry(Configuration);
 
-
       var mvcBuilder = services.AddMvc();
       
       
       mvcBuilder.AddJsonOptions(opt => {
-        var ss = opt.SerializerSettings;
-        // ss.DateParseHandling = DateParseHandling.DateTimeOffset;
-        ss.NullValueHandling = NullValueHandling.Include;
-        ss.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
-        ss.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-        ss.TypeNameHandling = TypeNameHandling.Objects;
-        ss.TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple;
-        ss.Converters.Add(new IsoDateTimeConverter {
-          DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss.fffK"
-          // DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK"
-        });
-        
-        // Needed because JSON.NET does not natively support I8601 Duration formats for TimeSpan
-        ss.Converters.Add(new TimeSpanConverter());
-        ss.Converters.Add(new StringEnumConverter());
-
+        var ss = JsonSerializationFns.UpdateWithDefaults(opt.SerializerSettings);
         var resolver = ss.ContractResolver;
         if (resolver != null) {
           var res = resolver as DefaultContractResolver;
@@ -108,6 +84,7 @@ namespace Breeze.AspCore {
         RequestPath = new PathString("")
       });
 
+      app.UseMvc();
 
       //app.UseExceptionHandler(errorApp => {
       //  errorApp.Run(async context => {
@@ -126,17 +103,10 @@ namespace Breeze.AspCore {
       //    }
       //  });
       //});
-
-      app.UseMvc();
     }
-
-
-
-
 
   }
 
-  
 
   public class DbConfig : DbConfiguration {
     public DbConfig() {
@@ -144,26 +114,6 @@ namespace Breeze.AspCore {
     }
   }
 
-  // http://www.w3.org/TR/xmlschema-2/#duration
-  public class TimeSpanConverter : JsonConverter {
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
-      var ts = (TimeSpan)value;
-      var tsString = XmlConvert.ToString(ts);
-      serializer.Serialize(writer, tsString);
-    }
-
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-      if (reader.TokenType == JsonToken.Null) {
-        return null;
-      }
-
-      var value = serializer.Deserialize<String>(reader);
-      return XmlConvert.ToTimeSpan(value);
-    }
-
-    public override bool CanConvert(Type objectType) {
-      return objectType == typeof(TimeSpan) || objectType == typeof(TimeSpan?);
-    }
-  }
+  
 }
 

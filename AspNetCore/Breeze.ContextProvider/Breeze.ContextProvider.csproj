@@ -70,9 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BreezeEntityBuilder.cs" />
-    <Compile Include="BreezeMetadataValidator.cs" />
-    <Compile Include="DataAnnotationsValidator.cs" />
     <Compile Include="ContextProvider.cs" />
     <Compile Include="BreezeConfig.cs" />
     <Compile Include="NumericKeyGenerator.cs" />
@@ -88,6 +85,9 @@
       <Project>{1e234391-d1c2-46ca-89fe-d217f4442ae7}</Project>
       <Name>Breeze.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UNUSED\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

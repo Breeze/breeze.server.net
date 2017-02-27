@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\Tests\Model_Inheritance.EF6\Model_Inheritance.EF6.csproj" />
     <ProjectReference Include="..\..\Tests\Model_NorthwindIB_CF.EF6\Model_NorthwindIB_CF.EF6.csproj" />
     <ProjectReference Include="..\..\Tests\Model_TPH.EF6\Model_TPH.EF6.csproj" />
+    <ProjectReference Include="..\Breeze.AspNetCore.NetFramework\Breeze.AspNetCore.NetFramework.csproj" />
     <ProjectReference Include="..\Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj" />
     <ProjectReference Include="..\Breeze.ContextProvider\Breeze.ContextProvider.csproj" />
     <ProjectReference Include="..\Breeze.Core\Breeze.Core.csproj" />

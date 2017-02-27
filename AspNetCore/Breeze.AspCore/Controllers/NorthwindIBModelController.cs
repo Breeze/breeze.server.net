@@ -19,6 +19,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using System.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
+using Breeze.AspNetCore;
 
 
 
@@ -32,7 +33,7 @@ using Models.NorthwindIB.EDMX_2012;
 namespace Breeze.AspCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
-  [QueryFilter]
+  [BreezeQueryFilter]
   public class NorthwindIBModelController : Controller {
     private NorthwindContextProvider ContextProvider;
 

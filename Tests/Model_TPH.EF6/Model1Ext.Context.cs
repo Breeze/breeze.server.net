@@ -15,7 +15,7 @@ namespace ProduceTPH {
 
     public ProduceTPHContext(string connectionString) : base(connectionString) {
       // next line is just so that we can add a breakpoint there.
-      var x = 3;
+      // var x = 3;
     }
   }
 }

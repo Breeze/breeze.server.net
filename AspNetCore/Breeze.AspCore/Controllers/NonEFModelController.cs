@@ -1,4 +1,5 @@
-﻿using Breeze.ContextProvider;
+﻿using Breeze.AspNetCore;
+using Breeze.ContextProvider;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
@@ -12,7 +13,7 @@ using System.Linq;
 namespace Breeze.AspCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
-  [QueryFilter]
+  [BreezeQueryFilter]
   public class NonEFModelController : Controller {
 
 

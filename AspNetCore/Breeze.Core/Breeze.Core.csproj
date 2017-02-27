@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="DynamicGenericTypeBuilder.cs" />
     <Compile Include="DynamicTypeInfo.cs" />
+    <Compile Include="JsonSerializationFns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertySignature.cs" />
     <Compile Include="Query\AndOrPredicate.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Query\QueryResult.cs" />
     <Compile Include="Query\SelectClause.cs" />
     <Compile Include="Query\UnaryPredicate.cs" />
+    <Compile Include="TimeSpanConverter.cs" />
     <Compile Include="TypeFns.cs" />
   </ItemGroup>
   <ItemGroup>

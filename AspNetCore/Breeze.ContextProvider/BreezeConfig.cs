@@ -1,17 +1,12 @@
-﻿using System;
+﻿using Breeze.Core;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization.Formatters;
-using System.Transactions;
-using System.Xml;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Threading;
-using System.Collections.ObjectModel;
-
-using Breeze.Core;
 
 namespace Breeze.ContextProvider {
 
@@ -39,8 +34,6 @@ namespace Breeze.ContextProvider {
         }
       }
     }
-
-
 
     public JsonSerializerSettings GetJsonSerializerSettings() {
       lock (__lock) {
@@ -70,37 +63,16 @@ namespace Breeze.ContextProvider {
     private static ReadOnlyCollection<Assembly> __probeAssemblies;
     private static int __assemblyCount = 0;
     private static int __assemblyLoadedCount = 0;
-   
+
     /// <summary>
     /// Override to use a specialized JsonSerializer implementation.
     /// </summary>
     protected virtual JsonSerializerSettings CreateJsonSerializerSettings() {
 
-      var jsonSerializerSettings = new JsonSerializerSettings() {
-        NullValueHandling = NullValueHandling.Include,
-        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        TypeNameHandling = TypeNameHandling.Objects,
-        TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
-      };
+      var jsonSerializerSettings = new JsonSerializerSettings();
+      return JsonSerializationFns.UpdateWithDefaults(jsonSerializerSettings);
 
-      // Default is DateTimeZoneHandling.RoundtripKind - you can change that here.
-      // jsonSerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-
-      // Hack is for the issue described in this post:
-      // http://stackoverflow.com/questions/11789114/internet-explorer-json-net-javascript-date-and-milliseconds-issue
-      jsonSerializerSettings.Converters.Add(new IsoDateTimeConverter {
-        DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss.fffK"
-        // DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK"
-      });
-      // Needed because JSON.NET does not natively support I8601 Duration formats for TimeSpan
-      jsonSerializerSettings.Converters.Add(new TimeSpanConverter());
-      jsonSerializerSettings.Converters.Add(new StringEnumConverter());
-      return jsonSerializerSettings;
     }
-
-
-    
 
     public static bool IsFrameworkAssembly(Assembly assembly) {
       var fullName = assembly.FullName;
@@ -141,7 +113,9 @@ namespace Breeze.ContextProvider {
       "Antlr3.Runtime",
       "Iesi.Collections",
       "WebGrease",
-      "Breeze.ContextProvider"
+      "Breeze.ContextProvider",
+      "Breeze.Core",
+      "Breeze.AspNetCore"
     };
 
     /// <summary>
@@ -160,25 +134,5 @@ namespace Breeze.ContextProvider {
 
   }
 
-  // http://www.w3.org/TR/xmlschema-2/#duration
-  public class TimeSpanConverter : JsonConverter {
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
-      var ts = (TimeSpan)value;
-      var tsString = XmlConvert.ToString(ts);
-      serializer.Serialize(writer, tsString);
-    }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-      if (reader.TokenType == JsonToken.Null) {
-        return null;
-      }
-
-      var value = serializer.Deserialize<String>(reader);
-      return XmlConvert.ToTimeSpan(value);
-    }
-
-    public override bool CanConvert(Type objectType) {
-      return objectType == typeof (TimeSpan) || objectType == typeof (TimeSpan?);
-    }
-  }
 }
