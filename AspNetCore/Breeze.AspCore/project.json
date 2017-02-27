@@ -30,7 +30,13 @@
         "Breeze.ContextProvider.EF6": {
           "target": "project"
         },
+        "Model_Inheritance.EF6": {
+          "target": "project"
+        },
         "Model_NorthwindIB_CF.EF6": {
+          "target": "project"
+        },
+        "Model_TPH.EF6": {
           "target": "project"
         }
       },

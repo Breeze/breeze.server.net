@@ -16,9 +16,9 @@ using Breeze.ContextProvider;
 using Foo;
 using Models.NorthwindIB.CF;
 using System.Reflection;
-using System.Net;
 using Microsoft.AspNetCore.Http;
 using System.Data.SqlClient;
+using System.ComponentModel.DataAnnotations;
 
 
 
@@ -33,10 +33,10 @@ namespace Breeze.AspCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
   [QueryFilter]
-  
   public class NorthwindIBModelController : Controller {
     private NorthwindContextProvider ContextProvider;
 
+    // called via DI 
     public NorthwindIBModelController(NorthwindIBContext_CF context) {
       ContextProvider = new NorthwindContextProvider(context);
     }
@@ -53,31 +53,31 @@ namespace Breeze.AspCore.Controllers {
 
 #region Save interceptors 
     [HttpPost]
-    public SaveResult SaveWithTransactionScope(JObject saveBundle) {
+    public SaveResult SaveWithTransactionScope([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.TransactionScope };
       return ContextProvider.SaveChanges(saveBundle, txSettings);
     }
 
     [HttpPost]
-    public SaveResult SaveWithDbTransaction(JObject saveBundle) {
+    public SaveResult SaveWithDbTransaction([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.DbTransaction };
       return ContextProvider.SaveChanges(saveBundle, txSettings);
     }
 
     [HttpPost]
-    public SaveResult SaveWithNoTransaction(JObject saveBundle) {
+    public SaveResult SaveWithNoTransaction([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.None };
       return ContextProvider.SaveChanges(saveBundle, txSettings);
     }
 
     [HttpPost]
-    public SaveResult SaveWithComment(JObject saveBundle) {
+    public SaveResult SaveWithComment([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = AddComment;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithExit(JObject saveBundle) {
+    public SaveResult SaveWithExit([FromBody]JObject saveBundle) {
       // set break points here to see how these two approaches give you a SaveMap w/o saving.
       var saveMap =  ContextProvider.GetSaveMapFromSaveBundle(saveBundle);
       saveMap = new NorthwindIBDoNotSaveContext().GetSaveMapFromSaveBundle(saveBundle);
@@ -85,50 +85,50 @@ namespace Breeze.AspCore.Controllers {
     }
 
     [HttpPost]
-    public SaveResult SaveAndThrow(JObject saveBundle) {
+    public SaveResult SaveAndThrow([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = ThrowError;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithEntityErrorsException(JObject saveBundle) {
+    public SaveResult SaveWithEntityErrorsException([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = ThrowEntityErrorsException;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
 
     [HttpPost]
-    public SaveResult SaveWithFreight(JObject saveBundle) {
+    public SaveResult SaveWithFreight([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckFreight;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithFreight2(JObject saveBundle) {
+    public SaveResult SaveWithFreight2([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = CheckFreightOnOrders;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckInitializer(JObject saveBundle) {
+    public SaveResult SaveCheckInitializer([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = AddOrder;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedProperty(JObject saveBundle) {
+    public SaveResult SaveCheckUnmappedProperty([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedProperty;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedPropertySerialized(JObject saveBundle) {
+    public SaveResult SaveCheckUnmappedPropertySerialized([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedPropertySerialized;
       return ContextProvider.SaveChanges(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedPropertySuppressed(JObject saveBundle) {
+    public SaveResult SaveCheckUnmappedPropertySuppressed([FromBody]JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedPropertySuppressed;
       return ContextProvider.SaveChanges(saveBundle);
     }
@@ -256,8 +256,6 @@ namespace Breeze.AspCore.Controllers {
 
     [HttpGet]
 //    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
-
-    
     public IQueryable<Customer> Customers() {
       var list = ContextProvider.Context.Customers;
       return list;
@@ -346,7 +344,7 @@ namespace Breeze.AspCore.Controllers {
 #region named queries
 
     [HttpGet]
-    public IQueryable<Customer> CustomersStartingWith(string companyName) {
+    public IQueryable<Customer> CustomersStartingWith([Required] string companyName) {
       if (companyName == "null") {
         throw new Exception("nulls should not be passed as 'null'");
       }
@@ -424,9 +422,10 @@ namespace Breeze.AspCore.Controllers {
     }
 
     [HttpGet]
-    public Customer CustomerFirstOrDefault() {
+    public IActionResult CustomerFirstOrDefault() {
       var customer = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith("blah")).FirstOrDefault();
-      return customer;
+      // return customer;
+      return Ok(customer);
     }
 
     [HttpGet]
@@ -992,3 +991,4 @@ namespace Breeze.AspCore.Controllers {
   }
 
 }
+

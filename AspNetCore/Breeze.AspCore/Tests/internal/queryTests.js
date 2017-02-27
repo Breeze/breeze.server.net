@@ -688,7 +688,9 @@
     em.executeQuery(q).then(function (data) {
       ok(true);
     }).fail(function (error) {
-      if (testFns.DEBUG_MONGO) {
+      if (testFns.DEBUG_DOTNET_ASPCORE) {
+        ok(error.status == 404, "Should have recieved a 404"); // need to use middleware if we want more detail...
+      } else if (testFns.DEBUG_MONGO) {
         ok(error.message.indexOf("Unable to locate") >= 0, "Bad error message");
       } else if (testFns.DEBUG_ODATA) {
         ok(error.message.indexOf("Not Found") >= 0, "Bad error message");
@@ -795,7 +797,9 @@
     q.execute().then(function (data) {
       ok(false, "should not get here");
     }).fail(function (e) {
-      if (testFns.DEBUG_ODATA) {
+      if (testFns.DEBUG_DOTNET_ASPCORE) {
+        ok(e.status == 404, "should have received a 404 message")  ;
+      } else if (testFns.DEBUG_ODATA) {
         ok(e.message == "Not Found", e.Message);
       } else {
         ok(e.message && e.message.toLowerCase().indexOf("entitythatdoesnotexist") >= 0, e.message);

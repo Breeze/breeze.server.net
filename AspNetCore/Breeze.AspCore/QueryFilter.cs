@@ -29,58 +29,80 @@ namespace Breeze.AspCore {
         return;
       }
 
+      var result = objResult.Value;
+
       var qs = context.HttpContext.Request.QueryString;
       var q = WebUtility.UrlDecode(qs.Value);
       if (q.Length == 0) {
         base.OnActionExecuted(context);
         return;
       }
-      q = q.Substring(1, q.Length - 2);
-      
-      
+      var endIx = q.IndexOf('&');
+      if (endIx > 1) { 
+        q = q.Substring(1, endIx - 1);
+      } else {
+        q = q.Substring(1);
+      }
+      if (q == "{}") {
+        base.OnActionExecuted(context);
+        return;
+      }
+
       var eq = new EntityQuery(q);
-      var eleType = TypeFns.GetElementType(objResult.Value.GetType());
+      var eleType = TypeFns.GetElementType(result.GetType());
       eq.Validate(eleType);
-      // TODO: handle IEnumerable as well.
-      var result = (IQueryable) objResult.Value;
+
+      IQueryable queryableResult = null;
+      if (result is IQueryable) {
+        queryableResult = (IQueryable)result;
+      } else if (result is IEnumerable) {
+        try {
+          queryableResult = ((IEnumerable)result).AsQueryable();
+        } catch {
+          throw new Exception("Unable to convert this endpoints IEnumerable to an IQueryable. Try returning an IEnumerable<T> instead of just an IEnumerable.");
+        }
+      } else {
+        throw new Exception("Unable to convert this endpoint to an IQueryable");
+      }
+      
       int? inlineCount = null;
 
       if (eq.WherePredicate != null) {
-        result = QueryBuilder.ApplyWhere(result, eleType, eq.WherePredicate);
+        queryableResult = QueryBuilder.ApplyWhere(queryableResult, eleType, eq.WherePredicate);
       }
 
       if (eq.IsInlineCountEnabled) {
-        inlineCount = (int)Queryable.Count((dynamic)result);
+        inlineCount = (int)Queryable.Count((dynamic)queryableResult);
       }
 
       if (eq.OrderByClause != null) {
-        result = QueryBuilder.ApplyOrderBy(result, eleType, eq.OrderByClause);
+        queryableResult = QueryBuilder.ApplyOrderBy(queryableResult, eleType, eq.OrderByClause);
       }
 
       if (eq.SkipCount.HasValue) {
-        result = QueryBuilder.ApplySkip(result, eleType, eq.SkipCount.Value);
+        queryableResult = QueryBuilder.ApplySkip(queryableResult, eleType, eq.SkipCount.Value);
       }
 
       if (eq.TakeCount.HasValue) {
-        result = QueryBuilder.ApplyTake(result, eleType, eq.TakeCount.Value);
+        queryableResult = QueryBuilder.ApplyTake(queryableResult, eleType, eq.TakeCount.Value);
       }
 
       if (eq.SelectClause != null) {
-        result = QueryBuilder.ApplySelect(result, eleType, eq.SelectClause);
+        queryableResult = QueryBuilder.ApplySelect(queryableResult, eleType, eq.SelectClause);
       }
 
       if (eq.ExpandClause != null) {
         eq.ExpandClause.PropertyPaths.ToList().ForEach(expand => {
-          result = ((dynamic) result).Include(expand.Replace('/', '.'));
+          queryableResult = ((dynamic) queryableResult).Include(expand.Replace('/', '.'));
         });
       }
 
-      if (objResult.Value != result) {
+      if (result != queryableResult) {
         // if a select or expand was encountered we need to
         // execute the DbQueries here, so that any exceptions thrown can be properly returned.
         // if we wait to have the query executed within the serializer, some exceptions will not
         // serialize properly.
-        var listResult = Enumerable.ToList((dynamic)result);
+        var listResult = Enumerable.ToList((dynamic)queryableResult);
         var qr = new QueryResult(listResult, inlineCount);
         context.Result = new ObjectResult(qr);
       }

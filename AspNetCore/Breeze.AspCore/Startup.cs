@@ -21,6 +21,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Text;
+using ProduceTPH;
 
 namespace Breeze.AspCore {
   public class Startup {
@@ -47,7 +48,10 @@ namespace Breeze.AspCore {
       services.AddApplicationInsightsTelemetry(Configuration);
 
 
-      services.AddMvc().AddJsonOptions(opt => {
+      var mvcBuilder = services.AddMvc();
+      
+      
+      mvcBuilder.AddJsonOptions(opt => {
         var ss = opt.SerializerSettings;
         // ss.DateParseHandling = DateParseHandling.DateTimeOffset;
         ss.NullValueHandling = NullValueHandling.Include;
@@ -59,6 +63,7 @@ namespace Breeze.AspCore {
           DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss.fffK"
           // DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK"
         });
+        
         // Needed because JSON.NET does not natively support I8601 Duration formats for TimeSpan
         ss.Converters.Add(new TimeSpanConverter());
         ss.Converters.Add(new StringEnumConverter());
@@ -71,12 +76,17 @@ namespace Breeze.AspCore {
 
       });
 
+      
+      mvcBuilder.AddMvcOptions(o => { o.Filters.Add(new GlobalExceptionFilter()); });
 
-      var connString = Configuration.GetConnectionString("NorthwindIB_CF");
+      var northwindIBConnStr = Configuration.GetConnectionString("NorthwindIB_CF");
+      var produceTPHConnStr = Configuration.GetConnectionString("ProduceTPH");
       services.AddScoped<NorthwindIBContext_CF>(_ => {
-        return new NorthwindIBContext_CF(connString);
+        return new NorthwindIBContext_CF(northwindIBConnStr);
       });
-
+      services.AddScoped<ProduceTPHContext>(_ => {
+        return new ProduceTPHContext(produceTPHConnStr);
+      });
 
 
     }
@@ -99,23 +109,23 @@ namespace Breeze.AspCore {
       });
 
 
-      app.UseExceptionHandler(errorApp => {
-        errorApp.Run(async context => {
-          context.Response.StatusCode = 500; // or another Status accordingly to Exception Type
-          context.Response.ContentType = "application/json";
+      //app.UseExceptionHandler(errorApp => {
+      //  errorApp.Run(async context => {
+      //    context.Response.StatusCode = 500; // or another Status accordingly to Exception Type
+      //    context.Response.ContentType = "application/json";
 
-          var error = context.Features.Get<IExceptionHandlerFeature>();
-          if (error != null) {
-            var ex = error.Error;
-
-            await context.Response.WriteAsync(new ErrorDto() {
-              Code = 123,
-              Message = ex.Message // or your custom message
-                                   // other custom data
-            }.ToString(), Encoding.UTF8);
-          }
-        });
-      });
+      //    var error = context.Features.Get<IExceptionHandlerFeature>();
+      //    if (error != null) {
+      //      var ex = error.Error;
+      //      var msg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+      //      await context.Response.WriteAsync(new ErrorDto() {
+      //        Code = 123,
+      //        Message = msg 
+      //       // + other custom data
+      //      }.ToString(), Encoding.UTF8);
+      //    }
+      //  });
+      //});
 
       app.UseMvc();
     }
@@ -126,16 +136,7 @@ namespace Breeze.AspCore {
 
   }
 
-  public class ErrorDto {
-    public int Code { get; set; }
-    public string Message { get; set; }
-
-    // other fields
-
-    public override string ToString() {
-      return JsonConvert.SerializeObject(this);
-    }
-  }
+  
 
   public class DbConfig : DbConfiguration {
     public DbConfig() {
