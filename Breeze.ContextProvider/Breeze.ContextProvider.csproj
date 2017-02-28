@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="BreezeEntityBuilder.cs" />
     <Compile Include="BreezeMetadataValidator.cs" />
+    <Compile Include="SimplePropertyInfo.cs" />
     <Compile Include="DataAnnotationsValidator.cs" />
     <Compile Include="ContextProvider.cs" />
     <Compile Include="BreezeConfig.cs" />
