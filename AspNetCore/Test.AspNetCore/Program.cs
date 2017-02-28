@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
 
-namespace Breeze.AspCore {
+namespace Test.AspNetCore {
   public class Program {
     public static void Main(string[] args) {
       var host = new WebHostBuilder()

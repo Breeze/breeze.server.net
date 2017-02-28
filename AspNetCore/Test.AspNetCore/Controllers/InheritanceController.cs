@@ -11,7 +11,7 @@ using Inheritance.Models;
 using Microsoft.AspNetCore.Mvc;
 using Breeze.AspNetCore;
 
-namespace Breeze.AspCore.Controllers {
+namespace Test.AspNetCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
   [BreezeQueryFilter]

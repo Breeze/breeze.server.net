@@ -30,7 +30,7 @@ using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.EDMX_2012;
 #endif
 
-namespace Breeze.AspCore.Controllers {
+namespace Test.AspNetCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
   [BreezeQueryFilter]

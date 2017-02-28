@@ -15,7 +15,7 @@ using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.IO;
 
-namespace Breeze.AspCore {
+namespace Test.AspNetCore {
   public class Startup {
     public Startup(IHostingEnvironment env) {
       var builder = new ConfigurationBuilder()

@@ -10,7 +10,7 @@ using System.Data;
 using System.Linq;
 
 
-namespace Breeze.AspCore.Controllers {
+namespace Test.AspNetCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
   [BreezeQueryFilter]

@@ -5,7 +5,7 @@ using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.CF;
 using Newtonsoft.Json.Linq;
 
-namespace Breeze.AspCore.Controllers {
+namespace Test.AspNetCore.Controllers {
   /// <summary>
   /// A context whose SaveChanges method does not save
   /// but it will prepare its <see cref="SaveWorkState"/> (with SaveMap)
