@@ -90,7 +90,7 @@ function updateFiles(streams, ext) {
 }
 
 gulp.task('breezeServerBuild', function(done) {
-  var solutionFileName = '../Breeze.Build.sln';
+  var solutionFileName = '../Breeze.AspNet.Build.sln';
   msBuildSolution(solutionFileName, done);
 });
 
@@ -108,14 +108,6 @@ gulp.task('nugetPack', ['copyBreezeJs', 'copyDlls', 'nugetClean'], function(done
     packNuget(fileName, cb);
   }, done);
 });
-
-// gulp.task('nugetTestDeploy', ['nugetPack'], function() {
-//   var src = _nugetDir + '**/*.nupkg';
-//   var dest = process.env.LOCALAPPDATA + '/Nuget/Cache'
-//   return gulp.src(src)
-//       .pipe(flatten())
-//       .pipe(gulp.dest(dest));
-// });
 
 // Deploy to nuget on local machine - NuGet 3.3+
 gulp.task('nugetTestDeploy', ['nugetPack'], function(done) {
