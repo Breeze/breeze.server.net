@@ -22,10 +22,15 @@ var flatten = require('gulp-flatten');
 var _tempDir = './_temp/';
 var _jsSrcDir = '../../Breeze.js/src/'
 var _jsBuildDir = '../../Breeze.js/build/';
-var _nugetDirs = ['../AspNet/Nuget.builds/', '../AspNetCore/Nuget.builds/'];
+var _buildSlnDirs = ["../AspNet/", "../AspNetCore/"];
+var _nugetDirs = _buildSlnDirs.map(function(bsd) {
+  return path.join(bsd, "/Nuget.builds/");
+});
+// ['../AspNet/Nuget.builds/', '../AspNetCore/Nuget.builds/'];
 // var _msBuildCmd = 'C:/Windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe ';
 var _msBuildCmd = '"C:/Program Files (x86)/MSBuild/14.0/Bin/MsBuild.exe" '; // vs 2015 version of MsBuild
-var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
+// var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
+var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal  /clp:NoSummary;NoItemAndPropertyList;ErrorsOnly';
 
 var _versionNum = getBreezeVersion();
 gutil.log('LocalAppData dir: ' + process.env.LOCALAPPDATA);
@@ -100,8 +105,15 @@ gulp.task("zipDlls", ["copyDlls"], function() {
 
 
 gulp.task('breezeServerBuild', function(done) {
-  var solutionFileName = '../Breeze.AspNet.Build.sln';
-  msBuildSolution(solutionFileName, done);
+  var solutionFileNames = [];
+  _buildSlnDirs.forEach(function(bsd) {
+    [].push.apply(solutionFileNames, glob.sync(bsd + "*.sln"));
+  });
+  async.each(solutionFileNames, function(sfn, cb1) {
+    sfn = path.normalize(sfn);
+    gutil.log('Building solution: ' + sfn );
+    msBuildSolution(sfn, cb1);
+  }, done);
 });
 
 gulp.task('nugetClean', function() {
