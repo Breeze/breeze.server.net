@@ -19,6 +19,8 @@ using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+using Breeze.Core;
 using BreezeCp = Breeze.ContextProvider;
 
 namespace Breeze.ContextProvider.EF6 {

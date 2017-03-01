@@ -13,7 +13,7 @@ using System.Transactions;
 using System.Xml.Linq;
 
 namespace Breeze.ContextProvider {
-  // Base for EFContextProvider
+  
   public abstract class ContextProvider {
 
     public IKeyGenerator KeyGenerator { get; set; }

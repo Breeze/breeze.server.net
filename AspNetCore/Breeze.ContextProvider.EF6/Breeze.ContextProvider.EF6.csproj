@@ -81,6 +81,10 @@
       <Project>{4d9ce4e7-dca1-4458-ba63-2c3f7907b754}</Project>
       <Name>Breeze.ContextProvider</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Breeze.Core\Breeze.Core.csproj">
+      <Project>{1e234391-d1c2-46ca-89fe-d217f4442ae7}</Project>
+      <Name>Breeze.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
