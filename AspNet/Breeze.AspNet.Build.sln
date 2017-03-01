@@ -14,13 +14,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider", "AspNet\Breeze.ContextProvider\Breeze.ContextProvider.csproj", "{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider", "Breeze.ContextProvider\Breeze.ContextProvider.csproj", "{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.EF6", "AspNet\Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.EF6", "Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.NH", "AspNet\Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj", "{15246B9C-5558-4BCE-894F-52C4F785BBCC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.NH", "Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj", "{15246B9C-5558-4BCE-894F-52C4F785BBCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.WebApi2", "AspNet\Breeze.WebApi2\Breeze.WebApi2.csproj", "{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.WebApi2", "Breeze.WebApi2\Breeze.WebApi2.csproj", "{AB54C69A-14C0-4E60-9DD4-CBEA3685C7DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
