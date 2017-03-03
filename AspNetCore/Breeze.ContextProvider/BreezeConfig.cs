@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace Breeze.ContextProvider {
+namespace Breeze.Persistence {
 
   public class BreezeConfig {
 

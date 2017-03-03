@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Configuration;
 using System.Linq;
 
-namespace Breeze.ContextProvider {
+namespace Breeze.Persistence {
 
   public class NumericKeyGenerator : IKeyGenerator {
 

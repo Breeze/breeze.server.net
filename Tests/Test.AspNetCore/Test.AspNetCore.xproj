@@ -17,8 +17,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AspNetCore\Breeze.AspNetCore.NetFramework\Breeze.AspNetCore.NetFramework.csproj" />
-    <ProjectReference Include="..\..\AspNetCore\Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj" />
-    <ProjectReference Include="..\..\AspNetCore\Breeze.ContextProvider\Breeze.ContextProvider.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\Breeze.ContextProvider.EF6\Breeze.Persistence.EF6.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\Breeze.ContextProvider\Breeze.Persistence.csproj" />
     <ProjectReference Include="..\..\AspNetCore\Breeze.Core\Breeze.Core.csproj" />
     <ProjectReference Include="..\..\Tests\Model_Inheritance.EF6\Model_Inheritance.EF6.csproj" />
     <ProjectReference Include="..\..\Tests\Model_NorthwindIB_CF.EF6\Model_NorthwindIB_CF.EF6.csproj" />

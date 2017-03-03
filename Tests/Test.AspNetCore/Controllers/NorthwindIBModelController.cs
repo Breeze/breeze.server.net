@@ -12,7 +12,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
-using Breeze.ContextProvider;
+using Breeze.Persistence;
 using Foo;
 using Models.NorthwindIB.CF;
 using System.Reflection;
@@ -24,9 +24,9 @@ using Breeze.AspNetCore;
 
 
 #if CODEFIRST_PROVIDER
-using Breeze.ContextProvider.EF6;
+using Breeze.Persistence.EF6;
 #elif DATABASEFIRST_NEW
-using Breeze.ContextProvider.EF6;
+using Breeze.Persistence.EF6;
 using Models.NorthwindIB.EDMX_2012;
 #endif
 
@@ -35,103 +35,103 @@ namespace Test.AspNetCore.Controllers {
   [Route("breeze/[controller]/[action]")]
   [BreezeQueryFilter]
   public class NorthwindIBModelController : Controller {
-    private NorthwindContextProvider ContextProvider;
+    private NorthwindPersistenceManager PersistenceManager;
 
     // called via DI 
     public NorthwindIBModelController(NorthwindIBContext_CF context) {
-      ContextProvider = new NorthwindContextProvider(context);
+      PersistenceManager = new NorthwindPersistenceManager(context);
     }
 
 
     [HttpGet]
     public IActionResult Metadata() {
-      return Ok(ContextProvider.Metadata());
+      return Ok(PersistenceManager.Metadata());
     }
     [HttpPost]
     public SaveResult SaveChanges([FromBody] JObject saveBundle) {
-      return ContextProvider.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
-#region Save interceptors 
+    #region Save interceptors 
     [HttpPost]
     public SaveResult SaveWithTransactionScope([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.TransactionScope };
-      return ContextProvider.SaveChanges(saveBundle, txSettings);
+      return PersistenceManager.SaveChanges(saveBundle, txSettings);
     }
 
     [HttpPost]
     public SaveResult SaveWithDbTransaction([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.DbTransaction };
-      return ContextProvider.SaveChanges(saveBundle, txSettings);
+      return PersistenceManager.SaveChanges(saveBundle, txSettings);
     }
 
     [HttpPost]
     public SaveResult SaveWithNoTransaction([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.None };
-      return ContextProvider.SaveChanges(saveBundle, txSettings);
+      return PersistenceManager.SaveChanges(saveBundle, txSettings);
     }
 
     [HttpPost]
     public SaveResult SaveWithComment([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntitiesDelegate = AddComment;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntitiesDelegate = AddComment;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     [HttpPost]
     public SaveResult SaveWithExit([FromBody]JObject saveBundle) {
       // set break points here to see how these two approaches give you a SaveMap w/o saving.
-      var saveMap =  ContextProvider.GetSaveMapFromSaveBundle(saveBundle);
+      var saveMap = PersistenceManager.GetSaveMapFromSaveBundle(saveBundle);
       saveMap = new NorthwindIBDoNotSaveContext().GetSaveMapFromSaveBundle(saveBundle);
       return new SaveResult() { Entities = new List<Object>(), KeyMappings = new List<KeyMapping>() };
     }
 
     [HttpPost]
     public SaveResult SaveAndThrow([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntitiesDelegate = ThrowError;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntitiesDelegate = ThrowError;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     [HttpPost]
     public SaveResult SaveWithEntityErrorsException([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntitiesDelegate = ThrowEntityErrorsException;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntitiesDelegate = ThrowEntityErrorsException;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
 
     [HttpPost]
     public SaveResult SaveWithFreight([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntityDelegate = CheckFreight;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntityDelegate = CheckFreight;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     [HttpPost]
     public SaveResult SaveWithFreight2([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntitiesDelegate = CheckFreightOnOrders;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntitiesDelegate = CheckFreightOnOrders;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     [HttpPost]
     public SaveResult SaveCheckInitializer([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntitiesDelegate = AddOrder;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntitiesDelegate = AddOrder;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     [HttpPost]
     public SaveResult SaveCheckUnmappedProperty([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedProperty;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntityDelegate = CheckUnmappedProperty;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     [HttpPost]
     public SaveResult SaveCheckUnmappedPropertySerialized([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedPropertySerialized;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntityDelegate = CheckUnmappedPropertySerialized;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     [HttpPost]
     public SaveResult SaveCheckUnmappedPropertySuppressed([FromBody]JObject saveBundle) {
-      ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedPropertySuppressed;
-      return ContextProvider.SaveChanges(saveBundle);
+      PersistenceManager.BeforeSaveEntityDelegate = CheckUnmappedPropertySuppressed;
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     private Dictionary<Type, List<EntityInfo>> ThrowError(Dictionary<Type, List<EntityInfo>> saveMap) {
@@ -154,7 +154,7 @@ namespace Test.AspNetCore.Controllers {
           return new EFEntityError(oi, "WrongMethod", "Cannot save orders with this save method", "OrderID");
 #endif
         });
-        var ex =  new EntityErrorsException("test of custom exception message", errors);
+        var ex = new EntityErrorsException("test of custom exception message", errors);
         // if you want to see a different error status code use this.
         // ex.StatusCode = HttpStatusCode.Conflict; // Conflict = 409 ; default is Forbidden (403).
         throw ex;
@@ -165,8 +165,8 @@ namespace Test.AspNetCore.Controllers {
     private Dictionary<Type, List<EntityInfo>> AddOrder(Dictionary<Type, List<EntityInfo>> saveMap) {
       var order = new Order();
       order.OrderDate = DateTime.Today;
-      var ei = ContextProvider.CreateEntityInfo(order);
-      List<EntityInfo> orderInfos = ContextProvider.GetEntityInfos(saveMap, typeof(Order));
+      var ei = PersistenceManager.CreateEntityInfo(order);
+      List<EntityInfo> orderInfos = PersistenceManager.GetEntityInfos(saveMap, typeof(Order));
       orderInfos.Add(ei);
 
       return saveMap;
@@ -184,14 +184,14 @@ namespace Test.AspNetCore.Controllers {
     }
 
     private bool CheckFreight(EntityInfo entityInfo) {
-      if ((ContextProvider.SaveOptions.Tag as String) == "freight update") {
+      if ((PersistenceManager.SaveOptions.Tag as String) == "freight update") {
         var order = entityInfo.Entity as Order;
         order.Freight = order.Freight + 1;
-      } else if ((ContextProvider.SaveOptions.Tag as String) == "freight update-ov") {
+      } else if ((PersistenceManager.SaveOptions.Tag as String) == "freight update-ov") {
         var order = entityInfo.Entity as Order;
         order.Freight = order.Freight + 1;
         entityInfo.OriginalValuesMap["Freight"] = null;
-      } else if ((ContextProvider.SaveOptions.Tag as String) == "freight update-force") {
+      } else if ((PersistenceManager.SaveOptions.Tag as String) == "freight update-force") {
         var order = entityInfo.Entity as Order;
         order.Freight = order.Freight + 1;
         entityInfo.ForceUpdate = true;
@@ -201,12 +201,12 @@ namespace Test.AspNetCore.Controllers {
 
     private Dictionary<Type, List<EntityInfo>> AddComment(Dictionary<Type, List<EntityInfo>> saveMap) {
       var comment = new Comment();
-      var tag = ContextProvider.SaveOptions.Tag;
+      var tag = PersistenceManager.SaveOptions.Tag;
       comment.Comment1 = (tag == null) ? "Generic comment" : tag.ToString();
       comment.CreatedOn = DateTime.Now;
       comment.SeqNum = 1;
-      var ei = ContextProvider.CreateEntityInfo(comment);
-      List<EntityInfo> commentInfos = ContextProvider.GetEntityInfos(saveMap, typeof(Comment));
+      var ei = PersistenceManager.CreateEntityInfo(comment);
+      List<EntityInfo> commentInfos = PersistenceManager.GetEntityInfos(saveMap, typeof(Comment));
       commentInfos.Add(ei);
 
       return saveMap;
@@ -224,7 +224,7 @@ namespace Test.AspNetCore.Controllers {
     }
 
     private bool CheckUnmappedPropertySuppressed(EntityInfo entityInfo) {
-      if (entityInfo.UnmappedValuesMap != null) { 
+      if (entityInfo.UnmappedValuesMap != null) {
         throw new Exception("unmapped properties should have been suppressed");
       }
       return false;
@@ -237,7 +237,7 @@ namespace Test.AspNetCore.Controllers {
       }
       var anotherOne = entityInfo.UnmappedValuesMap["AnotherOne"];
 
-      if (((dynamic) anotherOne).z[5].foo.Value != 4) {
+      if (((dynamic)anotherOne).z[5].foo.Value != 4) {
         throw new Exception("wrong value for 'anotherOne.z[5].foo'");
       }
 
@@ -251,98 +251,98 @@ namespace Test.AspNetCore.Controllers {
       }
       return false;
     }
-#endregion
+    #endregion
 
-#region standard queries
+    #region standard queries
 
     [HttpGet]
-//    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
+    //    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
     public IQueryable<Customer> Customers() {
-      var list = ContextProvider.Context.Customers;
+      var list = PersistenceManager.Context.Customers;
       return list;
     }
 
     [HttpGet]
-//    [EnableBreezeQuery(MaxExpansionDepth = 3)]
+    //    [EnableBreezeQuery(MaxExpansionDepth = 3)]
     public IQueryable<Order> Orders() {
-      return ContextProvider.Context.Orders;
+      return PersistenceManager.Context.Orders;
     }
 
     [HttpGet]
     public IQueryable<Employee> Employees() {
-      return ContextProvider.Context.Employees;
+      return PersistenceManager.Context.Employees;
     }
 
     [HttpGet]
     public IQueryable<OrderDetail> OrderDetails() {
-      return ContextProvider.Context.OrderDetails;
+      return PersistenceManager.Context.OrderDetails;
     }
 
     [HttpGet]
     public IQueryable<Product> Products() {
-      return ContextProvider.Context.Products;
+      return PersistenceManager.Context.Products;
     }
 
     [HttpGet]
     public IQueryable<Supplier> Suppliers() {
-      return ContextProvider.Context.Suppliers;
+      return PersistenceManager.Context.Suppliers;
     }
 
     [HttpGet]
     public IQueryable<Region> Regions() {
-      return ContextProvider.Context.Regions;
+      return PersistenceManager.Context.Regions;
     }
 
     [HttpGet]
     public IQueryable<Territory> Territories() {
-      return ContextProvider.Context.Territories;
+      return PersistenceManager.Context.Territories;
     }
 
     [HttpGet]
     public IQueryable<Category> Categories() {
-      return ContextProvider.Context.Categories;
+      return PersistenceManager.Context.Categories;
     }
 
     [HttpGet]
     public IQueryable<Role> Roles() {
-      return ContextProvider.Context.Roles;
+      return PersistenceManager.Context.Roles;
     }
 
     [HttpGet]
     public IQueryable<User> Users() {
-      return ContextProvider.Context.Users;
+      return PersistenceManager.Context.Users;
     }
 
     [HttpGet]
     public IQueryable<TimeLimit> TimeLimits() {
-      return ContextProvider.Context.TimeLimits;
+      return PersistenceManager.Context.TimeLimits;
     }
 
     [HttpGet]
     public IQueryable<TimeGroup> TimeGroups() {
-      return ContextProvider.Context.TimeGroups;
+      return PersistenceManager.Context.TimeGroups;
     }
 
     [HttpGet]
     public IQueryable<Comment> Comments() {
-      return ContextProvider.Context.Comments;
+      return PersistenceManager.Context.Comments;
     }
 
     [HttpGet]
     public IQueryable<UnusualDate> UnusualDates() {
-      return ContextProvider.Context.UnusualDates;
+      return PersistenceManager.Context.UnusualDates;
     }
 
 #if !DATABASEFIRST_OLD
     [HttpGet]
     public IQueryable<Geospatial> Geospatials() {
-      return ContextProvider.Context.Geospatials;
+      return PersistenceManager.Context.Geospatials;
     }
 #endif
 
-#endregion
+    #endregion
 
-#region named queries
+    #region named queries
 
     [HttpGet]
     public IQueryable<Customer> CustomersStartingWith([Required] string companyName) {
@@ -352,39 +352,39 @@ namespace Test.AspNetCore.Controllers {
       if (String.IsNullOrEmpty(companyName)) {
         companyName = "";
       }
-      var custs = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith(companyName));
+      var custs = PersistenceManager.Context.Customers.Where(c => c.CompanyName.StartsWith(companyName));
       return custs;
     }
 
     [HttpGet]
     public Object CustomerCountsByCountry() {
-      return ContextProvider.Context.Customers.GroupBy(c => c.Country).Select(g => new { g.Key, Count = g.Count() });
+      return PersistenceManager.Context.Customers.GroupBy(c => c.Country).Select(g => new { g.Key, Count = g.Count() });
     }
 
 
     [HttpGet]
     public Customer CustomerWithScalarResult() {
-      return ContextProvider.Context.Customers.First();
+      return PersistenceManager.Context.Customers.First();
     }
 
     [HttpGet]
     public IActionResult CustomersWithHttpError() {
-            //var responseMsg = new HttpResponseMessage(HttpStatusCode.NotFound);
-            //responseMsg.Content = new StringContent("Custom error message");
-            //responseMsg.ReasonPhrase = "Custom Reason";
-            //throw new HttpResponseException(responseMsg);
-            return StatusCode(StatusCodes.Status404NotFound, "Custom error message");
+      //var responseMsg = new HttpResponseMessage(HttpStatusCode.NotFound);
+      //responseMsg.Content = new StringContent("Custom error message");
+      //responseMsg.ReasonPhrase = "Custom Reason";
+      //throw new HttpResponseException(responseMsg);
+      return StatusCode(StatusCodes.Status404NotFound, "Custom error message");
     }
 
     [HttpGet]
     // [EnableBreezeQuery]
     public IEnumerable<Employee> EnumerableEmployees() {
-      return ContextProvider.Context.Employees.ToList();
+      return PersistenceManager.Context.Employees.ToList();
     }
 
     [HttpGet]
     public IQueryable<Employee> EmployeesFilteredByCountryAndBirthdate(DateTime birthDate, string country) {
-      return ContextProvider.Context.Employees.Where(emp => emp.BirthDate >= birthDate && emp.Country == country);
+      return PersistenceManager.Context.Employees.Where(emp => emp.BirthDate >= birthDate && emp.Country == country);
     }
 
     [HttpGet]
@@ -396,7 +396,7 @@ namespace Test.AspNetCore.Controllers {
         var dc = new NorthwindNHContext();
 #elif CODEFIRST_PROVIDER
       var dc0 = new NorthwindIBContext_CF();
-      var dc = new EFContextProvider<NorthwindIBContext_CF>();
+      var dc = new EFPersistenceManager<NorthwindIBContext_CF>();
 #elif DATABASEFIRST_OLD
         var dc0 = new NorthwindIBContext_EDMX();
         var dc = new EFContextProvider<NorthwindIBContext_EDMX>();
@@ -424,7 +424,7 @@ namespace Test.AspNetCore.Controllers {
 
     [HttpGet]
     public IActionResult CustomerFirstOrDefault() {
-      var customer = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith("blah")).FirstOrDefault();
+      var customer = PersistenceManager.Context.Customers.Where(c => c.CompanyName.StartsWith("blah")).FirstOrDefault();
       // return customer;
       return Ok(customer);
     }
@@ -432,22 +432,22 @@ namespace Test.AspNetCore.Controllers {
     [HttpGet]
     public Int32 OrdersCountForCustomer(string companyName) {
       var customer =
-        ContextProvider.Context.Customers.Include("Orders").Where(c => c.CompanyName.StartsWith(companyName)).First();
+        PersistenceManager.Context.Customers.Include("Orders").Where(c => c.CompanyName.StartsWith(companyName)).First();
       return customer.Orders.Count;
     }
 
     [HttpGet]
     // AltCustomers will not be in the resourceName/entityType map;
     public IQueryable<Customer> AltCustomers() {
-      return ContextProvider.Context.Customers;
+      return PersistenceManager.Context.Customers;
     }
 
 
     [HttpGet]
-        // public IQueryable<Employee> SearchEmployees([FromUri] int[] employeeIds) {
-        // // may need to use FromRoute... as opposed to FromQuery
-     public IQueryable<Employee> SearchEmployees([FromQuery] int[] employeeIds) {
-            var query = ContextProvider.Context.Employees.AsQueryable();
+    // public IQueryable<Employee> SearchEmployees([FromUri] int[] employeeIds) {
+    // // may need to use FromRoute... as opposed to FromQuery
+    public IQueryable<Employee> SearchEmployees([FromQuery] int[] employeeIds) {
+      var query = PersistenceManager.Context.Employees.AsQueryable();
       if (employeeIds.Length > 0) {
         query = query.Where(emp => employeeIds.Contains(emp.EmployeeID));
         var result = query.ToList();
@@ -465,7 +465,7 @@ namespace Test.AspNetCore.Controllers {
       }
       // just testing that qbe actually made it in not attempted to write qbe logic here
       // so just return first 3 customers.
-      return ContextProvider.Context.Customers.Take(3);
+      return PersistenceManager.Context.Customers.Take(3);
     }
 
     [HttpGet]
@@ -482,7 +482,7 @@ namespace Test.AspNetCore.Controllers {
       }
       // just testing that qbe actually made it in not attempted to write qbe logic here
       // so just return first 3 customers.
-      return ContextProvider.Context.Customers.Take(3);
+      return PersistenceManager.Context.Customers.Take(3);
     }
 
     public class CustomerQBE {
@@ -493,7 +493,7 @@ namespace Test.AspNetCore.Controllers {
 
     [HttpGet]
     public IQueryable<Customer> CustomersOrderedStartingWith(string companyName) {
-      var customers = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith(companyName)).OrderBy(cust => cust.CompanyName);
+      var customers = PersistenceManager.Context.Customers.Where(c => c.CompanyName.StartsWith(companyName)).OrderBy(cust => cust.CompanyName);
       var list = customers.ToList();
       return customers;
     }
@@ -504,24 +504,24 @@ namespace Test.AspNetCore.Controllers {
       if (city == "null") {
         city = null;
       }
-      var emps = ContextProvider.Context.Employees.Where(emp => emp.EmployeeID == employeeID || emp.City.Equals(city));
+      var emps = PersistenceManager.Context.Employees.Where(emp => emp.EmployeeID == employeeID || emp.City.Equals(city));
       return emps;
     }
 
     [HttpGet]
     public IEnumerable<Object> Lookup1Array() {
-      var regions = ContextProvider.Context.Regions;
+      var regions = PersistenceManager.Context.Regions;
 
       var lookups = new List<Object>();
-      lookups.Add(new {regions = regions});
+      lookups.Add(new { regions = regions });
       return lookups;
     }
 
     [HttpGet]
     public object Lookups() {
-      var regions = ContextProvider.Context.Regions;
-      var territories = ContextProvider.Context.Territories;
-      var categories = ContextProvider.Context.Categories;
+      var regions = PersistenceManager.Context.Regions;
+      var territories = PersistenceManager.Context.Territories;
+      var categories = PersistenceManager.Context.Categories;
 
       var lookups = new { regions, territories, categories };
       return lookups;
@@ -529,30 +529,30 @@ namespace Test.AspNetCore.Controllers {
 
     [HttpGet]
     public IEnumerable<Object> LookupsEnumerableAnon() {
-      var regions = ContextProvider.Context.Regions;
-      var territories = ContextProvider.Context.Territories;
-      var categories = ContextProvider.Context.Categories;
+      var regions = PersistenceManager.Context.Regions;
+      var territories = PersistenceManager.Context.Territories;
+      var categories = PersistenceManager.Context.Categories;
 
       var lookups = new List<Object>();
-      lookups.Add(new {regions = regions, territories = territories, categories = categories});
+      lookups.Add(new { regions = regions, territories = territories, categories = categories });
       return lookups;
     }
 
     [HttpGet]
     public IQueryable<Object> CompanyNames() {
-      var stuff = ContextProvider.Context.Customers.Select(c => c.CompanyName);
+      var stuff = PersistenceManager.Context.Customers.Select(c => c.CompanyName);
       return stuff;
     }
 
     [HttpGet]
     public IQueryable<Object> CompanyNamesAndIds() {
-      var stuff = ContextProvider.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID });
+      var stuff = PersistenceManager.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID });
       return stuff;
     }
 
     [HttpGet]
     public IQueryable<CustomerDTO> CompanyNamesAndIdsAsDTO() {
-      var stuff = ContextProvider.Context.Customers.Select(c => new CustomerDTO() { CompanyName = c.CompanyName, CustomerID = c.CustomerID });
+      var stuff = PersistenceManager.Context.Customers.Select(c => new CustomerDTO() { CompanyName = c.CompanyName, CustomerID = c.CustomerID });
       return stuff;
     }
 
@@ -564,20 +564,20 @@ namespace Test.AspNetCore.Controllers {
         CompanyName = companyName;
         CustomerID = customerID;
       }
-      
+
       public Guid CustomerID { get; set; }
       public String CompanyName { get; set; }
       public AnotherType AnotherItem { get; set; }
     }
 
     public class AnotherType {
-      
+
     }
 
 
     [HttpGet]
     public IQueryable<Object> CustomersWithBigOrders() {
-      var stuff = ContextProvider.Context.Customers.Where(c => c.Orders.Any(o => o.Freight > 100)).Select(c => new { Customer = c, BigOrders = c.Orders.Where(o => o.Freight > 100) });
+      var stuff = PersistenceManager.Context.Customers.Where(c => c.Orders.Any(o => o.Freight > 100)).Select(c => new { Customer = c, BigOrders = c.Orders.Where(o => o.Freight > 100) });
       return stuff;
     }
 
@@ -602,14 +602,14 @@ namespace Test.AspNetCore.Controllers {
         queryHelper.ConfigureFormatter(Request, query);
 #else
     public IQueryable<Object> CompanyInfoAndOrders() {
-      var stuff = ContextProvider.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID, c.Orders });
+      var stuff = PersistenceManager.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID, c.Orders });
 #endif
       return stuff;
     }
 
     [HttpGet]
     public Object CustomersAndProducts() {
-      var stuff = new { Customers = ContextProvider.Context.Customers.ToList(), Products = ContextProvider.Context.Products.ToList() };
+      var stuff = new { Customers = PersistenceManager.Context.Customers.ToList(), Products = PersistenceManager.Context.Products.ToList() };
       return stuff;
     }
 
@@ -624,20 +624,20 @@ namespace Test.AspNetCore.Controllers {
 
     [HttpGet]
     public IQueryable<Customer> CustomersAndOrders() {
-      var custs = ContextProvider.Context.Customers.Include("Orders");
+      var custs = PersistenceManager.Context.Customers.Include("Orders");
       return custs;
     }
 
     [HttpGet]
     public IQueryable<Order> OrdersAndCustomers() {
-      var orders = ContextProvider.Context.Orders.Include("Customer");
+      var orders = PersistenceManager.Context.Orders.Include("Customer");
       return orders;
     }
 
 
     [HttpGet]
     public IQueryable<Customer> CustomersStartingWithA() {
-      var custs = ContextProvider.Context.Customers.Where(c => c.CompanyName.StartsWith("A"));
+      var custs = PersistenceManager.Context.Customers.Where(c => c.CompanyName.StartsWith("A"));
       return custs;
     }
 
@@ -645,72 +645,69 @@ namespace Test.AspNetCore.Controllers {
     // [EnableBreezeQuery]
     // public HttpResponseMessage CustomersAsHRM() {
     public IActionResult CustomersAsHRM() {
-        var customers = ContextProvider.Context.Customers.Cast<Customer>();
-        return Ok(customers);
+      var customers = PersistenceManager.Context.Customers.Cast<Customer>();
+      return Ok(customers);
     }
 
     [HttpGet]
-    public IQueryable<OrderDetail> OrderDetailsMultiple(int multiple, string expands)
-    {
-        var query = ContextProvider.Context.OrderDetails.OfType<OrderDetail>();
-        if (!string.IsNullOrWhiteSpace(expands)) {
-            var segs = expands.Split(',').ToList();
-            segs.ForEach(s => {
-                query = ((System.Data.Entity.Infrastructure.DbQuery<OrderDetail>) query).Include(s);
-            });
-        }
-        var orig = query.ToList();
-        var list = new List<OrderDetail>(orig.Count * multiple);
-        for (var i = 0; i < multiple; i++)
-        {
-            for (var j = 0; j < orig.Count; j++)
-            {
-                var od = orig[j];
-                var newProductID = i * j + 1;
-                var clone = new OrderDetail();
-                clone.Order = od.Order;
-                clone.OrderID = od.OrderID;
-                clone.RowVersion = od.RowVersion;
-                clone.UnitPrice = od.UnitPrice;
-                clone.Quantity = (short)multiple;
-                clone.Discount = i;
-                clone.ProductID = newProductID;
+    public IQueryable<OrderDetail> OrderDetailsMultiple(int multiple, string expands) {
+      var query = PersistenceManager.Context.OrderDetails.OfType<OrderDetail>();
+      if (!string.IsNullOrWhiteSpace(expands)) {
+        var segs = expands.Split(',').ToList();
+        segs.ForEach(s => {
+          query = ((System.Data.Entity.Infrastructure.DbQuery<OrderDetail>)query).Include(s);
+        });
+      }
+      var orig = query.ToList();
+      var list = new List<OrderDetail>(orig.Count * multiple);
+      for (var i = 0; i < multiple; i++) {
+        for (var j = 0; j < orig.Count; j++) {
+          var od = orig[j];
+          var newProductID = i * j + 1;
+          var clone = new OrderDetail();
+          clone.Order = od.Order;
+          clone.OrderID = od.OrderID;
+          clone.RowVersion = od.RowVersion;
+          clone.UnitPrice = od.UnitPrice;
+          clone.Quantity = (short)multiple;
+          clone.Discount = i;
+          clone.ProductID = newProductID;
 
-                if (od.Product != null) {
-                    var p = new Product();
-                    var op = od.Product;
-                    p.ProductID = newProductID;
-                    p.Category = op.Category;
-                    p.CategoryID = op.CategoryID;
-                    p.Discontinued = op.Discontinued;
-                    p.DiscontinuedDate = op.DiscontinuedDate;
-                    p.ProductName = op.ProductName;
-                    p.QuantityPerUnit = op.QuantityPerUnit;
-                    p.ReorderLevel = op.ReorderLevel;
-                    p.RowVersion = op.RowVersion;
-                    p.Supplier = op.Supplier;
-                    p.SupplierID = op.SupplierID;
-                    p.UnitPrice = op.UnitPrice;
-                    p.UnitsInStock = op.UnitsInStock;
-                    p.UnitsOnOrder = op.UnitsOnOrder;
-                    clone.Product = p;
-                }
+          if (od.Product != null) {
+            var p = new Product();
+            var op = od.Product;
+            p.ProductID = newProductID;
+            p.Category = op.Category;
+            p.CategoryID = op.CategoryID;
+            p.Discontinued = op.Discontinued;
+            p.DiscontinuedDate = op.DiscontinuedDate;
+            p.ProductName = op.ProductName;
+            p.QuantityPerUnit = op.QuantityPerUnit;
+            p.ReorderLevel = op.ReorderLevel;
+            p.RowVersion = op.RowVersion;
+            p.Supplier = op.Supplier;
+            p.SupplierID = op.SupplierID;
+            p.UnitPrice = op.UnitPrice;
+            p.UnitsInStock = op.UnitsInStock;
+            p.UnitsOnOrder = op.UnitsOnOrder;
+            clone.Product = p;
+          }
 
-                list.Add(clone);
-            }
+          list.Add(clone);
         }
-        return list.AsQueryable();
+      }
+      return list.AsQueryable();
     }
 
-#endregion
+    #endregion
   }
 
 #if CODEFIRST_PROVIDER
-  public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_CF> {
+  public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_CF> {
     public const string CONFIG_VERSION = "CODEFIRST_PROVIDER";
-    public NorthwindContextProvider(NorthwindIBContext_CF dbContext) : base(dbContext) { }
+    public NorthwindPersistenceManager(NorthwindIBContext_CF dbContext) : base(dbContext) { }
 #elif DATABASEFIRST_NEW
-  public class NorthwindContextProvider : EFContextProvider<NorthwindIBContext_EDMX_2012> {
+  public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_EDMX_2012> {
     public const string CONFIG_VERSION = "DATABASEFIRST_NEW";
     public NorthwindContextProvider() : base() { }
 #endif
@@ -962,7 +959,7 @@ namespace Test.AspNetCore.Controllers {
         var prodinfo = saveMap[typeof(Product)].First();
         if (prodinfo.EntityState == EntityState.Added) {
           // because Deleted throws error when trying delete non-existent row from database
-          prodinfo.EntityState = EntityState.Detached; 
+          prodinfo.EntityState = EntityState.Detached;
         } else {
           prodinfo.EntityState = EntityState.Deleted;
         }

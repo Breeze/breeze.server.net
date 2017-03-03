@@ -27,13 +27,13 @@
         "Breeze.AspNetCore.NetFramework": {
           "target": "project"
         },
-        "Breeze.ContextProvider": {
-          "target": "project"
-        },
-        "Breeze.ContextProvider.EF6": {
-          "target": "project"
-        },
         "Breeze.Core": {
+          "target": "project"
+        },
+        "Breeze.Persistence": {
+          "target": "project"
+        },
+        "Breeze.Persistence.EF6": {
           "target": "project"
         },
         "Model_Inheritance.EF6": {

@@ -1,8 +1,8 @@
 using System.Linq;
 
 
-using Breeze.ContextProvider;
-using Breeze.ContextProvider.EF6;
+using Breeze.Persistence;
+using Breeze.Persistence.EF6;
 
 
 using Newtonsoft.Json.Linq;
@@ -17,25 +17,25 @@ namespace Test.AspNetCore.Controllers {
   [BreezeQueryFilter]
   public class InheritanceController : Controller {
 
-    readonly EFContextProvider<InheritanceContext> _contextProvider =
-        new EFContextProvider<InheritanceContext>();
+    readonly EFPersistenceManager<InheritanceContext> _persistenceManager =
+        new EFPersistenceManager<InheritanceContext>();
 
     // ~/breeze/inheritance/Metadata 
     [HttpGet]
     public string Metadata() {
-      return _contextProvider.Metadata();
+      return _persistenceManager.Metadata();
     }
 
     // ~/breeze/inheritance/SaveChanges
     [HttpPost]
     public SaveResult SaveChanges([FromBody] JObject saveBundle) {
-      return _contextProvider.SaveChanges(saveBundle);
+      return _persistenceManager.SaveChanges(saveBundle);
     }
 
     // ~/breeze/inheritance/accountTypes
     [HttpGet]
     public IQueryable<AccountType> AccountTypes() {
-      return _contextProvider.Context.AccountTypes;
+      return _persistenceManager.Context.AccountTypes;
     }
 
     #region TPH
@@ -43,19 +43,19 @@ namespace Test.AspNetCore.Controllers {
     // ~/breeze/inheritance/billingDetailsTPH
     [HttpGet]
     public IQueryable<BillingDetailTPH> BillingDetailTPHs() {
-      return _contextProvider.Context.BillingDetailTPHs;
+      return _persistenceManager.Context.BillingDetailTPHs;
     }
 
     // ~/breeze/inheritance/bankAccountTPH
     [HttpGet]
     public IQueryable<BankAccountTPH> BankAccountTPHs() {
-      return _contextProvider.Context.BillingDetailTPHs.OfType<BankAccountTPH>();
+      return _persistenceManager.Context.BillingDetailTPHs.OfType<BankAccountTPH>();
     }
 
     // ~/breeze/inheritance/creditCardsTPH
     [HttpGet]
     public IQueryable<CreditCardTPH> CreditCardTPHs() {
-      return _contextProvider.Context.BillingDetailTPHs.OfType<CreditCardTPH>();
+      return _persistenceManager.Context.BillingDetailTPHs.OfType<CreditCardTPH>();
     }
     #endregion
 
@@ -64,19 +64,19 @@ namespace Test.AspNetCore.Controllers {
     // ~/breeze/inheritance/billingDetailsTPT
     [HttpGet]
     public IQueryable<BillingDetailTPT> BillingDetailTPTs() {
-      return _contextProvider.Context.BillingDetailTPTs;
+      return _persistenceManager.Context.BillingDetailTPTs;
     }
 
     // ~/breeze/inheritance/bankAccountTPT
     [HttpGet]
     public IQueryable<BankAccountTPT> BankAccountTPTs() {
-      return _contextProvider.Context.BillingDetailTPTs.OfType<BankAccountTPT>();
+      return _persistenceManager.Context.BillingDetailTPTs.OfType<BankAccountTPT>();
     }
 
     // ~/breeze/inheritance/creditCardsTPT
     [HttpGet]
     public IQueryable<CreditCardTPT> CreditCardTPTs() {
-      return _contextProvider.Context.BillingDetailTPTs.OfType<CreditCardTPT>();
+      return _persistenceManager.Context.BillingDetailTPTs.OfType<CreditCardTPT>();
     }
     #endregion
 
@@ -85,19 +85,19 @@ namespace Test.AspNetCore.Controllers {
     // ~/breeze/inheritance/billingDetailsTPC
     [HttpGet]
     public IQueryable<BillingDetailTPC> BillingDetailTPCs() {
-      return _contextProvider.Context.BillingDetailTPCs;
+      return _persistenceManager.Context.BillingDetailTPCs;
     }
 
     // ~/breeze/inheritance/bankAccountTPC
     [HttpGet]
     public IQueryable<BankAccountTPC> BankAccountTPCs() {
-      return _contextProvider.Context.BillingDetailTPCs.OfType<BankAccountTPC>();
+      return _persistenceManager.Context.BillingDetailTPCs.OfType<BankAccountTPC>();
     }
 
     // ~/breeze/inheritance/creditCardsTPC
     [HttpGet]
     public IQueryable<CreditCardTPC> CreditCardTPCs() {
-      return _contextProvider.Context.BillingDetailTPCs.OfType<CreditCardTPC>();
+      return _persistenceManager.Context.BillingDetailTPCs.OfType<CreditCardTPC>();
     }
     #endregion
 
@@ -106,7 +106,7 @@ namespace Test.AspNetCore.Controllers {
     // ~/breeze/inheritance//purge
     [HttpPost]
     public string Purge() {
-      InheritanceDbInitializer.PurgeDatabase(_contextProvider.Context);
+      InheritanceDbInitializer.PurgeDatabase(_persistenceManager.Context);
       return "purged";
     }
 
@@ -114,7 +114,7 @@ namespace Test.AspNetCore.Controllers {
     [HttpPost]
     public string Reset() {
       Purge();
-      InheritanceDbInitializer.ResetDatabase(_contextProvider.Context);
+      InheritanceDbInitializer.ResetDatabase(_persistenceManager.Context);
       return "reset";
     }
 

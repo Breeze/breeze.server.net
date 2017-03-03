@@ -83,7 +83,7 @@
         }
       }
     },
-    "Breeze.ContextProvider.EF6/1.0.0": {
+    "Breeze.Persistence.EF6/1.0.0": {
       "type": "project",
       "framework": ".NETFramework,Version=v4.5",
       "compile": {
@@ -103,18 +103,18 @@
         }
       }
     },
-    "Breeze.ContextProvider/1.0.0": {
+    "Breeze.Persistence/1.0.0": {
       "type": "project",
       "framework": ".NETFramework,Version=v4.5",
       "compile": {
-        "bin/Debug/Breeze.ContextProvider.dll": {}
+        "bin/Debug/Breeze.Persistence.dll": {}
       },
       "runtime": {
         "../packages/Newtonsoft.Json.9.0.1/lib/net45/Newtonsoft.Json.dll": {},
-        "bin/Debug/Breeze.ContextProvider.dll": {}
+        "bin/Debug/Breeze.Persistence.dll": {}
       },
       "contentFiles": {
-        "bin/Debug/Breeze.ContextProvider.pdb": {
+        "bin/Debug/Breeze.Persistence.pdb": {
           "buildAction": "None",
           "codeLanguage": "any",
           "copyToOutput": true

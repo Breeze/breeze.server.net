@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Breeze.ContextProvider;
-using Breeze.ContextProvider.EF6;
+using Breeze.Persistence;
+using Breeze.Persistence.EF6;
 using Models.NorthwindIB.CF;
 using Newtonsoft.Json.Linq;
 
@@ -12,7 +12,7 @@ namespace Test.AspNetCore.Controllers {
   /// so developers can do what they please with the same information.
   /// See the <see cref="GetSaveMapFromSaveBundle"/> method;
   /// </summary>
-  public class NorthwindIBDoNotSaveContext : EFContextProvider<NorthwindIBContext_CF> {
+  public class NorthwindIBDoNotSaveContext : EFPersistenceManager<NorthwindIBContext_CF> {
     /// <summary>
     /// Open whatever is the "connection" to the "database" where you store entity data.
     /// This implementation does nothing.
@@ -27,7 +27,7 @@ namespace Test.AspNetCore.Controllers {
 
     /// <summary>
     /// Return the SaveMap that Breeze prepares
-    /// while performing <see cref="ContextProvider.SaveChanges"/>.
+    /// while performing <see cref="PersistenceManager.SaveChanges"/>.
     /// </summary>
     /// <remarks>
     /// Calls SaveChanges which internally creates a <see cref="SaveWorkState"/>
@@ -35,7 +35,7 @@ namespace Test.AspNetCore.Controllers {
     /// <para>
     /// While this works, it is hacky if all you want is the SaveMap.
     /// The real purpose of this context is to demonstrate how to
-    /// pare down a ContextProvider, benefit from the breeze save pre/post processing,
+    /// pare down a PersistenceManager, benefit from the breeze save pre/post processing,
     /// and then do your own save inside the <see cref="SaveChangesCore"/>.
     /// </para>
     /// </remarks>

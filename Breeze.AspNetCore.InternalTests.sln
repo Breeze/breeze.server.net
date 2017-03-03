@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.AspNetCore.NetFramework", "AspNetCore\Breeze.AspNetCore.NetFramework\Breeze.AspNetCore.NetFramework.csproj", "{576BB7E7-570E-4BAB-8AD7-288D53F5BBAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider", "AspNetCore\Breeze.ContextProvider\Breeze.ContextProvider.csproj", "{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence", "AspNetCore\Breeze.ContextProvider\Breeze.Persistence.csproj", "{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.ContextProvider.EF6", "AspNetCore\Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence.EF6", "AspNetCore\Breeze.ContextProvider.EF6\Breeze.Persistence.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Core", "AspNetCore\Breeze.Core\Breeze.Core.csproj", "{1E234391-D1C2-46CA-89FE-D217F4442AE7}"
 EndProject

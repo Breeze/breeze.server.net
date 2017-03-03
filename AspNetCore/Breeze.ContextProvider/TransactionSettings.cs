@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Transactions;
 
-namespace Breeze.ContextProvider {
+namespace Breeze.Persistence {
+
   public class TransactionSettings {
     /// <summary>
     /// Default settings for all saves. 

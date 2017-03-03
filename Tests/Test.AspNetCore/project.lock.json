@@ -1786,25 +1786,25 @@
       "Breeze.AspNetCore.NetFramework/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Breeze.ContextProvider": "1.0.0",
-          "Breeze.Core": "1.0.0"
-        }
-      },
-      "Breeze.ContextProvider/1.0.0": {
-        "type": "project",
-        "dependencies": {
-          "Breeze.Core": "1.0.0"
-        }
-      },
-      "Breeze.ContextProvider.EF6/1.0.0": {
-        "type": "project",
-        "dependencies": {
-          "Breeze.ContextProvider": "1.0.0",
-          "Breeze.Core": "1.0.0"
+          "Breeze.Core": "1.0.0",
+          "Breeze.Persistence": "1.0.0"
         }
       },
       "Breeze.Core/1.0.0": {
         "type": "project"
+      },
+      "Breeze.Persistence/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Breeze.Core": "1.0.0"
+        }
+      },
+      "Breeze.Persistence.EF6/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Breeze.Core": "1.0.0",
+          "Breeze.Persistence": "1.0.0"
+        }
       },
       "Model_Inheritance.EF6/1.0.0": {
         "type": "project"
@@ -5452,17 +5452,17 @@
       "type": "project",
       "msbuildProject": "../../AspNetCore/Breeze.AspNetCore.NetFramework/Breeze.AspNetCore.NetFramework.csproj"
     },
-    "Breeze.ContextProvider/1.0.0": {
-      "type": "project",
-      "msbuildProject": "../../AspNetCore/Breeze.ContextProvider/Breeze.ContextProvider.csproj"
-    },
-    "Breeze.ContextProvider.EF6/1.0.0": {
-      "type": "project",
-      "msbuildProject": "../../AspNetCore/Breeze.ContextProvider.EF6/Breeze.ContextProvider.EF6.csproj"
-    },
     "Breeze.Core/1.0.0": {
       "type": "project",
       "msbuildProject": "../../AspNetCore/Breeze.Core/Breeze.Core.csproj"
+    },
+    "Breeze.Persistence/1.0.0": {
+      "type": "project",
+      "msbuildProject": "../../AspNetCore/Breeze.ContextProvider/Breeze.Persistence.csproj"
+    },
+    "Breeze.Persistence.EF6/1.0.0": {
+      "type": "project",
+      "msbuildProject": "../../AspNetCore/Breeze.ContextProvider.EF6/Breeze.Persistence.EF6.csproj"
     },
     "Model_Inheritance.EF6/1.0.0": {
       "type": "project",
@@ -5497,9 +5497,9 @@
     ],
     ".NETFramework,Version=v4.5.2": [
       "Breeze.AspNetCore.NetFramework",
-      "Breeze.ContextProvider",
-      "Breeze.ContextProvider.EF6",
       "Breeze.Core",
+      "Breeze.Persistence",
+      "Breeze.Persistence.EF6",
       "Model_Inheritance.EF6",
       "Model_NorthwindIB_CF.EF6",
       "Model_TPH.EF6",

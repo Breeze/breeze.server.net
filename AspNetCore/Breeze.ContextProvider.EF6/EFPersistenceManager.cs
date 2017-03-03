@@ -21,9 +21,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using Breeze.Core;
-using BreezeCp = Breeze.ContextProvider;
+using Breeze.Persistence;
 
-namespace Breeze.ContextProvider.EF6 {
+namespace Breeze.Persistence.EF6 {
 
   public interface IEFContextProvider {
     ObjectContext ObjectContext { get; }
@@ -31,13 +31,13 @@ namespace Breeze.ContextProvider.EF6 {
   }
 
   // T is either a subclass of DbContext or a subclass of ObjectContext
-  public class EFContextProvider<T> : Breeze.ContextProvider.ContextProvider, IEFContextProvider where T : class, new() {
+  public class EFPersistenceManager<T> : PersistenceManager, IEFContextProvider where T : class, new() {
 
-    public EFContextProvider() {
+    public EFPersistenceManager() {
 
     }
 
-    public EFContextProvider(T context) {
+    public EFPersistenceManager(T context) {
       _context = context;
     }
 
@@ -250,7 +250,7 @@ namespace Breeze.ContextProvider.EF6 {
           // entityInfo.EFContextProvider = this;  may be needed eventually.
           entityInfo.EntitySetName = entitySetName;
           ProcessEntity(entityInfo);
-          if (entityInfo.EntityState == BreezeCp.EntityState.Deleted) {
+          if (entityInfo.EntityState == EntityState.Deleted) {
             deletedEntities.Add(entityInfo);
           }
         }
@@ -300,11 +300,11 @@ namespace Breeze.ContextProvider.EF6 {
 
     private EntityInfo ProcessEntity(EFEntityInfo entityInfo) {
       ObjectStateEntry ose;
-      if (entityInfo.EntityState == BreezeCp.EntityState.Modified) {
+      if (entityInfo.EntityState == EntityState.Modified) {
         ose = HandleModified(entityInfo);
-      } else if (entityInfo.EntityState == BreezeCp.EntityState.Added) {
+      } else if (entityInfo.EntityState == EntityState.Added) {
         ose = HandleAdded(entityInfo);
-      } else if (entityInfo.EntityState == BreezeCp.EntityState.Deleted) {
+      } else if (entityInfo.EntityState == EntityState.Deleted) {
         // for 1st pass this does NOTHING 
         ose = HandleDeletedPart1(entityInfo);
       } else {
