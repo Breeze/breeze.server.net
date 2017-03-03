@@ -16,10 +16,10 @@
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCore\Breeze.AspNetCore.NetFramework\Breeze.AspNetCore.NetFramework.csproj" />
-    <ProjectReference Include="..\..\AspNetCore\Breeze.ContextProvider.EF6\Breeze.Persistence.EF6.csproj" />
-    <ProjectReference Include="..\..\AspNetCore\Breeze.ContextProvider\Breeze.Persistence.csproj" />
     <ProjectReference Include="..\..\AspNetCore\Breeze.Core\Breeze.Core.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\Breeze.Persistence\Breeze.Persistence.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\Breeze.Persistence.EF6\Breeze.Persistence.EF6.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\Breeze.AspNetCore.NetFramework\Breeze.AspNetCore.NetFramework.csproj" />
     <ProjectReference Include="..\..\Tests\Model_Inheritance.EF6\Model_Inheritance.EF6.csproj" />
     <ProjectReference Include="..\..\Tests\Model_NorthwindIB_CF.EF6\Model_NorthwindIB_CF.EF6.csproj" />
     <ProjectReference Include="..\..\Tests\Model_TPH.EF6\Model_TPH.EF6.csproj" />

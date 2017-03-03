@@ -77,7 +77,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Breeze.ContextProvider\Breeze.Persistence.csproj">
+    <ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.csproj">
       <Project>{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}</Project>
       <Name>Breeze.Persistence</Name>
     </ProjectReference>

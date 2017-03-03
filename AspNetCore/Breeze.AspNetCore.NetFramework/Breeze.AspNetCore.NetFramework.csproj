@@ -317,13 +317,13 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Breeze.ContextProvider\Breeze.Persistence.csproj">
-      <Project>{3e6c8fe4-65bd-4b16-8182-3714b3ec602c}</Project>
-      <Name>Breeze.Persistence</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Breeze.Core\Breeze.Core.csproj">
       <Project>{1e234391-d1c2-46ca-89fe-d217f4442ae7}</Project>
       <Name>Breeze.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.csproj">
+      <Project>{3e6c8fe4-65bd-4b16-8182-3714b3ec602c}</Project>
+      <Name>Breeze.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

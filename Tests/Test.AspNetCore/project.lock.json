@@ -5458,11 +5458,11 @@
     },
     "Breeze.Persistence/1.0.0": {
       "type": "project",
-      "msbuildProject": "../../AspNetCore/Breeze.ContextProvider/Breeze.Persistence.csproj"
+      "msbuildProject": "../../AspNetCore/Breeze.Persistence/Breeze.Persistence.csproj"
     },
     "Breeze.Persistence.EF6/1.0.0": {
       "type": "project",
-      "msbuildProject": "../../AspNetCore/Breeze.ContextProvider.EF6/Breeze.Persistence.EF6.csproj"
+      "msbuildProject": "../../AspNetCore/Breeze.Persistence.EF6/Breeze.Persistence.EF6.csproj"
     },
     "Model_Inheritance.EF6/1.0.0": {
       "type": "project",
