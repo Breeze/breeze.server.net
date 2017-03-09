@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.Server.Persistence.EF6</id>
-        <version>1.1.1</version>
+        <version>0.1.1</version>
         <title>Breeze Server - Persistence framework for Entity Framework 6</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
@@ -17,7 +17,7 @@
         <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>javascript AspNetCore Breeze SPA</tags>
 		<dependencies>
-		    <dependency id="Breeze.Server.Persistence" version="[1.1.1]"/>
+		    <dependency id="Breeze.Server.Persistence" version="[0.1.1]"/>
 			<dependency id="EntityFramework" version="[6.0, 7.0)" />
 		</dependencies>
     </metadata>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.Server.AspNetCore.NetFramework</id>
-        <version>1.1.1</version>
+        <version>0.1.1</version>
         <title>Breeze Server - for ASP.Net Core using the full .NET Framework ( not .NET Core)</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
@@ -18,8 +18,8 @@
         <tags>javascript ASP.NET Core Breeze SPA</tags>
 		<dependencies>
             <dependency id="Microsoft.AspNetCore.Mvc.Core" version="[1.1.2, 1.2.0)"/>
-            <dependency id="Breeze.Server.Core" version="[1.1.1]" />
-            <dependency id="Breeze.Server.Persistence" version="[1.1.1]" />
+            <dependency id="Breeze.Server.Core" version="[0.1.1]" />
+            <dependency id="Breeze.Server.Persistence" version="[0.1.1]" />
 		</dependencies>
     </metadata>
     <files>
