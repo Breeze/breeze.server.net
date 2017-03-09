@@ -3,7 +3,7 @@
     <metadata>
         <id>{{id}}</id>
         <version>{{version}}</version>
-        <title>Breeze Server - Persistence framework for Entity Framework 6</title>
+        <title>Breeze Server (partial) - Persistence framework for Entity Framework 6</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
         <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
@@ -12,7 +12,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Core data access library for a Breeze Server working with Entity Framework v6</description>
         <summary>Breeze Server - Persistence framework for Entity Framework 6.  This package is usually used in conjunction with the Breeze.AspNetCore.NetFramework package.</summary>
-        <copyright>Copyright © IdeaBlade 2012-2016</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2017</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>javascript AspNetCore Breeze SPA</tags>

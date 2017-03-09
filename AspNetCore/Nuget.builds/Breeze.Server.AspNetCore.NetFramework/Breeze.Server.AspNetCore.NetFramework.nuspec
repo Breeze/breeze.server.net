@@ -2,24 +2,24 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.Server.AspNetCore.NetFramework</id>
-        <version>0.1.1</version>
-        <title>Breeze Server - for ASP.Net Core using the full .NET Framework ( not .NET Core)</title>
+        <version>0.1.3</version>
+        <title>Breeze Server (partial) - adds ASP.Net Core support with the full .NET Framework ( not .NET Core)</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
         <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
         <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
         <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>The files and references that are essential for a Breeze ASP.NET Core server.</description>
-        <summary>Breeze Server - for ASP.NET Core. This package is usually used in conjunction with one of the Breeze.Server.Persistence.XXX packages.</summary>
+        <description>Adds support for The files and references that are essential for a Breeze ASP.NET Core server.</description>
+        <summary>Breeze Server - ASP.NET Core support with full .NET Framework. This package is usually used in conjunction with one of the Breeze.Server.Persistence.XXX packages.</summary>
         <copyright>Copyright © IdeaBlade 2012-2016</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
-        <tags>javascript ASP.NET Core Breeze SPA</tags>
+        <tags>javascript AspNetCore Breeze SPA</tags>
 		<dependencies>
             <dependency id="Microsoft.AspNetCore.Mvc.Core" version="[1.1.2, 1.2.0)"/>
-            <dependency id="Breeze.Server.Core" version="[0.1.1]" />
-            <dependency id="Breeze.Server.Persistence" version="[0.1.1]" />
+            <dependency id="Breeze.Server.Core" version="[0.1.3]" />
+            <dependency id="Breeze.Server.Persistence" version="[0.1.3]" />
 		</dependencies>
     </metadata>
     <files>

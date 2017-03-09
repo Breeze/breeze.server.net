@@ -172,7 +172,9 @@ gulp.task('nugetDeploy', function(done) {
     async.each(fileNames, function (fileName, cb2) {
       gutil.log('Deploying nuspec file: ' + fileName);
       var cmd = 'nuget push ' + fileName + ' -Source https://www.nuget.org';
-      execCommands([ cmd], null, cb2);
+      
+      execCommands([ cmd], { shouldThrow: false }, cb2);
+      
     }, cb1);
   }, done);
 });
