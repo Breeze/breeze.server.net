@@ -32,7 +32,7 @@ var _msBuildCmd = '"C:/Program Files (x86)/MSBuild/14.0/Bin/MsBuild.exe" '; // v
 // var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
 var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal  /clp:NoSummary;NoItemAndPropertyList;ErrorsOnly';
 
-var _versionNum = getBreezeVersion();
+var _breezeClientVersionNum = getBreezeVersion();
 gutil.log('LocalAppData dir: ' + process.env.LOCALAPPDATA);
 
 /**
@@ -77,12 +77,16 @@ gulp.task("copyDlls", ['breezeServerBuild'], function() {
 // @param ext - file extension (with .) of files to copy.
 function updateFiles(nugetDir, streams, ext) {
   var fileNames = glob.sync(nugetDir + '**/*' + ext);
+  gutil.log("Copying files from release dir into nuget dir");
   fileNames.forEach(function(fileName) {
     var baseName = path.basename(fileName, ext);
-    var src = '../' + baseName +  '/bin/release/' + baseName + ext
-    if (fs.existsSync(src)) {
+    var src;
+    if (_buildSlnDirs.some(function(dir) {
+      src = dir + baseName +  '/bin/release/' + baseName + ext;
+      return fs.existsSync(src);
+    })) {
       var dest = path.dirname(fileName);
-      gutil.log("Processing " + fileName);
+      gutil.log("Processing " + src);
       streams.push(gulp.src(src).pipe(gulp.dest(dest)));
     } else {
       gutil.log("skipped: " + src);
@@ -125,10 +129,19 @@ gulp.task('nugetClean', function() {
 
 gulp.task('nugetPack', ['copyBreezeJs', 'copyDlls', 'nugetClean'], function(done) {
   async.each(_nugetDirs, function(nd, cb1) {
-    gutil.log('Packing nugets...');
+    var version;
+    versionFileName = path.resolve(nd, '../version.txt');
+    serverVersion = fs.readFileSync(versionFileName, { encoding: 'utf8'});
+    
     var fileNames = glob.sync(nd + '**/Default.nuspec');
     async.each(fileNames, function (fileName, cb2) {
-      packNuget(fileName, cb2);
+      if (fileName.toLowerCase().indexOf('breeze.client') != -1) {
+        version = _breezeClientVersionNum;
+      } else {
+        version = serverVersion;
+      }
+      gutil.log('Packing nuget for ' + fileName + ' version: ' + version);
+      packNuget(fileName, version, cb2);
     }, cb1);
   }, done);
 });
@@ -181,13 +194,14 @@ gulp.task('default', ['nugetTestDeploy'] , function() {
 
 });
 
-function packNuget(nuspecFileName, execCb) {
+function packNuget(nuspecFileName, version, execCb) {
   var folderName = path.dirname(nuspecFileName);
   var text = fs.readFileSync(nuspecFileName, { encoding: 'utf8'});
   var folders = folderName.split('/');
   var folderId = folders[folders.length-1];
 
-  text = text.replace(/{{version}}/g, _versionNum);
+  text = text.replace(/{{version}}/g, version);
+  text = text.replace(/{{clientVersion}}/g, _breezeClientVersionNum);
   text = text.replace(/{{id}}/g, folderId);
   var destFileName = folderName + '/' + folderId + '.nuspec';
   gutil.log('Packing nuspec file: ' + destFileName);
