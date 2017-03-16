@@ -418,7 +418,10 @@ namespace Breeze.ContextProvider.EF6 {
         var propertyName = kvp.Key;
         var originalValue = kvp.Value;
 
-        if (!(originalValue is JObject)) {
+        if (originalValue is JObject) {
+          // only really need to perform updating original values on key properties
+          // and a complex object cannot be a key.
+        } else {
           var ordinal = originalValuesRecord.GetOrdinal(propertyName);
           var fieldType = originalValuesRecord.GetFieldType(ordinal);
           var originalValueConverted = ConvertValue(originalValue, fieldType);
