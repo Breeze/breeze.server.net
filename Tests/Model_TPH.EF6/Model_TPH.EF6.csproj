@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{73BB1C2B-BF56-4257-A3DC-56FE5163D2AF}</ProjectGuid>
+    <ProjectGuid>{CC83A834-EF3D-4E7D-98AE-B760BD3AE3B3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ProduceTPH</RootNamespace>
@@ -153,6 +153,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model1Ext.Context.cs" />
     <Compile Include="Model_TPH.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

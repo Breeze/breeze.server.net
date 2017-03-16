@@ -20,11 +20,12 @@ using System.Xml;
 
 namespace Models.NorthwindIB.CF {
 
+  
   public class NorthwindIBContext_CF : DbContext {
     static NorthwindIBContext_CF() {
       // Uncomment this line if you are having testing issues with CodeFirst - errors will get eaten when
       // exposed via a webService - this will expose them.
-      InitializeTestContext();
+      // InitializeTestContext();
     }
 
 
@@ -36,6 +37,11 @@ namespace Models.NorthwindIB.CF {
         Console.WriteLine(e.Message);
       }
       return context;
+    }
+
+    public NorthwindIBContext_CF(string connectionString) : base(connectionString) {
+      this.Configuration.ProxyCreationEnabled = false;
+      this.Configuration.LazyLoadingEnabled = false;
     }
 
     // Use the constructor to target a specific named connection string

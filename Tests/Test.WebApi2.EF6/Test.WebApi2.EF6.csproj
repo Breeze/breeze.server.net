@@ -244,19 +244,19 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj">
-      <Project>{15246b9c-5558-4bce-894f-52c4f785bbcc}</Project>
-      <Name>Breeze.ContextProvider.NH</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Breeze.ContextProvider\Breeze.ContextProvider.csproj">
-      <Project>{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}</Project>
-      <Name>Breeze.ContextProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj">
+    <ProjectReference Include="..\..\AspNet\Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj">
       <Project>{be6f3a72-1b22-4e1e-8dde-ac65c3093a55}</Project>
       <Name>Breeze.ContextProvider.EF6</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Breeze.WebApi2\Breeze.WebApi2.csproj">
+    <ProjectReference Include="..\..\AspNet\Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj">
+      <Project>{15246b9c-5558-4bce-894f-52c4f785bbcc}</Project>
+      <Name>Breeze.ContextProvider.NH</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AspNet\Breeze.ContextProvider\Breeze.ContextProvider.csproj">
+      <Project>{3e6c8fe4-65bd-4b16-8182-3714b3ec602c}</Project>
+      <Name>Breeze.ContextProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AspNet\Breeze.WebApi2\Breeze.WebApi2.csproj">
       <Project>{ab54c69a-14c0-4e60-9dd4-cbea3685c7dd}</Project>
       <Name>Breeze.WebApi2</Name>
     </ProjectReference>
