@@ -62,6 +62,7 @@
     <Compile Include="Query\BinaryPredicate.cs" />
     <Compile Include="Query\DataType.cs" />
     <Compile Include="Query\EntityQuery.cs" />
+    <Compile Include="Query\EntityQueryExtensions.cs" />
     <Compile Include="Query\ExpandClause.cs" />
     <Compile Include="Query\FnBlock.cs" />
     <Compile Include="Query\FnBlockToken.cs" />

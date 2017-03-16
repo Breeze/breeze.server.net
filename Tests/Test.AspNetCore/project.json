@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "Breeze.Composite.AspNetCore.EF6": "0.1.1",
     "EntityFramework": "6.1.3",
     "Microsoft.ApplicationInsights.AspNetCore": "2.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.1.1",
