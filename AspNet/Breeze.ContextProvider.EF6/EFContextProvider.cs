@@ -29,6 +29,8 @@ using Newtonsoft.Json.Linq;
 
 using Breeze.ContextProvider;
 using BreezeCp = Breeze.ContextProvider;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Breeze.ContextProvider.EF6 {
 
@@ -114,9 +116,9 @@ namespace Breeze.ContextProvider.EF6 {
     /// See http://blogs.msdn.com/b/diego/archive/2012/01/26/exception-from-dbcontext-api-entityconnection-can-only-be-constructed-with-a-closed-dbconnection.aspx
     /// </summary>
     /// <returns></returns>
-    protected override void OpenDbConnection() {
+    protected async override Task OpenDbConnection(CancellationToken cancellationToken) {
       var ec = ObjectContext.Connection as EntityConnection;
-      if (ec.State == ConnectionState.Closed) ec.Open();
+      if (ec.State == ConnectionState.Closed) await ec.OpenAsync(cancellationToken);
     }
 
     protected override void CloseDbConnection() {
@@ -172,7 +174,7 @@ namespace Breeze.ContextProvider.EF6 {
       return keyValues;
     }
 
-    protected override void SaveChangesCore(SaveWorkState saveWorkState) {
+    protected async override Task SaveChangesCore(SaveWorkState saveWorkState, CancellationToken cancellationToken) {
       var saveMap = saveWorkState.SaveMap;
       var deletedEntities = ProcessSaves(saveMap);
 
@@ -184,9 +186,9 @@ namespace Breeze.ContextProvider.EF6 {
       int count;
       try {
         if (Context is DbContext) {
-          count = ((DbContext)(object)Context).SaveChanges();
+          count = await ((DbContext)(object)Context).SaveChangesAsync(cancellationToken);
         } else {
-          count = ObjectContext.SaveChanges(System.Data.Entity.Core.Objects.SaveOptions.AcceptAllChangesAfterSave);
+          count = await ObjectContext.SaveChangesAsync(System.Data.Entity.Core.Objects.SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
         }
       } catch (DbEntityValidationException e) {
         var entityErrors = new List<EntityError>();
