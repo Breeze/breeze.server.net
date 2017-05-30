@@ -123,7 +123,7 @@ namespace Breeze.ContextProvider {
     
 
     private static JsonSerializer CreateJsonSerializer() {
-      var serializerSettings = BreezeConfig.Instance.GetJsonSerializerSettings();
+      var serializerSettings = BreezeConfig.Instance.GetJsonSerializerSettingsForSave();
       var jsonSerializer = JsonSerializer.Create(serializerSettings);
       return jsonSerializer;
     }
