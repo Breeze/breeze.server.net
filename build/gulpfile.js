@@ -3,7 +3,7 @@
 // include gulp
 var gulp = require('gulp');
 
-var fs   = require('fs');
+var fs   = require('fs-extra');
 var path = require('path');
 var glob = require('glob');
 var async = require('async');
@@ -51,7 +51,7 @@ gulp.task("copyBreezeJs", ['breezeClientBuild'], function(done) {
     return gulp.src( mapPath( _jsBuildDir, [ 'breeze.*.*', 'adapters/*.*' ]), { base: _jsBuildDir })
        .pipe(gulp.dest(nd + 'Breeze.Client/content/scripts'));
   }));
-  
+
 });
 
 
@@ -71,13 +71,42 @@ gulp.task("copyDlls", ['breezeServerBuild'], function() {
   }));
 });
 
+gulp.task("initDlls", [], function() {
+    copyToNugetLib("../AspNet/", "Breeze.ContextProvider");
+    copyToNugetLib("../AspNet/", "Breeze.ContextProvider.EF6");
+    copyToNugetLib("../AspNet/", "Breeze.ContextProvider.NH");
+    copyToNugetLib("../AspNet/", "Breeze.WebApi2");
+    copyToNugetLib("../AspNetCore/", "Breeze.AspNetCore.NetFramework");
+    copyToNugetLib("../AspNetCore/", "Breeze.Core");
+    copyToNugetLib("../AspNetCore/", "Breeze.Persistence");
+    copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EF6");
+});
+
+// pathRoot = "../AspNet/" or "../AspNetCore/"
+// fileRoot = "Breeze.ContextProvider.EF6" or similar
+function copyToNugetLib(pathRoot, fileRoot) {
+    var name = fileRoot + ".dll";
+    var exts = [".dll", ".pdb", ".xml"];
+    var destdir = fileRoot.replace(/^Breeze/, "Breeze.Server");
+    exts.forEach(function(ext) {
+        var sourceFile = pathRoot + fileRoot + "/bin/Release/" + fileRoot + ext;
+        var targetFile = pathRoot + "Nuget.builds/" + destdir + "/lib/" + fileRoot + ext;
+        fs.copy(sourceFile, targetFile, function(err) {
+            if (err) {
+              gutil.log("Cannot copy " + sourceFile + " to " + targetFile);
+              throw err;
+            }
+            gutil.log("Copied " + sourceFile + " to " + targetFile);
+        });
+    });
+}
 
 // for each file in nuget dir, copy existing file from the release dir.
 // @param streams[] - array that will be filled with streams
 // @param ext - file extension (with .) of files to copy.
 function updateFiles(nugetDir, streams, ext) {
   var fileNames = glob.sync(nugetDir + '**/*' + ext);
-  gutil.log("Copying files from release dir into nuget dir");
+  gutil.log("Copying " + fileNames.length + " files from /bin/release dir into " + nugetDir);
   fileNames.forEach(function(fileName) {
     var baseName = path.basename(fileName, ext);
     var src;
@@ -86,7 +115,7 @@ function updateFiles(nugetDir, streams, ext) {
       return fs.existsSync(src);
     })) {
       var dest = path.dirname(fileName);
-      gutil.log("Processing " + src);
+      gutil.log("Copying " + src + " to " + dest);
       streams.push(gulp.src(src).pipe(gulp.dest(dest)));
     } else {
       gutil.log("skipped: " + src);
@@ -132,7 +161,7 @@ gulp.task('nugetPack', ['copyBreezeJs', 'copyDlls', 'nugetClean'], function(done
     var version;
     versionFileName = path.resolve(nd, '../version.txt');
     serverVersion = fs.readFileSync(versionFileName, { encoding: 'utf8'});
-    
+
     var fileNames = glob.sync(nd + '**/Default.nuspec');
     async.each(fileNames, function (fileName, cb2) {
       if (fileName.toLowerCase().indexOf('breeze.client') != -1) {
@@ -172,9 +201,9 @@ gulp.task('nugetDeploy', function(done) {
     async.each(fileNames, function (fileName, cb2) {
       gutil.log('Deploying nuspec file: ' + fileName);
       var cmd = 'nuget push ' + fileName + ' -Source https://www.nuget.org';
-      
+
       execCommands([ cmd], { shouldThrow: false }, cb2);
-      
+
     }, cb1);
   }, done);
 });
