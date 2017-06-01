@@ -86,7 +86,7 @@ gulp.task("initDlls", [], function() {
 // fileRoot = "Breeze.ContextProvider.EF6" or similar
 function copyToNugetLib(pathRoot, fileRoot) {
     var name = fileRoot + ".dll";
-    var exts = [".dll", ".pdb", ".xml"];
+    var exts = [".dll", ".pdb", ".XML"];
     var destdir = fileRoot.replace(/^Breeze/, "Breeze.Server");
     exts.forEach(function(ext) {
         var sourceFile = pathRoot + fileRoot + "/bin/Release/" + fileRoot + ext;
