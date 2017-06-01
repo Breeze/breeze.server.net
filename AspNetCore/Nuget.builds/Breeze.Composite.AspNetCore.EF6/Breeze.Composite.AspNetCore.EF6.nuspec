@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.Composite.AspNetCore.EF6</id>
-        <version>0.1.3</version>
+        <version>0.1.4</version>
         <title>Breeze Server - ASP.NET Core with Entity Framework 6.</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
@@ -17,8 +17,8 @@
         <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
         <tags>javascript AspNetCore Breeze SPA EntityFramework</tags>
 		<dependencies>
-		    <dependency id="Breeze.Server.Persistence.EF6" version="[0.1.3]"/>
-			<dependency id="Breeze.Server.AspNetCore.NetFramework" version="[0.1.3]" />
+		    <dependency id="Breeze.Server.Persistence.EF6" version="[0.1.4]"/>
+			<dependency id="Breeze.Server.AspNetCore.NetFramework" version="[0.1.4]" />
 		</dependencies>
     </metadata>
     <files>

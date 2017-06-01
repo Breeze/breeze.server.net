@@ -55,6 +55,12 @@
             Override to use a specialized JsonSerializer implementation.
             </summary>
         </member>
+        <member name="M:Breeze.Persistence.BreezeConfig.CreateJsonSerializerSettingsForSave">
+            <summary>
+            Override to use a specialized JsonSerializer implementation for saving.
+            Base implementation uses CreateJsonSerializerSettings() then sets TypeNameHandling to None
+            </summary>
+        </member>
         <member name="M:Breeze.Persistence.BreezeConfig.GetTransactionSettings">
             <summary>
             Returns TransactionSettings.Default.  Override to return different settings.

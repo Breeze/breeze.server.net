@@ -20,7 +20,7 @@
 		    <dependency id="Microsoft.AspNet.WebApi.OData" version="[5.2.2, 6.0)"/>
         <dependency id="Microsoft.AspNet.WebApi.WebHost" version="[5.2.2, 6.0)" />			
         <dependency id="Breeze.Server.ContextProvider" version="[{{version}}]" />
-        <dependency id="WebActivatorEx" />
+        <dependency id="WebActivatorEx" version="[2.2.0,)" />
 		</dependencies>
     </metadata>
     <files>
