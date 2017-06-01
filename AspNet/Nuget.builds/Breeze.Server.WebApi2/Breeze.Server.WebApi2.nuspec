@@ -20,11 +20,9 @@
 		    <dependency id="Microsoft.AspNet.WebApi.OData" version="[5.2.2, 6.0)"/>
         <dependency id="Microsoft.AspNet.WebApi.WebHost" version="[5.2.2, 6.0)" />			
         <dependency id="Breeze.Server.ContextProvider" version="[1.6.4]" />
-        <dependency id="WebActivatorEx" />
 		</dependencies>
     </metadata>
     <files>
-        <file src="content\App_Start\BreezeWebApiConfig.cs.pp" target="content\App_Start\BreezeWebApiConfig.cs.pp" />
         <file src="lib\Breeze.WebApi2.dll" target="lib\Breeze.WebApi2.dll" />
 		<file src="lib\Breeze.WebApi2.pdb" target="lib\Breeze.WebApi2.pdb" />
         <file src="lib\Breeze.WebApi2.XML" target="lib\Breeze.WebApi2.XML" />
