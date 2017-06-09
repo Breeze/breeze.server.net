@@ -245,9 +245,9 @@ namespace Sample_WebApi2.Controllers {
       var userId = 12345;
       if (entityInfo.EntityState == Breeze.ContextProvider.EntityState.Added)
       {
-        entityInfo.OriginalValuesMap["CreatedBy"] = null; // entity.CreatedBy;
-        entityInfo.OriginalValuesMap["CreatedByUserId"] = null; // entity.CreatedByUserId;
-        entityInfo.OriginalValuesMap["CreatedOnDate"] = null; // entity.CreatedDate;
+        entityInfo.OriginalValuesMap["CreatedBy"] = entity.CreatedBy;
+        entityInfo.OriginalValuesMap["CreatedByUserId"] = entity.CreatedByUserId;
+        entityInfo.OriginalValuesMap["CreatedDate"] = entity.CreatedDate;
         //entityInfo.ForceUpdate = true;
         entity.CreatedBy = "test";
         entity.CreatedByUserId = userId;
@@ -257,9 +257,9 @@ namespace Sample_WebApi2.Controllers {
         entity.ModifiedDate = DateTime.Now;
       } else if (entityInfo.EntityState == Breeze.ContextProvider.EntityState.Modified)
       {
-        entityInfo.OriginalValuesMap["ModifiedBy"] = null; // entity.ModifiedBy;
-        entityInfo.OriginalValuesMap["ModifiedByUserId"] = null; // entity.ModifiedByUserId;
-        entityInfo.OriginalValuesMap["ModifiedOnDate"] = null; // entity.ModifiedDate;
+        entityInfo.OriginalValuesMap["ModifiedBy"] = entity.ModifiedBy;
+        entityInfo.OriginalValuesMap["ModifiedByUserId"] = entity.ModifiedByUserId;
+        entityInfo.OriginalValuesMap["ModifiedDate"] = entity.ModifiedDate;
         //entityInfo.ForceUpdate = true;
         entity.ModifiedBy = "test";
         entity.ModifiedByUserId = userId;

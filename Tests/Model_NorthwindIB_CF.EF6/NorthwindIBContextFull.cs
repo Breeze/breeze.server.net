@@ -1382,6 +1382,7 @@ namespace Foo {
     /// <summary>Gets or sets the RowVersion. </summary>
     [DataMember]
     [Column("RowVersion")]
+    [ConcurrencyCheck]
     public decimal RowVersion { get; set; }
 
     /// <summary>Gets or sets the CreatedBy. </summary>
@@ -1414,7 +1415,6 @@ namespace Foo {
     /// <summary>Gets or sets the ModifiedDate. </summary>
     [DataMember]
     [Column("ModifiedDate")]
-    [ConcurrencyCheck]
     public System.DateTime ModifiedDate { get; set; }
 
     #endregion Data Properties
