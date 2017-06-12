@@ -49,6 +49,15 @@ namespace Breeze.ContextProvider {
       }
     }
 
+    public JsonSerializerSettings GetJsonSerializerSettingsForSave() {
+      lock (__lock) {
+        if (_jsonSerializerSettingsForSave == null) {
+          _jsonSerializerSettingsForSave = CreateJsonSerializerSettingsForSave();
+        }
+        return _jsonSerializerSettingsForSave;
+      }
+    }
+
     public static ReadOnlyCollection<Assembly> ProbeAssemblies {
       get {
         lock (__lock) {
@@ -97,7 +106,16 @@ namespace Breeze.ContextProvider {
       return jsonSerializerSettings;
     }
 
-
+    /// <summary>
+    /// Override to use a specialized JsonSerializer implementation for saving. 
+    /// Base implementation uses CreateJsonSerializerSettings, then changes TypeNameHandling to None.
+    /// http://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_TypeNameHandling.htm
+    /// </summary>
+    protected virtual JsonSerializerSettings CreateJsonSerializerSettingsForSave() {
+      var settings = CreateJsonSerializerSettings();
+      settings.TypeNameHandling = TypeNameHandling.None;
+      return settings;
+    }
     
 
     public static bool IsFrameworkAssembly(Assembly assembly) {
@@ -155,6 +173,7 @@ namespace Breeze.ContextProvider {
     private static BreezeConfig __instance;
     
     private JsonSerializerSettings _jsonSerializerSettings = null;
+    private JsonSerializerSettings _jsonSerializerSettingsForSave = null;
 
   }
 

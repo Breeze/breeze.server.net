@@ -18,86 +18,45 @@ namespace Breeze.AspNetCore {
     }
 
     public override void OnActionExecuted(ActionExecutedContext context) {
-      var objResult = context.Result as ObjectResult;
-      if (objResult == null) {
+
+      var qs = QueryFns.ExtractAndDecodeQueryString(context);
+      if (qs == null) {
         base.OnActionExecuted(context);
         return;
       }
 
-      var result = objResult.Value;
-
-      var qs = context.HttpContext.Request.QueryString;
-      var q = WebUtility.UrlDecode(qs.Value);
-      if (q.Length == 0) {
+      var queryable = QueryFns.ExtractQueryable(context);
+      if (queryable == null) {
         base.OnActionExecuted(context);
-        return;
-      }
-      var endIx = q.IndexOf('&');
-      if (endIx > 1) { 
-        q = q.Substring(1, endIx - 1);
-      } else {
-        q = q.Substring(1);
-      }
-      if (q == "{}") {
-        base.OnActionExecuted(context);
-        return;
       }
 
-      var eq = new EntityQuery(q);
-      var eleType = TypeFns.GetElementType(result.GetType());
+      var eq = new EntityQuery(qs);
+      var eleType = TypeFns.GetElementType(queryable.GetType());
       eq.Validate(eleType);
 
-      IQueryable queryableResult = null;
-      if (result is IQueryable) {
-        queryableResult = (IQueryable)result;
-      } else if (result is IEnumerable) {
-        try {
-          queryableResult = ((IEnumerable)result).AsQueryable();
-        } catch {
-          throw new Exception("Unable to convert this endpoints IEnumerable to an IQueryable. Try returning an IEnumerable<T> instead of just an IEnumerable.");
-        }
-      } else {
-        throw new Exception("Unable to convert this endpoint to an IQueryable");
-      }
       
       int? inlineCount = null;
 
-      if (eq.WherePredicate != null) {
-        queryableResult = QueryBuilder.ApplyWhere(queryableResult, eleType, eq.WherePredicate);
-      }
-
+      var originalQueryable = queryable;
+      queryable = eq.ApplyWhere(queryable, eleType);
+      
       if (eq.IsInlineCountEnabled) {
-        inlineCount = (int)Queryable.Count((dynamic)queryableResult);
+        inlineCount = (int)Queryable.Count((dynamic)queryable);
       }
 
-      if (eq.OrderByClause != null) {
-        queryableResult = QueryBuilder.ApplyOrderBy(queryableResult, eleType, eq.OrderByClause);
-      }
+      queryable = eq.ApplyOrderBy(queryable, eleType);
+      queryable = eq.ApplySkip(queryable, eleType);
+      queryable = eq.ApplyTake(queryable, eleType);
+      queryable = eq.ApplySelect(queryable, eleType);
+      queryable = eq.ApplyExpand(queryable, eleType);
+        
 
-      if (eq.SkipCount.HasValue) {
-        queryableResult = QueryBuilder.ApplySkip(queryableResult, eleType, eq.SkipCount.Value);
-      }
-
-      if (eq.TakeCount.HasValue) {
-        queryableResult = QueryBuilder.ApplyTake(queryableResult, eleType, eq.TakeCount.Value);
-      }
-
-      if (eq.SelectClause != null) {
-        queryableResult = QueryBuilder.ApplySelect(queryableResult, eleType, eq.SelectClause);
-      }
-
-      if (eq.ExpandClause != null) {
-        eq.ExpandClause.PropertyPaths.ToList().ForEach(expand => {
-          queryableResult = ((dynamic) queryableResult).Include(expand.Replace('/', '.'));
-        });
-      }
-
-      if (result != queryableResult) {
+      if (queryable != originalQueryable) {
         // if a select or expand was encountered we need to
         // execute the DbQueries here, so that any exceptions thrown can be properly returned.
         // if we wait to have the query executed within the serializer, some exceptions will not
         // serialize properly.
-        var listResult = Enumerable.ToList((dynamic)queryableResult);
+        var listResult = Enumerable.ToList((dynamic)queryable);
         var qr = new QueryResult(listResult, inlineCount);
         context.Result = new ObjectResult(qr);
       }
@@ -106,9 +65,8 @@ namespace Breeze.AspNetCore {
       base.OnActionExecuted(context);
 
     }
+    
   }
-  
-
 
 }
 

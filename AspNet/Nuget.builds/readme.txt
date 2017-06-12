@@ -28,4 +28,4 @@ The runtime-plus-samples package includes everything in the runtime package plus
 Please visit the
 [Breeze Nuget](http://breeze.github.io/doc-net/nuget-packages.html) page for more information about this package.
 
-Copyright 2012-2016 IdeaBlade, Inc.
+Copyright 2012-2017 IdeaBlade, Inc.

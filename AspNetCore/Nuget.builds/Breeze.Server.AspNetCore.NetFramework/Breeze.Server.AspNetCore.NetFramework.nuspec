@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Breeze.Server.AspNetCore.NetFramework</id>
+        <version>0.1.4</version>
+        <title>Breeze Server (partial) - adds ASP.Net Core support with the full .NET Framework ( not .NET Core)</title>
+        <authors>Jay Traband</authors>
+        <owners>IdeaBlade</owners>
+        <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
+        <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
+        <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Adds support for The files and references that are essential for a Breeze ASP.NET Core server.</description>
+        <summary>Breeze Server - ASP.NET Core support with full .NET Framework. This package is usually used in conjunction with one of the Breeze.Server.Persistence.XXX packages.</summary>
+        <copyright>Copyright © IdeaBlade 2012-2016</copyright>
+        <language>en-US</language>
+        <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
+        <tags>javascript AspNetCore Breeze SPA</tags>
+		<dependencies>
+            <dependency id="Microsoft.AspNetCore.Mvc.Core" version="[1.1.2, 1.2.0)"/>
+            <dependency id="Breeze.Server.Core" version="[0.1.4]" />
+            <dependency id="Breeze.Server.Persistence" version="[0.1.4]" />
+		</dependencies>
+    </metadata>
+    <files>
+        <file src="lib\Breeze.AspNetCore.NetFramework.dll" target="lib\Breeze.AspNetCore.NetFramework.dll" />
+		<file src="lib\Breeze.AspNetCore.NetFramework.pdb" target="lib\Breeze.AspNetCore.NetFramework.pdb" />
+        <file src="lib\Breeze.AspNetCore.NetFramework.XML" target="lib\Breeze.AspNetCore.NetFramework.XML" />
+        <file src="readme.txt" target="readme.txt" />
+    </files>
+</package>

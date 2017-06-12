@@ -10,6 +10,7 @@
     "gulp-flatten": "0.0.4",
     "gulp-task-listing": "^1.0.0",
     "gulp-util": "^3.0.1",
-    "gulp-zip": "^3.2.0"
+    "gulp-zip": "^3.2.0",
+    "fs-extra": "^3.0.1"
   }
 }

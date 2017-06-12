@@ -17,7 +17,7 @@
         <releaseNotes>Note that this package uses Microsoft's ASP.NET WebApi 2.2 and will attempt to upgrade any WebApi 2.1 dependencies in your project. Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA EntityFramework</tags>
 		<dependencies>
-		    <dependency id="Breeze.Client" version="[{{version}}]"/>
+		    <dependency id="Breeze.Client" version="[{{clientVersion}}]"/>
 		    <dependency id="Breeze.Server.WebApi2" version="[{{version}}]"/>
 			<dependency id="Breeze.Server.ContextProvider.EF6" version="[{{version}}]" />
 		</dependencies>

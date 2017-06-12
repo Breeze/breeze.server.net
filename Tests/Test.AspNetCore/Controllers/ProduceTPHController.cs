@@ -4,103 +4,103 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Breeze.ContextProvider;
+using Breeze.Persistence;
 
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Breeze.AspNetCore;
 
 #if NHIBERNATE
-using Breeze.ContextProvider.NH;
+using Breeze.Persistence.NH;
 using Models.Produce.NH;
 using NHibernate;
 using NHibernate.Linq;
 #else
-using Breeze.ContextProvider.EF6;
+using Breeze.Persistence.EF6;
 using ProduceTPH;
 #endif
 
 
 namespace Test.AspNetCore.Controllers {
 
-  [Route("breeze/[controller]/[action]")]
-  [BreezeQueryFilter]
-  public class ProduceTPHController : Controller {
+    [Route("breeze/[controller]/[action]")]
+    [BreezeQueryFilter]
+    public class ProduceTPHController : Controller {
 
-    private ProduceTPHContextProvider ContextProvider;
+        private ProduceTPHPersistenceManager PersistenceManager;
 
-    public ProduceTPHController(ProduceTPHContext context) {
-      ContextProvider = new ProduceTPHContextProvider(context);
-    }
+        public ProduceTPHController(ProduceTPHContext context) {
+            PersistenceManager = new ProduceTPHPersistenceManager(context);
+        }
 
 
 
-    [HttpGet]
-    public String Metadata() {
+        [HttpGet]
+        public String Metadata() {
 #if NHIBERNATE
-      return ContextProvider.GetHardcodedMetadata();
+      return PersistenceManager.GetHardcodedMetadata();
 #else
-      return ContextProvider.Metadata();
+            return PersistenceManager.Metadata();
 #endif
+        }
+
+        [HttpPost]
+        public SaveResult SaveChanges(JObject saveBundle) {
+            return PersistenceManager.SaveChanges(saveBundle);
+        }
+
+        #region standard queries
+
+        [HttpGet]
+        public IQueryable<ItemOfProduce> ItemsOfProduce() {
+            return PersistenceManager.Context.ItemsOfProduce;
+        }
+
+
+        [HttpGet]
+        public IQueryable<Fruit> Fruits() {
+            return PersistenceManager.Context.ItemsOfProduce.OfType<Fruit>();
+        }
+
+
+        [HttpGet]
+        public IQueryable<Apple> Apples() {
+            return PersistenceManager.Context.ItemsOfProduce.OfType<Apple>();
+        }
+
+        #endregion
+
+        #region named queries
+
+        #endregion
     }
-
-    [HttpPost]
-    public SaveResult SaveChanges(JObject saveBundle) {
-      return ContextProvider.SaveChanges(saveBundle);
-    }
-
-    #region standard queries
-
-    [HttpGet]
-    public IQueryable<ItemOfProduce> ItemsOfProduce() {
-      return ContextProvider.Context.ItemsOfProduce;
-    }
-
-
-    [HttpGet]
-    public IQueryable<Fruit> Fruits() {
-      return ContextProvider.Context.ItemsOfProduce.OfType<Fruit>();
-    }
-
-
-    [HttpGet]
-    public IQueryable<Apple> Apples() {
-      return ContextProvider.Context.ItemsOfProduce.OfType<Apple>();
-    }
-
-    #endregion
-
-    #region named queries
-
-    #endregion
-  }
 
 
 
 #if NHIBERNATE
-  public class ProduceTPHContextProvider  : ProduceNHContext {
+  public class ProduceTPHPersistenceManager  : ProduceNHContext {
 #else
-  public class ProduceTPHContextProvider  : EFContextProvider<ProduceTPHContext> {
+    public class ProduceTPHPersistenceManager : EFPersistenceManager<ProduceTPHContext> {
 
-    public ProduceTPHContextProvider(ProduceTPHContext dbContext) : base(dbContext) { }
+        public ProduceTPHPersistenceManager(ProduceTPHContext dbContext) : base(dbContext) { }
 #endif
 
 
 
-    protected override bool BeforeSaveEntity(EntityInfo entityInfo) {
-        return true;
+        protected override bool BeforeSaveEntity(EntityInfo entityInfo) {
+            return true;
+        }
+
+        protected override Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap) {
+            return saveMap;
+        }
+
+
+        protected override void SaveChangesCore(SaveWorkState saveWorkState) {
+            throw new NotImplementedException();
+        }
     }
 
-    protected override Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap) {
-      return saveMap;
-    }
 
-
-    protected override void SaveChangesCore(SaveWorkState saveWorkState) {
-      throw new NotImplementedException();
-    }
-  }
-
-  
 
 }

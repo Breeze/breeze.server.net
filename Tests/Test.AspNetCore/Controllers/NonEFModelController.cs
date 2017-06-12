@@ -1,5 +1,5 @@
 ﻿using Breeze.AspNetCore;
-using Breeze.ContextProvider;
+using Breeze.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
@@ -17,30 +17,30 @@ namespace Test.AspNetCore.Controllers {
   public class NonEFModelController : Controller {
 
 
-    NonEFContextProvider ContextProvider = new NonEFContextProvider();
+    NonEFPersistenceManager PersistenceManager = new NonEFPersistenceManager();
 
 
     [HttpGet]
     public String Metadata() {
-      return ContextProvider.Metadata();
+      return PersistenceManager.Metadata();
     }
 
     [HttpPost]
     public SaveResult SaveChanges(JObject saveBundle) {
-      return ContextProvider.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChanges(saveBundle);
     }
 
     #region standard queries
 
     [HttpGet]
     public IQueryable<Person> Persons() {
-      var custs = ContextProvider.Context.Persons;
+      var custs = PersistenceManager.Context.Persons;
       return custs;
     }
 
     [HttpGet]
     public IQueryable<Meal> Meals() {
-      var orders = ContextProvider.Context.Meals;
+      var orders = PersistenceManager.Context.Meals;
       return orders;
     }
 
@@ -54,7 +54,7 @@ namespace Test.AspNetCore.Controllers {
 
 
 
-  public class NonEFContextProvider : Breeze.ContextProvider.ContextProvider {
+  public class NonEFPersistenceManager : Breeze.Persistence.PersistenceManager {
 
     public NonEFModelContext Context = new NonEFModelContext();
 
@@ -76,28 +76,6 @@ namespace Test.AspNetCore.Controllers {
 
     protected override string BuildJsonMetadata() {
       return null;
-      //var mb = new ODataConventionModelBuilder();
-      //mb.EntitySet<Person>("Persons");
-      //mb.EntitySet<Meal>("Meals");
-      //// mb.Entity<Person>().HasKe
-      //var edmModel = mb.GetEdmModel();
-      //IEnumerable<EdmError> errors;
-      //String csdl;
-      //using (var swriter = new StringWriter()) {
-      //  using (var xwriter = new XmlTextWriter(swriter)) {
-      //    // edmModel.TryWriteCsdl(xwriter, out errors);
-      //    // CsdlWriter.TryWriteCsdl(edmModel, xwriter, out errors);
-      //    EdmxWriter.TryWriteEdmx(edmModel, xwriter, EdmxTarget.OData, out errors);
-      //    csdl = swriter.ToString();
-
-      //  }
-      //}
-      //var xele = XElement.Parse(csdl);
-      //var ns = xele.Name.Namespace;
-      //var dataServicesEle = xele.Descendants(ns + "DataServices").First();
-      //var xDoc = XDocument.Load(dataServicesEle.CreateReader());
-      //var json = ContextProvider.CsdlToJson(xDoc);
-      //return json;
     }
 
     protected override void SaveChangesCore(SaveWorkState saveWorkState) {
