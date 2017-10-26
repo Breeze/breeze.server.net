@@ -24,7 +24,7 @@
      <ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.csproj"> </ProjectReference>
   </ItemGroup>
   <ItemGroup> 
-    <PackageReference Include="EntityFramework" Version="6.1.3" />
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
 
   </ItemGroup>
