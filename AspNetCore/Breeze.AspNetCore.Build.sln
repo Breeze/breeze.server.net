@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Core", "Breeze.Core\Breeze.Core.csproj", "{1E234391-D1C2-46CA-89FE-D217F4442AE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Core", "Breeze.Core\Breeze.Core.csproj", "{1E234391-D1C2-46CA-89FE-D217F4442AE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.AspNetCore.NetFramework", "Breeze.AspNetCore.NetFramework\Breeze.AspNetCore.NetFramework.csproj", "{576BB7E7-570E-4BAB-8AD7-288D53F5BBAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.AspNetCore.NetFramework", "Breeze.AspNetCore.NetFramework\Breeze.AspNetCore.NetFramework.csproj", "{576BB7E7-570E-4BAB-8AD7-288D53F5BBAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence", "Breeze.Persistence\Breeze.Persistence.csproj", "{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "Breeze.Persistence\Breeze.Persistence.csproj", "{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence.EF6", "Breeze.Persistence.EF6\Breeze.Persistence.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EF6", "Breeze.Persistence.EF6\Breeze.Persistence.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,18 +32,21 @@ Global
 		{576BB7E7-570E-4BAB-8AD7-288D53F5BBAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.OData-debug|Any CPU.ActiveCfg = OData-debug|Any CPU
-		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.OData-debug|Any CPU.Build.0 = OData-debug|Any CPU
+		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.OData-debug|Any CPU.ActiveCfg = Release|Any CPU
+		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.OData-debug|Any CPU.Build.0 = Release|Any CPU
 		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E6C8FE4-65BD-4B16-8182-3714B3EC602C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.ActiveCfg = OData-debug|Any CPU
-		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.Build.0 = OData-debug|Any CPU
+		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.Build.0 = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4DB08B19-A1F5-469A-A217-996E42D98719}
 	EndGlobalSection
 EndGlobal

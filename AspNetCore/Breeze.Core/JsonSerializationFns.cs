@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Runtime.Serialization.Formatters;
+using Newtonsoft.Json.Converters; 
 
 namespace Breeze.Core {
   public static class JsonSerializationFns {
@@ -10,7 +9,7 @@ namespace Breeze.Core {
       ss.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
       ss.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
       ss.TypeNameHandling = TypeNameHandling.Objects;
-      ss.TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple;
+      ss.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
 
       // Hack is for the issue described in this post:
       // http://stackoverflow.com/questions/11789114/internet-explorer-json-net-javascript-date-and-milliseconds-issue
