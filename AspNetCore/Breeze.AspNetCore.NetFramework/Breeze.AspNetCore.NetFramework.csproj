@@ -2,6 +2,7 @@
   
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <NETStandardImplicitPackageVersion>2.0.0</NETStandardImplicitPackageVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Breeze.AspNetCore.NetFramework</AssemblyName>
     <PackageId>Breeze.AspNetCore.NetFramework</PackageId>
