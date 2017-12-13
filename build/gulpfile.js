@@ -29,6 +29,7 @@ var _nugetDirs = _buildSlnDirs.map(function(bsd) {
 // ['../AspNet/Nuget.builds/', '../AspNetCore/Nuget.builds/'];
 // var _msBuildCmd = 'C:/Windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe ';
 var _msBuildCmd = '"C:/Program Files (x86)/MSBuild/14.0/Bin/MsBuild.exe" '; // vs 2015 version of MsBuild
+// var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe" ' // vs 2017 version of MsBuild
 // var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
 var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal  /clp:NoSummary;NoItemAndPropertyList;ErrorsOnly';
 
