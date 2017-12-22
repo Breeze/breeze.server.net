@@ -1,5 +1,3 @@
-
-
 using Foo;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,17 +5,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Configuration;
-using System.Data.Common;
-
-using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Xml;
 
 namespace Models.NorthwindIB.CF {
 
-  
+
   public class NorthwindIBContext_CF : DbContext {
     static NorthwindIBContext_CF() {
       // Uncomment this line if you are having testing issues with CodeFirst - errors will get eaten when
@@ -25,6 +17,9 @@ namespace Models.NorthwindIB.CF {
       // InitializeTestContext();
     }
 
+    public DbContextOptions<NorthwindIBContext_CF> Options {
+      get; private set;
+    }
 
     //public static NorthwindIBContext_CF InitializeTestContext() {
     //  var context = new NorthwindIBContext_CF();
@@ -39,21 +34,24 @@ namespace Models.NorthwindIB.CF {
 
     public NorthwindIBContext_CF(DbContextOptions<NorthwindIBContext_CF> options)
       : base(options) {
-
-      var optionsBuilder = new DbContextOptionsBuilder<NorthwindIBContext_CF>();
-      // optionsBuilder.
-
-      using (var context = new NorthwindIBContext_CF(optionsBuilder.Options)) {
-        // do stuff
-      }
+      // Hang onto it so that we can create a clone.
+      Options = options;
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-      optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["NorthwindIBContext_CF"].ConnectionString);
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+    //  optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["NorthwindIBContext_CF"].ConnectionString);
+    //}
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+      modelBuilder.Entity<Comment>()
+         .HasKey(c => new { c.CreatedOn, c.SeqNum });
+      modelBuilder.Entity<OrderDetail>()
+        .HasKey(od => new { od.OrderID, od.ProductID });
+      modelBuilder.Entity<Supplier>()
+        .OwnsOne<Location>(s => s.Location);
     }
 
 
-    
     #region DbSets
 
     public DbSet<Category> Categories { get; set; }
@@ -446,9 +444,9 @@ namespace Foo {
     public ICollection<Order> Orders { get; set; }
 
     /// <summary>Gets the Territories. </summary>
-    [DataMember]
-    [InverseProperty("Employees")]
-    public ICollection<Territory> Territories { get; set; }
+    //[DataMember]
+    //[InverseProperty("Employees")]
+    //public ICollection<Territory> Territories { get; set; }
 
     #endregion Navigation properties
 
@@ -1082,13 +1080,11 @@ namespace Foo {
     [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("SupplierID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Supplier_SupplierID")]
     public int SupplierID { get; set; }
 
     /// <summary>Gets or sets the CompanyName. </summary>
     [DataMember]
     [Column("CompanyName")]
-    // [IbVal.StringLengthVerifier(MaxValue=40, IsRequired=true, ErrorMessageResourceName="Supplier_CompanyName")]
     [MaxLength(40)]
     [Required]
     public string CompanyName { get; set; }
@@ -1096,14 +1092,12 @@ namespace Foo {
     /// <summary>Gets or sets the ContactName. </summary>
     [DataMember]
     [Column("ContactName")]
-    // [IbVal.StringLengthVerifier(MaxValue=30, IsRequired=false, ErrorMessageResourceName="Supplier_ContactName")]
     [MaxLength(30)]
     public string ContactName { get; set; }
 
     /// <summary>Gets or sets the ContactTitle. </summary>
     [DataMember]
     [Column("ContactTitle")]
-    // [IbVal.StringLengthVerifier(MaxValue=30, IsRequired=false, ErrorMessageResourceName="Supplier_ContactTitle")]
     [MaxLength(30)]
     public string ContactTitle { get; set; }
 
@@ -1182,7 +1176,6 @@ namespace Foo {
     /// <summary>Gets or sets the RowVersion. </summary>
     [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Supplier_RowVersion")]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -1201,7 +1194,7 @@ namespace Foo {
 
   #region Location class
 
-  [ComplexType]
+  // [ComplexType]
   public partial class Location {
     /// <summary>Gets or sets the Address. </summary>
     [DataMember]
@@ -1295,9 +1288,9 @@ namespace Foo {
     public Region Region { get; set; }
 
     /// <summary>Gets the Employees. </summary>
-    [DataMember]
-    [InverseProperty("Territories")]
-    public ICollection<Employee> Employees { get; set; }
+    //[DataMember]
+    //[InverseProperty("Territories")]
+    //public ICollection<Employee> Employees { get; set; }
 
     #endregion Navigation properties
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Breeze.Persistence;
-using Breeze.Persistence.EF6;
+using Breeze.Persistence.EFCore;
 using Models.NorthwindIB.CF;
 using Newtonsoft.Json.Linq;
 

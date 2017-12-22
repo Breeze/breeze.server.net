@@ -1,34 +1,25 @@
 ﻿// Only one of the next few should be uncommented.
 #define CODEFIRST_PROVIDER
-//#define DATABASEFIRST_NEW
-//#define ORACLE_EDMX
 //#define NHIBERNATE
 
-// breeze/NorthwindIBModel/customers
-
+using Breeze.AspNetCore;
+using Breeze.Persistence;
+using Breeze.Persistence.EFCore;
+using Foo;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Models.NorthwindIB.CF;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-
-using Breeze.Persistence;
-using Foo;
-using Models.NorthwindIB.CF;
-using System.Reflection;
-using Microsoft.AspNetCore.Http;
-using System.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
-using Breeze.AspNetCore;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Reflection;
 
-
-
-#if CODEFIRST_PROVIDER
-using Breeze.Persistence.EF6;
-#elif DATABASEFIRST_NEW
-using Breeze.Persistence.EF6;
-using Models.NorthwindIB.EDMX_2012;
-#endif
+using EFEntityState = Microsoft.EntityFrameworkCore.EntityState;
+using BreezeEntityState = Breeze.Persistence.EntityState;
 
 namespace Test.AspNetCore.Controllers {
 
@@ -333,12 +324,12 @@ namespace Test.AspNetCore.Controllers {
       return PersistenceManager.Context.UnusualDates;
     }
 
-#if !DATABASEFIRST_OLD
-    [HttpGet]
-    public IQueryable<Geospatial> Geospatials() {
-      return PersistenceManager.Context.Geospatials;
-    }
-#endif
+
+    //[HttpGet]
+    //public IQueryable<Geospatial> Geospatials() {
+    //  return PersistenceManager.TypedContext.Geospatials;
+    //}
+
 
     #endregion
 
@@ -387,26 +378,12 @@ namespace Test.AspNetCore.Controllers {
       return PersistenceManager.Context.Employees.Where(emp => emp.BirthDate >= birthDate && emp.Country == country);
     }
 
+#if !NHIBERNATE
     [HttpGet]
     public List<Employee> QueryInvolvingMultipleEntities() {
-#if NHIBERNATE
-        // need to figure out what to do here
-        //return new List<Employee>();
-        var dc0 = new NorthwindNHContext();
-        var dc = new NorthwindNHContext();
-#elif CODEFIRST_PROVIDER
-      var dc0 = new NorthwindIBContext_CF();
-      var dc = new EFPersistenceManager<NorthwindIBContext_CF>();
-#elif DATABASEFIRST_OLD
-        var dc0 = new NorthwindIBContext_EDMX();
-        var dc = new EFContextProvider<NorthwindIBContext_EDMX>();
-#elif DATABASEFIRST_NEW
-      var dc0 = new NorthwindIBContext_EDMX_2012();
-      var dc = new EFContextProvider<NorthwindIBContext_EDMX_2012>();
-#elif ORACLE_EDMX
-      var dc0 = new NorthwindIBContext_EDMX_Oracle();
-      var dc = new EFContextProvider<NorthwindIBContext_EDMX_Oracle>();
-#endif
+      var dc0 = new NorthwindIBContext_CF(PersistenceManager.Context.Options);
+      var pm = new EFPersistenceManager<NorthwindIBContext_CF>(dc0);
+
       //the query executes using pure EF 
       var query0 = (from t1 in dc0.Employees
                     where (from t2 in dc0.Orders select t2.EmployeeID).Distinct().Contains(t1.EmployeeID)
@@ -414,13 +391,14 @@ namespace Test.AspNetCore.Controllers {
       var result0 = query0.ToList();
 
       //the same query fails if using EFContextProvider
-      dc0 = dc.Context;
+      dc0 = pm.Context;
       var query = (from t1 in dc0.Employees
                    where (from t2 in dc0.Orders select t2.EmployeeID).Distinct().Contains(t1.EmployeeID)
                    select t1);
       var result = query.ToList();
       return result;
     }
+#endif
 
     [HttpGet]
     public IActionResult CustomerFirstOrDefault() {
@@ -655,7 +633,7 @@ namespace Test.AspNetCore.Controllers {
       if (!string.IsNullOrWhiteSpace(expands)) {
         var segs = expands.Split(',').ToList();
         segs.ForEach(s => {
-          query = ((System.Data.Entity.Infrastructure.DbQuery<OrderDetail>)query).Include(s);
+          query = ((dynamic)query).Include(s);
         });
       }
       var orig = query.ToList();
@@ -702,15 +680,11 @@ namespace Test.AspNetCore.Controllers {
     #endregion
   }
 
-#if CODEFIRST_PROVIDER
+
   public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_CF> {
     public const string CONFIG_VERSION = "CODEFIRST_PROVIDER";
     public NorthwindPersistenceManager(NorthwindIBContext_CF dbContext) : base(dbContext) { }
-#elif DATABASEFIRST_NEW
-  public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_EDMX_2012> {
-    public const string CONFIG_VERSION = "DATABASEFIRST_NEW";
-    public NorthwindContextProvider() : base() { }
-#endif
+
 
     protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {
       var tag = (string)SaveOptions.Tag;
@@ -733,24 +707,24 @@ namespace Test.AspNetCore.Controllers {
       } else if (tag == "deleteProductOnServer") {
         var t = typeof(Product);
         var prodinfo = saveMap[t].First();
-        prodinfo.EntityState = EntityState.Deleted;
+        prodinfo.EntityState = BreezeEntityState.Deleted;
       } else if (tag != null && tag.StartsWith("deleteProductOnServer:")) {
         // create new EntityInfo for entity that we want to delete that was not in the save bundle
         var id = tag.Substring(tag.IndexOf(':') + 1);
         var product = new Product();
         product.ProductID = int.Parse(id);
         var infos = GetEntityInfos(saveMap, typeof(Product));
-        var info = CreateEntityInfo(product, EntityState.Deleted);
+        var info = CreateEntityInfo(product, BreezeEntityState.Deleted);
         infos.Add(info);
       } else if (tag == "deleteSupplierAndProductOnServer") {
         // mark deleted entities that are in the save bundle
         var t = typeof(Product);
         var infos = GetEntityInfos(saveMap, typeof(Product));
         var prodinfo = infos.FirstOrDefault();
-        if (prodinfo != null) prodinfo.EntityState = EntityState.Deleted;
+        if (prodinfo != null) prodinfo.EntityState = BreezeEntityState.Deleted;
         infos = GetEntityInfos(saveMap, typeof(Supplier));
         var supinfo = infos.FirstOrDefault();
-        if (supinfo != null) supinfo.EntityState = EntityState.Deleted;
+        if (supinfo != null) supinfo.EntityState = BreezeEntityState.Deleted;
       }
       base.AfterSaveEntities(saveMap, keyMappings);
     }
@@ -802,7 +776,7 @@ namespace Test.AspNetCore.Controllers {
       var cmd = Session.CreateSQLQuery(text);
       var result = cmd.ExecuteUpdate();
 #else
-      var conn = StoreConnection;
+      var conn = EntityConnection;
       var cmd = conn.CreateCommand();
 #if !ORACLE_EDMX
       SetCurrentTransaction(cmd);
@@ -830,17 +804,8 @@ namespace Test.AspNetCore.Controllers {
     private Employee LookupEmployeeInSeparateContext(bool existingConnection, int employeeId = 4) {
       var context2 = existingConnection
 #if CODEFIRST_PROVIDER
- ? new NorthwindIBContext_CF(EntityConnection)
-        : new NorthwindIBContext_CF();
-#elif DATABASEFIRST_OLD
-        ? new NorthwindIBContext_EDMX((System.Data.EntityClient.EntityConnection)EntityConnection)
-        : new NorthwindIBContext_EDMX();
-#elif DATABASEFIRST_NEW
-        ? new NorthwindIBContext_EDMX_2012(EntityConnection)
-        : new NorthwindIBContext_EDMX_2012();
-#elif ORACLE_EDMX
-        ? new NorthwindIBContext_EDMX_Oracle(EntityConnection)
-        : new NorthwindIBContext_EDMX_Oracle();
+ ? new NorthwindIBContext_CF(this.Context.Options)
+ : new NorthwindIBContext_CF(this.Context.Options);
 #elif NHIBERNATE
         ? new NorthwindNHContext(this)
         : new NorthwindNHContext();
@@ -865,7 +830,7 @@ namespace Test.AspNetCore.Controllers {
       }
 
       // prohibit any additions of entities of type 'Region'
-      if (entityInfo.Entity.GetType() == typeof(Region) && entityInfo.EntityState == EntityState.Added) {
+      if (entityInfo.Entity.GetType() == typeof(Region) && entityInfo.EntityState == BreezeEntityState.Added) {
         var region = entityInfo.Entity as Region;
         if (region.RegionDescription.ToLowerInvariant().StartsWith("error")) return false;
       }
@@ -930,14 +895,14 @@ namespace Test.AspNetCore.Controllers {
         foreach (var type in saveMap.Keys) {
           if (type == typeof(Category)) {
             foreach (var entityInfo in saveMap[type]) {
-              if (entityInfo.EntityState == EntityState.Modified) {
+              if (entityInfo.EntityState == BreezeEntityState.Modified) {
                 Category category = (entityInfo.Entity as Category);
                 var products = this.Context.Products.Where(p => p.CategoryID == category.CategoryID);
                 foreach (var product in products) {
                   if (!saveMapAdditions.ContainsKey(typeof(Product)))
                     saveMapAdditions[typeof(Product)] = new List<EntityInfo>();
 
-                  var ei = this.CreateEntityInfo(product, EntityState.Modified);
+                  var ei = this.CreateEntityInfo(product, BreezeEntityState.Modified);
                   ei.ForceUpdate = true;
                   var incr = (Convert.ToInt64(product.UnitPrice) % 2) == 0 ? 1 : -1;
                   product.UnitPrice += incr;
@@ -957,32 +922,28 @@ namespace Test.AspNetCore.Controllers {
         }
       } else if (tag == "deleteProductOnServer.Before") {
         var prodinfo = saveMap[typeof(Product)].First();
-        if (prodinfo.EntityState == EntityState.Added) {
+        if (prodinfo.EntityState == BreezeEntityState.Added) {
           // because Deleted throws error when trying delete non-existent row from database
-          prodinfo.EntityState = EntityState.Detached;
+          prodinfo.EntityState = BreezeEntityState.Detached;
         } else {
-          prodinfo.EntityState = EntityState.Deleted;
+          prodinfo.EntityState = BreezeEntityState.Deleted;
         }
       } else if (tag == "deleteSupplierOnServer.Before") {
         var product = (Product)saveMap[typeof(Product)].First().Entity;
         var infos = GetEntityInfos(saveMap, typeof(Supplier));
         var supinfo = infos.FirstOrDefault();
         if (supinfo != null) {
-          supinfo.EntityState = EntityState.Deleted;
+          supinfo.EntityState = BreezeEntityState.Deleted;
         } else {
           // create new EntityInfo for entity that we want to delete that was not in the save bundle
           var supplier = new Supplier();
           supplier.Location = new Location();
           supplier.SupplierID = product.SupplierID.GetValueOrDefault();
-          supinfo = CreateEntityInfo(supplier, EntityState.Deleted);
+          supinfo = CreateEntityInfo(supplier, BreezeEntityState.Deleted);
           infos.Add(supinfo);
         }
       }
-#if DATABASEFIRST_OLD
-      DataAnnotationsValidator.AddDescriptor(typeof(Customer), typeof(CustomerMetaData));
-      var validator = new DataAnnotationsValidator(this);
-      validator.ValidateEntities(saveMap, true);
-#endif
+
       return base.BeforeSaveEntities(saveMap);
     }
 

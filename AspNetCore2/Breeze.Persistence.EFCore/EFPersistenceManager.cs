@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,22 +14,25 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-// using Microsoft.EntityFrameworkCore.Relational;
 
-namespace Breeze.Persistence.EF6 {
+namespace Breeze.Persistence.EFCore {
 
   public interface IEFContextProvider {
-    DbContext DbContext { get;  }
+    DbContext DbContext { get; }
     String GetEntitySetName(Type entityType);
   }
 
   // T is a subclass of DbContext 
-  public class EFPersistenceManager<T> : PersistenceManager, IEFContextProvider where T : DbContext, new() { 
+  public class EFPersistenceManager<T> : PersistenceManager, IEFContextProvider where T : DbContext {
 
     private T _context;
 
-    public EFPersistenceManager() {
+    static EFPersistenceManager() {
+      EntityQuery.ApplyExpand = EFExtensions.ApplyExpand;
+    }
 
+    public EFPersistenceManager() {
+      _context = null;
     }
 
     public EFPersistenceManager(T context) {
@@ -36,31 +41,21 @@ namespace Breeze.Persistence.EF6 {
 
     public DbContext DbContext {
       get {
-        return TypedContext;
-      }
-    }
-
-    public T TypedContext {
-      get {
-        if (_context == null) {
-          _context = CreateContext();
-          // Disable lazy loading and proxy creation as this messes up the data service.
-          
-            var dbCtx = _context;
-            // Both of these in EF6 but not in EF Core (2.0)
-            // dbCtx.Configuration.ProxyCreationEnabled = false;
-            // dbCtx.Configuration.LazyLoadingEnabled = false;
-          
-        }
         return _context;
       }
     }
 
-    protected virtual T CreateContext() {
-      return new T();
+    public T Context {
+      get {
+        return _context;
+      }
     }
 
-   
+    //protected virtual T CreateContext() {
+    //  throw new NotImplementedException("A CreateContext method must be implemented - if you do not instantiate this PersistenceManager with a Context"); ;
+    //}
+
+
 
     /// <summary>Gets the EntityConnection from the ObjectContext.</summary>
     public DbConnection EntityConnection {
@@ -90,7 +85,7 @@ namespace Breeze.Persistence.EF6 {
     /// <returns></returns>
     protected override void OpenDbConnection() {
       DbContext.Database.OpenConnection();
-      
+
     }
 
     protected override void CloseDbConnection() {
@@ -105,7 +100,7 @@ namespace Breeze.Persistence.EF6 {
       if (conn == null) return null;
       EntityTransaction = DbContext.Database.BeginTransaction(isolationLevel);
       return EntityTransaction.GetDbTransaction();
-      
+
     }
 
 
@@ -113,7 +108,14 @@ namespace Breeze.Persistence.EF6 {
 
     protected override string BuildJsonMetadata() {
       var metadata = GetMetadataFromContext(DbContext);
-      var json = JsonConvert.SerializeObject(metadata);
+      var jss = new JsonSerializerSettings {
+        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+        NullValueHandling = NullValueHandling.Ignore,
+      };
+      jss.Converters.Add(new StringEnumConverter());
+
+      var json = JsonConvert.SerializeObject(metadata, jss);
+
       var altMetadata = BuildAltJsonMetadata();
       if (altMetadata != null) {
         json = "{ \"altMetadata\": " + altMetadata + "," + json.Substring(1);
@@ -123,32 +125,54 @@ namespace Breeze.Persistence.EF6 {
 
     private BreezeMetadata GetMetadataFromContext(DbContext dbContext) {
       var metadata = new BreezeMetadata();
-
+      var dbSetMap = GetDbSetMap(dbContext);
+      HashSet<Type> complexTypes = new HashSet<Type>();
       metadata.StructuralTypes = dbContext.Model.GetEntityTypes().Select(et => {
         var mt = new MetaType();
-        metadata.StructuralTypes.Add(mt);
-        mt.ShortName = et.Name;
+        mt.ShortName = et.ClrType.Name;
         mt.Namespace = et.ClrType.Namespace;
-        
+        String resourceName;
+        if (dbSetMap.TryGetValue(et.ClrType, out resourceName)) {
+          mt.DefaultResourceName = resourceName;
+        }
+
+        var hasIdentityColumn = false;
+
         mt.DataProperties = et.GetProperties().Select(p => {
           var dp = new MetaDataProperty();
-          
+
           dp.NameOnServer = p.Name;
           dp.IsNullable = p.IsNullable;
-          dp.IsPartOfKey = p.IsPrimaryKey();
+          dp.IsPartOfKey = p.IsPrimaryKey() ? true : (bool?)null;
+          hasIdentityColumn = hasIdentityColumn || (p.IsPrimaryKey() && p.AfterSaveBehavior != PropertySaveBehavior.Save);
           dp.MaxLength = p.GetMaxLength();
-          dp.DataType = p.ClrType.ToString();
-          dp.ConcurrencyMode = p.IsConcurrencyToken ? "None" : "Identity";
+          dp.DataType = NormalizeDataTypeName(p.ClrType);
+          dp.ConcurrencyMode = p.IsConcurrencyToken ? "Fixed" : null;
           var dfa = p.GetAnnotations().Where(a => a.Name == "DefaultValue").FirstOrDefault();
           if (dfa != null) {
             dp.DefaultValue = dfa.Value;
           }
+          dp.AddValidators(p.ClrType);
           return dp;
         }).ToList();
-        mt.NavigationProperties = et.GetNavigations().Select(p => {
+        mt.AutoGeneratedKeyType = hasIdentityColumn ? AutoGeneratedKeyType.Identity : AutoGeneratedKeyType.None;
+        // Handle complex properties
+        // for now this only complex types ( 'owned types' in EF parlance are eager loaded)
+        var ownedNavigations = et.GetNavigations().Where(n => n.IsEagerLoaded);
+        ownedNavigations.ToList().ForEach(n => {
+          var complexType = n.GetTargetType().ClrType;
+          complexTypes.Add(complexType);
+          var dp = new MetaDataProperty();
+          dp.NameOnServer = n.Name;
+          dp.IsNullable = false;
+          dp.IsPartOfKey = false;
+          dp.ComplexTypeName = NormalizeTypeName(complexType);
+          mt.DataProperties.Add(dp);
+        });
+        mt.NavigationProperties = et.GetNavigations().Where(n => !n.IsEagerLoaded).Select(p => {
           var np = new MetaNavProperty();
           np.NameOnServer = p.Name;
-          np.EntityTypeName = p.GetTargetType().Name;
+          np.EntityTypeName = NormalizeTypeName(p.GetTargetType().ClrType);
           np.IsScalar = !p.IsCollection();
           // FK_<dependent type name>_<principal type name>_<foreign key property name>
           np.AssociationName = BuildAssocName(p);
@@ -164,12 +188,53 @@ namespace Breeze.Persistence.EF6 {
         }).ToList();
         return mt;
       }).ToList();
+      complexTypes.ToList().ForEach(ct => {
+        var mt = new MetaType();
+        mt.ShortName = ct.Name;
+        mt.Namespace = ct.Namespace;
+        mt.IsComplexType = true;
+        mt.DataProperties = ct.GetProperties().ToList().Select(pi => {
+          var dp = new MetaDataProperty();
+
+          dp.NameOnServer = pi.Name;
+          dp.IsNullable = TypeFns.IsNullableType(pi.PropertyType);
+
+          // dp.MaxLength = ???
+          dp.DataType = NormalizeDataTypeName(pi.PropertyType);
+          return dp;
+        }).ToList();
+        metadata.StructuralTypes.Add(mt);
+      });
       return metadata;
     }
 
+    public Dictionary<Type, String> GetDbSetMap(DbContext context) {
+      var dbSetProperties = new List<PropertyInfo>();
+      var properties = context.GetType().GetProperties();
+      var result = new Dictionary<Type, String>();
+      foreach (var property in properties) {
+        var setType = property.PropertyType;
+        var isDbSet = setType.IsGenericType && (typeof(DbSet<>).IsAssignableFrom(setType.GetGenericTypeDefinition()));
+        if (isDbSet) {
+          var entityType = setType.GetGenericArguments()[0];
+          var resourceName = property.Name;
+          result.Add(entityType, resourceName);
+        }
+      }
+      return result;
+    }
+
     private string BuildAssocName(INavigation prop) {
-      var assocName =  prop.DeclaringEntityType.Name + "_" + prop.GetTargetType().Name + "_" + prop.Name;
+      var assocName = prop.DeclaringEntityType.Name + "_" + prop.GetTargetType().Name + "_" + prop.Name;
       return assocName;
+    }
+
+    private string NormalizeTypeName(Type type) {
+      return type.Name + ":#" + type.Namespace;
+    }
+
+    private string NormalizeDataTypeName(Type type) {
+      return type.ToString().Replace("System.", "");
     }
 
     protected virtual string BuildAltJsonMetadata() {
@@ -192,7 +257,7 @@ namespace Breeze.Persistence.EF6 {
     }
 
     private IEnumerable<PropertyInfo> GetKeyProperties(Type entityType) {
-      var pk = TypedContext.Model.FindEntityType(entityType).FindPrimaryKey();
+      var pk = Context.Model.FindEntityType(entityType).FindPrimaryKey();
       var props = pk.Properties.Select(k => k.PropertyInfo);
       return props;
     }
@@ -205,44 +270,44 @@ namespace Breeze.Persistence.EF6 {
         ProcessAllDeleted(deletedEntities);
       }
       ProcessAutogeneratedKeys(saveWorkState.EntitiesWithAutoGeneratedKeys);
-      
-      
+
+
       try {
         DbContext.SaveChanges();
-        
-      //} catch (DbEntityValidationException e) {
-      //  var entityErrors = new List<EntityError>();
-      //  foreach (var eve in e.EntityValidationErrors) {
-      //    var entity = eve.Entry.Entity;
-      //    var entityTypeName = entity.GetType().FullName;
-      //    Object[] keyValues;
-      //    var key = GetEntityEntry(entity).EntityKey;
-      //    if (key.EntityKeyValues != null) {
-      //      keyValues = key.EntityKeyValues.Select(km => km.Value).ToArray();
-      //    } else {
-      //      var entityInfo = saveWorkState.EntitiesWithAutoGeneratedKeys.FirstOrDefault(ei => ei.Entity == entity);
-      //      if (entityInfo != null) {
-      //        keyValues = new Object[] { entityInfo.AutoGeneratedKey.TempValue };
-      //      } else {
-      //        // how can this happen?
-      //        keyValues = null;
-      //      }
-      //    }
-      //    foreach (var ve in eve.ValidationErrors) {
-      //      var entityError = new EntityError() {
-      //        EntityTypeName = entityTypeName,
-      //        KeyValues = keyValues,
-      //        ErrorMessage = ve.ErrorMessage,
-      //        PropertyName = ve.PropertyName
-      //      };
-      //      entityErrors.Add(entityError);
-      //    }
 
-      //  }
-      //  saveWorkState.EntityErrors = entityErrors;
+        //} catch (DbEntityValidationException e) {
+        //  var entityErrors = new List<EntityError>();
+        //  foreach (var eve in e.EntityValidationErrors) {
+        //    var entity = eve.Entry.Entity;
+        //    var entityTypeName = entity.GetType().FullName;
+        //    Object[] keyValues;
+        //    var key = GetEntityEntry(entity).EntityKey;
+        //    if (key.EntityKeyValues != null) {
+        //      keyValues = key.EntityKeyValues.Select(km => km.Value).ToArray();
+        //    } else {
+        //      var entityInfo = saveWorkState.EntitiesWithAutoGeneratedKeys.FirstOrDefault(ei => ei.Entity == entity);
+        //      if (entityInfo != null) {
+        //        keyValues = new Object[] { entityInfo.AutoGeneratedKey.TempValue };
+        //      } else {
+        //        // how can this happen?
+        //        keyValues = null;
+        //      }
+        //    }
+        //    foreach (var ve in eve.ValidationErrors) {
+        //      var entityError = new EntityError() {
+        //        EntityTypeName = entityTypeName,
+        //        KeyValues = keyValues,
+        //        ErrorMessage = ve.ErrorMessage,
+        //        PropertyName = ve.PropertyName
+        //      };
+        //      entityErrors.Add(entityError);
+        //    }
+
+        //  }
+        //  saveWorkState.EntityErrors = entityErrors;
 
       } catch (DataException e) {
-        var nextException = (Exception) e;
+        var nextException = (Exception)e;
         while (nextException.InnerException != null) {
           nextException = nextException.InnerException;
         }
@@ -320,7 +385,7 @@ namespace Breeze.Persistence.EF6 {
 
     private IKeyGenerator GetKeyGenerator() {
       var generatorType = KeyGeneratorType.Value;
-      return (IKeyGenerator)Activator.CreateInstance(generatorType, StoreConnection);
+      return (IKeyGenerator)Activator.CreateInstance(generatorType, this.GetDbConnection());
     }
 
     private EntityInfo ProcessEntity(EFEntityInfo entityInfo) {
@@ -367,7 +432,7 @@ namespace Breeze.Persistence.EF6 {
       if (entry.State != Microsoft.EntityFrameworkCore.EntityState.Modified || entityInfo.ForceUpdate) {
         // _originalValusMap can be null if we mark entity.SetModified but don't actually change anything.
         entry.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-        
+
       }
       return entry;
     }
@@ -400,17 +465,17 @@ namespace Breeze.Persistence.EF6 {
       //var keyPropertyNames = efEntityType.KeyMembers.Select(km => km.Name).ToList();
       var keyPropertyNames = GetKeyProperties(entityType).Select(kp => kp.Name).ToList();
       var ovl = entityInfo.OriginalValuesMap.ToList();
-      for (var i = 0; i< ovl.Count; i++) {
+      for (var i = 0; i < ovl.Count; i++) {
         var kvp = ovl[i];
         var propName = kvp.Key;
         // keys should be ignored
-        if (keyPropertyNames.Contains(propName)) continue;       
+        if (keyPropertyNames.Contains(propName)) continue;
         var pi = entityType.GetProperty(propName);
         // unmapped properties should be ignored.
-        if (pi == null) continue;          
+        if (pi == null) continue;
         var nnPropType = TypeFns.GetNonNullableType(pi.PropertyType);
         // presumption here is that only a predefined type could be a fk or concurrency property
-        if (TypeFns.IsPredefinedType(nnPropType)) { 
+        if (TypeFns.IsPredefinedType(nnPropType)) {
           SetPropertyValue(entity, propName, kvp.Value);
         }
       }
@@ -430,7 +495,7 @@ namespace Breeze.Persistence.EF6 {
       if (originalValuesMap == null || originalValuesMap.Keys.Count == 0) return;
 
 
-      
+
       originalValuesMap.ToList().ForEach(kvp => {
         var propertyName = kvp.Key;
         var originalValue = kvp.Value;
@@ -440,7 +505,7 @@ namespace Breeze.Persistence.EF6 {
           // old code
           // entry.SetModifiedProperty(propertyName);
           propEntry.IsModified = true;
-          
+
           if (originalValue is JObject) {
             // only really need to perform updating original values on key properties
             // and a complex object cannot be a key.
@@ -539,12 +604,10 @@ namespace Breeze.Persistence.EF6 {
         TypeConverter typeConverter = TypeDescriptor.GetConverter(toType);
         if (typeConverter.CanConvertFrom(val.GetType())) {
           result = typeConverter.ConvertFrom(val);
-        }
-        else if (val is DateTime && toType == typeof(DateTimeOffset)) {
+        } else if (val is DateTime && toType == typeof(DateTimeOffset)) {
           // handle case where JSON deserializes to DateTime, but toType is DateTimeOffset.  DateTimeOffsetConverter doesn't work!
-          result = new DateTimeOffset((DateTime) val);
-        }
-        else {
+          result = new DateTimeOffset((DateTime)val);
+        } else {
           result = val;
         }
       }
@@ -562,7 +625,7 @@ namespace Breeze.Persistence.EF6 {
       } else {
         return entry;
       }
-      
+
     }
 
     private EntityEntry AttachEntityEntry(EFEntityInfo entityInfo) {
@@ -583,11 +646,11 @@ namespace Breeze.Persistence.EF6 {
 
 
     public String GetEntitySetName(Type entityType) {
-      return this.TypedContext.Model.FindEntityType(entityType).Name;
+      return this.Context.Model.FindEntityType(entityType).Name;
     }
-    
+
   }
-  
+
   public class EFEntityInfo : EntityInfo {
     internal EFEntityInfo() {
     }
@@ -613,5 +676,8 @@ namespace Breeze.Persistence.EF6 {
       return entityInfo.ContextProvider.GetKeyValues(entityInfo);
     }
   }
+
+
+
 
 }

@@ -48,8 +48,7 @@ namespace Breeze.AspNetCore {
       queryable = eq.ApplySkip(queryable, eleType);
       queryable = eq.ApplyTake(queryable, eleType);
       queryable = eq.ApplySelect(queryable, eleType);
-      queryable = eq.ApplyExpand(queryable, eleType);
-        
+      queryable = EntityQuery.ApplyExpand(eq, queryable, eleType);      
 
       if (queryable != originalQueryable) {
         // if a select or expand was encountered we need to
