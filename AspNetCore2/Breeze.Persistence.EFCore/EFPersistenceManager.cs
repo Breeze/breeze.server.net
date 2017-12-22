@@ -127,7 +127,9 @@ namespace Breeze.Persistence.EFCore {
       var metadata = new BreezeMetadata();
       var dbSetMap = GetDbSetMap(dbContext);
       HashSet<Type> complexTypes = new HashSet<Type>();
-      metadata.StructuralTypes = dbContext.Model.GetEntityTypes().Select(et => {
+      metadata.StructuralTypes = dbContext.Model.GetEntityTypes()
+        .Where(et => et.DefiningEntityType == null) // this removes Owned types
+        .Select(et => {
         var mt = new MetaType();
         mt.ShortName = et.ClrType.Name;
         mt.Namespace = et.ClrType.Namespace;
@@ -234,6 +236,7 @@ namespace Breeze.Persistence.EFCore {
     }
 
     private string NormalizeDataTypeName(Type type) {
+      type = TypeFns.GetNonNullableType(type);
       return type.ToString().Replace("System.", "");
     }
 
