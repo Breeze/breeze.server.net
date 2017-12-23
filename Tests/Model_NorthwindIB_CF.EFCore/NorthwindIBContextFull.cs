@@ -1,5 +1,6 @@
 using Foo;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,8 +48,12 @@ namespace Models.NorthwindIB.CF {
          .HasKey(c => new { c.CreatedOn, c.SeqNum });
       modelBuilder.Entity<OrderDetail>()
         .HasKey(od => new { od.OrderID, od.ProductID });
+      modelBuilder.Entity<OrderDetail>().Property(od => od.OrderID).ValueGeneratedNever();
       modelBuilder.Entity<Supplier>()
         .OwnsOne<Location>(s => s.Location);
+
+
+      // modelBuilder.Entity<Order>().Property(c => c.OrderID).Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
     }
 
 
@@ -651,45 +656,38 @@ namespace Foo {
     #region Data Properties
 
     /// <summary>Gets or sets the OrderID. </summary>
-    [Key]
+    // [Key]
+    // [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [DataMember]
-    // [ForeignKey("Order")]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Column("OrderID", Order = 0)]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="OrderDetail_OrderID")]
+    [Column("OrderID")]
     public int OrderID { get; set; }
 
     /// <summary>Gets or sets the ProductID. </summary>
-    [Key]
+    // [Key]
+    // [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Column("ProductID")]
     [DataMember]
-    // [ForeignKey("Product")]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Column("ProductID", Order = 1)]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="OrderDetail_ProductID")]
     public int ProductID { get; set; }
 
-    /// <summary>Gets or sets the UnitPrice. </summary>
-    [DataMember]
+    /// <summary>Gets or sets the UnitPrice. </summary>  
     [Column("UnitPrice")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="OrderDetail_UnitPrice")]
+    [DataMember]
     public decimal UnitPrice { get; set; }
 
     /// <summary>Gets or sets the Quantity. </summary>
-    [DataMember]
+    
     [Column("Quantity")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="OrderDetail_Quantity")]
+    [DataMember]
     public short Quantity { get; set; }
 
     /// <summary>Gets or sets the Discount. </summary>
-    [DataMember]
     [Column("Discount")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="OrderDetail_Discount")]
+    [DataMember]
     public float Discount { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
-    [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="OrderDetail_RowVersion")]
+    [DataMember]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -703,9 +701,9 @@ namespace Foo {
     public Order Order { get; set; }
 
     /// <summary>Gets or sets the Product. </summary>
-    [DataMember]
     [ForeignKey("ProductID")]
     // [InverseProperty("OrderDetails")]
+    [DataMember]
     public Product Product { get; set; }
 
     #endregion Navigation properties
