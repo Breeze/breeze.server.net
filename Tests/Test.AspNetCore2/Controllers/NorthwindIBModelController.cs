@@ -249,8 +249,10 @@ namespace Test.AspNetCore.Controllers {
     [HttpGet]
     //    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
     public IQueryable<Customer> Customers() {
-      var list = PersistenceManager.Context.Customers;
-      return list;
+      var q = PersistenceManager.Context.Customers;
+      // For testing expression trees
+      // var expr = (q.Where(c => c.Orders.Any(o => o.Freight > 950)) as IQueryable).Expression;
+      return q;
     }
 
     [HttpGet]
