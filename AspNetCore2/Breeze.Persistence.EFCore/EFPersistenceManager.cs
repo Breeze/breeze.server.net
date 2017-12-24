@@ -314,7 +314,7 @@ namespace Breeze.Persistence.EFCore {
         //  }
         //  saveWorkState.EntityErrors = entityErrors;
 
-      } catch (DataException e) {
+      } catch (DbUpdateException e) {
         var nextException = (Exception)e;
         while (nextException.InnerException != null) {
           nextException = nextException.InnerException;
@@ -538,24 +538,24 @@ namespace Breeze.Persistence.EFCore {
             //var fieldType = originalValuesRecord.GetFieldType(ordinal);
             var fieldType = propEntry.Metadata.ClrType;
             var originalValueConverted = ConvertValue(originalValue, fieldType);
+            propEntry.OriginalValue = originalValueConverted;
+            //if (originalValueConverted == null) {
+            //  // bug - hack because of bug in EF - see 
+            //  // http://social.msdn.microsoft.com/Forums/nl/adodotnetentityframework/thread/cba1c425-bf82-4182-8dfb-f8da0572e5da
 
-            if (originalValueConverted == null) {
-              // bug - hack because of bug in EF - see 
-              // http://social.msdn.microsoft.com/Forums/nl/adodotnetentityframework/thread/cba1c425-bf82-4182-8dfb-f8da0572e5da
 
-
-              // old code
-              // var temp = entry.CurrentValues[ordinal];
-              //entry.CurrentValues.SetDBNull(ordinal);
-              //entry.ApplyOriginalValues(entry.Entity);
-              //entry.CurrentValues.SetValue(ordinal, temp);
-              var temp = propEntry.CurrentValue;
-              propEntry.CurrentValue = DBNull.Value;
-              propEntry.OriginalValue = temp;
-              propEntry.CurrentValue = temp;
-            } else {
-              propEntry.OriginalValue = originalValueConverted;
-            }
+            //  // old code
+            //  // var temp = entry.CurrentValues[ordinal];
+            //  //entry.CurrentValues.SetDBNull(ordinal);
+            //  //entry.ApplyOriginalValues(entry.Entity);
+            //  //entry.CurrentValues.SetValue(ordinal, temp);
+            //  var temp = propEntry.CurrentValue;
+            //  propEntry.CurrentValue = DBNull.Value;
+            //  propEntry.OriginalValue = temp;
+            //  propEntry.CurrentValue = temp;
+            //} else {
+            //  propEntry.OriginalValue = originalValueConverted;
+            //}
           }
         } catch (Exception e) {
           if (e.Message.Contains(" part of the entity's key")) {
