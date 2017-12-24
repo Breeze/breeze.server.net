@@ -237,7 +237,12 @@ namespace Breeze.Persistence.EFCore {
 
     private string NormalizeDataTypeName(Type type) {
       type = TypeFns.GetNonNullableType(type);
-      return type.ToString().Replace("System.", "");
+      var result = type.ToString().Replace("System.", "");
+      if (result == "Byte[]") {
+        return "Binary";
+      } else {
+        return result;
+      }
     }
 
     protected virtual string BuildAltJsonMetadata() {

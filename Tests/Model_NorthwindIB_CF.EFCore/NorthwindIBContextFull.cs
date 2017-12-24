@@ -1040,7 +1040,7 @@ namespace Foo {
 
     // [DataMember]
     [Column("Ts")]
-    [Required]
+    // [Required]
     [Timestamp]
     public byte[] Ts { get; set; }
 
