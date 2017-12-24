@@ -23,6 +23,8 @@ namespace Breeze.Core {
       // Needed because JSON.NET does not natively support I8601 Duration formats for TimeSpan
       ss.Converters.Add(new TimeSpanConverter());
       ss.Converters.Add(new StringEnumConverter());
+      // only needed because this functionality seems to be broken in JSON.NET 10.0.3
+      ss.Converters.Add(new ByteArrayConverter());
 
       // Default is DateTimeZoneHandling.RoundtripKind - you can change that here.
       // ss.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
