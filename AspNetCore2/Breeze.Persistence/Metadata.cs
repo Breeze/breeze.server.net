@@ -75,8 +75,9 @@ namespace Breeze.Persistence {
     // Used with 'Undefined' DataType
     public string RawTypeName { get; set; }
 
+    [NonSerialized]
+    public bool IsIdentityColumn;
    
-
     public void AddValidators(Type clrType) {
       if (!(this.IsNullable ?? false)) {
         Validators.Add(MetaValidator.Required);
