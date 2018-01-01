@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AspNetCore.EFCore", "Test.AspNetCore.EFCore.csproj", "{B635C96D-1E83-4DA2-9638-346292A30A63}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.AspNetCore.NetCore", "..\..\AspNetCore2\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.AspNetCore.NetCore", "..\..\AspNetCore\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Core", "..\..\AspNetCore2\Breeze.Core\Breeze.Core.csproj", "{ED7A4721-018B-40ED-B790-28B0F1A8D5C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Core", "..\..\AspNetCore\Breeze.Core\Breeze.Core.csproj", "{ED7A4721-018B-40ED-B790-28B0F1A8D5C5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "..\..\AspNetCore2\Breeze.Persistence\Breeze.Persistence.csproj", "{D9533F8D-709A-489A-974E-82DD159CF241}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "..\..\AspNetCore\Breeze.Persistence\Breeze.Persistence.csproj", "{D9533F8D-709A-489A-974E-82DD159CF241}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EFCore", "..\..\AspNetCore2\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj", "{3A5604A1-CD74-416A-8B59-5480F36BF2B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EFCore", "..\..\AspNetCore\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj", "{3A5604A1-CD74-416A-8B59-5480F36BF2B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_NorthwindIB_CF.EFCore", "..\Model_NorthwindIB_CF.EFCore\Model_NorthwindIB_CF.EFCore.csproj", "{C0D85AE3-1246-4C20-8D29-118EE2D2673C}"
 EndProject

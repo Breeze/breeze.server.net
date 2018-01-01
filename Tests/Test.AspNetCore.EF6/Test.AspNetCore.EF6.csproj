@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCore2\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
-    <ProjectReference Include="..\..\AspNetCore2\Breeze.Persistence.EF6\Breeze.Persistence.EF6.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
+    <ProjectReference Include="..\..\AspNetCore\Breeze.Persistence.EF6\Breeze.Persistence.EF6.csproj" />
     <ProjectReference Include="..\Model_Inheritance.EF6\Model_Inheritance.EF6.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_CF.EF6\Model_NorthwindIB_CF.EF6.csproj" />
     <ProjectReference Include="..\Model_TPH.EF6\Model_TPH.EF6.csproj" />
