@@ -88,6 +88,12 @@ namespace Test.AspNetCore.Controllers {
       return PersistenceManager.SaveChanges(saveBundle);
     }
 
+    [HttpPost]
+    public SaveResult SaveWithAuditFields([FromBody] JObject saveBundle) {
+      PersistenceManager.BeforeSaveEntityDelegate = SetAuditFields;
+      return PersistenceManager.SaveChanges(saveBundle);
+    }
+
 
     [HttpPost]
     public SaveResult SaveWithFreight([FromBody]JObject saveBundle) {
@@ -189,6 +195,35 @@ namespace Test.AspNetCore.Controllers {
       }
       return true;
     }
+
+    private bool SetAuditFields(EntityInfo entityInfo) {
+      var entity = entityInfo.Entity as User;
+      if (entity == null) return true;
+
+      var userId = 12345;
+      if (entityInfo.EntityState == Breeze.Persistence.EntityState.Added) {
+        entityInfo.OriginalValuesMap["CreatedBy"] = entity.CreatedBy;
+        entityInfo.OriginalValuesMap["CreatedByUserId"] = entity.CreatedByUserId;
+        entityInfo.OriginalValuesMap["CreatedDate"] = entity.CreatedDate;
+        //entityInfo.ForceUpdate = true;
+        entity.CreatedBy = "test";
+        entity.CreatedByUserId = userId;
+        entity.CreatedDate = DateTime.Now;
+        entity.ModifiedBy = "test";
+        entity.ModifiedByUserId = userId;
+        entity.ModifiedDate = DateTime.Now;
+      } else if (entityInfo.EntityState == Breeze.Persistence.EntityState.Modified) {
+        entityInfo.OriginalValuesMap["ModifiedBy"] = entity.ModifiedBy;
+        entityInfo.OriginalValuesMap["ModifiedByUserId"] = entity.ModifiedByUserId;
+        entityInfo.OriginalValuesMap["ModifiedDate"] = entity.ModifiedDate;
+        //entityInfo.ForceUpdate = true;
+        entity.ModifiedBy = "test";
+        entity.ModifiedByUserId = userId;
+        entity.ModifiedDate = DateTime.Now;
+      }
+      return true;
+    }
+
 
     private Dictionary<Type, List<EntityInfo>> AddComment(Dictionary<Type, List<EntityInfo>> saveMap) {
       var comment = new Comment();
