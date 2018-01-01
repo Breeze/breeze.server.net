@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AspNetCore2", "Test.AspNetCore2.csproj", "{B635C96D-1E83-4DA2-9638-346292A30A63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AspNetCore.EFCore", "Test.AspNetCore.EFCore.csproj", "{B635C96D-1E83-4DA2-9638-346292A30A63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.AspNetCore.NetCore", "..\..\AspNetCore2\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}"
 EndProject

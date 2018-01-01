@@ -9,7 +9,7 @@ using Breeze.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -18,7 +18,7 @@ using Microsoft.Extensions.Options;
 using Models.NorthwindIB.CF;
 using Newtonsoft.Json.Serialization;
 
-namespace Test.AspNetCore2 {
+namespace Test.AspNetCore {
   public class Startup {
     public Startup(IConfiguration configuration) {
       Configuration = configuration;
@@ -41,13 +41,13 @@ namespace Test.AspNetCore2 {
       });
       mvcBuilder.AddMvcOptions(o => { o.Filters.Add(new GlobalExceptionFilter()); });
 
-      //var tmp = Configuration.GetConnectionString("NorthwindIB_CF");
-      //services.AddScoped<NorthwindIBContext_CF>(_ => {
-      //  return new NorthwindIBContext_CF(tmp);
-      //});
-
       var tmp = Configuration.GetConnectionString("NorthwindIB_CF");
-      services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(tmp));
+      services.AddScoped<NorthwindIBContext_CF>(_ => {
+        return new NorthwindIBContext_CF(tmp);
+      });
+
+      //var tmp = Configuration.GetConnectionString("NorthwindIB_CF");
+      //services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(tmp));
     }
 
 
@@ -62,7 +62,7 @@ namespace Test.AspNetCore2 {
       // app.UseStaticFiles();
       app.UseStaticFiles(new StaticFileOptions() {
         FileProvider = new PhysicalFileProvider(
-           Path.Combine(Directory.GetCurrentDirectory(), @"Tests")),
+           Path.Combine(Directory.GetCurrentDirectory(), @"breezeTests")),
         RequestPath = new PathString("")
       });
 
