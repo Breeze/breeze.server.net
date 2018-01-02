@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Breeze.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -85,7 +86,7 @@ namespace Breeze.Persistence {
       if (this.MaxLength != null) {
         Validators.Add(new MaxLengthMetaValidator(this.MaxLength.Value));
       }
-      var validator = MetaValidator.FindValidator(clrType);
+      var validator = MetaValidator.FindValidator(TypeFns.GetNonNullableType(clrType));
       if (validator != null) {
         Validators.Add(validator);
       }

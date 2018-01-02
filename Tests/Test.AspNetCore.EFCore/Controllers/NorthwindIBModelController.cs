@@ -17,6 +17,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Storage;
 
 using EFEntityState = Microsoft.EntityFrameworkCore.EntityState;
 using BreezeEntityState = Breeze.Persistence.EntityState;
@@ -800,7 +801,7 @@ namespace Test.AspNetCore.Controllers {
         //  command.Transaction = dbTransaction;
         //}
         if (this.DbContext.Database.CurrentTransaction != null) {
-          command.Transaction = (System.Data.Common.DbTransaction) this.DbContext.Database.CurrentTransaction;
+          command.Transaction = this.DbContext.Database.CurrentTransaction.GetDbTransaction();
         }
       }
     }
