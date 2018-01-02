@@ -104,6 +104,7 @@ namespace Breeze.Persistence {
       }
 
       return SaveWorkState.ToSaveResult();
+
     }
 
     // allows subclasses to plug in own save exception handling
@@ -114,7 +115,7 @@ namespace Breeze.Persistence {
 
     private void OpenAndSave(SaveWorkState saveWorkState) {
 
-      // OpenDbConnection();    // ensure connection is available for BeforeSaveEntities
+      OpenDbConnection();    // ensure connection is available for BeforeSaveEntities
       saveWorkState.BeforeSave();
       SaveChangesCore(saveWorkState);
       saveWorkState.AfterSave();
@@ -347,6 +348,9 @@ namespace Breeze.Persistence {
       } else {
         var entities = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState != EntityState.Detached))
           .Select(entityInfo => entityInfo.Entity)).ToList();
+        
+        // we want to stub off any navigation properties here, but how to do it quickly.
+        // entities.ForEach(e => e
         var deletes = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState == EntityState.Deleted || ei.EntityState == EntityState.Detached))
           .Select(entityInfo => new EntityKey(entityInfo.Entity, ContextProvider.GetKeyValues(entityInfo)))).ToList();
         return new SaveResult() { Entities = entities, KeyMappings = KeyMappings, DeletedKeys = deletes };

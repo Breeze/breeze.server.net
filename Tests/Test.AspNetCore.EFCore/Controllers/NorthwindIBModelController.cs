@@ -438,10 +438,15 @@ namespace Test.AspNetCore.Controllers {
 #endif
 
     [HttpGet]
-    public IActionResult CustomerFirstOrDefault() {
+    public List<Customer> CustomerFirstOrDefault() {
       var customer = PersistenceManager.Context.Customers.Where(c => c.CompanyName.StartsWith("blah")).FirstOrDefault();
-      // return customer;
-      return Ok(customer);
+      if (customer == null) {
+        return new List<Customer>();
+      } else {
+        return new List<Customer>() { customer };
+      }
+      //  return Ok(customer);
+      
     }
 
     [HttpGet]
@@ -786,13 +791,16 @@ namespace Test.AspNetCore.Controllers {
     public void SetCurrentTransaction(System.Data.Common.DbCommand command) {
       if (EntityTransaction != null) {
         // get private member via reflection
-        var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
-        var etype = EntityTransaction.GetType();
-        var stProp = etype.GetProperty("StoreTransaction", bindingFlags);
-        var transaction = stProp.GetValue(EntityTransaction, null);
-        var dbTransaction = transaction as System.Data.Common.DbTransaction;
-        if (dbTransaction != null) {
-          command.Transaction = dbTransaction;
+        //var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
+        //var etype = EntityTransaction.GetType();
+        //var stProp = etype.GetProperty("StoreTransaction", bindingFlags);
+        //var transaction = stProp.GetValue(EntityTransaction, null);
+        //var dbTransaction = transaction as System.Data.Common.DbTransaction;
+        //if (dbTransaction != null) {
+        //  command.Transaction = dbTransaction;
+        //}
+        if (this.DbContext.Database.CurrentTransaction != null) {
+          command.Transaction = (System.Data.Common.DbTransaction) this.DbContext.Database.CurrentTransaction;
         }
       }
     }

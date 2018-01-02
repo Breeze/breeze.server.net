@@ -105,6 +105,12 @@ namespace Breeze.Persistence.EFCore {
       var dfa = p.GetAnnotations().Where(a => a.Name == "DefaultValue").FirstOrDefault();
       if (dfa != null) {
         dp.DefaultValue = dfa.Value;
+      } else if (!p.IsNullable) {
+        // TODO: this should really be done on the client.
+        if (p.ClrType == typeof(TimeSpan)) {
+          dp.DefaultValue = "PT0S";
+        }
+        // dp.DefaultValue = // get default value for p.ClrType datatype
       }
       dp.AddValidators(p.ClrType);
       return dp;
