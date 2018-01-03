@@ -28,8 +28,8 @@ var _nugetDirs = _buildSlnDirs.map(function(bsd) {
 });
 // ['../AspNet/Nuget.builds/', '../AspNetCore/Nuget.builds/'];
 // var _msBuildCmd = 'C:/Windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe ';
-var _msBuildCmd = '"C:/Program Files (x86)/MSBuild/14.0/Bin/MsBuild.exe" '; // vs 2015 version of MsBuild
-// var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe" ' // vs 2017 version of MsBuild
+// var _msBuildCmd = '"C:/Program Files (x86)/MSBuild/14.0/Bin/MsBuild.exe" '; // vs 2015 version of MsBuild
+var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe" ' // vs 2017 version of MsBuild
 // var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
 var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal  /clp:NoSummary;NoItemAndPropertyList;ErrorsOnly';
 
@@ -81,6 +81,7 @@ gulp.task("initDlls", [], function() {
     copyToNugetLib("../AspNetCore/", "Breeze.Core");
     copyToNugetLib("../AspNetCore/", "Breeze.Persistence");
     copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EF6");
+    copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EFCore");
 });
 
 // pathRoot = "../AspNet/" or "../AspNetCore/"
@@ -113,6 +114,10 @@ function updateFiles(nugetDir, streams, ext) {
     var src;
     if (_buildSlnDirs.some(function(dir) {
       src = dir + baseName +  '/bin/release/' + baseName + ext;
+      // gutil.log("test: " + src);
+      if (fs.existsSync(src)) return true;
+      src = dir + baseName +  '/bin/release/netstandard2.0/' + baseName + ext;
+      // gutil.log("test: " + src);
       return fs.existsSync(src);
     })) {
       var dest = path.dirname(fileName);
