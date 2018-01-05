@@ -5,6 +5,7 @@ var gulp = require('gulp');
 
 var fs   = require('fs-extra');
 var path = require('path');
+
 var glob = require('glob');
 var async = require('async');
 var del = require('del');
@@ -52,6 +53,20 @@ gulp.task("copyBreezeJs", ['breezeClientBuild'], function(done) {
     return gulp.src( mapPath( _jsBuildDir, [ 'breeze.*.*', 'adapters/*.*' ]), { base: _jsBuildDir })
        .pipe(gulp.dest(nd + 'Breeze.Client/content/scripts'));
   }));
+
+});
+
+gulp.task("buildAspNetCoreNugets", function(done) {
+  const isDirectory = source => fs.lstatSync(source).isDirectory()
+  var dirs = glob.sync('../AspNetCore/Breeze.*');
+  projDirs = dirs.filter(d => isDirectory(d)); //  && !d.endsWith('EF6'));
+
+  async.each(projDirs, function (dir, cb) {
+    gutil.log(dir);
+    var cmd = 'msbuild /t:pack /p:Configuration=Release';
+    execCommands( [cmd], { cwd: dir}, cb);
+  }, done);
+  
 
 });
 

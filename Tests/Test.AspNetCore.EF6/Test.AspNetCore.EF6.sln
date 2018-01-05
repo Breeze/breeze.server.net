@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Core", "..\..\AspNet
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "..\..\AspNetCore\Breeze.Persistence\Breeze.Persistence.csproj", "{C738E1AF-6570-4AD1-B8C8-5D60F920EE0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence.EF6", "..\..\AspNetCore\Breeze.Persistence.EF6\Breeze.Persistence.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EF6", "..\..\AspNetCore\Breeze.Persistence.EF6\Breeze.Persistence.EF6.csproj", "{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_NorthwindIB_CF.EF6", "..\Model_NorthwindIB_CF.EF6\Model_NorthwindIB_CF.EF6.csproj", "{763B4341-7A4E-4880-A4E2-31AADC05F1AD}"
 EndProject
@@ -46,8 +46,8 @@ Global
 		{C738E1AF-6570-4AD1-B8C8-5D60F920EE0D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.ActiveCfg = OData-debug|Any CPU
-		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.Build.0 = OData-debug|Any CPU
+		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.OData-debug|Any CPU.Build.0 = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE6F3A72-1B22-4E1E-8DDE-AC65C3093A55}.Release|Any CPU.Build.0 = Release|Any CPU
 		{763B4341-7A4E-4880-A4E2-31AADC05F1AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
