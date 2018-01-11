@@ -66,7 +66,7 @@ namespace Breeze.Core {
       var propertyNames = propertyPath.Split('.').ToList();
       propertyNames.ForEach(pn => {
         var nextElementType = nextExpr.Type;
-        var propertyInfo = nextElementType.GetProperty(pn);
+        var propertyInfo = nextElementType.GetTypeInfo().GetProperty(pn);
         if (propertyInfo == null) {
           throw new Exception("Unable to locate property: " + pn + " on type: " + nextElementType.ToString());
         }
@@ -111,7 +111,7 @@ namespace Breeze.Core {
       // so we always create a MemberInitExpression with bindings ( i.e. a new Foo() { a=1, b=2 } instead of new Foo(1,2);
       var newExpr = Expression.New(dti.DynamicEmptyConstructor);
       var propertyExprs = selectors.Select(s => s.BuildMemberExpression(paramExpr));
-      var dynamicProperties = dti.DynamicType.GetProperties();
+      var dynamicProperties = dti.DynamicType.GetTypeInfo().GetProperties();
       var bindings = dynamicProperties.Zip(propertyExprs, (prop, expr) => Expression.Bind(prop, expr));
       var memberInitExpr = Expression.MemberInit(newExpr, bindings.Cast<MemberBinding>());
       var newLambda = Expression.Lambda(memberInitExpr, paramExpr);

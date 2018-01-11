@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Breeze.Persistence.EFCore</name>
+    </assembly>
+    <members>
+        <member name="P:Breeze.Persistence.EFCore.EFPersistenceManager`1.EntityConnection">
+            <summary>Gets the EntityConnection from the ObjectContext.</summary>
+        </member>
+        <member name="P:Breeze.Persistence.EFCore.EFPersistenceManager`1.EntityTransaction">
+            <summary>Gets the current transaction, if one is in progress.</summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.OpenDbConnection">
+            <summary>
+            Opens the DbConnection used by the Context.
+            If the connection will be used outside of the DbContext, this method should be called prior to DbContext 
+            initialization, so that the connection will already be open when the DbContext uses it.  This keeps
+            the DbContext from closing the connection, so it must be closed manually.
+            See http://blogs.msdn.com/b/diego/archive/2012/01/26/exception-from-dbcontext-api-entityconnection-can-only-be-constructed-with-a-closed-dbconnection.aspx
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

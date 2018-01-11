@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Breeze.AspNetCore.NetCore</PackageId>
+    <PackageVersion>0.0.2</PackageVersion>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release...</PackageReleaseNotes>
+    <PackageTags>Breeze BreezeJs</PackageTags>
+    <Description>ASP.NET Core library for Breeze Server running on .NET Core</Description>
+    <Version>0.0.2</Version>
+    <Authors>Jay Traband</Authors>
+    <Company>IdeaBlade</Company>
+    <Product>breeze.aspnetcore.netcore</Product>
+    <Copyright>Copyright © IdeaBlade 2012-2017</Copyright>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Breeze.Core\Breeze.Core.csproj" />
+    <ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

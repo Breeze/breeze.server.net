@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Breeze.Core {
   public static class EntityQueryExtensions {
     public static IQueryable ApplyWhere(this EntityQuery eq, IQueryable queryable, Type eleType) {

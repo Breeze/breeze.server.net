@@ -25,12 +25,12 @@ namespace Breeze.Core {
   /// <summary>
   /// For internal use only.
   /// </summary>
-  public  abstract class DynamicTypeBase {
+  public abstract class DynamicTypeBase {
 
     /// <summary>
     /// For internal use only.
     /// </summary>
-    public DynamicTypeBase() {}
+    public DynamicTypeBase() { }
 
     ///// <summary>
     ///// 
@@ -38,7 +38,7 @@ namespace Breeze.Core {
     ///// <param name="obj"></param>
     ///// <returns></returns>
     //public override bool Equals(object obj) {
-      
+
     //  if (obj == null) return false;
     //  if (obj.GetType() != this.GetType()) return false;
     //  var deconstructFunc = GetDeconstructorFunc(this.GetType());
@@ -58,7 +58,7 @@ namespace Breeze.Core {
     //}
 
     //private Func<Object, Object[]> GetDeconstructorFunc(Type type) {
-      
+
     //  Func<Object, Object[]> func = null;
     //  lock (__deconstructorMap) {
     //    if ( !__deconstructorMap.TryGetValue(type, out func)) {
@@ -70,7 +70,7 @@ namespace Breeze.Core {
     //}
 
     //private static Dictionary<Type, Func<Object, Object[]>> __deconstructorMap = new Dictionary<Type,Func<object,object[]>>();
-   
+
 
   }
 
@@ -89,7 +89,7 @@ namespace Breeze.Core {
       AssemblyBuilder asmBuilder = BuildAssembly(info);
       ModuleBuilder modBuilder = BuildModule(info, asmBuilder);
       TypeBuilder typBuilder = BuildType(info, modBuilder);
-      GenericTypeParameterBuilder[] parameterBuilders = BuildGenericParameters(info, typBuilder);
+      var parameterBuilders = BuildGenericParameters(info, typBuilder);
 
       // Build the fields
       var fieldBuilders = BuildFields(info, typBuilder, parameterBuilders).ToList();
@@ -98,7 +98,7 @@ namespace Breeze.Core {
       BuildEmptyCtor(info, typBuilder);
       // Build a ctor that includes all properties.
       BuildCtor(info, typBuilder, fieldBuilders, parameterBuilders);
-      
+
 
       // Build Properties
       BuildProperties(info, typBuilder, fieldBuilders, parameterBuilders);
@@ -106,54 +106,49 @@ namespace Breeze.Core {
       // BuildEqualsMethod(info, typBuilder, fieldBuilders);
       // BuildGetHashCodeMethod(info, typBuilder, fieldBuilders);
 
-      var openGenericType = typBuilder.CreateType();
+      // var openGenericType = typBuilder.CreateType();
+      var openGenericType = typBuilder.CreateTypeInfo();
       var returnType = openGenericType.MakeGenericType(info.PropertyTypes.ToArray());
       //OnDynamicEntityTypeCreated(new DynamicEntityTypeCreatedEventArgs(returnType));
-      if (info.DynamicTypeShouldSave) {
-#if !SILVERLIGHT
-        asmBuilder.Save(asmBuilder.GetName().Name + ".dll");
-#endif
-      }
+      //if (info.DynamicTypeShouldSave) {
+
+      //  asmBuilder.Save(asmBuilder.GetName().Name + ".dll");
+
+      //}
 
       return returnType;
 
     }
 
     private static AssemblyBuilder BuildAssembly(DynamicTypeInfo info) {
-      AppDomain aDomain = Thread.GetDomain();
+      //AppDomain aDomain = Thread.GetDomain();
 
-      // Build the assembly
-      AssemblyName asmName = new AssemblyName();
-      asmName.Name = info.DynamicTypeName + DynamicTypeInfo.DynamicAssemblyNameSuffix;
-      AssemblyBuilder asmBuilder;
-#if !SILVERLIGHT
-      if (info.DynamicTypeShouldSave) {
-        if (String.IsNullOrEmpty(info.DynamicTypeFileDirectory)) {
-          asmBuilder = aDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave);
-        } else {
-          asmBuilder = aDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave, info.DynamicTypeFileDirectory);
-        }
-      } else {
-        asmBuilder = aDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
-      }
-#else 
-      asmBuilder = aDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
-#endif
+      //// Build the assembly
+      //AssemblyName asmName = new AssemblyName();
+      //asmName.Name = info.DynamicTypeName + DynamicTypeInfo.DynamicAssemblyNameSuffix;
+      //AssemblyBuilder asmBuilder;
+
+      //if (info.DynamicTypeShouldSave) {
+      //  if (String.IsNullOrEmpty(info.DynamicTypeFileDirectory)) {
+      //    asmBuilder = aDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave);
+      //  } else {
+      //    asmBuilder = aDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave, info.DynamicTypeFileDirectory);
+      //  }
+      //} else {
+      //  asmBuilder = aDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
+      //}
+      // return asmBuilder;
+      var asmName = info.DynamicTypeName + DynamicTypeInfo.DynamicAssemblyNameSuffix;
+      var asmBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(asmName), AssemblyBuilderAccess.Run);
       return asmBuilder;
     }
 
     private static ModuleBuilder BuildModule(DynamicTypeInfo info, AssemblyBuilder asmBuilder) {
       // Build the module
       ModuleBuilder modBuilder;
-#if !SILVERLIGHT
-      if (info.DynamicTypeShouldSave) {
-        modBuilder = asmBuilder.DefineDynamicModule("DynamicAnonTypeModule_" + info.TypeName, asmBuilder.GetName().Name + ".dll");
-      } else {
-        modBuilder = asmBuilder.DefineDynamicModule("DynamicAnonTypeModule_" + info.TypeName);
-      }
-#else 
+
       modBuilder = asmBuilder.DefineDynamicModule("DynamicAnonTypeModule_" + info.TypeName);
-#endif
+      
       return modBuilder;
     }
 
@@ -171,15 +166,15 @@ namespace Breeze.Core {
       return typBuilder;
     }
 
-    private static GenericTypeParameterBuilder[] BuildGenericParameters(DynamicTypeInfo info, TypeBuilder typBuilder) {
+    private static Type[] BuildGenericParameters(DynamicTypeInfo info, TypeBuilder typBuilder) {
       // generates the names T0, T1, T2 ...
       String[] parameterNames = Enumerable.Range(0, info.PropertyNames.Count).Select(i => "T" + i.ToString()).ToArray();
       var parameterBuilders = typBuilder.DefineGenericParameters(parameterNames);
-      return parameterBuilders;
+      return parameterBuilders.Select(pb => pb.AsType()).ToArray();
     }
 
-    private static void BuildCtor(DynamicTypeInfo info, TypeBuilder typBuilder, 
-      List<FieldBuilder> fieldBuilders, GenericTypeParameterBuilder[] parameterBuilders) {
+    private static void BuildCtor(DynamicTypeInfo info, TypeBuilder typBuilder,
+      List<FieldBuilder> fieldBuilders, Type[] parameterBuilders) {
       Type[] ctorParams = parameterBuilders;
       var ctorBuilder = typBuilder.DefineConstructor(
         MethodAttributes.Public |
@@ -191,7 +186,7 @@ namespace Breeze.Core {
       ILGenerator ctorIL = ctorBuilder.GetILGenerator();
       ctorIL.Emit(OpCodes.Ldarg_0);
       // var baseCtorInfo = typeof(Object).GetConstructor(new Type[0]);
-      var baseCtorInfo = typeof(DynamicTypeBase).GetConstructor(new Type[0]);
+      var baseCtorInfo = typeof(DynamicTypeBase).GetTypeInfo().GetConstructor(new Type[0]);
       ctorIL.Emit(OpCodes.Call, baseCtorInfo);
       for (byte i = 0; i < info.PropertyNames.Count; i++) {
         ctorIL.Emit(OpCodes.Ldarg_0);
@@ -221,13 +216,13 @@ namespace Breeze.Core {
 
       var generator = ctorBuilder.GetILGenerator();
       generator.Emit(OpCodes.Ldarg_0);
-      var baseCtorInfo = typeof(Object).GetConstructor(new Type[0]);
+      var baseCtorInfo = typeof(Object).GetTypeInfo().GetConstructor(new Type[0]);
       generator.Emit(OpCodes.Call, baseCtorInfo);
       generator.Emit(OpCodes.Ret);
     }
 
-    private static void BuildProperties(DynamicTypeInfo info, TypeBuilder typBuilder, 
-      List<FieldBuilder> fieldBuilders, GenericTypeParameterBuilder[] parameterBuilders) {
+    private static void BuildProperties(DynamicTypeInfo info, TypeBuilder typBuilder,
+      List<FieldBuilder> fieldBuilders, Type[] parameterBuilders) {
       for (int i = 0; i < info.PropertyNames.Count; i++) {
         //var propBuilder = typBuilder.DefineProperty(
         //  info.PropertyNames[i], PropertyAttributes.None, parameterBuilders[i], Type.EmptyTypes);
@@ -247,7 +242,7 @@ namespace Breeze.Core {
 
         // Build Set prop
         var setMethBuilder = typBuilder.DefineMethod(
-          "set_" + info.PropertyNames[i], MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, 
+          "set_" + info.PropertyNames[i], MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
           typeof(void), new Type[] { fieldBuilders[i].FieldType });
         generator = setMethBuilder.GetILGenerator();
 
@@ -321,10 +316,10 @@ namespace Breeze.Core {
     //  }
     //  generator.Emit(OpCodes.Ret);
     //}
-    
 
-    private static IEnumerable<FieldBuilder> BuildFields(DynamicTypeInfo info, 
-      TypeBuilder typBuilder, GenericTypeParameterBuilder[] parameterBuilders) {
+
+    private static IEnumerable<FieldBuilder> BuildFields(DynamicTypeInfo info,
+      TypeBuilder typBuilder, Type[] parameterBuilders) {
       var propertyCount = info.PropertyNames.Count;
       for (int i = 0; i < propertyCount; i++) {
         yield return typBuilder.DefineField("_" + info.PropertyNames[i], parameterBuilders[i],

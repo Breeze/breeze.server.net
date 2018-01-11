@@ -73,10 +73,19 @@ namespace Breeze.Core {
     private Expression BuildBinaryExpr(Expression expr1, Expression expr2, Operator op) {
 
       if (expr1.Type != expr2.Type) {
+        
         if (TypeFns.IsNullableType(expr1.Type) && !TypeFns.IsNullableType(expr2.Type)) {
-          expr2 = Expression.Convert(expr2, expr1.Type);
+          if (!expr2.Type.IsEnum) {
+            expr2 = Expression.Convert(expr2, expr1.Type);
+          } else {
+            expr1 = Expression.Convert(expr1, expr2.Type);
+          }
         } else if (TypeFns.IsNullableType(expr2.Type) && !TypeFns.IsNullableType(expr1.Type)) {
-          expr1 = Expression.Convert(expr1, expr2.Type);
+          if (!expr1.Type.IsEnum) {
+            expr1 = Expression.Convert(expr1, expr2.Type);
+          } else {
+            expr2 = Expression.Convert(expr2, expr1.Type);
+          }
         }
 
         if (HasNullValue(expr2) && CannotBeNull(expr1)) {

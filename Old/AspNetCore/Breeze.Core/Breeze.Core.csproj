@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1E234391-D1C2-46CA-89FE-D217F4442AE7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Breeze.Core</RootNamespace>
+    <AssemblyName>Breeze.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Breeze.Core.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Breeze.Core.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DynamicGenericTypeBuilder.cs" />
+    <Compile Include="DynamicTypeInfo.cs" />
+    <Compile Include="JsonSerializationFns.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertySignature.cs" />
+    <Compile Include="Query\AndOrPredicate.cs" />
+    <Compile Include="Query\AnyAllPredicate.cs" />
+    <Compile Include="Query\BaseBlock.cs" />
+    <Compile Include="Query\BasePredicate.cs" />
+    <Compile Include="Query\BinaryPredicate.cs" />
+    <Compile Include="Query\DataType.cs" />
+    <Compile Include="Query\EntityQuery.cs" />
+    <Compile Include="Query\EntityQueryExtensions.cs" />
+    <Compile Include="Query\ExpandClause.cs" />
+    <Compile Include="Query\FnBlock.cs" />
+    <Compile Include="Query\FnBlockToken.cs" />
+    <Compile Include="Query\IEntityType.cs" />
+    <Compile Include="Query\JsonHelper.cs" />
+    <Compile Include="Query\LitBlock.cs" />
+    <Compile Include="Query\Operator.cs" />
+    <Compile Include="Query\OperatorType.cs" />
+    <Compile Include="Query\OrderByClause.cs" />
+    <Compile Include="Query\PropBlock.cs" />
+    <Compile Include="Query\QueryBuilder.cs" />
+    <Compile Include="Query\QueryResult.cs" />
+    <Compile Include="Query\SelectClause.cs" />
+    <Compile Include="Query\UnaryPredicate.cs" />
+    <Compile Include="TimeSpanConverter.cs" />
+    <Compile Include="TypeFns.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Query\QueryResult.java" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Breeze.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

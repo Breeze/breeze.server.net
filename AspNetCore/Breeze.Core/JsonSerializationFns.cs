@@ -10,7 +10,8 @@ namespace Breeze.Core {
       ss.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
       ss.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
       ss.TypeNameHandling = TypeNameHandling.Objects;
-      ss.TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple;
+      // ss.TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple;
+      ss.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
 
       // Hack is for the issue described in this post:
       // http://stackoverflow.com/questions/11789114/internet-explorer-json-net-javascript-date-and-milliseconds-issue
@@ -22,6 +23,8 @@ namespace Breeze.Core {
       // Needed because JSON.NET does not natively support I8601 Duration formats for TimeSpan
       ss.Converters.Add(new TimeSpanConverter());
       ss.Converters.Add(new StringEnumConverter());
+      // only needed because this functionality seems to be broken in JSON.NET 10.0.3
+      ss.Converters.Add(new ByteArrayConverter());
 
       // Default is DateTimeZoneHandling.RoundtripKind - you can change that here.
       // ss.DateTimeZoneHandling = DateTimeZoneHandling.Utc;

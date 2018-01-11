@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Linq.Expressions;
 using System.Diagnostics;
 using System.Text;
@@ -160,9 +161,9 @@ namespace Breeze.Core {
     /// <param name="t"></param>
     /// <returns></returns>
     internal static bool IsGenericQueryableType(Type t) {
-      if (typeof(IQueryable).IsAssignableFrom(t)) {
+      if (typeof(IQueryable).GetTypeInfo().IsAssignableFrom(t)) {
         var queryableType = typeof(IQueryable<>).MakeGenericType(TypeFns.GetElementType(t));
-        if (queryableType.IsAssignableFrom(t)) {
+        if (queryableType.GetTypeInfo().IsAssignableFrom(t)) {
           return true;
         }
       }
@@ -186,7 +187,7 @@ namespace Breeze.Core {
     /// <returns>May return null if the specified type is not a grouping type</returns>
     public static Type GetGroupingInterface(Type type) {
       if (type.GetTypeInfo().IsInterface && type.Name.StartsWith("IGrouping")) return type;
-      return type.GetInterfaces().FirstOrDefault(i => i.Name.StartsWith("IGrouping"));
+      return type.GetTypeInfo().GetInterfaces().FirstOrDefault(i => i.Name.StartsWith("IGrouping"));
     }
     
     /// <summary>
@@ -196,7 +197,7 @@ namespace Breeze.Core {
     /// <returns>null if it can't find one or result is ambiguous</returns>
     public static Type GetGenericArgument(Type type) {
       if (!type.GetTypeInfo().IsGenericType) return null;
-      var genArgs = type.GetGenericArguments();
+      var genArgs = type.GetTypeInfo().GetGenericArguments();
       if (genArgs.Length != 1) return null;
       return genArgs[0];
     }
@@ -224,7 +225,7 @@ namespace Breeze.Core {
     /// <param name="type"></param>
     /// <returns></returns>
     public static Type GetNonNullableType(Type type) {
-      return IsNullableType(type) ? type.GetGenericArguments()[0] : type;
+      return IsNullableType(type) ? type.GetTypeInfo().GetGenericArguments()[0] : type;
     }
 
     /// <summary>
@@ -235,7 +236,7 @@ namespace Breeze.Core {
     public static Type GetElementType(Type seqType) {
       Type ienum = FindIEnumerable(seqType);
       if (ienum == null) return null;
-      return ienum.GetGenericArguments()[0];
+      return ienum.GetTypeInfo().GetGenericArguments()[0];
     }
 
     /// <summary>
@@ -253,15 +254,15 @@ namespace Breeze.Core {
       }
 
       if (seqType.GetTypeInfo().IsGenericType) {
-        foreach (Type arg in seqType.GetGenericArguments()) {
+        foreach (Type arg in seqType.GetTypeInfo().GetGenericArguments()) {
           Type ienum = typeof(IEnumerable<>).MakeGenericType(arg);
-          if (ienum.IsAssignableFrom(seqType)) {
+          if (ienum.GetTypeInfo().IsAssignableFrom(seqType)) {
             return ienum;
           }
         }
       }
 
-      Type[] ifaces = seqType.GetInterfaces();
+      Type[] ifaces = seqType.GetTypeInfo().GetInterfaces();
       if (ifaces != null && ifaces.Length > 0) {
         foreach (Type iface in ifaces) {
           Type ienum = FindIEnumerable(iface);
@@ -383,7 +384,7 @@ namespace Breeze.Core {
     public static MemberInfo FindPropertyOrField(Type type, string memberName, BindingFlags bindingFlags) {
       foreach (Type t in GetSelfAndBaseTypes(type)) {
         MemberInfo[] members = t.GetTypeInfo().FindMembers(MemberTypes.Property | MemberTypes.Field,
-            bindingFlags, Type.FilterNameIgnoreCase, memberName);
+            bindingFlags,  Type.FilterNameIgnoreCase, memberName);
         if (members.Length != 0) return members[0];
       }
       return null;
@@ -457,7 +458,7 @@ namespace Breeze.Core {
           var parameters = resolvedMethod.GetParameters();
           if (parameters.Length != parameterTypes.Length) continue;
           var candidateParameterTypes = parameters.Select(p => p.ParameterType);
-          var ok = parameterTypes.Zip(candidateParameterTypes, (p, cp) => cp.IsAssignableFrom(p)).All(x => x);
+          var ok = parameterTypes.Zip(candidateParameterTypes, (p, cp) => cp.GetTypeInfo().IsAssignableFrom(p)).All(x => x);
           if (ok) {
             yield return resolvedMethod;
           }
@@ -483,7 +484,7 @@ namespace Breeze.Core {
           var candidateParameterTypes = parameters.Select(p => p.ParameterType);
           candidateParameterTypes = candidateParameterTypes.Select((cpt, i) =>
             parameterTypes[i].GetTypeInfo().IsGenericTypeDefinition ? cpt.GetGenericTypeDefinition() : cpt);
-          var ok = parameterTypes.Zip(candidateParameterTypes, (p, cp) => cp.IsAssignableFrom(p)).All(x => x);
+          var ok = parameterTypes.Zip(candidateParameterTypes, (p, cp) => cp.GetTypeInfo().IsAssignableFrom(p)).All(x => x);
           if (ok) {
             yield return (MethodInfo)method;
           }
@@ -551,9 +552,9 @@ namespace Breeze.Core {
     /// <param name="type"></param>
     /// <returns></returns>
     public static IEnumerable<Type> GetSelfAndBaseTypes(Type type) {
-      if (type.GetTypeInfo().IsInterface) return (new List<Type>() { type }).Concat(type.GetInterfaces());
+      if (type.GetTypeInfo().IsInterface) return (new List<Type>() { type }).Concat(type.GetTypeInfo().GetInterfaces());
       if (type == typeof(Object)) return new List<Type>() { type };
-      var ifaceTypes = type.GetInterfaces();
+      var ifaceTypes = type.GetTypeInfo().GetInterfaces();
       var baseTypes =  GetSelfAndBaseTypes(type.GetTypeInfo().BaseType);
       var results = new[] { type }.Concat(baseTypes).Concat(ifaceTypes).Distinct().ToList();
       return results;
@@ -580,7 +581,7 @@ namespace Breeze.Core {
     /// <returns></returns>
     public static bool IsCompatibleWith(Type source, Type target) {
       if (source == target) return true;
-      if (!target.GetTypeInfo().IsValueType) return target.IsAssignableFrom(source);
+      if (!target.GetTypeInfo().IsValueType) return target.GetTypeInfo().IsAssignableFrom(source);
       Type st = GetNonNullableType(source);
       Type tt = GetNonNullableType(target);
       if (st != source && tt == target) return false;

@@ -20,8 +20,8 @@ using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using Breeze.Core;
 using Breeze.Persistence;
+using Breeze.Core;
 
 namespace Breeze.Persistence.EF6 {
 
@@ -32,6 +32,11 @@ namespace Breeze.Persistence.EF6 {
 
   // T is either a subclass of DbContext or a subclass of ObjectContext
   public class EFPersistenceManager<T> : PersistenceManager, IEFContextProvider where T : class, new() {
+
+    static EFPersistenceManager() {
+      EntityQuery.ApplyExpand = EFExtensions.ApplyExpand;
+    }
+
 
     public EFPersistenceManager() {
 

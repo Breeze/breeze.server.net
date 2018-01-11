@@ -52,7 +52,7 @@ namespace Breeze.Core {
       lock (__lock) {
         if (!__typeResolverRegistered) {
           __typeResolverRegistered = true;
-          AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolveHandler);
+          // AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolveHandler);
         }
       }
     }
@@ -96,7 +96,7 @@ namespace Breeze.Core {
       OriginalType = anonType;
       TypeName = anonType.Name;
 
-      var props = anonType.GetProperties();
+      var props = anonType.GetTypeInfo().GetProperties();
       _propertyNames = props.Select(p => p.Name).ToList();
       _propertyTypes = props.Select(p => p.PropertyType).ToList();
       DynamicTypeName = BuildDynamicTypeName();
@@ -170,7 +170,7 @@ namespace Breeze.Core {
     public ReadOnlyCollection<PropertyInfo> Properties {
       get {
         if ( _properties == null) {
-          _properties = PropertyNames.Select(p => DynamicType.GetProperty(p)).ToList();
+          _properties = PropertyNames.Select(p => DynamicType.GetTypeInfo().GetProperty(p)).ToList();
         }
         return _properties.AsReadOnly();
       }
@@ -201,21 +201,6 @@ namespace Breeze.Core {
       }
     }
 
-    /// <summary>
-    /// Should this dynamic type's assembly be written out as a file.
-    /// </summary>
-    public bool DynamicTypeShouldSave {
-      get;
-      set;
-    }
-
-    /// <summary>
-    /// File directory to write out the dynamic types assembly.
-    /// </summary>
-    public String DynamicTypeFileDirectory {
-      get;
-      set;
-    }
 
     /// <summary>
     /// For internal use only.
@@ -402,8 +387,9 @@ namespace Breeze.Core {
     private static string CalcStringHash(string stringToHash, int maxChars) {
       //Unicode Encode Covering all characterset
       byte[] byteContents = Encoding.Unicode.GetBytes(stringToHash);
-      var provider = new System.Security.Cryptography.SHA1Managed();
-      byte[] hash = provider.ComputeHash(byteContents);
+      
+      var sha1 = System.Security.Cryptography.SHA1.Create();
+      byte[] hash = sha1.ComputeHash(byteContents);
 
       string stringHash = Convert.ToBase64String(hash);
       stringHash = stringHash.Replace("=", "").Replace("/", "_d").Replace("+", "_p");
@@ -413,8 +399,8 @@ namespace Breeze.Core {
 
     private void CreateDynamicType() {
       _dynamicType = DynamicGenericTypeBuilder.CreateType(this);
-      _dynamicEmptyConstructorInfo = _dynamicType.GetConstructor( new Type[0]);
-      _dynamicConstructorInfo = _dynamicType.GetConstructor(_propertyTypes.ToArray());
+      _dynamicEmptyConstructorInfo = _dynamicType.GetTypeInfo().GetConstructor( new Type[0]);
+      _dynamicConstructorInfo = _dynamicType.GetTypeInfo().GetConstructor(_propertyTypes.ToArray());
       if (OriginalType == null) {
         OriginalType = _dynamicType;
       }
@@ -434,15 +420,15 @@ namespace Breeze.Core {
       }
     }
 
-    private static Assembly AssemblyResolveHandler(object pSender, ResolveEventArgs pArgs) {
-      DynamicTypeInfo info = FindByAssemblyName(pArgs.Name);
-      if (info == null) {
-        // return Assembly.GetExecutingAssembly(); // will allow caller throw a standard unable to resolve exception
-        return null;
-      } else {
-        return info.DynamicType.GetTypeInfo().Assembly;
-      }
-    }
+    //private static Assembly AssemblyResolveHandler(object pSender, ResolveEventArgs pArgs) {
+    //  DynamicTypeInfo info = FindByAssemblyName(pArgs.Name);
+    //  if (info == null) {
+    //    // return Assembly.GetExecutingAssembly(); // will allow caller throw a standard unable to resolve exception
+    //    return null;
+    //  } else {
+    //    return info.DynamicType.GetTypeInfo().Assembly;
+    //  }
+    //}
 
 
     /// <summary>
