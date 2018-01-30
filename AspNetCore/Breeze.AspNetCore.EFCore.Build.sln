@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Core", "Breeze.Core\Breeze.Core.csproj", "{B3BFD33B-78D7-49B1-B0DB-3BF4AA66F08D}"
 EndProject
@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "Breez
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EFCore", "Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj", "{ED79263D-3C58-4903-BEE2-51A2CBC717E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.AspNetCore.NetCore", "Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{60337B3F-09AC-4FE0-BFDF-FCD3CBBC825D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.AspNetCore.NetCore", "Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{60337B3F-09AC-4FE0-BFDF-FCD3CBBC825D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.AspNetCore.EFCore.Sample", "Breeze.AspNetCore.EFCore.Sample\Breeze.AspNetCore.EFCore.Sample.csproj", "{C74F6F5A-CF79-4FC4-A488-91B9009750E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,12 @@ Global
 		{60337B3F-09AC-4FE0-BFDF-FCD3CBBC825D}.OData-debug|Any CPU.Build.0 = Debug|Any CPU
 		{60337B3F-09AC-4FE0-BFDF-FCD3CBBC825D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60337B3F-09AC-4FE0-BFDF-FCD3CBBC825D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C74F6F5A-CF79-4FC4-A488-91B9009750E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C74F6F5A-CF79-4FC4-A488-91B9009750E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C74F6F5A-CF79-4FC4-A488-91B9009750E3}.OData-debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C74F6F5A-CF79-4FC4-A488-91B9009750E3}.OData-debug|Any CPU.Build.0 = Debug|Any CPU
+		{C74F6F5A-CF79-4FC4-A488-91B9009750E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C74F6F5A-CF79-4FC4-A488-91B9009750E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
