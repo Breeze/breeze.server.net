@@ -82,6 +82,36 @@ namespace Models.NorthwindIB.CF {
       }
     }
 
+
+    // override for investigating customer complaint about EF original values for Enums
+    //public override int SaveChanges()
+    //{
+    //  foreach (var ent in ChangeTracker.Entries()
+    //      .Where(p => p.State == EntityState.Deleted || p.State == EntityState.Modified || p.State == EntityState.Added))
+    //  {
+    //    if (ent.State == EntityState.Added)
+    //      continue;
+
+    //    foreach (var prop in ent.OriginalValues.PropertyNames)
+    //    {
+    //      //TODO:Breeze Bug -- for enum IsModified is set to true but the originalValue is set to currentValue
+    //      if (ent.Property(prop).IsModified)
+    //      {
+    //        var originalValue = ent.OriginalValues[prop];
+    //        var currentValue = ent.CurrentValues[prop];
+    //        if (Equals(originalValue, currentValue))
+    //        {
+    //          Console.WriteLine($"Property:{prop} IsModified is true but OriginalValue and CurrentValue the same.");
+
+    //          throw new Exception($"Property:{prop} IsModified is true but OriginalValue and CurrentValue the same.");
+    //        }
+    //      }
+    //    }
+    //  }
+    //  return base.SaveChanges();
+    //}
+
+
     #region DbSets
 
     public DbSet<Category> Categories { get; set; }
