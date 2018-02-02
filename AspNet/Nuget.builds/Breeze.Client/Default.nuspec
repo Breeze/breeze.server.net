@@ -17,7 +17,7 @@
         <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-js/release-notes.html</releaseNotes>        
         <tags>javascript Breeze SPA</tags>
 		<dependencies>
-        <dependency id="Q" />
+        <dependency id="Q" version="1.4.1" />
 		</dependencies>
     </metadata>
     <files>

@@ -87,6 +87,7 @@ gulp.task("copyDlls", ['breezeServerBuild'], function() {
   }));
 });
 
+// need to run this the first time, because updateFiles only updates files that already exist
 gulp.task("initDlls", [], function() {
     copyToNugetLib("../AspNet/", "Breeze.ContextProvider");
     copyToNugetLib("../AspNet/", "Breeze.ContextProvider.EF6");
