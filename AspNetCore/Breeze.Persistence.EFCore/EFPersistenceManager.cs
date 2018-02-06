@@ -455,7 +455,10 @@ namespace Breeze.Persistence.EFCore {
       if (val == null) return val;
       if (toType == val.GetType()) return val;
       var nnToType = TypeFns.GetNonNullableType(toType);
-      if (typeof(IConvertible).IsAssignableFrom(nnToType)) {
+
+      if (nnToType.IsEnum && val is string) {
+        result = Enum.Parse(nnToType, val as string, true);
+      } else if (typeof(IConvertible).IsAssignableFrom(nnToType)) {
         result = Convert.ChangeType(val, nnToType, System.Threading.Thread.CurrentThread.CurrentCulture);
       } else if (val is JObject) {
         var serializer = new JsonSerializer();

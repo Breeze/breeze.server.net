@@ -422,16 +422,7 @@ namespace Breeze.Persistence.EF6 {
             var fieldType = originalValuesRecord.GetFieldType(ordinal);
             var originalValueConverted = ConvertValue(originalValue, fieldType);
 
-            if (originalValueConverted == null) {
-              // bug - hack because of bug in EF - see 
-              // http://social.msdn.microsoft.com/Forums/nl/adodotnetentityframework/thread/cba1c425-bf82-4182-8dfb-f8da0572e5da
-              var temp = entry.CurrentValues[ordinal];
-              entry.CurrentValues.SetDBNull(ordinal);
-              entry.ApplyOriginalValues(entry.Entity);
-              entry.CurrentValues.SetValue(ordinal, temp);
-            } else {
-              originalValuesRecord.SetValue(ordinal, originalValueConverted);
-            }
+            originalValuesRecord.SetValue(ordinal, originalValueConverted);
           }
         } catch (Exception e) {
           if (e.Message.Contains(" part of the entity's key")) {
@@ -493,7 +484,10 @@ namespace Breeze.Persistence.EF6 {
       if (val == null) return val;
       if (toType == val.GetType()) return val;
       var nnToType = TypeFns.GetNonNullableType(toType);
-      if (typeof(IConvertible).IsAssignableFrom(nnToType)) {
+
+      if (nnToType.IsEnum && val is string) {
+        result = Enum.Parse(nnToType, val as string, true);
+      } else if (typeof(IConvertible).IsAssignableFrom(nnToType)) {
         result = Convert.ChangeType(val, nnToType, System.Threading.Thread.CurrentThread.CurrentCulture);
       } else if (val is JObject) {
         var serializer = new JsonSerializer();
