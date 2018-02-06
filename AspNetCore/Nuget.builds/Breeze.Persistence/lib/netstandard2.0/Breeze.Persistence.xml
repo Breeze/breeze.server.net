@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Breeze.Persistence</name>
+    </assembly>
+    <members>
+        <member name="M:Breeze.Persistence.PersistenceManager.GetDbConnection">
+            <summary>
+            Should only be called from BeforeSaveEntities and AfterSaveEntities.
+            </summary>
+            <returns>Open DbConnection used by the ContextProvider's implementation</returns>
+        </member>
+        <member name="M:Breeze.Persistence.PersistenceManager.OpenDbConnection">
+            <summary>
+            Internal use only.  Should only be called by ContextProvider during SaveChanges.
+            Opens the DbConnection used by the ContextProvider's implementation.
+            Method must be idempotent; after it is called the first time, subsequent calls have no effect.
+            </summary>
+        </member>
+        <member name="M:Breeze.Persistence.PersistenceManager.CloseDbConnection">
+            <summary>
+            Internal use only.  Should only be called by ContextProvider during SaveChanges.
+            Closes the DbConnection used by the ContextProvider's implementation.
+            </summary>
+        </member>
+        <member name="M:Breeze.Persistence.PersistenceManager.BeforeSaveEntity(Breeze.Persistence.EntityInfo)">
+            <summary>
+            The method is called for each entity to be saved before the save occurs.  If this method returns 'false'
+            then the entity will be excluded from the save.  The base implementation returns the result of BeforeSaveEntityDelegate,
+            or 'true' if BeforeSaveEntityDelegate is null.
+            </summary>
+            <param name="entityInfo"></param>
+            <returns>true to include the entity in the save, false to exclude</returns>
+        </member>
+        <member name="M:Breeze.Persistence.PersistenceManager.BeforeSaveEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.Persistence.EntityInfo}})">
+            <summary>
+            Called after BeforeSaveEntity, and before saving the entities to the persistence layer.
+            Allows adding, changing, and removing entities prior to save.
+            The base implementation returns the result of BeforeSaveEntitiesDelegate, or the unchanged
+            saveMap if BeforeSaveEntitiesDelegate is null.
+            </summary>
+            <param name="saveMap">A List of EntityInfo for each Type</param>
+            <returns>The EntityInfo for each entity that should be saved</returns>
+        </member>
+        <member name="M:Breeze.Persistence.PersistenceManager.AfterSaveEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.Persistence.EntityInfo}},System.Collections.Generic.List{Breeze.Persistence.KeyMapping})">
+            <summary>
+            Called after the entities have been saved, and all the temporary keys have been replaced by real keys.
+            The base implementation calls AfterSaveEntitiesDelegate, or does nothing if AfterSaveEntitiesDelegate is null.
+            </summary>
+            <param name="saveMap">The same saveMap that was returned from BeforeSaveEntities</param>
+            <param name="keyMappings">The mapping of temporary keys to real keys</param>
+        </member>
+        <member name="M:Breeze.Persistence.BreezeConfig.CreateJsonSerializerSettings">
+            <summary>
+            Override to use a specialized JsonSerializer implementation.
+            </summary>
+        </member>
+        <member name="M:Breeze.Persistence.BreezeConfig.CreateJsonSerializerSettingsForSave">
+            <summary>
+            Override to use a specialized JsonSerializer implementation for saving.
+            Base implementation uses CreateJsonSerializerSettings() then sets TypeNameHandling to None
+            </summary>
+        </member>
+        <member name="M:Breeze.Persistence.BreezeConfig.GetTransactionSettings">
+            <summary>
+            Returns TransactionSettings.Default.  Override to return different settings.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Breeze.Persistence.TransactionSettings.Default">
+            <summary>
+            Default settings for all saves. 
+            </summary>
+            <remarks>
+            The <b>Default</b> provides default transaction settings for all SaveChanges actions.  
+            Override BreezeConfig to return a different TransactionSettings value.
+            You can supply settings for a particular save with the TransactionSettings passed in the SaveChanges call. 
+            </remarks>
+        </member>
+        <member name="M:Breeze.Persistence.TransactionSettings.#ctor">
+            <summary>
+            Create a TransactionSettings object using default settings.
+            </summary>
+            <remarks>
+            Defaults the <see cref="P:Breeze.Persistence.TransactionSettings.IsolationLevel"/> to ReadCommitted, 
+            the <see cref="P:Breeze.Persistence.TransactionSettings.Timeout"/> to TransactionManager.DefaultTimeout (which is usually 1 minute),
+            and <see cref="P:Breeze.Persistence.TransactionSettings.TransactionType"/> to TransactionType.None (which means the other settings have no effect).  
+            These settings are not Breeze requirements and can be changed using the appropriate constructor or setter.
+            </remarks>
+        </member>
+        <member name="M:Breeze.Persistence.TransactionSettings.#ctor(System.Transactions.IsolationLevel,System.TimeSpan,Breeze.Persistence.TransactionType)">
+            <summary>
+            Create a TransactionSettings object with the specified settings.
+            </summary>
+            <remarks>
+            Note that IsolationLevel and Timeout have no affect if TransactionType is None.
+            </remarks>
+        </member>
+        <member name="P:Breeze.Persistence.TransactionSettings.TransactionType">
+            <summary>
+            What type of transaction to use when performing saves.
+            The transaction wraps the BeforeSaveEntity/ies, SaveChangesCore, and AfterSaveEntities methods
+            so all work can be commited or rolled back together.
+            </summary>
+        </member>
+        <member name="P:Breeze.Persistence.TransactionSettings.IsolationLevel">
+            <summary>
+            Gets the transaction locking behavior.
+            </summary>
+            <remarks>
+            Only applicable if <see cref="P:Breeze.Persistence.TransactionSettings.TransactionType"/> is not <code>None</code>.  The default IsolationLevel is ReadCommitted.
+            </remarks>
+        </member>
+        <member name="P:Breeze.Persistence.TransactionSettings.IsolationLevelAs">
+            <summary>
+            Gets the transaction locking behavior as a System.Data.IsolationLevel.
+            </summary>
+            <remarks>
+            Only applicable if <see cref="P:Breeze.Persistence.TransactionSettings.TransactionType"/> is not <code>None</code>.  The default IsolationLevel is ReadCommitted.
+            </remarks>
+        </member>
+        <member name="P:Breeze.Persistence.TransactionSettings.Timeout">
+            <summary>
+            Gets the timeout period for the TransactionScope transaction. 
+            </summary>
+            <remarks>
+            Only applicable if <see cref="P:Breeze.Persistence.TransactionSettings.TransactionType"/> is <code>TransactionScope</code>. 
+            The default Timeout is TransactionManager.DefaultTimeout which is usually 1 minute.
+            See http://stackoverflow.com/questions/6402031/transactionscope-maximumtimeout
+            </remarks>
+        </member>
+        <member name="M:Breeze.Persistence.TransactionSettings.ToTransactionOptions">
+            <summary>
+            Converts the TransactionSettings to a <see cref="T:System.Transactions.TransactionOptions" /> instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Persistence.TransactionSettings.Equals(System.Object)">
+            <summary>
+            See <see cref="M:System.Object.Equals(System.Object)"/>.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Persistence.TransactionSettings.GetHashCode">
+            <summary>
+            See <see cref="M:System.Object.GetHashCode"/>.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"></see>.
+            </returns>
+        </member>
+        <member name="F:Breeze.Persistence.TransactionSettings.IsolationMap">
+            <summary>
+            Maps the System.Transactions.IsolationLevel to System.Data.IsolationLevel
+            </summary>
+        </member>
+        <member name="T:Breeze.Persistence.TransactionType">
+            <summary><list>
+             TransactionScope - Use the ambient .NET TransactionScope object.  Necessary for distributed transactions.
+             DbTransaction - Use the transaction from the DbConnection.  Only works against the single connection.
+             None - BeforeSaveEntity/ies, SaveChangesCore, and AfterSaveEntities are not executed in the same transaction.
+            </list></summary>
+        </member>
+    </members>
+</doc>
