@@ -176,8 +176,8 @@ namespace Breeze.Core {
 
     //}
 
-    // Impl of apply expand is a function is deferred to whatever Persistence framework is being used.
-    // i.e. EF vs NHibernate
+    /** Impl of apply expand is a function is deferred to whatever Persistence framework is being used.
+     i.e. EF vs NHibernate */
     public static Func<EntityQuery, IQueryable, Type, IQueryable> ApplyExpand {
       get;
       set;

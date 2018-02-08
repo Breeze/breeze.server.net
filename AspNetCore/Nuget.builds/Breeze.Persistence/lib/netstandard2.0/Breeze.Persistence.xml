@@ -4,6 +4,23 @@
         <name>Breeze.Persistence</name>
     </assembly>
     <members>
+        <member name="M:Breeze.Persistence.BreezeConfig.CreateJsonSerializerSettings">
+            <summary>
+            Override to use a specialized JsonSerializer implementation.
+            </summary>
+        </member>
+        <member name="M:Breeze.Persistence.BreezeConfig.CreateJsonSerializerSettingsForSave">
+            <summary>
+            Override to use a specialized JsonSerializer implementation for saving.
+            Base implementation uses CreateJsonSerializerSettings() then sets TypeNameHandling to None
+            </summary>
+        </member>
+        <member name="M:Breeze.Persistence.BreezeConfig.GetTransactionSettings">
+            <summary>
+            Returns TransactionSettings.Default.  Override to return different settings.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Breeze.Persistence.PersistenceManager.GetDbConnection">
             <summary>
             Should only be called from BeforeSaveEntities and AfterSaveEntities.
@@ -49,23 +66,6 @@
             </summary>
             <param name="saveMap">The same saveMap that was returned from BeforeSaveEntities</param>
             <param name="keyMappings">The mapping of temporary keys to real keys</param>
-        </member>
-        <member name="M:Breeze.Persistence.BreezeConfig.CreateJsonSerializerSettings">
-            <summary>
-            Override to use a specialized JsonSerializer implementation.
-            </summary>
-        </member>
-        <member name="M:Breeze.Persistence.BreezeConfig.CreateJsonSerializerSettingsForSave">
-            <summary>
-            Override to use a specialized JsonSerializer implementation for saving.
-            Base implementation uses CreateJsonSerializerSettings() then sets TypeNameHandling to None
-            </summary>
-        </member>
-        <member name="M:Breeze.Persistence.BreezeConfig.GetTransactionSettings">
-            <summary>
-            Returns TransactionSettings.Default.  Override to return different settings.
-            </summary>
-            <returns></returns>
         </member>
         <member name="P:Breeze.Persistence.TransactionSettings.Default">
             <summary>

@@ -8,14 +8,15 @@
     <PackageReleaseNotes>First release...</PackageReleaseNotes>
     <PackageTags>Breeze BreezeJs</PackageTags>
     <Description>Core library for Breeze Server running on .NET Core</Description>
-    <Version>0.0.2</Version>
+    <Version>0.1.2</Version>
     <Authors>Jay Traband</Authors>
     <Company>IdeaBlade</Company>
     <Product>breeze.core</Product>
-    <Copyright>Copyright © IdeaBlade 2012-2017</Copyright>
+    <Copyright>Copyright © IdeaBlade 2012-2018</Copyright>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <FileVersion>0.1.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

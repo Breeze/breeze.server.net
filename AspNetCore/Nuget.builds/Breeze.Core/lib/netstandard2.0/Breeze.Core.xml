@@ -130,16 +130,6 @@
             For internal use only.
             </summary>
         </member>
-        <member name="P:Breeze.Core.DynamicTypeInfo.DynamicTypeShouldSave">
-            <summary>
-            Should this dynamic type's assembly be written out as a file.
-            </summary>
-        </member>
-        <member name="P:Breeze.Core.DynamicTypeInfo.DynamicTypeFileDirectory">
-            <summary>
-            File directory to write out the dynamic types assembly.
-            </summary>
-        </member>
         <member name="M:Breeze.Core.DynamicTypeInfo.Equals(System.Object)">
             <summary>
             For internal use only.
@@ -272,6 +262,10 @@
             Return a new query based on this query with the specified expand clauses added.
             @param propertyPaths A list of expand clauses (each a dot delimited property path).
             @return A new EntityQuery.
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.ApplyExpand">
+            Impl of apply expand is a function is deferred to whatever Persistence framework is being used.
+                 i.e. EF vs NHibernate 
         </member>
         <member name="M:Breeze.Core.EntityQuery.Select(System.String[])">
             Return a new query based on this query with the specified select (projection) clauses added.
