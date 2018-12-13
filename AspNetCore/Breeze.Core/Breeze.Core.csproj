@@ -8,7 +8,7 @@
     <PackageReleaseNotes>First release...</PackageReleaseNotes>
     <PackageTags>Breeze BreezeJs</PackageTags>
     <Description>Core library for Breeze Server running on .NET Core</Description>
-    <Version>0.1.2</Version>
+    <Version>1.0.1</Version>
     <Authors>Jay Traband</Authors>
     <Company>IdeaBlade</Company>
     <Product>breeze.core</Product>
@@ -28,7 +28,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
