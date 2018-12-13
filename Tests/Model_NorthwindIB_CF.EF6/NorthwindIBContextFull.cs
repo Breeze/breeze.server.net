@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Spatial;
 using System.IO;
 using System.Linq;
@@ -77,7 +78,8 @@ namespace Models.NorthwindIB.CF {
         }
         stream.Position = 0;
         using (XmlReader reader = XmlReader.Create(stream)) {
-          return EdmxReader.Parse(reader);
+          // old - was EdmxReader.Parse
+          return CsdlReader.Parse(reader);
         }
       }
     }
