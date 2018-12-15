@@ -161,7 +161,7 @@ gulp.task('nugetPack', gulp.series('copyBreezeJs', 'copyDlls', 'nugetClean', fun
       } else {
         version = serverVersion;
       }
-      gutil.log('Packing nuget for ' + fileName + ' version: ' + version);
+      
       packNuget(fileName, version, cb2);
     }, cb1);
   }, done);
@@ -267,6 +267,7 @@ function updateFiles(nugetDir, streams, ext) {
 }
 
 function packNuget(nuspecFileName, version, execCb) {
+  gutil.log('Packing nuget for ' + nuspecFileName + ' version: ' + version);
   var folderName = path.dirname(nuspecFileName);
   var text = fs.readFileSync(nuspecFileName, { encoding: 'utf8'});
   var folders = folderName.split('/');
