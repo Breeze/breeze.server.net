@@ -24,15 +24,17 @@ var newer   = require('gulp-newer');
 var _tempDir = './_temp/';
 var _jsSrcDir = '../../Breeze.js/src/'
 var _jsBuildDir = '../../Breeze.js/build/';
+
+// TODO: pick one of the next 3 _buildSlnDirs defs
 // var _buildSlnDirs = ["../AspNet/", "../AspNetCore/"];
 // var _buildSlnDirs = ["../AspNet/"];
 var _buildSlnDirs = ["../AspNetCore/"];
+
 var _nugetDirs = _buildSlnDirs.map(function(bsd) {
   return path.join(bsd, "/Nuget.builds/");
 });
-// yields['../AspNet/Nuget.builds/', '../AspNetCore/Nuget.builds/'];
 
-// var _msBuildCmd = '"C:/Program Files (x86)/MSBuild/14.0/Bin/MsBuild.exe" '; // vs 2015 version of MsBuild
+
 // var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe" ' // vs 2017 version of MsBuild
 var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/MSBuild/15.0/Bin/MSBuild.exe" '
 // var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
@@ -63,20 +65,18 @@ gulp.task("copyBreezeJs",  function(done) {
   done();
 });
 
-// TODO: not sure when this should be used. ... 
-gulp.task("buildAspNetCoreNugets", function(done) {
-  const isDirectory = source => fs.lstatSync(source).isDirectory()
-  var dirs = glob.sync('../AspNetCore/Breeze.*');
-  projDirs = dirs.filter(d => isDirectory(d)); //  && !d.endsWith('EF6'));
+// // TODO: not sure when this should be used. ... 
+// gulp.task("buildAspNetCoreNugets", function(done) {
+//   const isDirectory = source => fs.lstatSync(source).isDirectory()
+//   var dirs = glob.sync('../AspNetCore/Breeze.*');
+//   projDirs = dirs.filter(d => isDirectory(d)); //  && !d.endsWith('EF6'));
 
-  async.eachSeries(projDirs, function (dir, cb) {
-    gutil.log(dir);
-    var cmd = 'msbuild /t:pack /p:Configuration=Release';
-    execCommands( [cmd], { cwd: dir}, cb);
-  }, done);
-  
-
-});
+//   async.eachSeries(projDirs, function (dir, cb) {
+//     gutil.log(dir);
+//     var cmd = 'msbuild /t:pack /p:Configuration=Release';
+//     execCommands( [cmd], { cwd: dir}, cb);
+//   }, done);
+// });
 
 gulp.task('breezeServerBuild', function(done) {
   var solutionFileNames = [];
