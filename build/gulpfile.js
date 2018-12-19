@@ -172,7 +172,7 @@ gulp.task('nugetTestDeploy', gulp.series('nugetPack', function(done) {
   async.eachSeries(_nugetDirs, function(nd, cb1) {
     gutil.log('Deploying Test Nugets...');
     var src = nd + '**/*.nupkg';
-    var dest = process.env.LOCALAPPDATA + '/Nuget/Test';
+    var dest = process.env.LOCALAPPDATA + '/Nuget/Cache';
     var fileNames = glob.sync( src);
     async.eachSeries(fileNames, function (fileName, cb2) {
       gutil.log('Deploying nuspec file: ' + fileName);
@@ -181,6 +181,8 @@ gulp.task('nugetTestDeploy', gulp.series('nugetPack', function(done) {
     }, cb1);
   }, done);
 }));
+
+
 
 
 // should ONLY be called manually after testing locally installed nugets from nugetPack step.
