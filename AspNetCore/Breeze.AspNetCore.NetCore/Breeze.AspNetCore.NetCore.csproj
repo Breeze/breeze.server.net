@@ -8,7 +8,7 @@
     <PackageReleaseNotes>First release...</PackageReleaseNotes>
     <PackageTags>Breeze BreezeJs</PackageTags>
     <Description>ASP.NET Core library for Breeze Server running on .NET Core</Description>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Jay Traband</Authors>
     <Company>IdeaBlade</Company>
     <Product>Breeze.AspNetCore.NetCore</Product>
@@ -16,8 +16,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

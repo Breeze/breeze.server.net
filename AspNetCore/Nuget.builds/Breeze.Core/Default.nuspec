@@ -21,7 +21,6 @@
 			<dependency id="Newtonsoft.Json" version="12.0.1"/>
             <dependency id="System.Linq.Queryable" version="4.3.0"/>
             <dependency id="System.Reflection.Emit" version="4.3.0"/>
-            <dependency id="System.Security.Algorithms" version="4.3.1"/>
 		</dependencies>
     </metadata>
     <files>

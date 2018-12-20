@@ -9,15 +9,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCore\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
+    <PackageReference Include="Breeze.AspNetCore.NetCore" Version="1.0.2" />
+    <PackageReference Include="Breeze.Core" Version="1.0.2" />
+    <PackageReference Include="Breeze.Persistence" Version="1.0.2" />
+    <PackageReference Include="Breeze.Persistence.EFCore" Version="1.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\AspNetCore\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore\Model_NorthwindIB_CF.EFCore.csproj" />
   </ItemGroup>
