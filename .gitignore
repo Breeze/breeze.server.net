@@ -24,4 +24,4 @@ GetFtpCredential.ps1
 breeze-*.zip
 breeze*.nupkg
 
-Breeze.Client
+Breeze.Client/

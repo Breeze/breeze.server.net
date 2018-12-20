@@ -45,8 +45,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
+    <Reference Include="Breeze.ContextProvider, Version=2.0.1.0, Culture=neutral, PublicKeyToken=f6085f1a45e2ac59, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Breeze.Server.ContextProvider.2.0.1\lib\Breeze.ContextProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="Breeze.ContextProvider.EF6, Version=2.0.1.0, Culture=neutral, PublicKeyToken=f6085f1a45e2ac59, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Breeze.Server.ContextProvider.EF6.2.0.1\lib\Breeze.ContextProvider.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="Breeze.ContextProvider.NH, Version=2.0.1.0, Culture=neutral, PublicKeyToken=f6085f1a45e2ac59, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Breeze.Server.ContextProvider.NH.2.0.1\lib\Breeze.ContextProvider.NH.dll</HintPath>
+    </Reference>
+    <Reference Include="Breeze.WebApi2, Version=2.0.1.0, Culture=neutral, PublicKeyToken=f6085f1a45e2ac59, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Breeze.Server.WebApi2.2.0.1\lib\Breeze.WebApi2.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -123,6 +132,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\BreezeWebApiConfig.cs" />
     <Compile Include="Controllers\BreezeConfig.cs" />
     <Compile Include="Controllers\MetadataTestController.cs" />
     <Compile Include="Controllers\InheritanceController.cs" />
@@ -242,22 +252,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNet\Breeze.ContextProvider.EF6\Breeze.ContextProvider.EF6.csproj">
-      <Project>{be6f3a72-1b22-4e1e-8dde-ac65c3093a55}</Project>
-      <Name>Breeze.ContextProvider.EF6</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\AspNet\Breeze.ContextProvider.NH\Breeze.ContextProvider.NH.csproj">
-      <Project>{15246b9c-5558-4bce-894f-52c4f785bbcc}</Project>
-      <Name>Breeze.ContextProvider.NH</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\AspNet\Breeze.ContextProvider\Breeze.ContextProvider.csproj">
-      <Project>{3e6c8fe4-65bd-4b16-8182-3714b3ec602c}</Project>
-      <Name>Breeze.ContextProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\AspNet\Breeze.WebApi2\Breeze.WebApi2.csproj">
-      <Project>{ab54c69a-14c0-4e60-9dd4-cbea3685c7dd}</Project>
-      <Name>Breeze.WebApi2</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Model_Inheritance.EF6\Model_Inheritance.EF6.csproj">
       <Project>{6ca2f9ec-22d8-41d8-b029-193252acb802}</Project>
       <Name>Model_Inheritance.EF6</Name>

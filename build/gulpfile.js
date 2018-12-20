@@ -1,7 +1,20 @@
+// Notes before running these tasks.
+
+// These tasks will build the breeze server for either AspNet or AspNetCore ( or both) 
+// 1) Build the projects with project refs and test.
+// 2) Update the .NET version numbers in the .Net projects.
+// 3) If any 3rd party dlls refs are changed - you will need to update the approriate 'default.nuspec' file in the 'AspNet(Core)/Nuget.Builds' dir.
+// 4) Run 'gulp initDllTemplates' at least once if any dll names have changed.
+// 5) You will need to uncomment one of the '_buildSlnDirs' setting below.
+// 6) You will need to update the appropriate 'version.txt' file in either the AspNet or AspNetCore dirs to match
+// 7) run 'gulp nugetTestDeploy'
+// 8) test the deployment locally - by updating test project to point to local nuget cache
+// 9) run 'gulp nugetDeploy'
+
+
 // Build for breeze.server.net
 // NOTE: converted to use Gulp 4.x
 
-// include gulp
 var gulp = require('gulp');
 
 var fs   = require('fs-extra');
@@ -16,7 +29,6 @@ var eventStream = require('event-stream');
 // include plug-ins
 var gutil = require('gulp-util');
 var flatten = require('gulp-flatten');
-
 var concat  = require('gulp-concat');
 var rename  = require('gulp-rename');
 var newer   = require('gulp-newer');
@@ -27,13 +39,12 @@ var _jsBuildDir = '../../Breeze.js/build/';
 
 // TODO: pick one of the next 3 _buildSlnDirs defs
 // var _buildSlnDirs = ["../AspNet/", "../AspNetCore/"];
-// var _buildSlnDirs = ["../AspNet/"];
-var _buildSlnDirs = ["../AspNetCore/"];
+var _buildSlnDirs = ["../AspNet/"];
+// var _buildSlnDirs = ["../AspNetCore/"];
 
 var _nugetDirs = _buildSlnDirs.map(function(bsd) {
   return path.join(bsd, "/Nuget.builds/");
 });
-
 
 // var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe" ' // vs 2017 version of MsBuild
 var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/MSBuild/15.0/Bin/MSBuild.exe" '
@@ -65,19 +76,6 @@ gulp.task("copyBreezeJs",  function(done) {
   done();
 });
 
-// // TODO: not sure when this should be used. ... 
-// gulp.task("buildAspNetCoreNugets", function(done) {
-//   const isDirectory = source => fs.lstatSync(source).isDirectory()
-//   var dirs = glob.sync('../AspNetCore/Breeze.*');
-//   projDirs = dirs.filter(d => isDirectory(d)); //  && !d.endsWith('EF6'));
-
-//   async.eachSeries(projDirs, function (dir, cb) {
-//     gutil.log(dir);
-//     var cmd = 'msbuild /t:pack /p:Configuration=Release';
-//     execCommands( [cmd], { cwd: dir}, cb);
-//   }, done);
-// });
-
 gulp.task('breezeServerBuild', function(done) {
   var solutionFileNames = [];
   _buildSlnDirs.forEach(function(bsd) {
@@ -90,42 +88,41 @@ gulp.task('breezeServerBuild', function(done) {
   }, done);
 });
 
+// need to run this the first time a new 'build' structure is changed
+// This is effectively a setup script for the 'copyDllsToNugetDir', 
+// which in turn uses 'updateFilesInNugetDir' to update 'matching' files in the nuget dir only updates files that already exist
+gulp.task("initDllTemplates",  function(done) {
+  copyToNugetLib("../AspNet/", "Breeze.ContextProvider");
+  copyToNugetLib("../AspNet/", "Breeze.ContextProvider.EF6");
+  copyToNugetLib("../AspNet/", "Breeze.ContextProvider.NH");
+  copyToNugetLib("../AspNet/", "Breeze.WebApi2");
+  copyToNugetLib("../AspNetCore/", "Breeze.AspNetCore.NetCore");
+  copyToNugetLib("../AspNetCore/", "Breeze.Core");
+  copyToNugetLib("../AspNetCore/", "Breeze.Persistence");
+  copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EF6");
+  copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EFCore");
+  done();
+});
 
 // look for all .dll files in the nuget dir and try to find
 // the most recent production version of the same file and copy
 // it if found over the one in the nuget dir.
-gulp.task("copyDlls", gulp.series('breezeServerBuild', function(done) {
+gulp.task("copyDllsToNugetDir", gulp.series('breezeServerBuild', function(done) {
   eventStream.concat(_nugetDirs.map(function(nd) {
     var streams = [];
     gutil.log('copying dlls...')
-    updateFiles(nd, streams, ".dll");
+    updateFilesInNugetDir(nd, streams, ".dll");
     gutil.log('copying XMLs...')
-    updateFiles(nd, streams, ".XML");
+    updateFilesInNugetDir(nd, streams, ".XML");
     gutil.log('copying PDBs...')
-    updateFiles(nd, streams, ".pdb");
+    updateFilesInNugetDir(nd, streams, ".pdb");
     return eventStream.concat.apply(null, streams);
   }));
   done();
 }));
 
-// need to run this the first time, because updateFiles only updates files that already exist
-gulp.task("initDlls",  function(done) {
-    // copyToNugetLib("../AspNet/", "Breeze.ContextProvider");
-    // copyToNugetLib("../AspNet/", "Breeze.ContextProvider.EF6");
-    // copyToNugetLib("../AspNet/", "Breeze.ContextProvider.NH");
-    // copyToNugetLib("../AspNet/", "Breeze.WebApi2");
-    copyToNugetLib("../AspNetCore/", "Breeze.AspNetCore.NetCore");
-    copyToNugetLib("../AspNetCore/", "Breeze.Core");
-    copyToNugetLib("../AspNetCore/", "Breeze.Persistence");
-    copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EF6");
-    copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EFCore");
-    done();
-});
-
-
-
 // create a zip file of all the .dll and .xml files
-gulp.task("zipDlls", gulp.series("copyDlls", function() {
+gulp.task("zipDlls", gulp.series("copyDllsToNugetDir", function() {
   return eventStream.concat(_nugetDirs.map(function(nd) {
     var fileNames = glob.sync(nd + '**/*.XML')
         .concat(glob.sync(nd + '**/*.dll'))
@@ -135,8 +132,6 @@ gulp.task("zipDlls", gulp.series("copyDlls", function() {
         .pipe(gulp.dest('../build'));
   }));
 }));
-
-
 
 gulp.task('nugetClean', function(done) {
   _nugetDirs.forEach(function(nd) {
@@ -148,7 +143,7 @@ gulp.task('nugetClean', function(done) {
   done();
 });
 
-gulp.task('nugetPack', gulp.series('copyBreezeJs', 'copyDlls', 'nugetClean', function(done) {
+gulp.task('nugetPack', gulp.series('copyBreezeJs', 'copyDllsToNugetDir', 'nugetClean', function(done) {
   async.eachSeries(_nugetDirs, function(nd, cb1) {
     var version;
     versionFileName = path.resolve(nd, '../version.txt');
@@ -182,9 +177,6 @@ gulp.task('nugetTestDeploy', gulp.series('nugetPack', function(done) {
   }, done);
 }));
 
-
-
-
 // should ONLY be called manually after testing locally installed nugets from nugetPack step.
 // deliberately does NOT have a dependency on nugetPack
 gulp.task('nugetDeploy', function(done) {
@@ -194,10 +186,10 @@ gulp.task('nugetDeploy', function(done) {
     var fileNames = glob.sync( src);
     async.eachSeries(fileNames, function (fileName, cb2) {
       gutil.log('Deploying nuspec file: ' + fileName);
-      var cmd = 'nuget push ' + fileName + ' -Source https://www.nuget.org';
-
+      
+      var cmd = 'nuget push ' + fileName +  ' {{nuget password goes here - without braces}} -Source https://www.nuget.org'
+      
       execCommands([ cmd], { shouldThrow: false }, cb2);
-
     }, cb1);
   }, done);
 });
@@ -243,7 +235,7 @@ function copyToNugetLib(pathRoot, fileRoot) {
 // for each file in nuget dir, copy existing file from the release dir.
 // @param streams[] - array that will be filled with streams
 // @param ext - file extension (with .) of files to copy.
-function updateFiles(nugetDir, streams, ext) {
+function updateFilesInNugetDir(nugetDir, streams, ext) {
   var fileNames = glob.sync(nugetDir + '**/*' + ext);
   gutil.log("Copying " + fileNames.length + " files from /bin/release dir into " + nugetDir);
   fileNames.forEach(function(fileName) {
@@ -313,7 +305,6 @@ function msBuildSolution(solutionFileName, done) {
   execCommands(cmds, { cwd: cwd},  done);
 }
 
-
 // utilities
 // added options are: shouldLog
 // cb is function(err, stdout, stderr);
@@ -355,4 +346,3 @@ function mapPath(dir, fileNames) {
     return dir + fileName;
   });
 };
-
