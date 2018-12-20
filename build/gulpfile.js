@@ -1,9 +1,9 @@
 // Notes before running these tasks.
 
-// These tasks will build the breeze server for either AspNet or AspNetCore ( or both) 
+// You will need to do the following in order to build the breeze server for either AspNet or AspNetCore ( or both) 
 // 1) Build the projects with project refs and test.
 // 2) Update the .NET version numbers in the .Net projects.
-// 3) If any 3rd party dlls refs are changed - you will need to update the approriate 'default.nuspec' file in the 'AspNet(Core)/Nuget.Builds' dir.
+// 3) If any 3rd party dlls refs are changed - you will need to update the appropriate 'default.nuspec' file in the 'AspNet(Core)/Nuget.Builds' dir.
 // 4) Run 'gulp initDllTemplates' at least once if any dll names have changed.
 // 5) You will need to uncomment one of the '_buildSlnDirs' setting below.
 // 6) You will need to update the appropriate 'version.txt' file in either the AspNet or AspNetCore dirs to match
@@ -40,8 +40,8 @@ var _jsBuildDir = '../../Breeze.js/build/';
 
 // TODO: pick one of the next 3 _buildSlnDirs defs
 // var _buildSlnDirs = ["../AspNet/", "../AspNetCore/"];
-var _buildSlnDirs = ["../AspNet/"];
-// var _buildSlnDirs = ["../AspNetCore/"];
+// var _buildSlnDirs = ["../AspNet/"];
+var _buildSlnDirs = ["../AspNetCore/"];
 
 var _nugetDirs = _buildSlnDirs.map(function(bsd) {
   return path.join(bsd, "/Nuget.builds/");
@@ -186,11 +186,15 @@ gulp.task('nugetDeploy', function(done) {
     var src = nd + '**/*.nupkg';
     var fileNames = glob.sync( src);
     async.eachSeries(fileNames, function (fileName, cb2) {
-      gutil.log('Deploying nuspec file: ' + fileName);
+      // Do not push Breeze Client here
+      if (fileName.indexOf('Breeze.Client')==-1) {
+        gutil.log('Deploying nuspec file: ' + fileName);
+        var cmd = 'nuget push ' + fileName +  ' {{ nuget password here }} -Source https://www.nuget.org'
+        execCommands([ cmd], { shouldThrow: false }, cb2);
+      } else {
+        cb2();
+      }
       
-      var cmd = 'nuget push ' + fileName +  ' {{nuget password goes here - without braces}} -Source https://www.nuget.org'
-      
-      execCommands([ cmd], { shouldThrow: false }, cb2);
     }, cb1);
   }, done);
 });

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.Persistence</id>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <title>Breeze Server - .NET Core Persistence</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
@@ -11,13 +11,13 @@
         <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Basic Persistence functionality for any Breeze Server using .NET Core.</description>
-        <summary>Breeze Server - Persistence</summary>
+        <summary>Breeze Server - Persistence for .NET Core</summary>
         <copyright>Copyright © IdeaBlade 2012-2019</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>AspNetCore javascript Breeze BreezeJs </tags>
 		<dependencies>
-            <dependency id="Breeze.Core" version="[1.0.2]"/>
+            <dependency id="Breeze.Core" version="[1.0.3]"/>
             <dependency id="Newtonsoft.Json" version="12.0.1"/>
 		</dependencies>
     </metadata>

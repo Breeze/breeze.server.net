@@ -8,7 +8,7 @@
     <PackageReleaseNotes>First release...</PackageReleaseNotes>
     <PackageTags>Breeze BreezeJs</PackageTags>
     <Description>.NET Core Persistence using Entity Framework Core for Breeze Server running on .NET Core</Description>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>Jay Traband</Authors>
     <Company>IdeaBlade</Company>
     <Product>Breeze.Persistence.EFCore</Product>
@@ -16,7 +16,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <FileVersion>1.0.2.0</FileVersion>
+    <FileVersion>1.0.3.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
