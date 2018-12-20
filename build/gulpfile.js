@@ -9,7 +9,8 @@
 // 6) You will need to update the appropriate 'version.txt' file in either the AspNet or AspNetCore dirs to match
 // 7) run 'gulp nugetTestDeploy'
 // 8) test the deployment locally - by updating test project to point to local nuget cache
-// 9) run 'gulp nugetDeploy'
+// 9) replace the { nuget password } in the nugetDeploy task ( do NOT check this in)
+// 10) run 'gulp nugetDeploy'
 
 
 // Build for breeze.server.net
