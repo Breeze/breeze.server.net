@@ -1,5 +1,6 @@
 ﻿using Breeze.Core;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -98,21 +99,32 @@ namespace Breeze.AspNetCore.NetCore
             // This doesn't work because WebApi2 OData will actually just skip the portions of the query that it can't process and return what it can ( under some conditions). 
 
             var expandQueryString = queryOptions.RawValues.Expand;
+            //if (!String.IsNullOrWhiteSpace(expandQueryString))
+            //{
+            //    expandQueryString = expandQueryString.Replace('/', '.');
+            //}
             var orderByQueryString = queryOptions.RawValues.OrderBy;
             var selectQueryString = queryOptions.RawValues.Select;
+            var inlineCountEnabled = queryOptions.Request.QueryString.ToString().ToLower().Contains("inlinecount=allpages");
 
             ODataQueryOptions newQueryOptions = queryOptions;
+            if (inlineCountEnabled)
+            {
+                newQueryOptions = QueryHelper.RemoveInlineCount(newQueryOptions);
+            }
             if (!string.IsNullOrWhiteSpace(selectQueryString))
             {
-                newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
+                newQueryOptions = QueryHelper.RemoveSelect(newQueryOptions);
             }
-            else if ((!string.IsNullOrWhiteSpace(orderByQueryString)) && orderByQueryString.IndexOf('/') >= 0)
+            if ((!string.IsNullOrWhiteSpace(orderByQueryString)) && orderByQueryString.IndexOf('/') >= 0)
             {
-                newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
+                //newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
+                newQueryOptions = QueryHelper.FixupOrderBy(newQueryOptions);
             }
-            else if (ManuallyExpand && !string.IsNullOrWhiteSpace(expandQueryString))
+            if (/*ManuallyExpand &&*/ !string.IsNullOrWhiteSpace(expandQueryString))
             {
-                newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
+                //newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
+                newQueryOptions = QueryHelper.FixupExpand(newQueryOptions);
             }
 
 
@@ -122,31 +134,15 @@ namespace Breeze.AspNetCore.NetCore
             }
             else
             {
-                // remove inlinecount or it will be executed two times
-                if (newQueryOptions.Count != null)
-                {
-                    newQueryOptions = QueryHelper.RemoveInlineCount(newQueryOptions);
-                }
-
                 // apply default processing first with "unsupported" stuff removed. 
                 var q = newQueryOptions.ApplyTo(queryable, querySettings);
                 // then apply unsupported stuff. 
 
-                string inlinecountString = queryOptions.RawValues.Count;
-                if (!string.IsNullOrWhiteSpace(inlinecountString))
-                {
-                    if (inlinecountString == "allpages")
-                    {
-                        var inlineCount = (Int64)Queryable.Count((dynamic)q);
-                        //queryOptions.Request.SetInlineCount(inlineCount);
-                    }
-                }
-
-                q = ApplyOrderBy(q, queryOptions);
-                var q2 = ApplySelect(q, queryOptions);
+                //q = ApplyOrderBy(q, newQueryOptions);
+                var q2 = ApplySelect(q, newQueryOptions);
                 if (q2 == q)
                 {
-                    q2 = ApplyExpand(q, queryOptions);
+                    q2 = ApplyExpand(q, newQueryOptions);
                 }
 
                 return q2;
@@ -155,26 +151,36 @@ namespace Breeze.AspNetCore.NetCore
 
         }
 
-        public static ODataQueryOptions RemoveSelectExpandOrderBy(ODataQueryOptions queryOptions)
+        public static ODataQueryOptions RemoveSelect(ODataQueryOptions queryOptions)
         {
-            var optionsToRemove = new List<String>() { "$select", "$expand", "$orderby", "$top", "$skip" };
+            //var optionsToRemove = new List<String>() { "$select", "$expand", "$orderby"/*, "$top", "$skip"*/ };
+            var optionsToRemove = new List<String>() { "$select"/*, "$orderby", "$top", "$skip"*/ };
             return RemoveOptions(queryOptions, optionsToRemove);
         }
 
         public static ODataQueryOptions RemoveInlineCount(ODataQueryOptions queryOptions)
         {
             var optionsToRemove = new List<String>() { "$inlinecount" };
-            return RemoveOptions(queryOptions, optionsToRemove);
+            var list = new List<KeyValuePair<string, string>>();
+            list.Add(new KeyValuePair<string, string>("$count", "true"));
+            return RemoveOptions(queryOptions, optionsToRemove, list);
         }
 
-        public static ODataQueryOptions RemoveOptions(ODataQueryOptions queryOptions, List<String> optionNames)
+        public static ODataQueryOptions RemoveOptions(ODataQueryOptions queryOptions, List<String> optionNames, List<KeyValuePair<string, string>> newQueryOptions = null)
         {
             var request = queryOptions.Request;
             //var oldUri = new Uri(queryOptions.Request.QueryString.ToString());
             var oldUri = new Uri($"{request.Scheme}://{request.Host}{request.Path.ToString().TrimEnd('/')}/{request.QueryString}");
 
             var map = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(oldUri.Query).Where(d => (d.Key.Trim().Length > 0) && !optionNames.Contains(d.Key.Trim()))
-                .Select(d => new KeyValuePair<string, string>(d.Key, d.Value));
+                .Select(d => new KeyValuePair<string, string>(d.Key, d.Value)).ToList();
+            if (newQueryOptions != null)
+            {
+                newQueryOptions?.ForEach(newQueryOption =>
+                {
+                    map.Add(new KeyValuePair<string, string>(newQueryOption.Key, newQueryOption.Value));
+                });
+            }
 
             var qb = new Microsoft.AspNetCore.Http.Extensions.QueryBuilder(map);
             var newUrl = oldUri.Scheme + "://" + oldUri.Authority + oldUri.AbsolutePath.TrimEnd('/') + "/" + qb.ToQueryString();
@@ -212,18 +218,93 @@ namespace Breeze.AspNetCore.NetCore
         /// <returns></returns>
         public virtual IQueryable ApplyExpand(IQueryable queryable, ODataQueryOptions queryOptions)
         {
+            return queryable;
+            var queryable2 = queryable as IQueryable<object>;
             var expandQueryString = queryOptions.RawValues.Expand;
             if (string.IsNullOrEmpty(expandQueryString)) return queryable;
-            var eleType = TypeFns.GetElementType(queryable.GetType());
-            expandQueryString.Split(',').Select(s => s.Trim()).ToList().ForEach(expand => {
+            var eleType = TypeFns.GetElementType(queryable2.GetType());
+            expandQueryString.Split(',').Select(s => s.Trim().Replace('/', '.')).ToList().ForEach(expand => {
                 //queryable = ((dynamic)queryable).Include(expand.Replace('/', '.'));
-                var method = TypeFns.GetMethodByExample((IQueryable<String> q) => EntityFrameworkQueryableExtensions.Include<String>(q, "dummyPath"), eleType);
-                var func = QueryBuilder.BuildIQueryableFunc(eleType, method, expand);
-                queryable = func(queryable);
+                queryable2 = queryable2.Include(expand);
+                //var method = TypeFns.GetMethodByExample((IQueryable<String> q) => EntityFrameworkQueryableExtensions.Include<String>(q, "dummyPath"), eleType);
+                //var func = QueryBuilder.BuildIQueryableFunc(eleType, method, expand);
+                //queryable2 = func(queryable2 as IQueryable) as IQueryable<object>;
             });
-            return queryable;
+            return queryable2 as IQueryable;
         }
 
+        public static ODataQueryOptions FixupExpand(ODataQueryOptions queryOptions)
+        {
+            var expandQueryString = queryOptions.RawValues.Expand;
+            if (string.IsNullOrEmpty(expandQueryString)) return queryOptions;
+            var request = queryOptions.Request;
+            var oldUri = new Uri($"{request.Scheme}://{request.Host}{request.Path.ToString().TrimEnd('/')}/{request.QueryString}");
+
+            var map = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(oldUri.Query).Where(d => (d.Key.Trim().Length > 0))
+                .Select(d => new KeyValuePair<string, string>(d.Key, d.Value)).ToList();
+            bool foundExpand = false;
+            for (int i = 0; i < map.Count; i++)
+            {
+                var mapItem = map[i];
+                if (mapItem.Key == "$expand")
+                {
+                    var expandItems = mapItem.Value.Split(',').ToList();
+                    if (expandItems.Count <= 1) continue;
+                    foundExpand = true;
+                    var result = String.Empty;
+                    expandItems.ForEach(expandItem =>
+                    {
+                        var orderByItems = expandItem.Split('/');
+                        var thisResult = orderByItems[0];
+                        for (int j = 1; j < orderByItems.Length; j++)
+                        {
+                            thisResult += "($expand=" + orderByItems[j];
+                        }
+                        thisResult += String.Empty.PadLeft(orderByItems.Length - 1, ')');
+                        result += thisResult + ",";
+                    });
+                    result = result.TrimEnd(',');
+
+                    //map[i] = new KeyValuePair<string, string>(mapItem.Key, "OrderView,OrderItem,OrderItem($expand=OrderItemType),OrderItem($expand=OrderItemActivity),OrderNotes,OrderType,Circuit,OwnerUser,Circuit($expand=ALocation),Circuit($expand=ZLocation),BusinessEntity");
+                    map[i] = new KeyValuePair<string, string>(mapItem.Key, result);
+                }
+            }
+            if (!foundExpand) return queryOptions;
+            var qb = new Microsoft.AspNetCore.Http.Extensions.QueryBuilder(map);
+            var newUrl = oldUri.Scheme + "://" + oldUri.Authority + oldUri.AbsolutePath.TrimEnd('/') + "/" + qb.ToQueryString();
+            request.QueryString = qb.ToQueryString();
+            var newQo = new ODataQueryOptions(queryOptions.Context, request);
+            return newQo;
+        }
+        public static ODataQueryOptions FixupOrderBy(ODataQueryOptions queryOptions)
+        {
+            return queryOptions;
+            var expandQueryString = queryOptions.RawValues.Expand;
+            if (string.IsNullOrEmpty(expandQueryString)) return queryOptions;
+            var request = queryOptions.Request;
+            var oldUri = new Uri($"{request.Scheme}://{request.Host}{request.Path.ToString().TrimEnd('/')}/{request.QueryString}");
+
+            var map = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(oldUri.Query).Where(d => (d.Key.Trim().Length > 0))
+                .Select(d => new KeyValuePair<string, string>(d.Key, d.Value)).ToList();
+            bool foundExpand = false;
+            for (int i = 0; i < map.Count; i++)
+            {
+                var mapItem = map[i];
+                if (mapItem.Key == "$orderby")
+                {
+                    var expandItems = mapItem.Value.Split(',').ToList();
+                    if (expandItems.Count <= 1) continue;
+                    //foundExpand = true;
+                    //map[i] = new KeyValuePair<string, string>(mapItem.Key, "OrderView,OrderItem,OrderItem($expand=OrderItemType),OrderItem($expand=OrderItemActivity),OrderNotes,OrderType,Circuit,OwnerUser,Circuit($expand=ALocation),Circuit($expand=ZLocation),BusinessEntity");
+                }
+            }
+            if (!foundExpand) return queryOptions;
+            var qb = new Microsoft.AspNetCore.Http.Extensions.QueryBuilder(map);
+            var newUrl = oldUri.Scheme + "://" + oldUri.Authority + oldUri.AbsolutePath.TrimEnd('/') + "/" + qb.ToQueryString();
+            request.QueryString = qb.ToQueryString();
+            var newQo = new ODataQueryOptions(queryOptions.Context, request);
+            return newQo;
+        }
 
         public virtual IQueryable ApplyOrderBy(IQueryable queryable, ODataQueryOptions queryOptions)
         {
@@ -307,9 +388,7 @@ namespace Breeze.AspNetCore.NetCore
         /// <param name="queryable"></param>
         public virtual void WrapResult(HttpRequest request, ActionExecutedContext actionExecutedContext, IQueryable queryResult)
         {
-            Object tmp;
-            request.HttpContext.Items.TryGetValue("MS_InlineCount", out tmp);
-            var inlineCount = (Int64?)tmp;
+            var inlineCount = request.ODataFeature().TotalCount;
 
             // if a select or expand was encountered we need to
             // execute the DbQueries here, so that any exceptions thrown can be properly returned.
