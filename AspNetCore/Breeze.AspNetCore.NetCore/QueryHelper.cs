@@ -98,6 +98,7 @@ namespace Breeze.AspNetCore.NetCore
             // Another approach that DOESN'T work is to let WebApi2 OData try to do it stuff and then only handle the cases where it throws an exception.
             // This doesn't work because WebApi2 OData will actually just skip the portions of the query that it can't process and return what it can ( under some conditions). 
 
+            var filterQueryString = queryOptions.RawValues.Filter;
             var expandQueryString = queryOptions.RawValues.Expand;
             //if (!String.IsNullOrWhiteSpace(expandQueryString))
             //{
@@ -125,6 +126,10 @@ namespace Breeze.AspNetCore.NetCore
             {
                 //newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
                 newQueryOptions = QueryHelper.FixupExpand(newQueryOptions);
+            }
+            if (!string.IsNullOrWhiteSpace(filterQueryString))
+            {
+                newQueryOptions = QueryHelper.FixupFilter(newQueryOptions);
             }
 
 
@@ -349,6 +354,39 @@ namespace Breeze.AspNetCore.NetCore
             return result;
         }
 
+        public static ODataQueryOptions FixupFilter(ODataQueryOptions queryOptions)
+        {
+            var filterQueryString = queryOptions.RawValues.Filter;
+            if (string.IsNullOrEmpty(filterQueryString)) return queryOptions;
+            var request = queryOptions.Request;
+            var oldUri = new Uri($"{request.Scheme}://{request.Host}{request.Path.ToString().TrimEnd('/')}/{request.QueryString}");
+
+            var map = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(oldUri.Query).Where(d => (d.Key.Trim().Length > 0))
+                .Select(d => new KeyValuePair<string, string>(d.Key, d.Value)).ToList();
+            bool foundsubstringof = false;
+            for (int i = 0; i < map.Count; i++)
+            {
+                var mapItem = map[i];
+                // swap "substringof" with "contains" and swap parm values
+                if (mapItem.Key == "$filter" && mapItem.Value.Contains("substringof"))
+                {
+                    var result = System.Text.RegularExpressions.Regex.Replace(mapItem.Value, @"substringof\s*?\(\s*?('[^']+?'|[^,]+?)\s*?,\s*?('[^']+?'|[^,]+?)\s*?\)",
+                        m => $"contains({m.Groups[2].Value},{m.Groups[1].Value})");
+                    if (result != mapItem.Value)
+                    {
+                        foundsubstringof = true;
+                        map[i] = new KeyValuePair<string, string>(mapItem.Key, result);
+                    }
+                }
+            }
+            if (!foundsubstringof) return queryOptions;
+            var qb = new Microsoft.AspNetCore.Http.Extensions.QueryBuilder(map);
+            var newUrl = oldUri.Scheme + "://" + oldUri.Authority + oldUri.AbsolutePath.TrimEnd('/') + "/" + qb.ToQueryString();
+            request.QueryString = qb.ToQueryString();
+            var newQo = new ODataQueryOptions(queryOptions.Context, request);
+            return newQo;
+        }
+
         private static Func<IQueryable, IQueryable> BuildIQueryableFunc<TArg>(Type instanceType, MethodInfo method, TArg parameter, Type queryableBaseType = null)
         {
             if (queryableBaseType == null)
@@ -452,7 +490,7 @@ namespace Breeze.AspNetCore.NetCore
         {
             var controller = actionExecutedContext.Controller as Microsoft.AspNetCore.Mvc.Controller;
             var formatSelector = actionExecutedContext.HttpContext.RequestServices.GetRequiredService<Microsoft.AspNetCore.Mvc.Infrastructure.OutputFormatterSelector>();
-            
+
             //var jsonFormatter = request.GetConfiguration().Formatters.JsonFormatter;
             //ConfigureFormatter(jsonFormatter, queryable);
         }
