@@ -463,8 +463,9 @@ namespace Breeze.AspNetCore.NetCore
                     var resultType = objResult.Value.GetType();
                     if (resultType.Name != "String")
                     {
-                        var ss = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+                        var ss = new JsonSerializerSettings();
                         ss = JsonSerializationFns.UpdateWithDefaults(ss);
+                        ss.NullValueHandling = NullValueHandling.Ignore;
                         //ss.TypeNameHandling = TypeNameHandling.None;
                         //ss.PreserveReferencesHandling = PreserveReferencesHandling.None;
                         //var finalJsonIndented = JsonConvert.SerializeObject(result, Formatting.Indented, ss);
