@@ -254,7 +254,7 @@ namespace Breeze.AspNetCore.NetCore
                 if (mapItem.Key == "$expand")
                 {
                     var expandItems = mapItem.Value.Split(',').ToList();
-                    if (expandItems.Count <= 1) continue;
+                    if (expandItems.Count <= 0) continue;
                     foundExpand = true;
                     var result = String.Empty;
                     expandItems.ForEach(expandItem =>
@@ -270,7 +270,6 @@ namespace Breeze.AspNetCore.NetCore
                     });
                     result = result.TrimEnd(',');
 
-                    //map[i] = new KeyValuePair<string, string>(mapItem.Key, "OrderView,OrderItem,OrderItem($expand=OrderItemType),OrderItem($expand=OrderItemActivity),OrderNotes,OrderType,Circuit,OwnerUser,Circuit($expand=ALocation),Circuit($expand=ZLocation),BusinessEntity");
                     map[i] = new KeyValuePair<string, string>(mapItem.Key, result);
                 }
             }
@@ -284,14 +283,14 @@ namespace Breeze.AspNetCore.NetCore
         public static ODataQueryOptions FixupOrderBy(ODataQueryOptions queryOptions)
         {
             return queryOptions;
-            var expandQueryString = queryOptions.RawValues.Expand;
+            var expandQueryString = queryOptions.RawValues.OrderBy;
             if (string.IsNullOrEmpty(expandQueryString)) return queryOptions;
             var request = queryOptions.Request;
             var oldUri = new Uri($"{request.Scheme}://{request.Host}{request.Path.ToString().TrimEnd('/')}/{request.QueryString}");
 
             var map = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(oldUri.Query).Where(d => (d.Key.Trim().Length > 0))
                 .Select(d => new KeyValuePair<string, string>(d.Key, d.Value)).ToList();
-            bool foundExpand = false;
+            bool foundOrderBy = false;
             for (int i = 0; i < map.Count; i++)
             {
                 var mapItem = map[i];
@@ -299,11 +298,11 @@ namespace Breeze.AspNetCore.NetCore
                 {
                     var expandItems = mapItem.Value.Split(',').ToList();
                     if (expandItems.Count <= 1) continue;
-                    //foundExpand = true;
+                    foundOrderBy = true;
                     //map[i] = new KeyValuePair<string, string>(mapItem.Key, "OrderView,OrderItem,OrderItem($expand=OrderItemType),OrderItem($expand=OrderItemActivity),OrderNotes,OrderType,Circuit,OwnerUser,Circuit($expand=ALocation),Circuit($expand=ZLocation),BusinessEntity");
                 }
             }
-            if (!foundExpand) return queryOptions;
+            if (!foundOrderBy) return queryOptions;
             var qb = new Microsoft.AspNetCore.Http.Extensions.QueryBuilder(map);
             var newUrl = oldUri.Scheme + "://" + oldUri.Authority + oldUri.AbsolutePath.TrimEnd('/') + "/" + qb.ToQueryString();
             request.QueryString = qb.ToQueryString();
