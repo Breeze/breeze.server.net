@@ -113,10 +113,10 @@ namespace Breeze.AspNetCore.NetCore
             {
                 newQueryOptions = QueryHelper.RemoveInlineCount(newQueryOptions);
             }
-            if (!string.IsNullOrWhiteSpace(selectQueryString))
-            {
-                newQueryOptions = QueryHelper.RemoveSelect(newQueryOptions);
-            }
+            //if (!string.IsNullOrWhiteSpace(selectQueryString))
+            //{
+            //    newQueryOptions = QueryHelper.RemoveSelect(newQueryOptions);
+            //}
             if ((!string.IsNullOrWhiteSpace(orderByQueryString)) && orderByQueryString.IndexOf('/') >= 0)
             {
                 //newQueryOptions = QueryHelper.RemoveSelectExpandOrderBy(newQueryOptions);
