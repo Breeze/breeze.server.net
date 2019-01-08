@@ -11,15 +11,15 @@
       <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
       <description>Persistence for EF Core functionality for any Breeze Server using .NET Core</description>
-      <summary>Breeze Server - Persistence EF Core</summary>
-      <copyright>Copyright © IdeaBlade 2012-2018</copyright>
+      <summary>Breeze Server - Persistence for EF Core on .NET Core</summary>
+      <copyright>Copyright © IdeaBlade 2012-2019</copyright>
       <language>en-US</language>
       <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
       <tags>AspNetCore Entity Framework javascript Breeze BreezeJs </tags>
       <dependencies>
         <dependency id="Breeze.Core" version="[{{version}}]"/>
         <dependency id="Breeze.Persistence" version="[{{version}}]"/>
-        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="2.0.1"/>
+        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="2.2.0"/>
       </dependencies>
     </metadata>
     <files>

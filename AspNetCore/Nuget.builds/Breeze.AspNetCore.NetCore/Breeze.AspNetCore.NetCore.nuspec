@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.AspNetCore.NetCore</id>
-        <version>0.1.2</version>
+        <version>1.0.3</version>
         <title>Breeze Server - ASP.NET Core Provider</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
@@ -12,15 +12,16 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Core ASP.NET Core functionality for any Breeze Server using ASP.NET Core</description>
         <summary>Breeze Server - ASP.NET Core </summary>
-        <copyright>Copyright © IdeaBlade 2012-2018</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2019</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>AspNetCore javascript Breeze BreezeJs </tags>
 		<dependencies>
-      <dependency id="Breeze.Core" version="[0.1.2]"/>
-      <dependency id="Breeze.Persistence" version="[0.1.2]"/>
-      <dependency id="Microsoft.AspNetCore" version="2.0.1"/>
-      <dependency id="Microsoft.AspNetCore.Mvc" version="2.0.1"/>
+            <dependency id="Breeze.Core" version="[1.0.3]"/>
+            <dependency id="Breeze.Persistence" version="[1.0.3]"/>
+            <dependency id="Microsoft.AspNetCore" version="2.2.0"/>
+            <dependency id="Microsoft.AspNetCore.Mvc" version="2.2.0"/>
+            
 		</dependencies>
     </metadata>
     <files>
