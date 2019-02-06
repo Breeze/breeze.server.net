@@ -362,23 +362,59 @@ namespace Breeze.AspNetCore.NetCore
 
             var map = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(oldUri.Query).Where(d => (d.Key.Trim().Length > 0))
                 .Select(d => new KeyValuePair<string, string>(d.Key, d.Value)).ToList();
-            bool foundsubstringof = false;
+            bool filterChanged = false;
             for (int i = 0; i < map.Count; i++)
             {
                 var mapItem = map[i];
-                // swap "substringof" with "contains" and swap parm values
-                if (mapItem.Key == "$filter" && mapItem.Value.Contains("substringof"))
+                if (mapItem.Key.ToLower() == "$filter")
                 {
-                    var result = System.Text.RegularExpressions.Regex.Replace(mapItem.Value, @"substringof\s*?\(\s*?('[^']+?'|[^,]+?)\s*?,\s*?('[^']+?'|[^,]+?)\s*?\)",
-                        m => $"contains({m.Groups[2].Value},{m.Groups[1].Value})");
-                    if (result != mapItem.Value)
+                    // swap "substringof" with "contains" and swap parm values
+                    if (mapItem.Value.ToLower().Contains("substringof"))
                     {
-                        foundsubstringof = true;
-                        map[i] = new KeyValuePair<string, string>(mapItem.Key, result);
+                        var r = new System.Text.RegularExpressions.Regex(@"substringof\s*?\(\s*?('[^']+?'|[^,]+?)\s*?,\s*?('[^']+?'|[^,]+?)\s*?\)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        var result = r.Replace(mapItem.Value, m => $"contains({m.Groups[2].Value},{m.Groups[1].Value})");
+                        if (result != mapItem.Value)
+                        {
+                            filterChanged = true;
+                            mapItem = map[i] = new KeyValuePair<string, string>(mapItem.Key, result);
+                        }
+                    }
+                    // OData 4 does not support DateTime.  Substitute "datetime('yyyy-mmm-ddThh:mm:ss')" values with "cast(yyyy-mmm-ddThh:mm:ssTZ,Edm.DateTimeOffset)"
+                    if (mapItem.Value.ToLower().Contains("datetime'"))
+                    {
+                        var r = new System.Text.RegularExpressions.Regex(@"datetime\s*?'([^']+?)'", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        var result = r.Replace(mapItem.Value, m =>
+                        {
+                            var origVal = m.Groups[1].Value;
+                            var containsT = origVal.ToUpper().IndexOf('T') > -1;
+                            var containsTZ = (origVal.Count(s => s == '-') > 2) || origVal.IndexOf('+') > -1 || origVal.ToUpper().IndexOf('Z') > -1;
+                            var curUTCoffset = System.TimeZoneInfo.Local.BaseUtcOffset.ToString().Substring(0, 6);
+                            // if has TimeZone, return as is
+                            if (containsTZ)
+                            {
+                                return $"cast({origVal},Edm.DateTimeOffset)";
+                            }
+                            // if no TimeZone, add TZ
+                            if (containsT && !containsTZ)
+                            {
+                                return $"cast({origVal}{curUTCoffset},Edm.DateTimeOffset)";
+                            }
+                            // if no TimeZone, add TZ
+                            if (!containsT || !containsTZ)
+                            {
+                                return $"cast({origVal}{curUTCoffset},Edm.DateTimeOffset)";
+                            }
+                            throw new Exception($"Unable to parse {origVal} as DateTimeOffset value.");
+                        });
+                        if (result != mapItem.Value)
+                        {
+                            filterChanged = true;
+                            mapItem = map[i] = new KeyValuePair<string, string>(mapItem.Key, result);
+                        }
                     }
                 }
             }
-            if (!foundsubstringof) return queryOptions;
+            if (!filterChanged) return queryOptions;
             var qb = new Microsoft.AspNetCore.Http.Extensions.QueryBuilder(map);
             var newUrl = oldUri.Scheme + "://" + oldUri.Authority + oldUri.AbsolutePath.TrimEnd('/') + "/" + qb.ToQueryString();
             request.QueryString = qb.ToQueryString();
