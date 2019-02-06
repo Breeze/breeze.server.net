@@ -132,7 +132,13 @@ namespace Microsoft.Data.Edm {
         }
         stream.Position = 0;
         using (var reader = XmlReader.Create(stream)) {
-          return EdmxReader.Parse(reader);
+          IEdmModel model;
+          IEnumerable<EdmError> errors;
+          if (!CsdlReader.TryParse(new[] { reader }, out model, out errors)) {
+            foreach (var e in errors)
+              Debug.Fail(e.ErrorCode.ToString("F"), e.ErrorMessage);
+          }
+          return model;
         }
       }
     }

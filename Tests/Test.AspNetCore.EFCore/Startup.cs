@@ -60,9 +60,9 @@ namespace Test.AspNetCore {
 
       // allows use of html startup file.
       // app.UseStaticFiles();
+      var path = Path.Combine(Directory.GetCurrentDirectory(), @"breezeTests");
       app.UseStaticFiles(new StaticFileOptions() {
-        FileProvider = new PhysicalFileProvider(
-           Path.Combine(Directory.GetCurrentDirectory(), @"breezeTests")),
+        FileProvider = new PhysicalFileProvider(path),
         RequestPath = new PathString("")
       });
 

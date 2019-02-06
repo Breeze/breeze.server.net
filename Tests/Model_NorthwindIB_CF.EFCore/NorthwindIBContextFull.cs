@@ -147,7 +147,6 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets the Products. </summary>
-    // [DataMember]
     [InverseProperty("Category")]
     public ICollection<Product> Products { get; set; }
 
@@ -371,30 +370,20 @@ namespace Foo {
 
     /// <summary>Gets or sets the ID. </summary>
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("ID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="EmployeeTerritory_ID")]
     public int ID { get; set; }
 
     /// <summary>Gets or sets the EmployeeID. </summary>
-    // [DataMember]
-    //[ForeignKey("Employee")]
     [Column("EmployeeID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="EmployeeTerritory_EmployeeID")]
     public int EmployeeID { get; set; }
 
     /// <summary>Gets or sets the TerritoryID. </summary>
-    // [DataMember]
-    // [ForeignKey("Territory")]
     [Column("TerritoryID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="EmployeeTerritory_TerritoryID")]
     public int TerritoryID { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
-    // [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="EmployeeTerritory_RowVersion")]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -402,13 +391,11 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets or sets the Employee. </summary>
-    // [DataMember]
     [ForeignKey("EmployeeID")]
     [InverseProperty("EmployeeTerritories")]
     public Employee Employee { get; set; }
 
     /// <summary>Gets or sets the Territory. </summary>
-    // [DataMember]
     [ForeignKey("TerritoryID")]
     [InverseProperty("EmployeeTerritories")]
     public Territory Territory { get; set; }
@@ -428,89 +415,71 @@ namespace Foo {
 
     /// <summary>Gets or sets the OrderID. </summary>
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("OrderID")]
     public int OrderID { get; set; }
 
     /// <summary>Gets or sets the CustomerID. </summary>
-    // [DataMember]
-    // [ForeignKey("Customer")]
     [Column("CustomerID")]
     public System.Nullable<System.Guid> CustomerID { get; set; }
 
     /// <summary>Gets or sets the EmployeeID. </summary>
-    // [DataMember]
-    // [ForeignKey("Employee")]
     [Column("EmployeeID")]
     public System.Nullable<int> EmployeeID { get; set; }
 
     /// <summary>Gets or sets the OrderDate. </summary>
-    // [DataMember]
-    [Column("OrderDate")]
+    // [Column("OrderDate")]
+    // needed by EF Core 2 because new default is that .NET DateTimes convert to DateTime2 in DB, but this column is a DateTime in the DB.
+    [Column("OrderDate", TypeName = "datetime")]
     public System.Nullable<System.DateTime> OrderDate { get; set; }
 
     /// <summary>Gets or sets the RequiredDate. </summary>
-    // [DataMember]
-    [Column("RequiredDate")]
+    // [Column("RequiredDate")]
+    // needed by EF Core 2 because new default is that .NET DateTimes convert to DateTime2 in DB, but this column is a DateTime in the DB.
+    [Column("RequiredDate", TypeName = "datetime")]
     public System.Nullable<System.DateTime> RequiredDate { get; set; }
 
     /// <summary>Gets or sets the ShippedDate. </summary>
-    // [DataMember]
-    [Column("ShippedDate")]
+    // [Column("ShippedDate")] - see above
+    [Column("ShippedDate", TypeName = "datetime")]
     public System.Nullable<System.DateTime> ShippedDate { get; set; }
 
     /// <summary>Gets or sets the Freight. </summary>
-    // [DataMember]
     [Column("Freight")]
     public System.Nullable<decimal> Freight { get; set; }
 
     /// <summary>Gets or sets the ShipName. </summary>
-    // [DataMember]
     [Column("ShipName")]
-    // [IbVal.StringLengthVerifier(MaxValue=40, IsRequired=false, ErrorMessageResourceName="Order_ShipName")]
     [MaxLength(40)]
     public string ShipName { get; set; }
 
     /// <summary>Gets or sets the ShipAddress. </summary>
-    // [DataMember]
     [Column("ShipAddress")]
-    // [IbVal.StringLengthVerifier(MaxValue=60, IsRequired=false, ErrorMessageResourceName="Order_ShipAddress")]
     [MaxLength(60)]
     public string ShipAddress { get; set; }
 
     /// <summary>Gets or sets the ShipCity. </summary>
-    // [DataMember]
     [Column("ShipCity")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Order_ShipCity")]
     [MaxLength(15)]
     public string ShipCity { get; set; }
 
     /// <summary>Gets or sets the ShipRegion. </summary>
-    // [DataMember]
     [Column("ShipRegion")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Order_ShipRegion")]
     [MaxLength(15)]
     public string ShipRegion { get; set; }
 
     /// <summary>Gets or sets the ShipPostalCode. </summary>
-    // [DataMember]
     [Column("ShipPostalCode")]
-    // [IbVal.StringLengthVerifier(MaxValue=10, IsRequired=false, ErrorMessageResourceName="Order_ShipPostalCode")]
     [MaxLength(10)]
     public string ShipPostalCode { get; set; }
 
     /// <summary>Gets or sets the ShipCountry. </summary>
-    // [DataMember]
     [Column("ShipCountry")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Order_ShipCountry")]
     [MaxLength(15)]
     public string ShipCountry { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
-    // [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Order_RowVersion")]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -518,24 +487,20 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets or sets the Customer. </summary>
-    // [DataMember]
     [ForeignKey("CustomerID")]
     [InverseProperty("Orders")]
     public Customer Customer { get; set; }
 
     /// <summary>Gets or sets the Employee. </summary>
-    // [DataMember]
     [ForeignKey("EmployeeID")]
     [InverseProperty("Orders")]
     public Employee Employee { get; set; }
 
     /// <summary>Gets the OrderDetails. </summary>
-    // [DataMember]
     [InverseProperty("Order")]
     public ICollection<OrderDetail> OrderDetails { get; set; }
 
     /// <summary>Gets or sets the InternationalOrder. </summary>
-    // [DataMember]
     [InverseProperty("Order")]
     public InternationalOrder InternationalOrder { get; set; }
 
@@ -555,7 +520,6 @@ namespace Foo {
     /// <summary>Gets or sets the OrderID. </summary>
     // [Key]
     // [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    // // [DataMember]
     [Column("OrderID")]
     public int OrderID { get; set; }
 
@@ -563,28 +527,22 @@ namespace Foo {
     // [Key]
     // [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Column("ProductID")]
-    // // [DataMember]
     public int ProductID { get; set; }
 
     /// <summary>Gets or sets the UnitPrice. </summary>  
     [Column("UnitPrice")]
-    // // [DataMember]
     public decimal UnitPrice { get; set; }
 
     /// <summary>Gets or sets the Quantity. </summary>
-    
     [Column("Quantity")]
-    // // [DataMember]
     public short Quantity { get; set; }
 
     /// <summary>Gets or sets the Discount. </summary>
     [Column("Discount")]
-    // // [DataMember]
     public float Discount { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
     [Column("RowVersion")]
-    // // [DataMember]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -592,15 +550,12 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets or sets the Order. </summary>
-    // // [DataMember]
     [ForeignKey("OrderID")]
     [InverseProperty("OrderDetails")]
     public Order Order { get; set; }
 
     /// <summary>Gets or sets the Product. </summary>
     [ForeignKey("ProductID")]
-    // [InverseProperty("OrderDetails")]
-    // // [DataMember]
     public Product Product { get; set; }
 
     #endregion Navigation properties
@@ -618,121 +573,89 @@ namespace Foo {
 
     /// <summary>Gets or sets the EmployeeID. </summary>
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Column("EmployeeID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="PreviousEmployee_EmployeeID")]
     public int EmployeeID { get; set; }
 
     /// <summary>Gets or sets the LastName. </summary>
-    // [DataMember]
     [Column("LastName")]
-    // [IbVal.StringLengthVerifier(MaxValue=20, IsRequired=true, ErrorMessageResourceName="PreviousEmployee_LastName")]
     [MaxLength(20)]
     [Required]
     public string LastName { get; set; }
 
     /// <summary>Gets or sets the FirstName. </summary>
-    // [DataMember]
     [Column("FirstName")]
-    // [IbVal.StringLengthVerifier(MaxValue=10, IsRequired=true, ErrorMessageResourceName="PreviousEmployee_FirstName")]
     [MaxLength(10)]
     [Required]
     public string FirstName { get; set; }
 
     /// <summary>Gets or sets the Title. </summary>
-    // [DataMember]
     [Column("Title")]
-    // [IbVal.StringLengthVerifier(MaxValue=30, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_Title")]
     [MaxLength(30)]
     public string Title { get; set; }
 
     /// <summary>Gets or sets the TitleOfCourtesy. </summary>
-    // [DataMember]
     [Column("TitleOfCourtesy")]
-    // [IbVal.StringLengthVerifier(MaxValue=25, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_TitleOfCourtesy")]
     [MaxLength(25)]
     public string TitleOfCourtesy { get; set; }
 
     /// <summary>Gets or sets the BirthDate. </summary>
-    // [DataMember]
-    [Column("BirthDate")]
+    [Column("BirthDate", TypeName = "datetime")]
     public System.Nullable<System.DateTime> BirthDate { get; set; }
 
     /// <summary>Gets or sets the HireDate. </summary>
-    // [DataMember]
-    [Column("HireDate")]
+    [Column("HireDate", TypeName = "datetime")]
     public System.Nullable<System.DateTime> HireDate { get; set; }
 
     /// <summary>Gets or sets the Address. </summary>
-    // [DataMember]
     [Column("Address")]
-    // [IbVal.StringLengthVerifier(MaxValue=60, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_Address")]
     public string Address { get; set; }
 
     /// <summary>Gets or sets the City. </summary>
-    // [DataMember]
     [Column("City")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_City")]
     [MaxLength(15)]
     public string City { get; set; }
 
     /// <summary>Gets or sets the Region. </summary>
-    // [DataMember]
     [Column("Region")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_Region")]
     [MaxLength(15)]
     public string Region { get; set; }
 
     /// <summary>Gets or sets the PostalCode. </summary>
-    // [DataMember]
     [Column("PostalCode")]
-    // [IbVal.StringLengthVerifier(MaxValue=10, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_PostalCode")]
     [MaxLength(10)]
     public string PostalCode { get; set; }
 
     /// <summary>Gets or sets the Country. </summary>
-    // [DataMember]
     [Column("Country")]
-    // [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_Country")]
     [MaxLength(15)]
     public string Country { get; set; }
 
     /// <summary>Gets or sets the HomePhone. </summary>
-    // [DataMember]
     [Column("HomePhone")]
-    // [IbVal.StringLengthVerifier(MaxValue=24, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_HomePhone")]
     [MaxLength(24)]
     public string HomePhone { get; set; }
 
     /// <summary>Gets or sets the Extension. </summary>
-    // [DataMember]
     [Column("Extension")]
-    // [IbVal.StringLengthVerifier(MaxValue=4, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_Extension")]
     [MaxLength(4)]
     public string Extension { get; set; }
 
     /// <summary>Gets or sets the Photo. </summary>
-    // [DataMember]
     [Column("Photo")]
     public byte[] Photo { get; set; }
 
     /// <summary>Gets or sets the Notes. </summary>
-    // [DataMember]
     [Column("Notes")]
     public string Notes { get; set; }
 
     /// <summary>Gets or sets the PhotoPath. </summary>
-    // [DataMember]
     [Column("PhotoPath")]
-    // [IbVal.StringLengthVerifier(MaxValue=255, IsRequired=false, ErrorMessageResourceName="PreviousEmployee_PhotoPath")]
     [MaxLength(255)]
     public string PhotoPath { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
-    // [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="PreviousEmployee_RowVersion")]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -754,73 +677,54 @@ namespace Foo {
 
     /// <summary>Gets or sets the ProductID. </summary>
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("ProductID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Product_ProductID")]
     public int ProductID { get; set; }
 
     /// <summary>Gets or sets the ProductName. </summary>
-    // [DataMember]
     [Column("ProductName")]
-    // [IbVal.StringLengthVerifier(MaxValue=40, IsRequired=true, ErrorMessageResourceName="Product_ProductName")]
     [MaxLength(40)]
     public string ProductName { get; set; }
 
     /// <summary>Gets or sets the SupplierID. </summary>
-    // [DataMember]
-    //[ForeignKey("Supplier")]
     [Column("SupplierID")]
     public System.Nullable<int> SupplierID { get; set; }
 
     /// <summary>Gets or sets the CategoryID. </summary>
-    // [DataMember]
-    // [ForeignKey("Category")]
     [Column("CategoryID")]
     public System.Nullable<int> CategoryID { get; set; }
 
     /// <summary>Gets or sets the QuantityPerUnit. </summary>
-    // [DataMember]
     [Column("QuantityPerUnit")]
-    // [IbVal.StringLengthVerifier(MaxValue=20, IsRequired=false, ErrorMessageResourceName="Product_QuantityPerUnit")]
     public string QuantityPerUnit { get; set; }
 
     /// <summary>Gets or sets the UnitPrice. </summary>
-    // [DataMember]
     [Column("UnitPrice")]
     public System.Nullable<decimal> UnitPrice { get; set; }
 
     /// <summary>Gets or sets the UnitsInStock. </summary>
-    // [DataMember]
     [Column("UnitsInStock")]
     public System.Nullable<short> UnitsInStock { get; set; }
 
     /// <summary>Gets or sets the UnitsOnOrder. </summary>
-    // [DataMember]
     [Column("UnitsOnOrder")]
     public System.Nullable<short> UnitsOnOrder { get; set; }
 
     /// <summary>Gets or sets the ReorderLevel. </summary>
-    // [DataMember]
     [Column("ReorderLevel")]
     public System.Nullable<short> ReorderLevel { get; set; }
 
     /// <summary>Gets or sets the Discontinued. </summary>
-    // [DataMember]
     [Column("Discontinued")]
     [DefaultValue(false)]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Product_Discontinued")]
     public bool Discontinued { get; set; }
 
     /// <summary>Gets or sets the DiscontinuedDate. </summary>
-    // [DataMember]
-    [Column("DiscontinuedDate")]
+    [Column("DiscontinuedDate", TypeName = "datetime")]
     public System.Nullable<System.DateTime> DiscontinuedDate { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
-    // [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Product_RowVersion")]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -828,13 +732,11 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets or sets the Category. </summary>
-    // [DataMember]
     [ForeignKey("CategoryID")]
     [InverseProperty("Products")]
     public Category Category { get; set; }
 
     ///// <summary>Gets the OrderDetails. </summary>
-    //// [DataMember]
     //[InverseProperty("Product")]
     //public ICollection<OrderDetail> OrderDetails {
     //  get;
@@ -842,7 +744,6 @@ namespace Foo {
     //}
 
     /// <summary>Gets or sets the Supplier. </summary>
-    // [DataMember]
     [ForeignKey("SupplierID")]
     [InverseProperty("Products")]
     public Supplier Supplier { get; set; }
@@ -862,24 +763,18 @@ namespace Foo {
 
     /// <summary>Gets or sets the RegionID. </summary>
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Column("RegionID")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Region_RegionID")]
     public int RegionID { get; set; }
 
     /// <summary>Gets or sets the RegionDescription. </summary>
-    // [DataMember]
     [Column("RegionDescription")]
     [MaxLength(50)]
     [Required]
-    // [IbVal.StringLengthVerifier(MaxValue=50, IsRequired=true, ErrorMessageResourceName="Region_RegionDescription")]
     public string RegionDescription { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
-    // [DataMember]
     [Column("RowVersion")]
-    // [IbVal.RequiredValueVerifier( ErrorMessageResourceName="Region_RowVersion")]
     public int RowVersion { get; set; }
 
     #endregion Data Properties
@@ -887,7 +782,6 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets the Territories. </summary>
-    // [DataMember]
     [InverseProperty("Region")]
     public ICollection<Territory> Territories { get; set; }
 
@@ -974,13 +868,10 @@ namespace Foo {
     [MaxLength(30)]
     public string ContactTitle { get; set; }
 
-    // [DataMember]
     public Location Location { get; set; }
 
     ///// <summary>Gets or sets the Address. </summary>
-    //// [DataMember]
     //[Column("Address")]
-    //// [IbVal.StringLengthVerifier(MaxValue=60, IsRequired=false, ErrorMessageResourceName="Supplier_Address")]
     //[MaxLength(60)]
     //public string Address {
     //  get;
@@ -988,9 +879,7 @@ namespace Foo {
     //}
 
     ///// <summary>Gets or sets the City. </summary>
-    //// [DataMember]
     //[Column("City")]
-    //// [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Supplier_City")]
     //[MaxLength(15)]
     //public string City {
     //  get;
@@ -998,7 +887,6 @@ namespace Foo {
     //}
 
     ///// <summary>Gets or sets the Region. </summary>
-    //// [DataMember]
     //[Column("Region")]
     //// [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Supplier_Region")]
     //[MaxLength(15)]
@@ -1008,9 +896,7 @@ namespace Foo {
     //}
 
     ///// <summary>Gets or sets the PostalCode. </summary>
-    //// [DataMember]
     //[Column("PostalCode")]
-    //// [IbVal.StringLengthVerifier(MaxValue=10, IsRequired=false, ErrorMessageResourceName="Supplier_PostalCode")]
     //[MaxLength(10)]
     //public string PostalCode {
     //  get;
@@ -1018,9 +904,7 @@ namespace Foo {
     //}
 
     ///// <summary>Gets or sets the Country. </summary>
-    //// [DataMember]
     //[Column("Country")]
-    //// [IbVal.StringLengthVerifier(MaxValue=15, IsRequired=false, ErrorMessageResourceName="Supplier_Country")]
     //[MaxLength(15)]
     //public string Country {
     //  get;
@@ -1050,7 +934,6 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets the Products. </summary>
-    // [DataMember]
     [InverseProperty("Supplier")]
     public ICollection<Product> Products { get; set; }
 
@@ -1075,7 +958,6 @@ namespace Foo {
     public string City { get; set; }
 
     /// <summary>Gets or sets the Region. </summary>
-    // [DataMember]
     [Column("Region")]
     [MaxLength(15)]
     public string Region { get; set; }
@@ -1195,7 +1077,7 @@ namespace Foo {
     public long CreatedByUserId { get; set; }
 
     /// <summary>Gets or sets the CreatedDate. </summary>
-    [Column("CreatedDate")]
+    [Column("CreatedDate", TypeName ="datetime")]
     public System.DateTime CreatedDate { get; set; }
 
     /// <summary>Gets or sets the ModifiedBy. </summary>
@@ -1208,7 +1090,7 @@ namespace Foo {
     public long ModifiedByUserId { get; set; }
 
     /// <summary>Gets or sets the ModifiedDate. </summary>
-    [Column("ModifiedDate")]
+    [Column("ModifiedDate", TypeName = "datetime")]
     public System.DateTime ModifiedDate { get; set; }
 
     #endregion Data Properties
@@ -1278,25 +1160,21 @@ namespace Foo {
 
     /// <summary>Gets or sets the OrderID. </summary>
     [Key]
-    // [DataMember]
     [ForeignKey("Order")]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Column("OrderID")]
     public int OrderID { get; set; }
 
     /// <summary>Gets or sets the CustomsDescription. </summary>
-    // [DataMember]
     [Column("CustomsDescription")]
     [MaxLength(100)]
     public string CustomsDescription { get; set; }
 
     /// <summary>Gets or sets the ExciseTax. </summary>
-    // [DataMember]
     [Column("ExciseTax")]
     public decimal ExciseTax { get; set; }
 
     /// <summary>Gets or sets the RowVersion. </summary>
-    // [DataMember]
     [Column("RowVersion")]
     public int RowVersion { get; set; }
 
@@ -1305,7 +1183,6 @@ namespace Foo {
     #region Navigation properties
 
     /// <summary>Gets or sets the Order. </summary>
-    // [DataMember]
     //[ForeignKey("OrderID")]
     //[InverseProperty("InternationalOrder")]
     //[Required]
@@ -1358,18 +1235,15 @@ namespace Foo {
 
     #region Data Properties
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("Id")]
     public int Id { get; set; }
 
-    // [DataMember]
     [Column("Comment")]
     public string Comment { get; set; }
     #endregion Data Properties
 
     #region Navigation Properties
-    // [DataMember]
     [InverseProperty("TimeGroup")]
     public ICollection<TimeLimit> TimeLimits { get; set; }
     #endregion Navigation Properties
@@ -1379,25 +1253,21 @@ namespace Foo {
 
   #region Comment class
 
-  // [DataContract(IsReference = true)]
   [Table("Comment", Schema = "dbo")]
   public partial class Comment {
 
     #region Data Properties
 
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Column("CreatedOn", Order = 1)]
+    [Column("CreatedOn", Order = 1, TypeName = "datetime")]
     public System.DateTime CreatedOn { get; set; }
 
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Column("SeqNum", Order = 2)]
     public byte SeqNum { get; set; }
 
-    // [DataMember]
     [Column("Comment1")]
     public string Comment1 { get; set; }
 
@@ -1423,17 +1293,14 @@ namespace Foo {
 //    }
 
 //    [Key]
-//    // [DataMember]
 //    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 //    [Column("Id")]
 //    public int Id { get; set; }
 
 
-//    // [DataMember]
 //    [Column("Geometry1")]
 //    public DbGeometry Geometry1 { get; set; }
 
-//    // [DataMember]
 //    [Column("Geography1")]
 //    public DbGeography Geography1 { get; set; }
 
@@ -1443,29 +1310,23 @@ namespace Foo {
 
   #region UnusualDate class
 
-  // [DataContract(IsReference = true)]
   [Table("UnusualDate", Schema = "dbo")]
   public partial class UnusualDate {
 
     [Key]
-    // [DataMember]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("Id")]
     public int Id { get; set; }
 
-    // [DataMember]
     [Column("CreationDate")]
     public System.DateTimeOffset CreationDate { get; set; }
 
-    // [DataMember]
     [Column("ModificationDate")]
     public System.DateTime ModificationDate { get; set; }
 
-    // [DataMember]
     [Column("CreationDate2")]
     public Nullable<System.DateTimeOffset> CreationDate2 { get; set; }
 
-    // [DataMember]
     [Column("ModificationDate2")]
     public Nullable<System.DateTime> ModificationDate2 { get; set; }
   }

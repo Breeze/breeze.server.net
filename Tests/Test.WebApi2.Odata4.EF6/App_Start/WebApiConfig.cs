@@ -9,10 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
 // using Microsoft.Data.Edm;
-using System.Web.OData.Batch;
 
 #if CODEFIRST_PROVIDER
 using Models.NorthwindIB.CF;
