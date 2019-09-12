@@ -21,7 +21,6 @@ namespace Breeze.Core {
 
     }
 
-
     /**
      * Materializes the serialized json representation of an EntityQuery.
      * @param json The serialized json version of the EntityQuery.
@@ -33,7 +32,7 @@ namespace Breeze.Core {
       Dictionary<string, object> qmap;
       try {
         var dmap = JsonHelper.Deserialize(json);
-        qmap= (Dictionary<string, object>)dmap;
+        qmap = (Dictionary<string, object>)dmap;
       } catch (Exception) {
         throw new Exception(
                 "This EntityQuery ctor requires a valid json string. The following is not json: "
@@ -43,8 +42,8 @@ namespace Breeze.Core {
       this._resourceName = GetMapValue<string>(qmap, "resourceName");
       this._skipCount = GetMapInt(qmap, "skip");
       this._takeCount = GetMapInt(qmap, "take");
-      this._wherePredicate = BasePredicate.PredicateFromMap( GetMapValue<Dictionary<string, object>>(qmap, "where"));
-      this._orderByClause = OrderByClause.From(GetMapValue<List<Object>>(qmap,"orderBy"));
+      this._wherePredicate = BasePredicate.PredicateFromMap(GetMapValue<Dictionary<string, object>>(qmap, "where"));
+      this._orderByClause = OrderByClause.From(GetMapValue<List<Object>>(qmap, "orderBy"));
       this._selectClause = SelectClause.From(GetMapValue<List<Object>>(qmap, "select"));
       this._expandClause = ExpandClause.From(GetMapValue<List<Object>>(qmap, "expand"));
       this._parameters = GetMapValue<Dictionary<string, object>>(qmap, "parameters");
@@ -173,6 +172,17 @@ namespace Breeze.Core {
       return eq;
     }
 
+    //public static IQueryable ApplyExpand(EntityQuery eq, IQueryable queryable, Type eleType) {
+
+    //}
+
+    /** Impl of apply expand is a function is deferred to whatever Persistence framework is being used.
+     i.e. EF vs NHibernate */
+    public static Func<EntityQuery, IQueryable, Type, IQueryable> ApplyExpand {
+      get;
+      set;
+    }
+
     /**
      * Return a new query based on this query with the specified select (projection) clauses added.
      * @param propertyPaths A varargs array of select clauses (each a dot delimited property path).
@@ -245,8 +255,6 @@ namespace Breeze.Core {
       return eq;
     }
 
-
-    
     private List<String> ToStringList(Object src) {
       if (src == null)
         return null;
@@ -256,7 +264,7 @@ namespace Breeze.Core {
         var list = new List<String>();
         list.Add(src as String);
         return list;
-         
+
       }
       throw new Exception("Unable to convert to a List<String>");
     }
@@ -288,8 +296,6 @@ namespace Breeze.Core {
     public Type EntityType {
       get { return _entityType; }
     }
-
-
 
     public String ResourceName {
       get { return _resourceName; }

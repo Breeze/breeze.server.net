@@ -263,6 +263,13 @@
             Override to use a specialized JsonSerializer implementation.
             </summary>
         </member>
+        <member name="M:Breeze.ContextProvider.BreezeConfig.CreateJsonSerializerSettingsForSave">
+            <summary>
+            Override to use a specialized JsonSerializer implementation for saving. 
+            Base implementation uses CreateJsonSerializerSettings, then changes TypeNameHandling to None.
+            http://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_TypeNameHandling.htm
+            </summary>
+        </member>
         <member name="M:Breeze.ContextProvider.BreezeConfig.GetTransactionSettings">
             <summary>
             Returns TransactionSettings.Default.  Override to return different settings.

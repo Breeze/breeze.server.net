@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AspNetCore.EFCore", "Test.AspNetCore.EFCore.csproj", "{B635C96D-1E83-4DA2-9638-346292A30A63}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.AspNetCore.NetCore", "..\..\AspNetCore\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Core", "..\..\AspNetCore\Breeze.Core\Breeze.Core.csproj", "{ED7A4721-018B-40ED-B790-28B0F1A8D5C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "..\..\AspNetCore\Breeze.Persistence\Breeze.Persistence.csproj", "{D9533F8D-709A-489A-974E-82DD159CF241}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EFCore", "..\..\AspNetCore\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj", "{3A5604A1-CD74-416A-8B59-5480F36BF2B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_NorthwindIB_CF.EFCore", "..\Model_NorthwindIB_CF.EFCore\Model_NorthwindIB_CF.EFCore.csproj", "{C0D85AE3-1246-4C20-8D29-118EE2D2673C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B635C96D-1E83-4DA2-9638-346292A30A63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B635C96D-1E83-4DA2-9638-346292A30A63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B635C96D-1E83-4DA2-9638-346292A30A63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B635C96D-1E83-4DA2-9638-346292A30A63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B4D8285-D332-4CE4-B9DB-80A9DD1B8A6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED7A4721-018B-40ED-B790-28B0F1A8D5C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED7A4721-018B-40ED-B790-28B0F1A8D5C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED7A4721-018B-40ED-B790-28B0F1A8D5C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED7A4721-018B-40ED-B790-28B0F1A8D5C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9533F8D-709A-489A-974E-82DD159CF241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9533F8D-709A-489A-974E-82DD159CF241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9533F8D-709A-489A-974E-82DD159CF241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9533F8D-709A-489A-974E-82DD159CF241}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A5604A1-CD74-416A-8B59-5480F36BF2B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A5604A1-CD74-416A-8B59-5480F36BF2B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A5604A1-CD74-416A-8B59-5480F36BF2B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A5604A1-CD74-416A-8B59-5480F36BF2B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0D85AE3-1246-4C20-8D29-118EE2D2673C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0D85AE3-1246-4C20-8D29-118EE2D2673C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0D85AE3-1246-4C20-8D29-118EE2D2673C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0D85AE3-1246-4C20-8D29-118EE2D2673C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67C6FD2C-C374-4320-B1A1-3FBE7185C225}
+	EndGlobalSection
+EndGlobal

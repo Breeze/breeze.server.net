@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Spatial;
 using System.IO;
 using System.Linq;
@@ -77,10 +78,41 @@ namespace Models.NorthwindIB.CF {
         }
         stream.Position = 0;
         using (XmlReader reader = XmlReader.Create(stream)) {
-          return EdmxReader.Parse(reader);
+          // old - was EdmxReader.Parse
+          return CsdlReader.Parse(reader);
         }
       }
     }
+
+
+    // override for investigating customer complaint about EF original values for Enums
+    //public override int SaveChanges()
+    //{
+    //  foreach (var ent in ChangeTracker.Entries()
+    //      .Where(p => p.State == EntityState.Deleted || p.State == EntityState.Modified || p.State == EntityState.Added))
+    //  {
+    //    if (ent.State == EntityState.Added)
+    //      continue;
+
+    //    foreach (var prop in ent.OriginalValues.PropertyNames)
+    //    {
+    //      //TODO:Breeze Bug -- for enum IsModified is set to true but the originalValue is set to currentValue
+    //      if (ent.Property(prop).IsModified)
+    //      {
+    //        var originalValue = ent.OriginalValues[prop];
+    //        var currentValue = ent.CurrentValues[prop];
+    //        if (Equals(originalValue, currentValue))
+    //        {
+    //          Console.WriteLine($"Property:{prop} IsModified is true but OriginalValue and CurrentValue the same.");
+
+    //          throw new Exception($"Property:{prop} IsModified is true but OriginalValue and CurrentValue the same.");
+    //        }
+    //      }
+    //    }
+    //  }
+    //  return base.SaveChanges();
+    //}
+
 
     #region DbSets
 
@@ -1382,6 +1414,7 @@ namespace Foo {
     /// <summary>Gets or sets the RowVersion. </summary>
     [DataMember]
     [Column("RowVersion")]
+    [ConcurrencyCheck]
     public decimal RowVersion { get; set; }
 
     /// <summary>Gets or sets the CreatedBy. </summary>
@@ -1414,7 +1447,6 @@ namespace Foo {
     /// <summary>Gets or sets the ModifiedDate. </summary>
     [DataMember]
     [Column("ModifiedDate")]
-    [ConcurrencyCheck]
     public System.DateTime ModifiedDate { get; set; }
 
     #endregion Data Properties

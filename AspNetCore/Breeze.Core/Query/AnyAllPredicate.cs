@@ -41,15 +41,12 @@ namespace Breeze.Core {
       var elementType = NavPropBlock.Property.ElementType;
       MethodInfo mi;
       if (Operator == Operator.Any) {
-        mi = TypeFns.GetMethodByExample((IQueryable<String> list) => list.Any(x => x != null), elementType);
+        mi = TypeFns.GetMethodByExample((IEnumerable<String> list) => list.Any(x => x != null), elementType);
       } else {
-        mi = TypeFns.GetMethodByExample((IQueryable<String> list) => list.All(x => x != null), elementType);
+        mi = TypeFns.GetMethodByExample((IEnumerable<String> list) => list.All(x => x != null), elementType);
       }
-      
       var lambdaExpr = Predicate.ToLambda(elementType);
-      var castType = typeof(IQueryable<>).MakeGenericType(new[] { elementType });
-      var castNavExpr = Expression.Convert(navExpr, castType);
-      var result = Expression.Call(mi, castNavExpr, lambdaExpr);
+      var result = Expression.Call(mi, navExpr, lambdaExpr);
       return result;
     }
   }

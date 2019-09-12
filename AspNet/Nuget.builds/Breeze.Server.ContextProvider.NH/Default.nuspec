@@ -10,9 +10,9 @@
         <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
         <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Core data access library for a Breeze Server working with NHibernate</description>
-        <summary>Breeze Server - ContextProvider for NHibernate.  This package is usually used in conjunction with the Breeze.WebApi2 package.</summary>
-        <copyright>Copyright © IdeaBlade 2012-2016</copyright>
+        <description>Core data access library for a Breeze Server working with NHibernate and ASP.NET WebApi. (Not for use with .NET Core or ASP.Net Core)</description>
+        <summary>Breeze Server - ContextProvider for NHibernate.  Used with the Breeze.WebApi2 package. (Not for use with .NET Core or ASP.Net Core)</summary>
+        <copyright>Copyright © IdeaBlade 2012-2019</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>

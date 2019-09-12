@@ -131,6 +131,11 @@ namespace Sample_WebApi2.Controllers {
       return ContextProvider.SaveChanges(saveBundle);
     }
 
+    [HttpPost]
+    public SaveResult SaveWithAuditFields(JObject saveBundle) {
+      ContextProvider.BeforeSaveEntityDelegate = SetAuditFields;
+      return ContextProvider.SaveChanges(saveBundle);
+    }
 
     [HttpPost]
     public SaveResult SaveWithFreight(JObject saveBundle) {
@@ -229,6 +234,36 @@ namespace Sample_WebApi2.Controllers {
         var order = entityInfo.Entity as Order;
         order.Freight = order.Freight + 1;
         entityInfo.ForceUpdate = true;
+      }
+      return true;
+    }
+
+    private bool SetAuditFields(EntityInfo entityInfo) {
+      var entity = entityInfo.Entity as User;
+      if (entity == null) return true;
+
+      var userId = 12345;
+      if (entityInfo.EntityState == Breeze.ContextProvider.EntityState.Added)
+      {
+        entityInfo.OriginalValuesMap["CreatedBy"] = entity.CreatedBy;
+        entityInfo.OriginalValuesMap["CreatedByUserId"] = entity.CreatedByUserId;
+        entityInfo.OriginalValuesMap["CreatedDate"] = entity.CreatedDate;
+        //entityInfo.ForceUpdate = true;
+        entity.CreatedBy = "test";
+        entity.CreatedByUserId = userId;
+        entity.CreatedDate = DateTime.Now;
+        entity.ModifiedBy = "test";
+        entity.ModifiedByUserId = userId;
+        entity.ModifiedDate = DateTime.Now;
+      } else if (entityInfo.EntityState == Breeze.ContextProvider.EntityState.Modified)
+      {
+        entityInfo.OriginalValuesMap["ModifiedBy"] = entity.ModifiedBy;
+        entityInfo.OriginalValuesMap["ModifiedByUserId"] = entity.ModifiedByUserId;
+        entityInfo.OriginalValuesMap["ModifiedDate"] = entity.ModifiedDate;
+        //entityInfo.ForceUpdate = true;
+        entity.ModifiedBy = "test";
+        entity.ModifiedByUserId = userId;
+        entity.ModifiedDate = DateTime.Now;
       }
       return true;
     }

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_NorthwindIB_CF.EFCore", "Model_NorthwindIB_CF.EFCore.csproj", "{763B4341-7A4E-4880-A4E2-31AADC05F1AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		OData-debug|Any CPU = OData-debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{763B4341-7A4E-4880-A4E2-31AADC05F1AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{763B4341-7A4E-4880-A4E2-31AADC05F1AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{763B4341-7A4E-4880-A4E2-31AADC05F1AD}.OData-debug|Any CPU.ActiveCfg = Release|Any CPU
+		{763B4341-7A4E-4880-A4E2-31AADC05F1AD}.OData-debug|Any CPU.Build.0 = Release|Any CPU
+		{763B4341-7A4E-4880-A4E2-31AADC05F1AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{763B4341-7A4E-4880-A4E2-31AADC05F1AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5B067C2-2916-4062-A874-BB83C7B99DD3}
+	EndGlobalSection
+EndGlobal
