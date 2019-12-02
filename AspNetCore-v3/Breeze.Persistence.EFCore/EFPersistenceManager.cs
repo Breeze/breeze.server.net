@@ -38,6 +38,7 @@ namespace Breeze.Persistence.EFCore {
 
     public EFPersistenceManager(T context) {
       _context = context;
+      // Added for EF Core 3
       _context.ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
       _context.ChangeTracker.DeleteOrphansTiming = CascadeTiming.OnSaveChanges;
     }

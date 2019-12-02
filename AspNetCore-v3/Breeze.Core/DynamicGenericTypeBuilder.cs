@@ -170,6 +170,7 @@ namespace Breeze.Core {
       // generates the names T0, T1, T2 ...
       String[] parameterNames = Enumerable.Range(0, info.PropertyNames.Count).Select(i => "T" + i.ToString()).ToArray();
       var parameterBuilders = typBuilder.DefineGenericParameters(parameterNames);
+      // Old parameterBuilders returned a typeInfo which req'd a AsType conversion; the need DefineGenericParameters in .Net Standard 2.1 now returns something inheriting from Type
       // return parameterBuilders.Select(pb => pb.AsType()).ToArray();
       return parameterBuilders.ToArray();
     }

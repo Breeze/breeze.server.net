@@ -20,6 +20,8 @@ namespace Breeze.Persistence.EFCore {
     }
 
     public static IQueryable ApplyAsNoTracking(this EntityQuery eq, IQueryable queryable, Type eleType) {
+      // TODO: this isn't quite right - we only want to ApplyAsNoTracking if the result of the select is an anon type
+      // but we need to apply the AsNoTracking before the select ( much simpler that way). 
       if (eq.SelectClause != null) {
         queryable = EFQueryBuilder.ApplyAsNoTracking(queryable, eleType);
       }
