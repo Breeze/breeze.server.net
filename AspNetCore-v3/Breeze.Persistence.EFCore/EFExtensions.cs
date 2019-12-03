@@ -20,10 +20,16 @@ namespace Breeze.Persistence.EFCore {
     }
 
     public static IQueryable ApplyAsNoTracking(this EntityQuery eq, IQueryable queryable, Type eleType) {
-      // TODO: this isn't quite right - we only want to ApplyAsNoTracking if the result of the select is an anon type
-      // but we need to apply the AsNoTracking before the select ( much simpler that way). 
+      // This was added for EF Core 3 because of requirment that all owned types have their owners as part of the query
+      // unless we add 'AsNoTracking'
       if (eq.SelectClause != null) {
-        queryable = EFQueryBuilder.ApplyAsNoTracking(queryable, eleType);
+        // TODO: this isn't quite right - we only want to ApplyAsNoTracking if the result of the select includes an 'owned' type
+        // but currently the code just checks for any non system type, so we are applying 'noTracking' more than we should.
+        // but we need to apply the AsNoTracking before the select ( much simpler that way).
+        var areAllSystemTypes = eq.SelectClause.Properties.All(p => p.ReturnType.FullName.StartsWith("System."));
+        if (!areAllSystemTypes) {
+          queryable = EFQueryBuilder.ApplyAsNoTracking(queryable, eleType);
+        }
       }
       return queryable;
     }
