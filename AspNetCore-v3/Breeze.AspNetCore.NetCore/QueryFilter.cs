@@ -44,6 +44,8 @@ namespace Breeze.AspNetCore {
         inlineCount = (int)Queryable.Count((dynamic)queryable);
       }
 
+      
+
       queryable = EntityQuery.ApplyCustomLogic(eq, queryable, eleType);
       queryable = eq.ApplyOrderBy(queryable, eleType);
       queryable = eq.ApplySkip(queryable, eleType);
