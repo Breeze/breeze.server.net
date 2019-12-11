@@ -1,4 +1,4 @@
-﻿using Breeze.Core;
+using Breeze.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -133,6 +133,7 @@ namespace Breeze.Persistence {
       "Iesi.Collections",
       "WebGrease",
       "Breeze.ContextProvider",
+      "Breeze.Persistence",
       "Breeze.Core",
       "Breeze.AspNetCore"
     };

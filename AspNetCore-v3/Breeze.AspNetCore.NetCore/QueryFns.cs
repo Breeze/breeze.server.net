@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Breeze.AspNetCore {
   public static class QueryFns {
 
-    public static IQueryable ExtractQueryable(ActionExecutedContext context) {
+    public static IQueryable ExtractQueryable(ActionExecutedContext context, bool throwOnError = false) {
       var objResult = context.Result as ObjectResult;
       if (objResult == null) {
         return null;
@@ -26,10 +26,10 @@ namespace Breeze.AspNetCore {
         try {
           queryable = ((IEnumerable)result).AsQueryable();
         } catch {
-          throw new Exception("Unable to convert this endpoints IEnumerable to an IQueryable. Try returning an IEnumerable<T> instead of just an IEnumerable.");
+          if (throwOnError) throw new Exception("Unable to convert this endpoints IEnumerable to an IQueryable. Try returning an IEnumerable<T> instead of just an IEnumerable.");
         }
       } else {
-        throw new Exception("Unable to convert this endpoint to an IQueryable");
+        if (throwOnError) throw new Exception("Unable to convert this endpoint to an IQueryable");
       }
       return queryable;
     }

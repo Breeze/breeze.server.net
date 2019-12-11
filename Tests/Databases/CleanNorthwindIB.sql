@@ -4,11 +4,11 @@ delete from InternationalOrder  where OrderID in (select [Order].OrderID from [O
 go
 delete from OrderDetail where OrderID in (select [Order].OrderID from [Order] where CustomerID is null or EmployeeID is null)
 go
-delete from [Order] where CustomerID is null or EmployeeID is null
+delete from [Order] where CustomerID is null or EmployeeID is null or ShipAddress like 'Test%'
 go
 delete from Employee where LastName like 'Test%' or LastName like '''%'
 go
-delete from Customer where CompanyName like 'Test%' or CompanyName like '''%'
+delete from Customer where CompanyName like 'Test%' or CompanyName like '''%' or CompanyName like 'error%'
 go
 delete from Territory where TerritoryDescription like 'Test%'
 go

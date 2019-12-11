@@ -1,15 +1,19 @@
-﻿// Only one of the next few should be uncommented.
+// Only one of the next few should be uncommented.
 #define CODEFIRST_PROVIDER
 //#define NHIBERNATE
 
 using Breeze.AspNetCore;
 using Breeze.Persistence;
+#if CODEFIRST_PROVIDER
 using Breeze.Persistence.EFCore;
+using Models.NorthwindIB.CF;
 using Foo;
+#elif NHIBERNATE
+using Models.NorthwindIB.NH;
+#endif
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models.NorthwindIB.CF;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -30,10 +34,15 @@ namespace Test.AspNetCore.Controllers {
     private NorthwindPersistenceManager PersistenceManager;
 
     // called via DI 
+#if CODEFIRST_PROVIDER
     public NorthwindIBModelController(NorthwindIBContext_CF context) {
       PersistenceManager = new NorthwindPersistenceManager(context);
     }
-
+#elif NHIBERNATE
+    public NorthwindIBModelController(NHibernate.ISessionFactory sessionFactory) {
+      PersistenceManager = new NorthwindPersistenceManager(sessionFactory);
+    }
+#endif
 
     [HttpGet]
     public IActionResult Metadata() {
@@ -44,7 +53,7 @@ namespace Test.AspNetCore.Controllers {
       return PersistenceManager.SaveChanges(saveBundle);
     }
 
-    #region Save interceptors 
+#region Save interceptors 
     [HttpPost]
     public SaveResult SaveWithTransactionScope([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.TransactionScope };
@@ -369,9 +378,9 @@ namespace Test.AspNetCore.Controllers {
     //}
 
 
-    #endregion
+#endregion
 
-    #region named queries
+#region named queries
 
     [HttpGet]
     public IQueryable<Customer> CustomersStartingWith([Required] string companyName) {
@@ -605,7 +614,7 @@ namespace Test.AspNetCore.Controllers {
 
 
     [HttpGet]
-#if NHIBERNATE
+#if NHIBERNATE_X
     public IQueryable<Object> CompanyInfoAndOrders(System.Web.Http.OData.Query.ODataQueryOptions options) {
         // Need to handle this specially for NH, to prevent $top being applied to Orders
         var query = ContextProvider.Context.Customers;
@@ -679,7 +688,7 @@ namespace Test.AspNetCore.Controllers {
           query = ((dynamic)query).Include(s);
         });
       }
-      var orig = query.ToList();
+      var orig = query.ToList() as IList<OrderDetail>;
       var list = new List<OrderDetail>(orig.Count * multiple);
       for (var i = 0; i < multiple; i++) {
         for (var j = 0; j < orig.Count; j++) {
@@ -720,14 +729,17 @@ namespace Test.AspNetCore.Controllers {
       return list.AsQueryable();
     }
 
-    #endregion
+#endregion
   }
 
-
-  public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_CF> {
+#if CODEFIRST_PROVIDER
+    public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_CF> {
     public const string CONFIG_VERSION = "CODEFIRST_PROVIDER";
     public NorthwindPersistenceManager(NorthwindIBContext_CF dbContext) : base(dbContext) { }
-
+#elif NHIBERNATE
+    public class NorthwindPersistenceManager : NorthwindNHPersistenceManager {
+    public NorthwindPersistenceManager(NHibernate.ISessionFactory sessionFactory) : base(sessionFactory) { }
+#endif
 
     protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {
       var tag = (string)SaveOptions.Tag;
@@ -852,8 +864,8 @@ namespace Test.AspNetCore.Controllers {
  ? new NorthwindIBContext_CF(this.Context.Options)
  : new NorthwindIBContext_CF(this.Context.Options);
 #elif NHIBERNATE
-        ? new NorthwindNHContext(this)
-        : new NorthwindNHContext();
+        ? new NorthwindNHPersistenceManager(this)
+        : new NorthwindNHPersistenceManager(this.Session.SessionFactory);
 #endif
 
       var query = context2.Employees.Where(e => e.EmployeeID == employeeId);

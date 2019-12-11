@@ -122,8 +122,10 @@ namespace Breeze.Core {
     private static BasePredicate CreateCompoundPredicate(List<BasePredicate> preds) {
       if (preds.Count > 1) {
         return new AndOrPredicate(Operator.And, preds);
-      } else {
+      } else if (preds.Count == 1) {
         return preds[0];
+      } else {
+        return null;
       }
     }
 

@@ -20,14 +20,11 @@ namespace Breeze.AspNetCore {
     public override void OnActionExecuted(ActionExecutedContext context) {
 
       var qs = QueryFns.ExtractAndDecodeQueryString(context);
-      if (qs == null) {
+      var queryable = QueryFns.ExtractQueryable(context);
+
+      if (!EntityQuery.NeedsExecution(qs, queryable)) {
         base.OnActionExecuted(context);
         return;
-      }
-
-      var queryable = QueryFns.ExtractQueryable(context);
-      if (queryable == null) {
-        base.OnActionExecuted(context);
       }
 
       var eq = new EntityQuery(qs);
@@ -44,7 +41,6 @@ namespace Breeze.AspNetCore {
         inlineCount = (int)Queryable.Count((dynamic)queryable);
       }
 
-      
 
       queryable = EntityQuery.ApplyCustomLogic(eq, queryable, eleType);
       queryable = eq.ApplyOrderBy(queryable, eleType);
@@ -60,15 +56,15 @@ namespace Breeze.AspNetCore {
         // if we wait to have the query executed within the serializer, some exceptions will not
         // serialize properly.
         var listResult = Enumerable.ToList((dynamic)queryable);
+        listResult = EntityQuery.AfterExecution(eq, queryable, listResult);
+
         var qr = new QueryResult(listResult, inlineCount);
         context.Result = new ObjectResult(qr);
       }
-      
 
       base.OnActionExecuted(context);
 
     }
-    
   }
 
 }

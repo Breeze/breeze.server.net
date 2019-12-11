@@ -32,7 +32,7 @@ namespace Models.NorthwindIB.NH {
     }
   }
 
-  [MetadataType(typeof(CustomerMetaData))]
+  //[MetadataType(typeof(CustomerMetaData))]
   [CustomerValidator]
   public partial class Customer {
 

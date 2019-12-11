@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,6 +17,14 @@ namespace Breeze.Core {
     private bool? _inlineCountEnabled;
     private Dictionary<String, Object> _parameters;
     private Type _entityType;
+
+    static EntityQuery() {
+      // default implementations of pluggable static extension methods
+      EntityQuery.NeedsExecution = (qs, iq) => (qs != null && iq != null);
+      EntityQuery.ApplyCustomLogic = (eq, iq, type) => iq;
+      EntityQuery.ApplyExpand = (eq, iq, type) => iq;
+      EntityQuery.AfterExecution = (eq, iq, list) => list;
+    }
 
     public EntityQuery() {
 
@@ -172,18 +181,25 @@ namespace Breeze.Core {
       return eq;
     }
 
-    //public static IQueryable ApplyExpand(EntityQuery eq, IQueryable queryable, Type eleType) {
+    // Impl of following functions is deferred to whatever Persistence framework is being used, i.e. EF vs NHibernate 
 
-    //}
-
-    /** Impl of apply expand is a function is deferred to whatever Persistence framework is being used.
-     i.e. EF vs NHibernate */
+    /// <summary> Whether query string needs execution </summary>
+    public static Func<string, IQueryable, bool> NeedsExecution {
+      get;
+      set;
+    }
+    /// <summary> Apply logic to the IQueryable after the Where clause is applied, but before Order/Skip/Take/Select </summary>
+    public static Func<EntityQuery, IQueryable, Type, IQueryable> ApplyCustomLogic {
+      get;
+      set;
+    }
+    /// <summary> Apply expand clauses to the IQueryable after Order/Skip/Take/Select, but before execution </summary>
     public static Func<EntityQuery, IQueryable, Type, IQueryable> ApplyExpand {
       get;
       set;
     }
-
-    public static Func<EntityQuery, IQueryable, Type, IQueryable> ApplyCustomLogic {
+    /// <summary> After the query was executed, post-process the resulting list and return the list </summary>
+    public static Func<EntityQuery, IQueryable, IList, IList> AfterExecution {
       get;
       set;
     }

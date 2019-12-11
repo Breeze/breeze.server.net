@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization.Formatters;
 
@@ -20,8 +20,10 @@ namespace Breeze.Core {
       // http://stackoverflow.com/questions/11789114/internet-explorer-json-net-javascript-date-and-milliseconds-issue
       // See also: https://stackoverflow.com/questions/52048935/how-do-i-get-entityframeworkcore-generated-sql-to-use-the-right-format-for-datet
       ss.Converters.Add(new IsoDateTimeConverter {
+        // datetime2, using quoted literals to prevent locale-specific conversions.  See https://github.com/Breeze/breeze.server.net/issues/67
+        DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffK"
         // datetime2
-        DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss.fffffffK"
+        // DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss.fffffffK"
         // datetime
         // DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss.fffK"
         // old 
