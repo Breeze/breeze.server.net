@@ -38,11 +38,11 @@ namespace Breeze.Core {
 
     private Expression BuildAndOrExpr(IEnumerable<Expression> exprs, Operator op) {
       if (op == Operator.And) {
-        return exprs.Aggregate((result, expr) => Expression.And(result, expr));
+        return exprs.Aggregate((result, expr) => Expression.AndAlso(result, expr));
       } else if (op == Operator.Or) {
-        return exprs.Aggregate((result, expr) => Expression.Or(result, expr));
+        return exprs.Aggregate((result, expr) => Expression.OrElse(result, expr));
       } else {
-        throw new Exception("Invalid AndOr operator" + op.Name);
+        throw new Exception("Invalid AndOr operator " + op.Name);
       }
     }
 
