@@ -263,9 +263,17 @@
             @param propertyPaths A list of expand clauses (each a dot delimited property path).
             @return A new EntityQuery.
         </member>
+        <member name="P:Breeze.Core.EntityQuery.NeedsExecution">
+            <summary> Whether query string needs execution </summary>
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.ApplyCustomLogic">
+            <summary> Apply logic to the IQueryable after the Where clause is applied, but before Order/Skip/Take/Select </summary>
+        </member>
         <member name="P:Breeze.Core.EntityQuery.ApplyExpand">
-            Impl of apply expand is a function is deferred to whatever Persistence framework is being used.
-                 i.e. EF vs NHibernate 
+            <summary> Apply expand clauses to the IQueryable after Order/Skip/Take/Select, but before execution </summary>
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.AfterExecution">
+            <summary> After the query was executed, post-process the resulting list and return the list </summary>
         </member>
         <member name="M:Breeze.Core.EntityQuery.Select(System.String[])">
             Return a new query based on this query with the specified select (projection) clauses added.

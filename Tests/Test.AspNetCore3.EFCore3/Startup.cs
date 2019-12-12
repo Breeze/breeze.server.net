@@ -1,19 +1,31 @@
+// Uncomment only one of the two defines below
+#define EFCORE
+// #define NHIBERNATE
+
 using Breeze.AspNetCore;
 using Breeze.Core;
-using Breeze.Persistence.NH;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Models.NorthwindIB.CF;
 using Newtonsoft.Json.Serialization;
+
+#if EFCORE
+using Microsoft.EntityFrameworkCore;
+#elif NHIBERNATE
+using Breeze.Persistence.NH;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
 using NHibernate.Driver;
+#endif
+
+
 using System.IO;
 using System.Linq;
 
@@ -38,6 +50,7 @@ namespace Test.AspNetCore {
           res.NamingStrategy = null;  // <<!-- this removes the camelcasing
         }
 
+#if NHIBERNATE
         // NHibernate settings
         var settings = opt.SerializerSettings;
         settings.ContractResolver = NHibernateContractResolver.Instance;
@@ -53,14 +66,19 @@ namespace Test.AspNetCore {
         if (!settings.Converters.Any(c => c is NHibernateProxyJsonConverter)) {
           settings.Converters.Add(new NHibernateProxyJsonConverter());
         }
+#endif
 
       });
+
 
       mvcBuilder.AddMvcOptions(o => { o.Filters.Add(new GlobalExceptionFilter()); });
 
       var tmp = Configuration.GetConnectionString("NorthwindIB_CF");
+#if EFCORE
       services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(tmp));
+#endif
 
+#if NHIBERNATE
       services.AddSingleton<NHibernate.ISessionFactory>(factory => {
         var cfg = new NHibernate.Cfg.Configuration();
         cfg.DataBaseIntegration(db => {
@@ -78,9 +96,9 @@ namespace Test.AspNetCore {
         var sessionFactory = cfg.BuildSessionFactory();
         return sessionFactory;
       });
+
+#endif
     }
-
-
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -98,11 +116,7 @@ namespace Test.AspNetCore {
       });
       
       app.UseMvc();
-      
 
     }
-
-
-
   }
 }

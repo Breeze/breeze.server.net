@@ -39,16 +39,17 @@ var _jsSrcDir = '../../Breeze.js/src/'
 var _jsBuildDir = '../../Breeze.js/build/';
 
 // TODO: pick one of the next 3 _buildSlnDirs defs
-// var _buildSlnDirs = ["../AspNet/", "../AspNetCore/"];
 // var _buildSlnDirs = ["../AspNet/"];
-var _buildSlnDirs = ["../AspNetCore/"];
+// var _buildSlnDirs = ["../AspNetCore/"];
+var _buildSlnDirs = ["../AspNetCore-v3/"];
 
 var _nugetDirs = _buildSlnDirs.map(function(bsd) {
   return path.join(bsd, "/Nuget.builds/");
 });
 
 // var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe" ' // vs 2017 version of MsBuild
-var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/MSBuild/15.0/Bin/MSBuild.exe" '
+// var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/MSBuild/15.0/Bin/MSBuild.exe" '
+var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe" '
 // var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
 var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal  /clp:NoSummary;NoItemAndPropertyList;ErrorsOnly';
 
@@ -102,6 +103,10 @@ gulp.task("initDllTemplates",  function(done) {
   copyToNugetLib("../AspNetCore/", "Breeze.Persistence");
   copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EF6");
   copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EFCore");
+  copyToNugetLib("../AspNetCore-v3/", "Breeze.AspNetCore.NetCore");
+  copyToNugetLib("../AspNetCore-v3/", "Breeze.Core");
+  copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence");
+  copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence.EFCore");
   done();
 });
 
@@ -216,13 +221,24 @@ gulp.task('default', gulp.series('nugetTestDeploy', function(done) {
   done();
 }));
 
-// pathRoot = "../AspNet/" or "../AspNetCore/"
+// pathRoot = "../AspNet/" or "../AspNetCore/" or "../AspNetCore-v3"
 // fileRoot = "Breeze.ContextProvider.EF6" or similar
 function copyToNugetLib(pathRoot, fileRoot) {
   var name = fileRoot + ".dll";
   var exts = [".dll", ".pdb", ".XML"];
-  var destdir = (pathRoot == "../AspNetCore/") ? fileRoot : fileRoot.replace(/^Breeze/, "Breeze.Server");
-  var subdir = (pathRoot == "../AspNetCore/") ? ((fileRoot == "Breeze.Persistence.EF6") ? "net462/" : "netstandard2.0/") : "";
+  // // Old code 
+  // var destdir = (pathRoot === "../AspNetCore/") ? fileRoot : fileRoot.replace(/^Breeze/, "Breeze.Server");
+  // var subdir = (pathRoot === "../AspNetCore/") ? ((fileRoot == "Breeze.Persistence.EF6") ? "net462/" : "netstandard2.0/") : "";
+  if (pathRoot === "../AspNetCore/") {
+    destdir = fileRoot;
+    subdir = (fileRoot == "Breeze.Persistence.EF6") ? "net462/" : "netstandard2.0/";
+  } else if (pathRoot === "../AspNetCore-v3/") {
+    destdir = fileRoot;
+    subdir = (fileRoot == "Breeze.AspNetCore.NetCore") ? "netcoreapp3.1/" : "netstandard2.1/";
+  } else {
+    destdir = fileRoot.replace(/^Breeze/, "Breeze.Server");
+    subdir = "";
+  }
   exts.forEach(function(ext) {
       var sourceFile = pathRoot + fileRoot + "/bin/Release/" + subdir + fileRoot + ext;
       var targetFile = pathRoot + "Nuget.builds/" + destdir + "/lib/" + subdir + fileRoot + ext;
@@ -248,10 +264,12 @@ function updateFilesInNugetDir(nugetDir, streams, ext) {
     var src;
     if (_buildSlnDirs.some(function(dir) {
       src = dir + baseName +  '/bin/release/' + baseName + ext;
-      // gutil.log("test: " + src);
       if (fs.existsSync(src)) return true;
       src = dir + baseName +  '/bin/release/netstandard2.0/' + baseName + ext;
-      // gutil.log("test: " + src);
+      if (fs.existsSync(src)) return true;
+      src = dir + baseName +  '/bin/release/netstandard2.1/' + baseName + ext;
+      if (fs.existsSync(src)) return true;
+      src = dir + baseName +  '/bin/release/netcoreapp3.1/' + baseName + ext;
       if (fs.existsSync(src)) return true;
       src = dir + baseName +  '/bin/release/net462/' + baseName + ext;
       return fs.existsSync(src);
@@ -305,7 +323,8 @@ function msBuildSolution(solutionFileName, done) {
   var rootCmd = _msBuildCmd + '"' + baseName +'"' + _msBuildOptions + ' /t:'
   var nuGetRestoreCmd = 'nuget.exe restore '  + '"' + baseName +'"';
 
-  var cmds = [nuGetRestoreCmd, rootCmd + 'Clean', rootCmd + 'Rebuild'];
+  // var cmds = [nuGetRestoreCmd, rootCmd + 'Clean', rootCmd + 'Rebuild'];
+  var cmds = [rootCmd + 'Clean', rootCmd + 'Rebuild'];
   var cwd = path.dirname(solutionFileName);
   execCommands(cmds, { cwd: cwd},  done);
 }

@@ -14,18 +14,18 @@
       <summary>Breeze Server - Persistence for EF Core on .NET Core</summary>
       <copyright>Copyright © IdeaBlade 2012-2019</copyright>
       <language>en-US</language>
-      <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
+      <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>
       <tags>AspNetCore Entity Framework javascript Breeze BreezeJs </tags>
       <dependencies>
         <dependency id="Breeze.Core" version="[{{version}}]"/>
         <dependency id="Breeze.Persistence" version="[{{version}}]"/>
-        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="2.2.0"/>
+        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="3.0.0"/>
       </dependencies>
     </metadata>
     <files>
-      <file src="lib\netstandard2.0\Breeze.Persistence.EFCore.dll" target="lib\netstandard2.0\Breeze.Persistence.EFCore.dll" />
-      <file src="lib\netstandard2.0\Breeze.Persistence.EFCore.pdb" target="lib\netstandard2.0\Breeze.Persistence.EFCore.pdb" />
-      <file src="lib\netstandard2.0\Breeze.Persistence.EFCore.xml" target="lib\netstandard2.0\Breeze.Persistence.EFCore.xml" />
+      <file src="lib\netstandard2.1\Breeze.Persistence.EFCore.dll" target="lib\netstandard2.1\Breeze.Persistence.EFCore.dll" />
+      <file src="lib\netstandard2.1\Breeze.Persistence.EFCore.pdb" target="lib\netstandard2.1\Breeze.Persistence.EFCore.pdb" />
+      <file src="lib\netstandard2.1\Breeze.Persistence.EFCore.xml" target="lib\netstandard2.1\Breeze.Persistence.EFCore.xml" />
       <file src="readme.txt" target="readme.txt" />
     </files>
 </package>

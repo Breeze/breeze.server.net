@@ -1,6 +1,6 @@
 // Only one of the next few should be uncommented.
-//#define CODEFIRST_PROVIDER
-#define NHIBERNATE
+#define CODEFIRST_PROVIDER
+//#define NHIBERNATE
 
 using Breeze.AspNetCore;
 using Breeze.Persistence;

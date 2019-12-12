@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -13,16 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Breeze.AspNetCore.NetCore" Version="3.0.1" />
+    <PackageReference Include="Breeze.Persistence.EFCore" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCore-v3\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
-    <ProjectReference Include="..\..\AspNetCore-v3\Breeze.Core\Breeze.Core.csproj" />
-    <ProjectReference Include="..\..\AspNetCore-v3\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj" />
     <ProjectReference Include="..\..\AspNetCore-v3\Breeze.Persistence.NH\Breeze.Persistence.NH.csproj" />
-    <ProjectReference Include="..\..\AspNetCore-v3\Breeze.Persistence\Breeze.Persistence.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore3\Model.NorthwindIB_CF.EFCore3.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.netstandard2.csproj" />
   </ItemGroup>
