@@ -8,7 +8,7 @@ namespace Breeze.Persistence.NH {
   public static class NHQueryHelper {
 
     public static bool NeedsExecution(string queryString, IQueryable queryable) {
-      return (queryable != null && queryable.Provider is DefaultQueryProvider);
+      return (queryable != null && (queryString != null || queryable.Provider is DefaultQueryProvider));
     }
 
     public static IList PostExecuteQuery(this EntityQuery eq, IQueryable queryable, IList result) {

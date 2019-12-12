@@ -1,6 +1,6 @@
 // Only one of the next few should be uncommented.
-#define CODEFIRST_PROVIDER
-//#define NHIBERNATE
+//#define CODEFIRST_PROVIDER
+#define NHIBERNATE
 
 using Breeze.AspNetCore;
 using Breeze.Persistence;
@@ -425,7 +425,17 @@ namespace Test.AspNetCore.Controllers {
       return PersistenceManager.Context.Employees.Where(emp => emp.BirthDate >= birthDate && emp.Country == country);
     }
 
-#if !NHIBERNATE
+#if NHIBERNATE
+    [HttpGet]
+    public List<Employee> QueryInvolvingMultipleEntities() {
+      var pm = PersistenceManager;
+      var query = (from t1 in pm.Employees
+                   where (from t2 in pm.Orders select t2.EmployeeID).Distinct().Contains(t1.EmployeeID)
+                   select t1);
+      var result = query.ToList();
+      return result;
+    }
+#else
     [HttpGet]
     public List<Employee> QueryInvolvingMultipleEntities() {
       var dc0 = new NorthwindIBContext_CF(PersistenceManager.Context.Options);
@@ -614,22 +624,11 @@ namespace Test.AspNetCore.Controllers {
 
 
     [HttpGet]
-#if NHIBERNATE_X
-    public IQueryable<Object> CompanyInfoAndOrders(System.Web.Http.OData.Query.ODataQueryOptions options) {
-        // Need to handle this specially for NH, to prevent $top being applied to Orders
-        var query = ContextProvider.Context.Customers;
-        var queryHelper = new NHQueryHelper();
-
-        // apply the $filter, $skip, $top to the query
-        var query2 = queryHelper.ApplyQuery(query, options);
-
-        // execute query, then expand the Orders
-        var r = query2.Cast<Customer>().ToList();
-        NHInitializer.InitializeList(r, "Orders");
-
-        // after all is loaded, create the projection
-        var stuff = r.AsQueryable().Select(c => new { c.CompanyName, c.CustomerID, c.Orders });
-        queryHelper.ConfigureFormatter(Request, query);
+#if NHIBERNATE
+    public IQueryable<Object> CompanyInfoAndOrders() {
+      // Need to handle this specially for NH, to prevent $top being applied to Orders
+      var q = PersistenceManager.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID, c.Orders });
+      var stuff = q.ToList().AsQueryable();
 #else
     public IQueryable<Object> CompanyInfoAndOrders() {
       var stuff = PersistenceManager.Context.Customers.Select(c => new { c.CompanyName, c.CustomerID, c.Orders });
@@ -734,10 +733,11 @@ namespace Test.AspNetCore.Controllers {
 
 #if CODEFIRST_PROVIDER
     public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_CF> {
-    public const string CONFIG_VERSION = "CODEFIRST_PROVIDER";
+    public const string CONFIG_VERSION = "EFCORE";
     public NorthwindPersistenceManager(NorthwindIBContext_CF dbContext) : base(dbContext) { }
 #elif NHIBERNATE
     public class NorthwindPersistenceManager : NorthwindNHPersistenceManager {
+    public const string CONFIG_VERSION = "NHIBERNATE";
     public NorthwindPersistenceManager(NHibernate.ISessionFactory sessionFactory) : base(sessionFactory) { }
 #endif
 
