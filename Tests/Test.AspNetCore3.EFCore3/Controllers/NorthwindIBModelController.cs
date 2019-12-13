@@ -6,24 +6,23 @@ using Breeze.AspNetCore;
 using Breeze.Persistence;
 #if CODEFIRST_PROVIDER
 using Breeze.Persistence.EFCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Models.NorthwindIB.CF;
 using Foo;
 #elif NHIBERNATE
+using Breeze.Persistence.NH;
 using Models.NorthwindIB.NH;
 #endif
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore.Storage;
 
-using EFEntityState = Microsoft.EntityFrameworkCore.EntityState;
 using BreezeEntityState = Breeze.Persistence.EntityState;
 
 namespace Test.AspNetCore.Controllers {
