@@ -1,6 +1,6 @@
 // Notes before running these tasks.
 
-// You will need to do the following in order to build the breeze server for either AspNet or AspNetCore ( or both) 
+// You will need to do the following in order to build the breeze server for either AspNet or AspNetCore ( or both)
 // 1) Build the projects with project refs and test.
 // 2) Update the .NET version numbers in the .Net projects.
 // 3) If any 3rd party dlls refs are changed - you will need to update the appropriate 'default.nuspec' file in the 'AspNet(Core)/Nuget.Builds' dir.
@@ -91,7 +91,7 @@ gulp.task('breezeServerBuild', function(done) {
 });
 
 // need to run this the first time a new 'build' structure is changed
-// This is effectively a setup script for the 'copyDllsToNugetDir', 
+// This is effectively a setup script for the 'copyDllsToNugetDir',
 // which in turn uses 'updateFilesInNugetDir' to update 'matching' files in the nuget dir only updates files that already exist
 gulp.task("initDllTemplates",  function(done) {
   copyToNugetLib("../AspNet/", "Breeze.ContextProvider");
@@ -107,6 +107,7 @@ gulp.task("initDllTemplates",  function(done) {
   copyToNugetLib("../AspNetCore-v3/", "Breeze.Core");
   copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence");
   copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence.EFCore");
+  copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence.NH");
   done();
 });
 
@@ -162,7 +163,7 @@ gulp.task('nugetPack', gulp.series('copyBreezeJs', 'copyDllsToNugetDir', 'nugetC
       } else {
         version = serverVersion;
       }
-      
+
       packNuget(fileName, version, cb2);
     }, cb1);
   }, done);
@@ -173,7 +174,7 @@ gulp.task('nugetTestDeploy', gulp.series('nugetPack', function(done) {
   async.eachSeries(_nugetDirs, function(nd, cb1) {
     gutil.log('Deploying Test Nugets...');
     var src = nd + '**/*.nupkg';
-    var dest = process.env.LOCALAPPDATA + '/Nuget/Cache';
+    var dest = process.env.LOCALAPPDATA + '/Nuget/Test';
     var fileNames = glob.sync( src);
     async.eachSeries(fileNames, function (fileName, cb2) {
       gutil.log('Deploying nuspec file: ' + fileName);
@@ -199,7 +200,7 @@ gulp.task('nugetDeploy', function(done) {
       } else {
         cb2();
       }
-      
+
     }, cb1);
   }, done);
 });
@@ -226,7 +227,7 @@ gulp.task('default', gulp.series('nugetTestDeploy', function(done) {
 function copyToNugetLib(pathRoot, fileRoot) {
   var name = fileRoot + ".dll";
   var exts = [".dll", ".pdb", ".XML"];
-  // // Old code 
+  // // Old code
   // var destdir = (pathRoot === "../AspNetCore/") ? fileRoot : fileRoot.replace(/^Breeze/, "Breeze.Server");
   // var subdir = (pathRoot === "../AspNetCore/") ? ((fileRoot == "Breeze.Persistence.EF6") ? "net462/" : "netstandard2.0/") : "";
   if (pathRoot === "../AspNetCore/") {

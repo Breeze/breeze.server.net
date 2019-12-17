@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\git\Breeze\breeze.server.net\AspNetCore-v3\Breeze.Persistence.NH\Breeze.Persistence.NH.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\git\Breeze\breeze.server.net\AspNetCore-v3\Breeze.Persistence.NH\Breeze.Persistence.NH.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
