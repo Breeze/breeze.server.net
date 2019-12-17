@@ -87,8 +87,8 @@ namespace Test.AspNetCore {
           db.Driver<Sql2008ClientDriver>();
           db.LogFormattedSql = true;
           db.LogSqlInConsole = true;
-          db.BatchSize = 32;
         });
+        cfg.Properties.Add(Environment.DefaultBatchFetchSize, "32");
         cfg.CurrentSessionContext<NHibernate.Context.ThreadStaticSessionContext>();
         var modelAssembly = typeof(Models.NorthwindIB.NH.Customer).Assembly;
         cfg.AddAssembly(modelAssembly);  // mapping is in this assembly

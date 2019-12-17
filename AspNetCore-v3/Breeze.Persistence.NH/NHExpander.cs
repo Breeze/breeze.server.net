@@ -24,7 +24,7 @@ namespace Breeze.Persistence.NH {
     /// </summary>
     /// <param name="roots">Collection of Hibernate-mapped objects</param>
     /// <param name="expandPaths">properties relative to the roots</param>
-    public static void InitializeList(IEnumerable roots, string[] expandPaths) {
+    public static void InitializeList(IEnumerable roots, IEnumerable<string> expandPaths) {
       List<string[]> paths = SplitPaths(expandPaths);
       foreach (var root in roots) {
         foreach (var path in paths) {
@@ -82,7 +82,7 @@ namespace Breeze.Persistence.NH {
     /// </summary>
     /// <param name="expandPaths"></param>
     /// <returns></returns>
-    private static List<string[]> SplitPaths(string[] expandPaths) {
+    private static List<string[]> SplitPaths(IEnumerable<string> expandPaths) {
       var delims = new char[] { '/', '.' };
       List<string[]> paths = new List<string[]>();
       foreach (string expandPath in expandPaths) {

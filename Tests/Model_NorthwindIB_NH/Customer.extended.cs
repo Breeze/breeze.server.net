@@ -16,11 +16,11 @@ namespace Models.NorthwindIB.NH {
 
 
   [AttributeUsage(AttributeTargets.Property)]
-  public class CustomValidator : ValidationAttribute {
+  public class NotErrorValidator : ValidationAttribute {
     public override Boolean IsValid(Object value) {
       try {
         var val = (string)value;
-        if (!string.IsNullOrEmpty(val) && val.StartsWith("Error")) {
+        if (!string.IsNullOrEmpty(val) && val.ToLower().StartsWith("error")) {
           ErrorMessage = "{0} equal the word 'Error'";
           return false;
         }
@@ -42,7 +42,7 @@ namespace Models.NorthwindIB.NH {
   public class CustomerMetaData {
 
 
-    [CustomValidator]
+    [NotErrorValidator]
     public string ContactName {
       get;
       set;

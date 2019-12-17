@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using NHibernate;
 using NHibernate.Engine;
 using NHibernate.Id;
@@ -13,36 +14,36 @@ using System.Text;
 namespace Breeze.Persistence.NH {
   /// <summary>
   /// Builds a data structure containing the metadata required by Breeze.
-  /// <see cref="http://www.breezejs.com/documentation/breeze-metadata-format"/>
+  /// <see cref="http://breeze.github.io/doc-js/metadata-schema.html"/>
   /// </summary>
   public class NHMetadataBuilder {
     private readonly ISessionFactory _sessionFactory;
-    private Metadata _map;
-    private List<Dictionary<string, object>> _typeList;
+    private NHBreezeMetadata _map;
+    private List<MetaType> _typeList;
     private Dictionary<string, object> _resourceMap;
     private HashSet<string> _typeNames;
-    private List<Dictionary<string, object>> _enumList;
+    private List<MetaEnumType> _enumList;
 
     public NHMetadataBuilder(ISessionFactory sessionFactory) {
       _sessionFactory = sessionFactory;
     }
 
     /// <summary>
-    /// Build the Breeze metadata as a nested Dictionary.  
+    /// Build the Breeze metadata.  
     /// The result can be converted to JSON and sent to the Breeze client.
     /// </summary>
     /// <returns></returns>
-    public Metadata BuildMetadata() {
+    public NHBreezeMetadata BuildMetadata() {
       return BuildMetadata((Func<Type, bool>)null);
     }
 
     /// <summary>
-    /// Build the Breeze metadata as a nested Dictionary.  
+    /// Build the Breeze metadata.  
     /// The result can be converted to JSON and sent to the Breeze client.
     /// </summary>
     /// <param name="includeFilter">Function that returns true if a Type should be included in metadata, false otherwise</param>
     /// <returns></returns>
-    public Metadata BuildMetadata(Func<Type, bool> includeFilter) {
+    public NHBreezeMetadata BuildMetadata(Func<Type, bool> includeFilter) {
       // retrieves all mappings with the name property set on the class  (mapping with existing type, no duck typing)
       IDictionary<string, IClassMetadata> classMeta = _sessionFactory.GetAllClassMetadata().Where(p => ((IEntityPersister)p.Value).EntityMetamodel.Type != null).ToDictionary(p => p.Key, p => p.Value);
 
@@ -53,12 +54,12 @@ namespace Breeze.Persistence.NH {
     }
 
     /// <summary>
-    /// Build the Breeze metadata as a nested Dictionary.  
+    /// Build the Breeze metadata.  
     /// The result can be converted to JSON and sent to the Breeze client.
     /// </summary>
     /// <param name="classMeta">Entity metadata types to include in the metadata</param>
     /// <returns></returns>
-    public Metadata BuildMetadata(IEnumerable<IClassMetadata> classMeta) {
+    public NHBreezeMetadata BuildMetadata(IEnumerable<IClassMetadata> classMeta) {
       InitMap();
 
       foreach (var meta in classMeta) {
@@ -68,19 +69,21 @@ namespace Breeze.Persistence.NH {
     }
 
     /// <summary>
-    /// Populate the metadata header.
+    /// Create the top-level data structure.  Populate the metadata header.
     /// </summary>
     void InitMap() {
-      _map = new Metadata();
-      _typeList = new List<Dictionary<string, object>>();
+      _map = new NHBreezeMetadata();
+      _typeList = new List<MetaType>();
       _typeNames = new HashSet<string>();
       _resourceMap = new Dictionary<string, object>();
+      _enumList = new List<MetaEnumType>();
+
       _map.ForeignKeyMap = new Dictionary<string, string>();
-      _enumList = new List<Dictionary<string, object>>();
-      _map.Add("localQueryComparisonOptions", "caseInsensitiveSQL");
-      _map.Add("structuralTypes", _typeList);
-      _map.Add("resourceEntityTypeMap", _resourceMap);
-      _map.Add("enumTypes", _enumList);
+      _map.EnumTypes = _enumList;
+      _map.StructuralTypes = _typeList;
+
+      //_map.Add("localQueryComparisonOptions", "caseInsensitiveSQL");
+      //_map.Add("resourceEntityTypeMap", _resourceMap);
     }
 
     /// <summary>
@@ -92,39 +95,35 @@ namespace Breeze.Persistence.NH {
 
       // "Customer:#Breeze.Nhibernate.NorthwindIBModel": {
       var classKey = type.Name + ":#" + type.Namespace;
-      var cmap = new Dictionary<string, object>();
+      var cmap = new MetaType();
       _typeList.Add(cmap);
 
-      cmap.Add("shortName", type.Name);
-      cmap.Add("namespace", type.Namespace);
+      cmap.ShortName = type.Name;
+      cmap.Namespace = type.Namespace;
 
       var entityPersister = meta as IEntityPersister;
       var metaModel = entityPersister.EntityMetamodel;
       var superType = metaModel.SuperclassType;
       if (superType != null) {
-        var baseTypeName = superType.Name + ":#" + superType.Namespace;
-        cmap.Add("baseTypeName", baseTypeName);
+        cmap.BaseTypeName = superType.Name + ":#" + superType.Namespace;
       }
 
       var generator = entityPersister != null ? entityPersister.IdentifierGenerator : null;
       if (generator != null) {
-        string genType = null;
-        if (generator is IdentityGenerator) genType = "Identity";
-        else if (generator is Assigned || generator is ForeignGenerator) genType = "None";
-        else genType = "KeyGenerator";
-        cmap.Add("autoGeneratedKeyType", genType); // TODO find the real generator
+        if (generator is IdentityGenerator) cmap.AutoGeneratedKeyType = AutoGeneratedKeyType.Identity;
+        else if (generator is Assigned || generator is ForeignGenerator) cmap.AutoGeneratedKeyType = AutoGeneratedKeyType.None;
+        else cmap.AutoGeneratedKeyType = AutoGeneratedKeyType.KeyGenerator;
       }
 
       var resourceName = Pluralize(type.Name); // TODO find the real name
-      cmap.Add("defaultResourceName", resourceName);
+      cmap.DefaultResourceName = resourceName;
       _resourceMap.Add(resourceName, classKey);
 
-      var dataList = new List<Dictionary<string, object>>();
-      cmap.Add("dataProperties", dataList);
-      var navList = new List<Dictionary<string, object>>();
-      cmap.Add("navigationProperties", navList);
+      cmap.DataProperties = new List<MetaDataProperty>();
 
-      AddClassProperties(meta, dataList, navList);
+      cmap.NavigationProperties = new List<MetaNavProperty>();
+
+      AddClassProperties(meta, cmap.DataProperties, cmap.NavigationProperties);
     }
 
     /// <summary>
@@ -133,7 +132,7 @@ namespace Breeze.Persistence.NH {
     /// <param name="meta"></param>
     /// <param name="dataList">will be populated with the data properties of the entity</param>
     /// <param name="navList">will be populated with the navigation properties of the entity</param>
-    void AddClassProperties(IClassMetadata meta, List<Dictionary<string, object>> dataList, List<Dictionary<string, object>> navList) {
+    void AddClassProperties(IClassMetadata meta, List<MetaDataProperty> dataList, List<MetaNavProperty> navList) {
       var persister = meta as AbstractEntityPersister;
       var metaModel = persister.EntityMetamodel;
       var type = metaModel.Type;
@@ -156,11 +155,12 @@ namespace Breeze.Persistence.NH {
             var columnNames = persister.GetPropertyColumnNames(i);
             var compType = (ComponentType)propType;
             var complexTypeName = AddComponent(compType, columnNames);
-            var compMap = new Dictionary<string, object>();
-            compMap.Add("nameOnServer", propName);
-            compMap.Add("complexTypeName", complexTypeName);
-            compMap.Add("isNullable", propNull[i]);
-            dataList.Add(compMap);
+            var comp = new MetaDataProperty {
+              NameOnServer = propName,
+              ComplexTypeName = complexTypeName,
+              IsNullable = propNull[i]
+            };
+            dataList.Add(comp);
           } else {
             // data property
             var isKey = meta.HasNaturalIdentifier && meta.NaturalIdentifierProperties.Contains(i);
@@ -177,12 +177,13 @@ namespace Breeze.Persistence.NH {
           if (types.Length > 0) {
             var realType = types[0];
             string[] enumNames = Enum.GetNames(realType);
-            var p = new Dictionary<string, object>();
-            p.Add("shortName", realType.Name);
-            p.Add("namespace", realType.Namespace);
-            p.Add("values", enumNames);
-            if (!_enumList.Exists(x => x.ContainsValue(realType.Name))) {
-              _enumList.Add(p);
+            var et = new MetaEnumType {
+              ShortName = realType.Name,
+              Namespace = realType.Namespace,
+              Values = enumNames
+            };
+            if (!_enumList.Exists(x => x.ShortName == realType.Name)) {
+              _enumList.Add(et);
             }
           }
         }
@@ -192,6 +193,7 @@ namespace Breeze.Persistence.NH {
       // Hibernate identifiers are excluded from the list of data properties, so we have to add them separately
       if (meta.HasIdentifierProperty && !inheritedProperties.Contains(meta.IdentifierPropertyName)) {
         var dmap = MakeDataProperty(meta.IdentifierPropertyName, meta.IdentifierType, false, true, false);
+        dmap.IsIdentityColumn = (meta.IdentifierType.ReturnedClass == typeof(NHibernate.Id.IdentityGenerator));
         dataList.Insert(0, dmap);
       } else if (meta.IdentifierType != null && meta.IdentifierType.IsComponentType) {
         // composite key is a ComponentType
@@ -268,16 +270,15 @@ namespace Breeze.Persistence.NH {
         return classKey;
       }
 
-      var cmap = new Dictionary<string, object>();
+      var cmap = new MetaType();
       _typeList.Insert(0, cmap);
       _typeNames.Add(classKey);
 
-      cmap.Add("shortName", type.Name);
-      cmap.Add("namespace", type.Namespace);
-      cmap.Add("isComplexType", true);
+      cmap.ShortName = type.Name;
+      cmap.Namespace = type.Namespace;
+      cmap.IsComplexType = true;
 
-      var dataList = new List<Dictionary<string, object>>();
-      cmap.Add("dataProperties", dataList);
+      cmap.DataProperties = new List<MetaDataProperty>();
 
       var propNames = compType.PropertyNames;
       var propTypes = compType.Subtypes;
@@ -293,16 +294,16 @@ namespace Breeze.Persistence.NH {
           var span = compType2.GetColumnSpan((IMapping)_sessionFactory);
           var subColumns = columnNames.Skip(colIndex).Take(span).ToArray();
           var complexTypeName = AddComponent(compType2, subColumns);
-          var compMap = new Dictionary<string, object>();
-          compMap.Add("nameOnServer", propName);
-          compMap.Add("complexTypeName", complexTypeName);
-          compMap.Add("isNullable", propNull[i]);
-          dataList.Add(compMap);
+          var compMap = new MetaDataProperty();
+          compMap.NameOnServer = propName;
+          compMap.ComplexTypeName = complexTypeName;
+          compMap.IsNullable = propNull[i];
+          cmap.DataProperties.Add(compMap);
           colIndex += span;
         } else {
           // data property
           var dmap = MakeDataProperty(propName, propType, propNull[i], false, false);
-          dataList.Add(dmap);
+          cmap.DataProperties.Add(dmap);
           colIndex++;
         }
       }
@@ -318,14 +319,16 @@ namespace Breeze.Persistence.NH {
     /// <param name="isKey">true if this property is part of the key for the entity</param>
     /// <param name="isVersion">true if this property contains the version of the entity (for a concurrency strategy)</param>
     /// <returns></returns>
-    private Dictionary<string, object> MakeDataProperty(string propName, IType type, bool isNullable, bool isKey, bool isVersion) {
+    private MetaDataProperty MakeDataProperty(string propName, IType type, bool isNullable, bool isKey, bool isVersion) {
       string newType;
       var typeName = (BreezeTypeMap.TryGetValue(type.Name, out newType)) ? newType : type.Name;
 
-      var dmap = new Dictionary<string, object>();
-      dmap.Add("nameOnServer", propName);
-      dmap.Add("dataType", typeName);
-      dmap.Add("isNullable", isNullable);
+      var dmap = new MetaDataProperty {
+        NameOnServer = propName,
+        DataType = typeName,
+        IsNullable = isNullable
+      };
+
 
       var sqlTypes = type.SqlTypes((ISessionFactoryImplementor)this._sessionFactory);
       var sqlType = sqlTypes[0];
@@ -339,37 +342,24 @@ namespace Breeze.Persistence.NH {
       //}
 
       if (isKey) {
-        dmap.Add("isPartOfKey", true);
+        dmap.IsPartOfKey = true;
       }
       if (isVersion) {
-        dmap.Add("concurrencyMode", "Fixed");
+        dmap.ConcurrencyMode = "Fixed";
       }
-
-      var validators = new List<Dictionary<string, object>>();
 
       if (!isNullable) {
-        validators.Add(new Dictionary<string, object>() {
-                    {"name", "required" },
-                });
+        dmap.Validators.Add(MetaValidator.Required);
       }
       if (sqlType.LengthDefined) {
-        dmap.Add("maxLength", sqlType.Length);
-
-        validators.Add(new Dictionary<string, object>() {
-                    {"maxLength", sqlType.Length },
-                    {"name", "maxLength" }
-                });
+        dmap.MaxLength = sqlType.Length;
+        dmap.Validators.Add(new MaxLengthMetaValidator(sqlType.Length));
       }
 
-      string validationType;
-      if (ValidationTypeMap.TryGetValue(typeName, out validationType)) {
-        validators.Add(new Dictionary<string, object>() {
-                    {"name", validationType },
-                });
+      var validator = MetaValidator.FindValidator(type.ReturnedClass);
+      if (validator != null) {
+        dmap.Validators.Add(validator);
       }
-
-      if (validators.Any())
-        dmap.Add("validators", validators);
 
       return dmap;
     }
@@ -385,20 +375,20 @@ namespace Breeze.Persistence.NH {
     /// <param name="dataProperties">Data properties already collected for the containingType.  "isPartOfKey" may be added to a property.</param>
     /// <param name="isKey">Whether the property is part of the key</param>
     /// <returns></returns>
-    private Dictionary<string, object> MakeAssociationProperty(AbstractEntityPersister containingPersister, IAssociationType propType, string propName, List<Dictionary<string, object>> dataProperties, bool isKey) {
-      var nmap = new Dictionary<string, object>();
-      nmap.Add("nameOnServer", propName);
+    private MetaNavProperty MakeAssociationProperty(AbstractEntityPersister containingPersister, IAssociationType propType, string propName, List<MetaDataProperty> dataProperties, bool isKey) {
+      var nmap = new MetaNavProperty();
+      nmap.NameOnServer = propName;
 
       var relatedEntityType = GetEntityType(propType.ReturnedClass, propType.IsCollectionType);
-      nmap.Add("entityTypeName", relatedEntityType.Name + ":#" + relatedEntityType.Namespace);
-      nmap.Add("isScalar", !propType.IsCollectionType);
+      nmap.EntityTypeName = relatedEntityType.Name + ":#" + relatedEntityType.Namespace;
+      nmap.IsScalar = !propType.IsCollectionType;
 
       // the associationName must be the same at both ends of the association.
       Type containingType = containingPersister.EntityMetamodel.Type;
-      string[] columnNames = GetPropertyColumnNames(containingPersister, propName, propType);
-      nmap.Add("associationName", GetAssociationName(containingType.Name, relatedEntityType.Name, columnNames));
+      var columnNames = GetPropertyColumnNames(containingPersister, propName, propType);
+      nmap.AssociationName = GetAssociationName(containingType.Name, relatedEntityType.Name, columnNames);
 
-      string[] fkNames = null;
+      List<string> fkNames = null;
       var joinable = propType.GetAssociatedJoinable((ISessionFactoryImplementor)this._sessionFactory);
       if (propType.IsCollectionType) {
         // inverse foreign key
@@ -409,7 +399,7 @@ namespace Breeze.Persistence.NH {
           if (elementPersister != null) {
             fkNames = GetPropertyNamesForColumns(elementPersister, columnNames);
             if (fkNames != null)
-              nmap.Add("invForeignKeyNamesOnServer", fkNames);
+              nmap.InvForeignKeyNamesOnServer = fkNames;
           }
         }
       } else {
@@ -419,24 +409,22 @@ namespace Breeze.Persistence.NH {
         fkNames = GetPropertyNamesForColumns(containingPersister, columnNames);
         if (fkNames != null) {
           if (propType.ForeignKeyDirection == ForeignKeyDirection.ForeignKeyFromParent) {
-            nmap.Add("foreignKeyNamesOnServer", fkNames);
+            nmap.ForeignKeyNamesOnServer = fkNames;
           } else {
-            nmap.Add("invForeignKeyNamesOnServer", fkNames);
+            nmap.InvForeignKeyNamesOnServer = fkNames;
           }
 
           // For many-to-one and one-to-one associations, save the relationship in ForeignKeyMap for re-establishing relationships during save
           _map.ForeignKeyMap.Add(entityRelationship, string.Join(",", fkNames));
           if (isKey) {
             foreach (var fkName in fkNames) {
-              var relatedDataProperty = FindPropertyByName(dataProperties, fkName);
-              if (!relatedDataProperty.ContainsKey("isPartOfKey")) {
-                relatedDataProperty.Add("isPartOfKey", true);
-              }
+              var relatedDataProperty = FindPropertyByName(dataProperties, fkName) as MetaDataProperty;
+              relatedDataProperty.IsPartOfKey = true;
             }
           }
         } else if (fkNames == null) {
-          nmap.Add("foreignKeyNamesOnServer", columnNames);
-          nmap.Add("ERROR", "Could not find matching fk for property " + entityRelationship);
+          nmap.ForeignKeyNamesOnServer = columnNames;
+          //nmap.Add("ERROR", "Could not find matching fk for property " + entityRelationship);
           _map.ForeignKeyMap.Add(entityRelationship, string.Join(",", columnNames));
           throw new ArgumentException("Could not find matching fk for property " + entityRelationship);
         }
@@ -454,7 +442,7 @@ namespace Breeze.Persistence.NH {
     /// <param name="propertyName"></param>
     /// <param name="propType"></param>
     /// <returns></returns>
-    string[] GetPropertyColumnNames(AbstractEntityPersister persister, string propertyName, IType propType) {
+    List<string> GetPropertyColumnNames(AbstractEntityPersister persister, string propertyName, IType propType) {
       string[] propColumnNames = null;
       if (propType.IsCollectionType) {
         propColumnNames = ((CollectionType)propType).GetReferencedColumns((ISessionFactoryImplementor)this._sessionFactory);
@@ -479,7 +467,7 @@ namespace Breeze.Persistence.NH {
     /// <param name="persister"></param>
     /// <param name="columnNames">Array of column names</param>
     /// <returns></returns>
-    static string[] GetPropertyNamesForColumns(AbstractEntityPersister persister, string[] columnNames) {
+    static List<string> GetPropertyNamesForColumns(AbstractEntityPersister persister, IList<string> columnNames) {
       var propNames = persister.PropertyNames;
       var propTypes = persister.PropertyTypes;
       for (int i = 0; i < propNames.Length; i++) {
@@ -491,32 +479,32 @@ namespace Breeze.Persistence.NH {
         if (columnArray[0] == null) {
           continue;
         }
-        if (NamesEqual(columnArray, columnNames)) return new string[] { propName };
+        if (NamesEqual(columnArray, columnNames)) return new List<string> { propName };
       }
 
       // If we got here, maybe the property is the identifier
       var keyColumnArray = persister.KeyColumnNames;
       if (NamesEqual(keyColumnArray, columnNames)) {
         if (persister.IdentifierPropertyName != null) {
-          return new string[] { persister.IdentifierPropertyName };
+          return new List<string> { persister.IdentifierPropertyName };
         }
         if (persister.IdentifierType.IsComponentType) {
           var compType = (ComponentType)persister.IdentifierType;
-          return compType.PropertyNames;
+          return compType.PropertyNames.ToList(); ;
         }
       }
 
-      if (columnNames.Length > 1) {
+      if (columnNames.Count > 1) {
         // go one-by-one through columnNames, trying to find a matching property.
         // TODO: maybe this should split columnNames into all possible combinations of ordered subsets, and try those
         var propList = new List<string>();
         var prop = new string[1];
-        for (int i = 0; i < columnNames.Length; i++) {
+        for (int i = 0; i < columnNames.Count; i++) {
           prop[0] = columnNames[i];
           var names = GetPropertyNamesForColumns(persister, prop);  // recursive call
           if (names != null) propList.AddRange(names);
         }
-        if (propList.Count > 0) return propList.ToArray();
+        if (propList.Count > 0) return propList;
       }
       return null;
     }
@@ -524,7 +512,7 @@ namespace Breeze.Persistence.NH {
     /// <summary>
     /// Unbrackets the column names and concatenates them into a comma-delimited string
     /// </summary>
-    static string CatColumnNames(string[] columnNames, char delim = ',') {
+    static string CatColumnNames(IEnumerable<string> columnNames, char delim = ',') {
       var sb = new StringBuilder();
       foreach (var s in columnNames) {
         if (sb.Length > 0) sb.Append(delim);
@@ -537,9 +525,9 @@ namespace Breeze.Persistence.NH {
     /// return true if the two arrays contain the same names, false otherwise.
     /// Names are compared after UnBracket(), and are case-insensitive.
     /// </summary>
-    static bool NamesEqual(string[] a, string[] b) {
-      if (a.Length != b.Length) return false;
-      for (int i = 0; i < a.Length; i++) {
+    static bool NamesEqual(IList<string> a, IList<string> b) {
+      if (a.Count != b.Count) return false;
+      for (int i = 0; i < a.Count; i++) {
         if (UnBracket(a[i]).ToLower() != UnBracket(b[i]).ToLower()) return false;
       }
       return true;
@@ -562,10 +550,10 @@ namespace Breeze.Persistence.NH {
     /// <summary>
     /// Return a new array containing the UnBracketed names
     /// </summary>
-    static string[] UnBracket(string[] names) {
-      var u = new string[names.Length];
-      for (int i = 0; i < names.Length; i++) {
-        u[i] = UnBracket(names[i]);
+    static List<string> UnBracket(IList<string> names) {
+      var u = new List<string>();
+      for (int i = 0; i < names.Count; i++) {
+        u.Add(UnBracket(names[i]));
       }
       return u;
     }
@@ -576,11 +564,11 @@ namespace Breeze.Persistence.NH {
     /// <param name="properties">list of DataProperty or NavigationProperty maps</param>
     /// <param name="name">matched against the nameOnServer value of entries in the list</param>
     /// <returns></returns>
-    static Dictionary<string, object> FindPropertyByName(List<Dictionary<string, object>> properties, string name) {
-      object nameOnServer;
+    static MetaProperty FindPropertyByName(IEnumerable<MetaProperty> properties, string name) {
+      //object nameOnServer;
       foreach (var prop in properties) {
-        if (prop.TryGetValue("nameOnServer", out nameOnServer)) {
-          if (((string)nameOnServer) == name) return prop;
+        if (prop.NameOnServer == name) {
+          return prop;
         }
       }
       return null;
@@ -629,7 +617,7 @@ namespace Breeze.Persistence.NH {
     /// <param name="name2"></param>
     /// <param name="propType">Used to ensure the association name is unique for a type</param>
     /// <returns></returns>
-    static string GetAssociationName(string name1, string name2, string[] columnNames) {
+    static string GetAssociationName(string name1, string name2, IEnumerable<string> columnNames) {
       var cols = CatColumnNames(columnNames, '_');
       if (name1.CompareTo(name2) < 0)
         return ASSN + name1 + '_' + name2 + '_' + cols;
@@ -646,35 +634,28 @@ namespace Breeze.Persistence.NH {
                     {"TimeAsTimeSpan", "Time" }
                 };
 
-
-    // Map of data type to Breeze validation type
-    static readonly Dictionary<string, string> ValidationTypeMap = new Dictionary<string, string>() {
-                    {"Boolean", "bool" },
-                    {"Byte", "byte" },
-                    {"DateTime", "date" },
-                    {"DateTimeOffset", "date" },
-                    {"Decimal", "number" },
-                    {"Guid", "guid" },
-                    {"Int16", "int16" },
-                    {"Int32", "int32" },
-                    {"Int64", "integer" },
-                    {"Single", "number" },
-                    {"Time", "duration" },
-                    {"TimeAsTimeSpan", "duration" }
-                };
-
-
   }
 
   /// <summary>
   /// Metadata describing the entity model.  Converted to JSON to send to Breeze client.
   /// </summary>
-  public class Metadata : Dictionary<string, object> {
+  public class NHBreezeMetadata : BreezeMetadata {
     /// <summary>
     /// Map of relationship name -> foreign key name, e.g. "Customer" -> "CustomerID".
     /// Used for re-establishing the entity relationships from the foreign key values during save.
-    /// This part is not sent to the client because it is separate from the base dictionary implementation.
+    /// This part is not sent to the client because it is for server-side save implementation.
     /// </summary>
+    [JsonIgnore]
     public IDictionary<string, string> ForeignKeyMap;
+
+    /// <summary> List of Enum types in NHibernate properties.  Not sure if this is useful on the client. </summary>
+    public List<MetaEnumType> EnumTypes;
+
+  }
+
+  public class MetaEnumType {
+    public string ShortName { get; set; }
+    public string Namespace { get; set; }
+    public string[] Values { get; set; }
   }
 }

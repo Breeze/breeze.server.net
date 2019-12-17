@@ -15,7 +15,7 @@ namespace Breeze.Persistence.NH {
   public class NHPersistenceManager : Breeze.Persistence.PersistenceManager, IDisposable {
     private readonly ISession session;
     //protected Configuration configuration;
-    private static readonly Dictionary<ISessionFactory, Metadata> _factoryMetadata = new Dictionary<ISessionFactory, Metadata>();
+    private static readonly Dictionary<ISessionFactory, NHBreezeMetadata> _factoryMetadata = new Dictionary<ISessionFactory, NHBreezeMetadata>();
     private static readonly object _metadataLock = new object();
 
     static NHPersistenceManager() {
@@ -180,11 +180,10 @@ namespace Breeze.Persistence.NH {
       return json;
     }
 
-    protected Metadata GetMetadata() {
+    protected NHBreezeMetadata GetMetadata() {
       if (_metadata == null) {
         lock (_metadataLock) {
           if (!_factoryMetadata.TryGetValue(session.SessionFactory, out _metadata)) {
-            //var builder = new NHBreezeMetadata(session.SessionFactory, configuration);
             var builder = new NHMetadataBuilder(session.SessionFactory);
             _metadata = builder.BuildMetadata(TypeFilter);
             _factoryMetadata.Add(session.SessionFactory, _metadata);
@@ -199,7 +198,7 @@ namespace Breeze.Persistence.NH {
 
     private readonly Dictionary<EntityInfo, KeyMapping> EntityKeyMapping = new Dictionary<EntityInfo, KeyMapping>();
     private readonly List<EntityError> entityErrors = new List<EntityError>();
-    private Metadata _metadata;
+    private NHBreezeMetadata _metadata;
 
     /// <summary>
     /// Persist the changes to the entities in the saveMap.

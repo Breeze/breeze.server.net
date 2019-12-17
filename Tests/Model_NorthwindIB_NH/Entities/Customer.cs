@@ -13,6 +13,7 @@ namespace Models.NorthwindIB.NH
         public virtual System.Guid CustomerID { get; set; }
         public virtual string CustomerID_OLD { get; set; }
         public virtual string CompanyName { get; set; }
+        [NotErrorValidator]
         public virtual string ContactName { get; set; }
         public virtual string ContactTitle { get; set; }
         public virtual string Address { get; set; }

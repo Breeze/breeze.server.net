@@ -1,4 +1,4 @@
-﻿using Breeze.Core;
+using Breeze.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
@@ -29,7 +29,7 @@ namespace Breeze.Persistence.EFCore {
       // Complex types show up once per parent reference and we need to reduce
       // this to just the unique types.
       var complexTypesMap = complexTypes.ToDictionary(mt => mt.ShortName);
-      complexTypesMap.Values.ToList().ForEach(v => metadata.StructuralTypes.Add(v));
+      complexTypesMap.Values.ToList().ForEach(v => metadata.StructuralTypes.Insert(0, v));
 
       return metadata;
     }
@@ -61,6 +61,11 @@ namespace Breeze.Persistence.EFCore {
       if (dbSetMap.TryGetValue(et.ClrType, out string resourceName)) {
         mt.DefaultResourceName = resourceName;
       }
+      var baseType = et.BaseType;
+      if (baseType != null) {
+        mt.BaseTypeName = baseType.ClrType.Name + ":#" + baseType.ClrType.Namespace;
+      }
+
 
       mt.DataProperties = et.GetProperties().Select(p => CreateDataProperty(p)).ToList();
 
