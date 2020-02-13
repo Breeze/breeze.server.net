@@ -1,8 +1,10 @@
 ﻿// Only one of the next few should be uncommented.
 #define CODEFIRST_PROVIDER
+// #define NHIBERNATE
+
+// OLD defines
 //#define DATABASEFIRST_NEW
 //#define ORACLE_EDMX
-//#define NHIBERNATE
 
 using System;
 using System.Net;
