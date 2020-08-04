@@ -66,8 +66,9 @@ namespace Breeze.Persistence.EFCore {
         mt.BaseTypeName = baseType.ClrType.Name + ":#" + baseType.ClrType.Namespace;
       }
 
+      // exclude base class properties 
+      mt.DataProperties = et.GetProperties().Where(p => p.DeclaringType.ClrType.Equals(et.ClrType)).Select(p => CreateDataProperty(p)).ToList();
 
-      mt.DataProperties = et.GetProperties().Select(p => CreateDataProperty(p)).ToList();
 
       // EF returns parent's key with the complex type - we need to remove this.
       if (mt.IsComplexType) {
