@@ -93,7 +93,7 @@ namespace Breeze.Persistence.EFCore {
       });
 
       mt.NavigationProperties = et.GetNavigations()
-        .Where(n => !n.GetTargetType().IsOwned()).Select(p => CreateNavProperty(p)).ToList();
+        .Where(n => !n.GetTargetType().IsOwned() && n.DeclaringType.ClrType.Equals(et.ClrType)).Select(p => CreateNavProperty(p)).ToList();
 
       return mt;
     }
