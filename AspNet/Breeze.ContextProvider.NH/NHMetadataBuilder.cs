@@ -199,7 +199,7 @@ namespace Breeze.ContextProvider.NH
                         string[] enumNames = Enum.GetNames(realType);
                         var p = new Dictionary<string, object>();
                         p.Add("shortName", realType.Name);
-                        p.Add("namespace", realType.Namespace);
+                        p.Add("namespace", realType.Namespace); 
                         p.Add("values", enumNames);
                         if (!_enumList.Exists(x => x.ContainsValue(realType.Name)))
                         {
