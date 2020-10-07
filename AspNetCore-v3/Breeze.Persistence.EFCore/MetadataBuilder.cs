@@ -22,10 +22,19 @@ namespace Breeze.Persistence.EFCore {
         .Where(et => !et.IsOwned())
         .Select(et => CreateMetaType(et, dbSetMap)).ToList();
 
-      var enums = dbContext.Model.GetEntityTypes().Where(et => et.GetProperties().Any(p => p.PropertyInfo != null && p.PropertyInfo.PropertyType.IsEnum)).Select(et => et.GetProperties().Where(p => p.PropertyInfo.PropertyType.IsEnum)).ToList();
+
+      // get the enums out of the model types
+      // for nullable enum we must call Nullable.GetUnderlyingType
+      var enums = dbContext.Model.GetEntityTypes().Where(et => et.GetProperties().Any(p =>
+      p.PropertyInfo != null && (p.PropertyInfo.PropertyType.IsEnum || (Nullable.GetUnderlyingType(p.PropertyInfo.PropertyType) != null && Nullable.GetUnderlyingType(p.PropertyInfo.PropertyType).IsEnum))))
+        .Select(et => et.GetProperties().Where(p => p.PropertyInfo.PropertyType.IsEnum || (Nullable.GetUnderlyingType(p.PropertyInfo.PropertyType) != null && Nullable.GetUnderlyingType(p.PropertyInfo.PropertyType).IsEnum))).ToList();
 
       foreach (var myEnum in enums) {
         var realType = myEnum.First().ClrType;
+        //check if realType is nullable
+        if (Nullable.GetUnderlyingType(realType) != null) {
+          realType = Nullable.GetUnderlyingType(realType);
+        }
         string[] enumNames = Enum.GetNames(realType);
         var p = new Dictionary<string, object>();
         p.Add("shortName", realType.Name);
