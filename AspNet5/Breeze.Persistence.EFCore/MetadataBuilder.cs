@@ -80,9 +80,9 @@ namespace Breeze.Persistence.EFCore {
 
       // Handle complex properties
       // for now this only complex types ( 'owned types' in EF parlance are eager loaded)
-      var ownedNavigations = et.GetNavigations().Where(n => n.GetTargetType().IsOwned());
+      var ownedNavigations = et.GetNavigations().Where(n => n.TargetEntityType.IsOwned());
       ownedNavigations.ToList().ForEach(n => {
-        var complexType = n.GetTargetType().ClrType;
+        var complexType = n.TargetEntityType.ClrType;
         var dp = new MetaDataProperty();
         dp.NameOnServer = n.Name;
         dp.IsNullable = false;
@@ -92,7 +92,7 @@ namespace Breeze.Persistence.EFCore {
       });
 
       mt.NavigationProperties = et.GetNavigations()
-        .Where(n => !n.GetTargetType().IsOwned()).Select(p => CreateNavProperty(p)).ToList();
+        .Where(n => !n.TargetEntityType.IsOwned()).Select(p => CreateNavProperty(p)).ToList();
 
       return mt;
     }
@@ -124,15 +124,15 @@ namespace Breeze.Persistence.EFCore {
     private MetaNavProperty CreateNavProperty(INavigation p) {
       var np = new MetaNavProperty();
       np.NameOnServer = p.Name;
-      np.EntityTypeName = NormalizeTypeName(p.GetTargetType().ClrType);
-      np.IsScalar = !p.IsCollection();
+      np.EntityTypeName = NormalizeTypeName(p.TargetEntityType.ClrType);
+      np.IsScalar = !p.IsCollection;
       // FK_<dependent type name>_<principal type name>_<foreign key property name>
       np.AssociationName = BuildAssocName(p);
-      if (p.IsDependentToPrincipal()) {
+      if (p.IsOnDependent) {
         np.AssociationName = BuildAssocName(p);
         np.ForeignKeyNamesOnServer = p.ForeignKey.Properties.Select(fkp => fkp.Name).ToList();
       } else {
-        var invP = p.FindInverse();
+        var invP = p.Inverse;
         string assocName;
         if (invP == null) {
           assocName = "Inv_" + BuildAssocName(p);
@@ -147,7 +147,7 @@ namespace Breeze.Persistence.EFCore {
     }
 
     private string BuildAssocName(INavigation prop) {
-      var assocName = prop.DeclaringEntityType.Name + "_" + prop.GetTargetType().Name + "_" + prop.Name;
+      var assocName = prop.DeclaringEntityType.Name + "_" + prop.TargetEntityType.Name + "_" + prop.Name;
       return assocName;
     }
 

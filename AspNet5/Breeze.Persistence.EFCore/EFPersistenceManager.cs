@@ -219,7 +219,7 @@ namespace Breeze.Persistence.EFCore {
         var entry = GetOrAddEntityEntry(entityInfo);
         entry.State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
         // Handle owned entities - ( complex types).
-        var ownedNavs = entry.Navigations.Where(n => n.Metadata.GetTargetType().IsOwned());
+        var ownedNavs = entry.Navigations.Where(n => n.Metadata.TargetEntityType.IsOwned());
         ownedNavs.ToList().ForEach(n => {
           var nEntry = GetEntityEntry(n.CurrentValue);
           nEntry.State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
@@ -312,7 +312,7 @@ namespace Breeze.Persistence.EFCore {
       entry.State = state;
 
       // Handle owned entities - ( complex types).
-      var ownedNavs = entry.Navigations.Where(n => n.Metadata.GetTargetType().IsOwned());
+      var ownedNavs = entry.Navigations.Where(n => n.Metadata.TargetEntityType.IsOwned());
       ownedNavs.ToList().ForEach(n => {
         var nEntry = GetEntityEntry(n.CurrentValue);
         nEntry.State = state;
