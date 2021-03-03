@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
       <id>Breeze.Persistence.NH</id>
-      <version>3.0.1</version>
+      <version>3.1.0</version>
       <title>Breeze Server - Persistence for NHibernate</title>
       <authors>Jay Traband, Steve Schmitt</authors>
       <owners>IdeaBlade</owners>
@@ -17,8 +17,8 @@
       <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>
       <tags>AspNetCore NHibernate Persistence javascript Breeze BreezeJs </tags>
       <dependencies>
-        <dependency id="Breeze.Core" version="[3.0.1]"/>
-        <dependency id="Breeze.Persistence" version="[3.0.1]"/>
+        <dependency id="Breeze.Core" version="[3.1.0]"/>
+        <dependency id="Breeze.Persistence" version="[3.1.0]"/>
         <dependency id="Newtonsoft.Json" version="12.0.3" />
         <dependency id="NHibernate" version="5.2.6" />
         <dependency id="System.ComponentModel.Annotations" version="4.7.0" />
