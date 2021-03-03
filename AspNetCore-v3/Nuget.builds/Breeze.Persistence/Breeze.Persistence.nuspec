@@ -26,9 +26,9 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		</dependencies>
     </metadata>
     <files>
-        <file src="lib\netstandard2.1\Breeze.Persistence.dll" target="lib\netstandard2.1\Breeze.Persistence.dll" />
-        <file src="lib\netstandard2.1\Breeze.Persistence.pdb" target="lib\netstandard2.1\Breeze.Persistence.pdb" />
-        <file src="lib\netstandard2.1\Breeze.Persistence.xml" target="lib\netstandard2.1\Breeze.Persistence.xml" />
+        <file src="lib\netstandard2.0\Breeze.Persistence.dll" target="lib\netstandard2.0\Breeze.Persistence.dll" />
+        <file src="lib\netstandard2.0\Breeze.Persistence.pdb" target="lib\netstandard2.0\Breeze.Persistence.pdb" />
+        <file src="lib\netstandard2.0\Breeze.Persistence.xml" target="lib\netstandard2.0\Breeze.Persistence.xml" />
         <file src="readme.txt" target="readme.txt" />
     </files>
 </package>
