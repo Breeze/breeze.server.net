@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>{{id}}</id>
+        <version>{{version}}</version>
+        <title>Breeze Server - ASP.NET Core Provider</title>
+        <authors>Jay Traband</authors>
+        <owners>IdeaBlade</owners>
+        <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
+        <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
+        <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Core ASP.NET Core functionality for any Breeze Server using ASP.NET Core.
+
+Note: Version 3.x of this package is for .NET Core 3, whereas Version 1.x is for .NET Core 2.
+You will need to install one of the Version 1.x versions of this package if you are running ASP.NET Core 2/.NET Core 2 or EF Core 2.</description>
+        <summary>Breeze Server - ASP.NET Core </summary>
+        <copyright>Copyright © IdeaBlade 2012-2019</copyright>
+        <language>en-US</language>
+        <releaseNotes>Version 3.x of this package is for .NET Core 3, whereas Version 1.x is for .NET Core 2.
+You will need to install one of the Version 1.x versions of this package if you are running ASP.NET Core 2/.NET Core 2 or EF Core 2.
+Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>
+        <tags>AspNetCore javascript Breeze BreezeJs </tags>
+		<dependencies>
+            <dependency id="Breeze.Core" version="[{{version}}]"/>
+            <dependency id="Breeze.Persistence" version="[{{version}}]"/>
+		</dependencies>
+    </metadata>
+    <files>
+        <file src="lib\netcoreapp3.1\Breeze.AspNetCore.NetCore.dll" target="lib\netcoreapp3.1\Breeze.AspNetCore.NetCore.dll" />
+        <file src="lib\netcoreapp3.1\Breeze.AspNetCore.NetCore.pdb" target="lib\netcoreapp3.1\Breeze.AspNetCore.NetCore.pdb" />
+        <file src="lib\netcoreapp3.1\Breeze.AspNetCore.NetCore.xml" target="lib\netcoreapp3.1\Breeze.AspNetCore.NetCore.xml" />
+        <file src="readme.txt" target="readme.txt" />
+    </files>
+</package>
