@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\NorthwindNHPersistenceManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AspNetCore-v5\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
+    <ProjectReference Include="..\..\AspNetCore-v5\Breeze.Core\Breeze.Core.csproj" />
+    <ProjectReference Include="..\..\AspNetCore-v5\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj" />
+    <ProjectReference Include="..\..\AspNetCore-v5\Breeze.Persistence\Breeze.Persistence.csproj" />
+    <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore5\Model.NorthwindIB_CF.EFCore5.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="breezeTests\breeze\breeze.debug.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
