@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="breeze\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -26,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="breeze\breeze.debug.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\index.aspcore.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
