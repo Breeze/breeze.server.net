@@ -19,11 +19,10 @@ Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NE
 Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html		</PackageReleaseNotes>
 		<Product>Breeze Server - Core .NET 5 dll</Product>
 		<PackageTags>AspNetCore javascript Breeze BreezeJs</PackageTags>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageLicenseExpression></PackageLicenseExpression>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>5.0.2.0</AssemblyVersion>
-		<PackageIcon>BreezeLogo.png</PackageIcon>
+		<AssemblyVersion>5.0.22.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -36,13 +35,6 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="..\BreezeLogo.png">
-	    <Pack>True</Pack>
-	    <PackagePath></PackagePath>
-	  </None>
 	</ItemGroup>
 
 </Project>

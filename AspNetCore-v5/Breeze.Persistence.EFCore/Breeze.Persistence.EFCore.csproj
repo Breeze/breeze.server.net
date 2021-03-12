@@ -1,16 +1,55 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IsPackable>true</IsPackable>
+		<Version>5.0.2</Version>
+		<Description>Persistence for EF Core functionality for any Breeze Server using .NET 5.
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.4" />
-  </ItemGroup>
+Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NET Core 3 and Version 1.x is for .NET Core 2.
+		</Description>
+		<Copyright>Copyright © IdeaBlade 2012-2021</Copyright>
+		<PackageProjectUrl>https://github.com/Breeze/breeze.server.net</PackageProjectUrl>
+		<Authors>Jay Traband</Authors>
+		<Company>IdeaBlade</Company>
+		<PackageReleaseNotes>Version 5.x of this package is for .NET 5/EFCore 5, whereas Version 3.x is for .NET Core 3/EF core 3 and  Version 1.x is for .NET Core 2 and EFCore.
 
-  <ItemGroup>
-    <ProjectReference Include="..\Breeze.Core\Breeze.Core.csproj" />
-    <ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.csproj" />
-  </ItemGroup>
+Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html
+		</PackageReleaseNotes>
+		<Product>Breeze Server - Persistence for EF Core Provider</Product>
+		<PackageTags>AspNetCore javascript Breeze BreezeJs</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<DelaySign>false</DelaySign>
+		<AssemblyVersion>5.0.2.0</AssemblyVersion>
+		<FileVersion>5.0.2.0</FileVersion>
+		<PackageIcon>BreezeLogo.png</PackageIcon>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile></DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>C:\GitHub\breeze.server.net\AspNetCore-v5\Breeze.Persistence.EFCore\bin\release\net5.0\Breeze.Persistence.EFCore.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Breeze.Core\Breeze.Core.csproj" />
+		<ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\BreezeLogo.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
 
 </Project>

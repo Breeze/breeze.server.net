@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.AspNetCore.NetCore", "Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{D6735AD8-DD83-44AC-9584-D06AA76C1E2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Core", "Breeze.Core\Breeze.Core.csproj", "{D7072EE0-4349-453B-91BA-657706F1C514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Core", "Breeze.Core\Breeze.Core.csproj", "{D7072EE0-4349-453B-91BA-657706F1C514}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence", "Breeze.Persistence\Breeze.Persistence.csproj", "{9293A854-FA52-4886-BF24-814A52E03148}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "Breeze.Persistence\Breeze.Persistence.csproj", "{9293A854-FA52-4886-BF24-814A52E03148}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence.EFCore", "Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj", "{AC782D7D-8F4B-49F6-9C6D-1037CAC1B513}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EFCore", "Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj", "{AC782D7D-8F4B-49F6-9C6D-1037CAC1B513}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -20,10 +20,11 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.SqlClient;
+
 using System.Linq;
 
 using BreezeEntityState = Breeze.Persistence.EntityState;
+using Microsoft.Data.SqlClient;
 
 namespace Test.AspNetCore.Controllers {
 

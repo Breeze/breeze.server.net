@@ -218,9 +218,9 @@ namespace Breeze.Persistence.EFCore {
         RestoreOriginal(entityInfo);
         var entry = GetOrAddEntityEntry(entityInfo);
         entry.State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
-        // Handle owned entities - ( complex types).
-        var ownedNavs = entry.Navigations.Where(n => n.Metadata.TargetEntityType.IsOwned());
-        ownedNavs.ToList().ForEach(n => {
+          // Handle owned entities - ( complex types).
+          var ownedNavs = entry.Navigations.Where(n => n.Metadata.TargetEntityType.IsOwned());
+          ownedNavs.ToList().ForEach(n => {
           var nEntry = GetEntityEntry(n.CurrentValue);
           nEntry.State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
         });
