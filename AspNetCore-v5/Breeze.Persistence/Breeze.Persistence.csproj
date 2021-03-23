@@ -5,7 +5,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<IsPackable>true</IsPackable>
-		<Version>5.0.2</Version>
+		<Version>5.0.2.1</Version>
 		<Description>Basic Persistence functionality for any Breeze Server using .NET 5.
 
 Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NET Core 3 and Version 1.x is for .NET Core 2.
@@ -23,13 +23,13 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>5.0.2.0</AssemblyVersion>
-		<FileVersion>5.0.2.0</FileVersion>
+		<AssemblyVersion>5.0.2.1</AssemblyVersion>
+		<FileVersion>5.0.2.1</FileVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile></DocumentationFile>
+		<DocumentationFile>C:\GitHub\breeze.server.net\AspNetCore-v5\Breeze.Persistence\Breeze.Persistence.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

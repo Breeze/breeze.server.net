@@ -6,7 +6,7 @@ var del = require('del');
 const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
-const version = '5.0.2';
+const version = '5.0.2.1';
 const debugOrRelease = 'Debug'
 
 var baseNames = [
@@ -44,7 +44,7 @@ function deployLocal() {
 function deployRemote() {
   const nupkgs = getNupkgs(baseNames);
   nupkgs.forEach(nupkg => {
-    var cmd = `nuget push ${nupkg} {{ nuget password here }} -Source https://www.nuget.org`
+    var cmd = `nuget push ${nupkg} {{ nuget key goes here }} -Source https://www.nuget.org`
     console.log(cmd);
     bu.execCmd(cmd);
   });
