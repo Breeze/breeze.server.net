@@ -1,13 +1,12 @@
 // Uncomment only one of the two defines below
 #define EFCORE
-// #define NHIBERNATE
+//#define NHIBERNATE
 
 using Breeze.AspNetCore;
 using Breeze.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -19,6 +18,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+#if EFCORE
+using Microsoft.EntityFrameworkCore;
+#elif NHIBERNATE
+using Breeze.Persistence.NH;
+#endif
 
 namespace Test.AspNetCore5.EFCore5 {
   public class Startup {
@@ -78,12 +83,12 @@ namespace Test.AspNetCore5.EFCore5 {
         var cfg = new NHibernate.Cfg.Configuration();
         cfg.DataBaseIntegration(db => {
           db.ConnectionString = tmp;
-          db.Dialect<MsSql2008Dialect>();
-          db.Driver<Sql2008ClientDriver>();
+          db.Dialect<NHibernate.Dialect.MsSql2008Dialect>();
+          db.Driver<NHibernate.Driver.MicrosoftDataSqlClientDriver>();
           db.LogFormattedSql = true;
           db.LogSqlInConsole = true;
         });
-        cfg.Properties.Add(Environment.DefaultBatchFetchSize, "32");
+        cfg.Properties.Add(NHibernate.Cfg.Environment.DefaultBatchFetchSize, "32");
         cfg.CurrentSessionContext<NHibernate.Context.ThreadStaticSessionContext>();
         var modelAssembly = typeof(Models.NorthwindIB.NH.Customer).Assembly;
         cfg.AddAssembly(modelAssembly);  // mapping is in this assembly

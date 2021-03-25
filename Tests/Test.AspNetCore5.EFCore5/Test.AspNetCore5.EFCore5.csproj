@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\NorthwindNHPersistenceManager.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Breeze.AspNetCore.NetCore" Version="5.0.2.1" />
     <PackageReference Include="Breeze.Persistence.EFCore" Version="5.0.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
@@ -16,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AspNetCore-v5\Breeze.Persistence.NH\Breeze.Persistence.NH.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore5\Model.NorthwindIB_CF.EFCore5.csproj" />
+    <ProjectReference Include="..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.net5.csproj" />
   </ItemGroup>
 
   <ItemGroup>
