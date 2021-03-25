@@ -11,6 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence", "Breez
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.EFCore", "Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj", "{AC782D7D-8F4B-49F6-9C6D-1037CAC1B513}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F8D85A9F-E6FE-427B-ABAB-CA76ACF94AD2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
