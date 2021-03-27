@@ -31,7 +31,39 @@ namespace Breeze.Persistence.EFCore {
       var complexTypesMap = complexTypes.ToDictionary(mt => mt.ShortName);
       complexTypesMap.Values.ToList().ForEach(v => metadata.StructuralTypes.Insert(0, v));
 
+      // Get the enums out of the model types
+      var enums = dbContext.Model.GetEntityTypes()
+      .SelectMany(et => et.GetProperties().Where(p => p.PropertyInfo != null && IsEnum(p.PropertyInfo.PropertyType))).ToList();
+
+      if (enums.Any()) {
+        metadata.EnumTypes = new List<MetaEnum>();
+
+        foreach (var myEnum in enums) {
+          var realType = myEnum.ClrType;
+          // Check if realType is nullable
+          if (Nullable.GetUnderlyingType(realType) != null) {
+            realType = Nullable.GetUnderlyingType(realType);
+          }
+
+          string[] enumNames = Enum.GetNames(realType);
+          int[] enumOrds = Enum.GetValues(realType) as int[];
+          var et = new MetaEnum {
+            ShortName = realType.Name,
+            Namespace = realType.Namespace,
+            Values = enumNames,
+            Ordinals = enumOrds
+          };
+          if (!metadata.EnumTypes.Exists(x => x.ShortName == realType.Name)) {
+            metadata.EnumTypes.Add(et);
+          }
+        }
+      }
+
       return metadata;
+    }
+
+    private static bool IsEnum(Type type) {
+      return type.IsEnum || (Nullable.GetUnderlyingType(type) != null && Nullable.GetUnderlyingType(type).IsEnum);
     }
 
     private static Dictionary<Type, String> GetDbSetMap(DbContext context) {
@@ -106,6 +138,9 @@ namespace Breeze.Persistence.EFCore {
       dp.IsIdentityColumn = p.IsPrimaryKey() && p.ValueGenerated == ValueGenerated.OnAdd;
       dp.MaxLength = p.GetMaxLength();
       dp.DataType = NormalizeDataTypeName(p.ClrType);
+      if (IsEnum(p.ClrType)) {
+        dp.EnumType = NormalizeTypeName(TypeFns.GetNonNullableType(p.ClrType));
+      }
       dp.ConcurrencyMode = p.IsConcurrencyToken ? "Fixed" : null;
       var dfa = p.GetAnnotations().Where(a => a.Name == "DefaultValue").FirstOrDefault();
       if (dfa != null) {

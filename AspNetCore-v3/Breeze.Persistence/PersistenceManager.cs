@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
@@ -505,7 +505,7 @@ namespace Breeze.Persistence {
     public Object[] KeyValues;
     public String PropertyName;
     public string ErrorMessage;
-
+    public object Custom;
   }
 
 
