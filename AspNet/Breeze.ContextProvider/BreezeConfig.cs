@@ -22,7 +22,7 @@ namespace Breeze.ContextProvider {
           AppDomain.CurrentDomain.AssemblyLoad += CurrentDomain_AssemblyLoad;
           if (__instance == null) {
             var typeCandidates = ProbeAssemblies.SelectMany(a => GetTypes(a));
-            var types = typeCandidates.Where(t => typeof (BreezeConfig).IsAssignableFrom(t) && !t.IsAbstract).ToList();
+            var types = typeCandidates.Where(t => t != typeof(BreezeConfig) && typeof (BreezeConfig).IsAssignableFrom(t) && !t.IsAbstract).ToList();
 
             if (types.Count == 0) {
               __instance = new BreezeConfig();
