@@ -5,7 +5,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<IsPackable>true</IsPackable>
-		<Version>5.0.2.1</Version>
+		<Version>5.0.3.0</Version>
 		<Description>Core functionality for any Breeze Server using .NET 5.
 
 Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NET Core 3 and Version 1.x is for .NET Core 2.
@@ -18,11 +18,11 @@ Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NE
 
 Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html		</PackageReleaseNotes>
 		<Product>Breeze Server - Core .NET 5 dll</Product>
-		<PackageTags>AspNetCore javascript Breeze BreezeJs</PackageTags>
+		<PackageTags>AspNetCore DotNetCore Net5 javascript Breeze BreezeJs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>5.0.2.1</AssemblyVersion>
+		<AssemblyVersion>5.0.3.0</AssemblyVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 	</PropertyGroup>
 

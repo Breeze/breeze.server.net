@@ -7,7 +7,7 @@
 		<OutputType>Library</OutputType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>5.0.2.1</Version>
+		<Version>5.0.3.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Core ASP.NET Core functionality for any Breeze Server using ASP.NET Core 5.x.
 
@@ -21,9 +21,9 @@ Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NE
 Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html
 		</PackageReleaseNotes>
 		<Product>Breeze Server - ASP.NET Core Provider</Product>
-		<PackageTags>AspNetCore javascript Breeze BreezeJs</PackageTags>
+		<PackageTags>AspNetCore DotNetCore Net5 javascript Breeze BreezeJs</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<AssemblyVersion>5.0.2.1</AssemblyVersion>
+		<AssemblyVersion>5.0.3.0</AssemblyVersion>
 		<PackageIcon>Breeze-aspnet.png</PackageIcon>
 	</PropertyGroup>
 

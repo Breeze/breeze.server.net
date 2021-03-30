@@ -6,14 +6,15 @@ var del = require('del');
 const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
-const version = '5.0.2.1';
+const version = '5.0.3';
 const debugOrRelease = 'Debug'
 
 var baseNames = [
   'Breeze.AspNetCore.NetCore',
   'Breeze.Core',
   'Breeze.Persistence',
-  'Breeze.Persistence.EFCore'
+  'Breeze.Persistence.EFCore',
+  'Breeze.Persistence.NH',
 ];
 
 const arg = bu.getArg();
@@ -44,7 +45,7 @@ function deployLocal() {
 function deployRemote() {
   const nupkgs = getNupkgs(baseNames);
   nupkgs.forEach(nupkg => {
-    var cmd = `nuget push ${nupkg} {{ nuget key goes here }} -Source https://www.nuget.org`
+    var cmd = `nuget push ${nupkg} {{ nuget key goes here }} -Source https://www.nuget.org`;
     console.log(cmd);
     bu.execCmd(cmd);
   });
