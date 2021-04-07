@@ -2,6 +2,7 @@
 using Breeze.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections;
 using System.Linq;
@@ -18,6 +19,12 @@ namespace Breeze.AspNetCore {
     }
 
     public override void OnActionExecuted(ActionExecutedContext context) {
+
+      // don't attempt to process queryable if we are throwing an error
+      if (context.Result is IStatusCodeActionResult scar && scar.StatusCode >= 400) {
+        base.OnActionExecuted(context);
+        return;
+      }
 
       var qs = QueryFns.ExtractAndDecodeQueryString(context);
       var queryable = QueryFns.ExtractQueryable(context);
