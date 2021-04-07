@@ -383,7 +383,7 @@ namespace Test.AspNetCore.Controllers {
 #region named queries
 
     [HttpGet]
-    public IQueryable<Customer> CustomersStartingWith([Required] string companyName) {
+    public IQueryable<Customer> CustomersStartingWith(string companyName) {
       if (companyName == "null") {
         throw new Exception("nulls should not be passed as 'null'");
       }
@@ -996,10 +996,16 @@ namespace Test.AspNetCore.Controllers {
           var supplier = new Supplier();
           supplier.Location = new Location();
           supplier.SupplierID = product.SupplierID.GetValueOrDefault();
+          supplier.CompanyName = "delete me";
+          supplier.RowVersion = 1;
           supinfo = CreateEntityInfo(supplier, BreezeEntityState.Deleted);
           infos.Add(supinfo);
         }
       }
+
+      DataAnnotationsValidator.AddDescriptor(typeof(Customer), typeof(Customer));
+      var validator = new DataAnnotationsValidator(this);
+      validator.ValidateEntities(saveMap, true);
 
       return base.BeforeSaveEntities(saveMap);
     }

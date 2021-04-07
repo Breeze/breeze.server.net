@@ -4,30 +4,6 @@
         <name>Breeze.Persistence.NH</name>
     </assembly>
     <members>
-        <member name="M:Breeze.Persistence.DataAnnotationsValidator.#ctor(Breeze.Persistence.PersistenceManager)">
-            <summary>
-            Create a new instance.  
-            </summary>
-            <param name="persistenceManager">Used for getting entity keys for building EntityError objects.</param>
-        </member>
-        <member name="M:Breeze.Persistence.DataAnnotationsValidator.ValidateEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.Persistence.EntityInfo}},System.Boolean)">
-            <summary>
-            Validate all the entities in the saveMap.
-            </summary>
-            <param name="saveMap">Map of type to entities.</param>
-            <param name="throwIfInvalid">If true, throws an EntityErrorsException if any entity is invalid</param>
-            <exception cref="T:Breeze.Persistence.EntityErrorsException">Contains all the EntityErrors.  Only thrown if throwIfInvalid is true.</exception>
-            <returns>List containing an EntityError for each failed validation.</returns>
-        </member>
-        <member name="M:Breeze.Persistence.DataAnnotationsValidator.ValidateEntity(Breeze.Persistence.EntityInfo,System.Collections.Generic.List{Breeze.Persistence.EntityError})">
-            <summary>
-            Validates a single entity.
-            Skips validation (returns true) if entity is marked Deleted.
-            </summary>
-            <param name="entityInfo">contains the entity to validate</param>
-            <param name="entityErrors">An EntityError is added to this list for each error found in the entity</param>
-            <returns>true if entity is valid, false if invalid.</returns>
-        </member>
         <member name="T:Breeze.Persistence.NH.ExcludingContractResolver">
             <summary>
             Newtonsoft.Json ContractResolver that can be configured to exclude certain properties by name.
