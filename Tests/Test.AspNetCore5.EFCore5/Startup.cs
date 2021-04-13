@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ProduceTPH;
 
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -73,16 +74,18 @@ namespace Test.AspNetCore5.EFCore5 {
 
       mvcBuilder.AddMvcOptions(o => { o.Filters.Add(new GlobalExceptionFilter()); });
 
-      var tmp = Configuration.GetConnectionString("NorthwindIB_CF");
+      var nwcf = Configuration.GetConnectionString("NorthwindIB_CF");
+      var ptph = Configuration.GetConnectionString("ProduceTPH");
 #if EFCORE
-      services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(tmp));
+      services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(nwcf));
+      services.AddDbContext<ProduceTPHContext>(options => options.UseSqlServer(ptph));
 #endif
 
 #if NHIBERNATE
       services.AddSingleton<NHibernate.ISessionFactory>(factory => {
         var cfg = new NHibernate.Cfg.Configuration();
         cfg.DataBaseIntegration(db => {
-          db.ConnectionString = tmp;
+          db.ConnectionString = nwcf;
           db.Dialect<NHibernate.Dialect.MsSql2008Dialect>();
           db.Driver<NHibernate.Driver.MicrosoftDataSqlClientDriver>();
           db.LogFormattedSql = true;

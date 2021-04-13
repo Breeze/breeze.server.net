@@ -1,4 +1,4 @@
-// Only one of the next few should be uncommented.
+// Only one of the next few should be uncommented.  See also the flag in ProduceTPHController and in Startup.cs
 #define CODEFIRST_PROVIDER
 //#define NHIBERNATE
 

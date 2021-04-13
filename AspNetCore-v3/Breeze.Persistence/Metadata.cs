@@ -32,10 +32,7 @@ namespace Breeze.Persistence {
     public MetaType() {
       DataProperties = new List<MetaDataProperty>();
       NavigationProperties = new List<MetaNavProperty>();
-      
     }
-
-    
     
     public string ShortName { get; set; }
     public string Namespace { get; set; }
@@ -51,8 +48,8 @@ namespace Breeze.Persistence {
     }
 
     public bool IsComplexType { get; set; }
+    public bool IsAbstract { get; set; }
 
-    
     public List<MetaDataProperty> DataProperties {
       get;set;
     }
