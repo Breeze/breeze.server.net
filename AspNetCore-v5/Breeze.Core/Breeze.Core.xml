@@ -1,0 +1,666 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Breeze.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Breeze.Core.DynamicTypeBase">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeBase.#ctor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="M:Breeze.Core.DynamicGenericTypeBuilder.CreateType(Breeze.Core.DynamicTypeInfo)">
+            <summary>
+            Constructs a new dynamic entity type from the specified DynamicTypeInfo.
+            </summary>
+            <param name="info">An DynamicTypeInfo instance</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException">Thrown if the dynamic type key name is already defined.</exception>
+        </member>
+        <member name="T:Breeze.Core.DynamicTypeInfo">
+            <summary>
+            Internal use only.
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.DynamicTypeInfo.DynamicAssemblyNameSuffix">
+            <summary>
+            Suffix added to all dynamic assemblies constructed here.
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.DynamicTypeInfo.CSharpAnonPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.DynamicTypeInfo.CSharpDynamicPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.DynamicTypeInfo.VBAnonPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.DynamicTypeInfo.VBDynamicPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.DynamicTypeInfo.BaseDynamicPrefix">
+            <summary>
+            For internal use only
+            </summary>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.FindOrCreate(System.Type)">
+            <summary>
+            Either finds a dynamic type that matches the specified anon or dynamic type or 
+            creates a new DynamicTypeInfo that does.
+            </summary>
+            <param name="anonOrDynType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.FindOrCreate(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Either finds a dynamic type that matches the specified propertyNames and propertyTypes or creates a 
+            new DynamicType that does.  
+            </summary>
+            <param name="propertyNames"></param>
+            <param name="propertyTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.#ctor(System.Type)">
+            <summary>
+            For internal use only. Builds a dynamic type from an anonymous type.
+            </summary>
+            <param name="anonType"></param>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.#ctor(Breeze.Core.DynamicTypeInfo.TypeShape)">
+            <summary>
+            Called by FindOrCreate to create a new dynamictypeinfo based on the selected properties and types  
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.OriginalType">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.DynamicType">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.TypeName">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.DynamicTypeName">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.PropertyNames">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.PropertyTypes">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.Properties">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.DynamicConstructor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.DynamicEmptyConstructor">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.Equals(System.Object)">
+            <summary>
+            For internal use only.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.GetHashCode">
+            <summary>
+            For internal use only.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.FindByAssemblyName(System.String)">
+            <summary>
+            Return the DynamicTypeInfo for the specified assembly name containing a dynamic type.
+            </summary>
+            <param name="pAssemblyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.FindByDynamicTypeName(System.String)">
+            <summary>
+            Return the DynamicTypeInfo for the specified dynamic type name.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.IsDynamicType(System.Type)">
+            <summary>
+            For internal use only.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.ConvertDynamicAssemblyNameToDynamicTypeName(System.String)">
+            <summary>
+            Return the dynamic type name for the specified assembly name containing the dynamic type.
+            </summary>
+            <param name="pAssemblyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.FindByTypeShape(Breeze.Core.DynamicTypeInfo.TypeShape)">
+            <summary>
+            For internal use only.
+            </summary>
+            <param name="typeShape"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.BuildDynamicTypeName">
+            <summary>
+            The type name generated must be the same even if generated during different sessions
+            ( so no part can be random or based on the current time)
+            because this same name may be sent to the server by multiple clients and
+            the server needs to understand that these are all the same type. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.DynamicTypeInfo.CalcStringHash(System.String,System.Int32)">
+            <summary>
+            Returns a hash encoded as a string with the chars (A-Z,A-z,0-9,_) only.
+            Under the covers this method returns an 128 bit hash code calculated
+            using SHA1.  This code is then encoded into an approx Base64 encode
+            of the chars listed above.  This will usually be approx 28 chars in length,
+            which may then be truncated based on the maxChars parameter. This
+            method can process approx 100K 300 char strings a second.
+            </summary>
+            <param name="stringToHash"></param>
+            <param name="maxChars"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Breeze.Core.DynamicTypeInfo.PropertyNameWrappers">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="T:Breeze.Core.DynamicTypeInfo.TypeShape">
+             <summary>
+            Used for shape comparison.
+             </summary>
+        </member>
+        <member name="T:Breeze.Core.AndOrPredicate">
+             @author IdeaBlade
+            
+        </member>
+        <member name="T:Breeze.Core.BasePredicate">
+             Represents a single where clause.
+             @author IdeaBlade
+            
+        </member>
+        <member name="T:Breeze.Core.BinaryPredicate">
+             Represents a where clause that compares two values given a specified operator, the two values are either a property
+             and a literal value, or two properties.  
+             @author IdeaBlade
+            
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.#ctor(System.String)">
+            Materializes the serialized json representation of an EntityQuery.
+            @param json The serialized json version of the EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.#ctor(Breeze.Core.EntityQuery)">
+            Copy constructor
+            @param query
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Where(System.String)">
+            Return a new query based on this query with an additional where clause added.
+            @param json Json representation of the where clause.
+            @return A new EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Where(Breeze.Core.BasePredicate)">
+            Return a new query based on this query with an additional where clause added.
+            @param predicate A Predicate representing the where clause to add.
+            @return A new EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.OrderBy(System.String[])">
+            Return a new query based on this query with the specified orderBy clauses added.
+            @param propertyPaths A varargs array of orderBy clauses ( each consisting of a property path and an optional sort direction).
+            @return A new EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.OrderBy(System.Collections.Generic.List{System.String})">
+            Return a new query based on this query with the specified orderBy clauses added.
+            @param propertyPaths An List of orderBy clauses ( each consisting of a property path and an optional sort direction).
+            @return A new EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Expand(System.String[])">
+            Return a new query based on this query with the specified expand clauses added.
+            @param propertyPaths A varargs array of expand clauses ( each a dot delimited property path).
+            @return A new EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Expand(System.Collections.Generic.List{System.String})">
+            Return a new query based on this query with the specified expand clauses added.
+            @param propertyPaths A list of expand clauses (each a dot delimited property path).
+            @return A new EntityQuery.
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.NeedsExecution">
+            <summary> Whether query string needs execution </summary>
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.ApplyCustomLogic">
+            <summary> Apply logic to the IQueryable after the Where clause is applied, but before Order/Skip/Take/Select </summary>
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.ApplyExpand">
+            <summary> Apply expand clauses to the IQueryable after Order/Skip/Take/Select, but before execution </summary>
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.AfterExecution">
+            <summary> After the query was executed, post-process the resulting list and return the list </summary>
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Select(System.String[])">
+            Return a new query based on this query with the specified select (projection) clauses added.
+            @param propertyPaths A varargs array of select clauses (each a dot delimited property path).
+            @return A new EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Select(System.Collections.Generic.IEnumerable{System.String})">
+            Return a new query based on this query with the specified select (projection) clauses added.
+            @param propertyPaths A list of select clauses (each a dot delimited property path).
+            @return A new EntityQuery.
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Take(System.Int32)">
+            Return a new query based on this query that limits the results to the first n records.
+            @param takeCount The number of records to take.
+            @return A new EntityQuery
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Skip(System.Int32)">
+            Return a new query based on this query that skips the first n records.
+            @param skipCount The number of records to skip.
+            @return A new EntityQuery
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.EnableInlineCount(System.Boolean)">
+            Return a new query based on this query that either adds or removes the inline count capability. 
+            @param inlineCountEnabled Whether to enable inlineCount.
+            @return A new EntityQuery
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.WithResourceName(System.String)">
+            Return a new query based on this query with the specified resourceName 
+            @param resourceName The name of the url resource.
+            @return A new EntityQuery
+        </member>
+        <member name="M:Breeze.Core.EntityQuery.Validate(System.Type)">
+            Validates that all of the clauses that make up this query are consistent with the 
+            specified EntityType.
+            @param entityType A EntityType
+        </member>
+        <member name="P:Breeze.Core.EntityQuery.EntityType">
+            Returns the EntityType that this query has been validated against. Not that this property
+            will return null until the validate method has been called.
+            @return The EntityType that this query has been validated against.
+        </member>
+        <member name="T:Breeze.Core.ExpandClause">
+             Represents a single expand expand clause that will be part of an EntityQuery. An expand 
+             clause represents the path to other entity types via a navigation path from the current EntityType
+             for a given query. 
+             @author IdeaBlade
+            
+        </member>
+        <member name="T:Breeze.Core.OrderByClause">
+             Represents a single orderBy clause that will be part of an EntityQuery. An orderBy 
+             clause represents either the name of a property or a path to the property of another entity via its navigation path 
+             from the current EntityType for a given query. 
+             @author IdeaBlade
+            
+        </member>
+        <member name="T:Breeze.Core.QueryBuilder">
+            <summary>
+            Used to build up a Queryable.
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="T:Breeze.Core.SelectClause">
+             Represents a single selectClause clause that will be part of an EntityQuery. An orderBy 
+             clause represents either the name of a property or a path to the property of another entity via its navigation path 
+             from the current EntityType for a given query. 
+             @author IdeaBlade
+            
+        </member>
+        <member name="T:Breeze.Core.TypeFns">
+            <summary>
+            A collection of static methods used to provide additional <see cref="T:System.Type"/> related services.
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.TypeFns.NumericTypes">
+            <summary>
+            Returns an array of numeric types.
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.TypeFns.IntegerTypes">
+            <summary>
+            Returns an array of integer types.
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.TypeFns.DecimalTypes">
+            <summary>
+            Returns an array of decimal types.
+            </summary>
+        </member>
+        <member name="F:Breeze.Core.TypeFns.PredefinedTypes">
+            <summary>
+            Returns an array of predefined types.
+            </summary>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetTypeName(System.Type)">
+            <summary>
+            Returns the name of either the specified type or its non-nullable counterpart.
+            </summary>
+            <param name="type"></param>
+            <returns>the name of the given type</returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsEnumType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents an enumeration.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type represents an enumeration; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsNumericType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents a numeric type.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type is numeric; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsIntegralType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents an integer type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsSignedIntegralType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents a signed integer type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsUnsignedIntegralType(System.Type)">
+            <summary>
+            Returns whether the specified type (or its non-nullable counterpart) represents an unsigned integer type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsGenericQueryableType(System.Type)">
+            <summary>
+            Think about making public if used again.
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsGroupingType(System.Type)">
+            <summary>
+            Returns true if the Type is an IGrouping.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetGroupingInterface(System.Type)">
+            <summary>
+            Returns the IGrouping interface implemented by the type.
+            </summary>
+            <param name="type"></param>
+            <returns>May return null if the specified type is not a grouping type</returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetGenericArgument(System.Type)">
+            <summary>
+            Gets a single generic argument from a specified type.
+            </summary>
+            <param name="type"></param>
+            <returns>null if it can't find one or result is ambiguous</returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetNullableType(System.Type)">
+            <summary>
+            Gets the nullable type that corresponds to the given type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetNonNullableType(System.Type)">
+            <summary>
+            Returns either the specified type or its non-nullable counterpart.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetElementType(System.Type)">
+            <summary>
+            Returns the element type of any enumerable type;
+            </summary>
+            <param name="seqType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindIEnumerable(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="seqType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsPredefinedType(System.Type)">
+            <summary>
+            Returns whether the specified type is one of the <see cref="F:Breeze.Core.TypeFns.PredefinedTypes"/>.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type is a predefined type; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsPredefinedType(System.Type,System.Boolean)">
+            <summary>
+            Returns whether the specified type is one of the <see cref="F:Breeze.Core.TypeFns.PredefinedTypes"/> and
+            optionally includes nullable versions of the same in the check.
+            </summary>
+            <param name="type"></param>
+            <param name="includeNullable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsNullableType(System.Type)">
+            <summary>
+            Returns whether the specified type is a nullable generic type, i.e. Nullable{T}.
+            </summary>
+            <param name="type"></param>
+            <returns>true if the specified type is a nullable generic type; false otherwise</returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetDefaultValue(System.Type)">
+            <summary>
+            Gets the default value for a specified type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetMethodByExample``2(System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Type[])">
+            <summary>
+            For internal use only.
+            </summary>
+            <typeparam name="TIn"></typeparam>
+            <typeparam name="TOut"></typeparam>
+            <param name="prototypeLambda"></param>
+            <param name="resolvedTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindPropertyOrField(System.Type,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Finds a specific public property or field. Will be automatically restricted as well by execution environment restrictions ( e.g. Silverlight).
+            </summary>
+            <param name="type"></param>
+            <param name="memberName"></param>
+            <param name="isPublic"></param>
+            <param name="isStatic"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindPropertyOrField(System.Type,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Finds a specific property or field
+            </summary>
+            <param name="type"></param>
+            <param name="memberName"></param>
+            <param name="bindingFlags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindMethod(System.Type,System.String,System.Type[])">
+            <summary>
+            Finds a specific public method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindMethod(System.Type,System.String,System.Reflection.BindingFlags,System.Type[],System.Type[])">
+            <summary>
+            Finds a specific method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="genericArgTypes"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindMethods(System.Type,System.String,System.Reflection.BindingFlags,System.Type[],System.Type[])">
+            <summary>
+            Finds all the methods that match specific criteria.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="genericArgTypes"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindMethods(System.Type,System.String,System.Reflection.BindingFlags,System.Type[])">
+            <summary>
+            Finds specific methods.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindMethod(System.Type,System.String,System.Boolean,System.Type[])">
+            <summary>
+            Finds a specific method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="isStatic"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindMethod(System.Type,System.String,System.Reflection.BindingFlags,System.Type[])">
+            <summary>
+            Finds a specific method.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="flags"></param>
+            <param name="parameterTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.FindGenericMethods(System.Type,System.String,System.Reflection.BindingFlags,System.Type[])">
+            <summary>
+            Finds a collection of generic methods. 
+            </summary>
+            <param name="type"></param>
+            <param name="methodName">Is case insensitive</param>
+            <param name="flags"></param>
+            <param name="genericArgTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetSelfAndBaseTypes(System.Type)">
+            <summary>
+            Returns a collection of types from which the given type directly inherits or implements.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.GetSelfAndBaseClasses(System.Type)">
+            <summary>
+            Returns a collection of classes (not interfaces) from which the given type directly inherits.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.IsCompatibleWith(System.Type,System.Type)">
+            <summary>
+            Determines whether the source type is compatible with the given target type.
+            </summary>
+            <remarks>This is a better implementation than <see cref="M:System.Type.IsAssignableFrom(System.Type)"/>.</remarks>
+            <param name="source"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.ConstructGenericInstance(System.Type,System.Type[])">
+            <summary>
+            Constructs a generic instance.
+            </summary>
+            <param name="genericType"></param>
+            <param name="argTypes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.MakeGenericList(System.Type)">
+            <summary>
+            Constructs a generic list.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.TypeFns.ConstructGenericInstance(System.Type,System.Type[],System.Object[])">
+            <summary>
+            Constructs a generic instance. Can only access public constructors.
+            </summary>
+            <param name="genericType"></param>
+            <param name="argTypes"></param>
+            <param name="constructorParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.EnumerableExtns.GetAggregateHashCode(System.Collections.IEnumerable)">
+            <summary>
+            Returns a hashcode for a collection that 
+            uses a similar algorithm to that used by the .NET Tuple class.
+            Order matters.
+            </summary>
+            <remarks>
+            </remarks>
+            <param name="items"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Core.EnumerableExtns.ToAggregateString(System.Collections.IEnumerable,System.String)">
+            <summary>
+            Concatenates the string version of each element in a collection using the delimiter provided.
+            </summary>
+            <param name="items">The enumerated items whose string formated elements will be concatenated</param>
+            <param name="delimiter">Delimiter</param>
+            <returns>A delimited string</returns>
+        </member>
+    </members>
+</doc>

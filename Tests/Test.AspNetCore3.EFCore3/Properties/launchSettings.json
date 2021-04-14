@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "index.aspcore.efcore.html",
+      "launchUrl": "index.aspcore.efcore.html?version=efcore3",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

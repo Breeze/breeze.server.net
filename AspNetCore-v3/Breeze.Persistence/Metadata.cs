@@ -11,6 +11,20 @@ namespace Breeze.Persistence {
     public List<MetaType> StructuralTypes {
       get; set;
     }
+    /// <summary> Enum types used by entities and complex types </summary>
+    public List<MetaEnum> EnumTypes { get; set; }
+  }
+
+  /// <summary> Represents a C# enum type, which can be a value for a DataProperty </summary>
+  public class MetaEnum {
+    /// <summary> Name of the enum </summary>
+    public string ShortName { get; set; }
+    /// <summary> Namespace of the enum </summary>
+    public string Namespace { get; set; }
+    /// <summary> String values of the enum </summary>
+    public string[] Values { get; set; }
+    /// <summary> Int values of the enum </summary>
+    public int[] Ordinals { get; set; }
   }
 
   public class MetaType {
@@ -18,10 +32,7 @@ namespace Breeze.Persistence {
     public MetaType() {
       DataProperties = new List<MetaDataProperty>();
       NavigationProperties = new List<MetaNavProperty>();
-      
     }
-
-    
     
     public string ShortName { get; set; }
     public string Namespace { get; set; }
@@ -37,8 +48,8 @@ namespace Breeze.Persistence {
     }
 
     public bool IsComplexType { get; set; }
+    public bool? IsAbstract { get; set; }
 
-    
     public List<MetaDataProperty> DataProperties {
       get;set;
     }
@@ -51,6 +62,7 @@ namespace Breeze.Persistence {
 
     private List<MetaValidator> _validators = new List<MetaValidator>();
 
+    public object Custom { get; set; }
 
     public string NameOnServer { get; set; }
 
@@ -63,6 +75,7 @@ namespace Breeze.Persistence {
   public class MetaDataProperty : MetaProperty {
 
     public string DataType { get; set; }
+    public string EnumType { get; set; }
     public bool? IsPartOfKey { get; set; }
 
     public bool? IsNullable { get; set; }
