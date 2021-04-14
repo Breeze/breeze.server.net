@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.14" />
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
 
@@ -25,7 +25,6 @@
     <ProjectReference Include="..\Model_Inheritance.EFCore\Model_Inheritance.EFCore3.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore3\Model.NorthwindIB_CF.EFCore3.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.netstandard2.csproj" />
-    <ProjectReference Include="..\Model_ProduceTPH_CF.EFCore5\Model_ProduceTPH_CF.EFCore3.csproj" />
     <ProjectReference Include="..\Model_ProduceTPH_CF.EFCore\Model_ProduceTPH_CF.EFCore3.csproj" />
   </ItemGroup>
 
