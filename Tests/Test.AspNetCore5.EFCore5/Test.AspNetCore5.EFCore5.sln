@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_NorthwindIB_NH.net5",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_ProduceTPH_CF.EFCore5", "..\Model_ProduceTPH_CF.EFCore\Model_ProduceTPH_CF.EFCore5.csproj", "{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_Inheritance.EFCore5", "..\Model_Inheritance.EFCore\Model_Inheritance.EFCore5.csproj", "{73A0D21C-F23B-4B8D-A589-51135CD2B481}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73A0D21C-F23B-4B8D-A589-51135CD2B481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73A0D21C-F23B-4B8D-A589-51135CD2B481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73A0D21C-F23B-4B8D-A589-51135CD2B481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73A0D21C-F23B-4B8D-A589-51135CD2B481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

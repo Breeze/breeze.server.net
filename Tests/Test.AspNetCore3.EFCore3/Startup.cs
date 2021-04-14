@@ -29,6 +29,7 @@ using NHibernate.Driver;
 using System.IO;
 using System.Linq;
 using ProduceTPH;
+using Inheritance.Models;
 
 namespace Test.AspNetCore {
   public class Startup {
@@ -74,9 +75,11 @@ namespace Test.AspNetCore {
 
       mvcBuilder.AddMvcOptions(o => { o.Filters.Add(new GlobalExceptionFilter()); });
 
+      var inhe = Configuration.GetConnectionString("InheritanceContext");
       var nwcf = Configuration.GetConnectionString("NorthwindIB_CF");
       var ptph = Configuration.GetConnectionString("ProduceTPH");
 #if EFCORE
+      services.AddDbContext<InheritanceContext>(options => options.UseSqlServer(inhe));
       services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(nwcf));
       services.AddDbContext<ProduceTPHContext>(options => options.UseSqlServer(ptph));
 #endif

@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\AspNetCore-v3\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
     <ProjectReference Include="..\..\AspNetCore-v3\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj" />
     <ProjectReference Include="..\..\AspNetCore-v3\Breeze.Persistence.NH\Breeze.Persistence.NH.csproj" />
+    <ProjectReference Include="..\Model_Inheritance.EFCore\Model_Inheritance.EFCore3.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore3\Model.NorthwindIB_CF.EFCore3.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.netstandard2.csproj" />
     <ProjectReference Include="..\Model_ProduceTPH_CF.EFCore5\Model_ProduceTPH_CF.EFCore3.csproj" />

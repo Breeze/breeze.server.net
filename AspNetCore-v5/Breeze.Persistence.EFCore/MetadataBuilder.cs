@@ -117,7 +117,9 @@ namespace Breeze.Persistence.EFCore {
 
       // Handle complex properties
       // for now this only complex types ( 'owned types' in EF parlance are eager loaded)
-      var ownedNavigations = et.GetNavigations().Where(n => n.TargetEntityType.IsOwned());
+      var ownedNavigations = et.GetNavigations()
+        .Where(p => p.DeclaringEntityType == et)
+        .Where(n => n.TargetEntityType.IsOwned());
       ownedNavigations.ToList().ForEach(n => {
         var complexType = n.TargetEntityType.ClrType;
         var dp = new MetaDataProperty();
@@ -129,6 +131,7 @@ namespace Breeze.Persistence.EFCore {
       });
 
       mt.NavigationProperties = et.GetNavigations()
+        .Where(p => p.DeclaringEntityType == et)
         .Where(n => !n.TargetEntityType.IsOwned()).Select(p => CreateNavProperty(p)).ToList();
 
       return mt;

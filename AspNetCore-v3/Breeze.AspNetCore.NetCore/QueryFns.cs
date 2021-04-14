@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections;
@@ -51,7 +51,7 @@ namespace Breeze.AspNetCore {
         q = q.Substring(1);
       }
       q = q.Replace(marker, "&");
-      if (q == "{}") {
+      if (q == "{}" || q == "") {
         return null;
       }
       return q;

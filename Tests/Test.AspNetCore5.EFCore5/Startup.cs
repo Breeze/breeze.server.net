@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ProduceTPH;
+using Inheritance.Models;
 
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -74,9 +75,11 @@ namespace Test.AspNetCore5.EFCore5 {
 
       mvcBuilder.AddMvcOptions(o => { o.Filters.Add(new GlobalExceptionFilter()); });
 
+      var inhe = Configuration.GetConnectionString("InheritanceContext");
       var nwcf = Configuration.GetConnectionString("NorthwindIB_CF");
       var ptph = Configuration.GetConnectionString("ProduceTPH");
 #if EFCORE
+      services.AddDbContext<InheritanceContext>(options => options.UseSqlServer(inhe));
       services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(nwcf));
       services.AddDbContext<ProduceTPHContext>(options => options.UseSqlServer(ptph));
 #endif
@@ -105,7 +108,10 @@ namespace Test.AspNetCore5.EFCore5 {
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, InheritanceContext inheritanceContext) {
+
+      InheritanceDbInitializer.Seed(inheritanceContext);
+
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
       }

@@ -48,7 +48,7 @@ namespace Breeze.Persistence {
     }
 
     public bool IsComplexType { get; set; }
-    public bool IsAbstract { get; set; }
+    public bool? IsAbstract { get; set; }
 
     public List<MetaDataProperty> DataProperties {
       get;set;

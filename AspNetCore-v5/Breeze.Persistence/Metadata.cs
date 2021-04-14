@@ -46,7 +46,7 @@ namespace Breeze.Persistence {
     /// <summary> Name of resource or endpoint on the server for retrieving instances of this entity </summary>
     public string DefaultResourceName { get; set; }
     /// <summary> Whether this type is an abstract base class </summary>
-    public bool IsAbstract { get; set; }
+    public bool? IsAbstract { get; set; }
     /// <summary> Whether this type is a ComplexType (vs. an Entity) </summary>
     public bool IsComplexType { get; set; }
     /// <summary> Data properties of this type </summary>
