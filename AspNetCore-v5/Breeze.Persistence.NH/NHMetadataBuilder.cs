@@ -100,6 +100,9 @@ namespace Breeze.Persistence.NH {
 
       cmap.ShortName = type.Name;
       cmap.Namespace = type.Namespace;
+      if (type.IsAbstract) {
+        cmap.IsAbstract = true;
+      }
 
       var entityPersister = meta as IEntityPersister;
       var metaModel = entityPersister.EntityMetamodel;
