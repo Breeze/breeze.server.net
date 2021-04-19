@@ -1,0 +1,30 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Inheritance.Models" assembly="Model_Inheritance_NH">
+  <class name="BillingDetailTPC" abstract="true" dynamic-update="true">
+    <id name="Id" type="int" />
+
+    <property name="CreatedAt" type="DateTime" />
+    <property name="Owner" type="string" />
+    <property name="Number" type="string" />
+    <property name="InheritanceModel" type="string" />
+
+    <union-subclass name="BankAccountTPC" table="BankAccountTPCs">
+      <property name="BankName" type="string" />
+      <property name="Swift" type="string" />
+      <many-to-one name="AccountType" column="`AccountTypeId`" class="AccountType" />
+      <property name="AccountTypeId" type="int" />
+      <!--Foreign key to DepositTPH -->
+      <set name="Deposits" table="`DepositTPCs`" schema="`dbo`" cascade="all-delete-orphan" inverse="true">
+        <key column="`BankAccountId`" foreign-key="FK_DepositTPCs_BankAccountTPCs_BankAccountId" />
+        <one-to-many class="DepositTPC" />
+      </set>
+    </union-subclass>
+
+    <union-subclass name="CreditCardTPC" table="CreditCardsTPCs">
+      <property name="ExpiryMonth" type="string" />
+      <property name="ExpiryYear" type="string" />
+      <many-to-one name="AccountType" column="`AccountTypeId`" class="AccountType" />
+      <property name="AccountTypeId" type="int" />
+    </union-subclass>
+
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Inheritance.Models" assembly="Model_Inheritance_NH">
+  <class name="BillingDetailTPH" table="`BillingDetailTPHs`" schema="`dbo`" dynamic-update="true">
+    <id name="Id" type="int">
+      <generator class="native" />
+    </id>
+    <discriminator column="BillingDetailType" type="string" />
+
+    <property name="CreatedAt" type="DateTime" />
+    <property name="Owner" type="string" />
+    <property name="Number" type="string" />
+    <many-to-one name="AccountType" column="`AccountTypeId`" class="AccountType" />
+    <property name="AccountTypeId" type="int" />
+    <property name="InheritanceModel" type="string" />
+
+    <subclass name="BankAccountTPH" extends="BillingDetailTPH" discriminator-value="BA">
+      <property name="BankName" type="string" />
+      <property name="Swift" type="string" />
+      <!--Foreign key to DepositTPH -->
+      <set name="Deposits" table="`DepositTPHs`" schema="`dbo`" cascade="all-delete-orphan" inverse="true">
+        <key column="`BankAccountId`" foreign-key="FK_DepositTPHs_BillingDetailTPHs_BankAccountId" />
+        <one-to-many class="DepositTPH" />
+      </set>
+
+    </subclass>
+
+    <subclass name="CreditCardTPH" extends="BillingDetailTPH" discriminator-value="CC">
+      <property name="ExpiryMonth" type="string" />
+      <property name="ExpiryYear" type="string" />
+    </subclass>
+
+  </class>
+</hibernate-mapping>
