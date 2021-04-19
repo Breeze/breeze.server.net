@@ -1,4 +1,5 @@
-﻿using System;
+#if EFCORE
+using System;
 using System.Collections.Generic;
 using Breeze.Persistence;
 using Breeze.Persistence.EFCore;
@@ -48,3 +49,4 @@ namespace Test.AspNetCore.Controllers {
     }
   }
 }
+#endif

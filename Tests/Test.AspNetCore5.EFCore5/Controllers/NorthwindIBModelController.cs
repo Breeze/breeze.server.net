@@ -1,10 +1,8 @@
-// Only one of the next few should be uncommented.  See also the flag in ProduceTPHController and in Startup.cs
-#define CODEFIRST_PROVIDER
-//#define NHIBERNATE
+// Either EFCORE or NHIBERNATE should be defined in the project properties
 
 using Breeze.AspNetCore;
 using Breeze.Persistence;
-#if CODEFIRST_PROVIDER
+#if EFCORE
 using Breeze.Persistence.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -34,13 +32,13 @@ namespace Test.AspNetCore.Controllers {
     private NorthwindPersistenceManager PersistenceManager;
 
     // called via DI 
-#if CODEFIRST_PROVIDER
+#if EFCORE
     public NorthwindIBModelController(NorthwindIBContext_CF context) {
       PersistenceManager = new NorthwindPersistenceManager(context);
     }
 #elif NHIBERNATE
-    public NorthwindIBModelController(NHibernate.ISessionFactory sessionFactory) {
-      PersistenceManager = new NorthwindPersistenceManager(sessionFactory);
+    public NorthwindIBModelController(NHSessionProvider<NorthwindPersistenceManager> provider) {
+      PersistenceManager = new NorthwindPersistenceManager(provider);
     }
 #endif
 
@@ -82,7 +80,9 @@ namespace Test.AspNetCore.Controllers {
     public SaveResult SaveWithExit([FromBody]JObject saveBundle) {
       // set break points here to see how these two approaches give you a SaveMap w/o saving.
       var saveMap = PersistenceManager.GetSaveMapFromSaveBundle(saveBundle);
+#if EFCORE
       saveMap = new NorthwindIBDoNotSaveContext().GetSaveMapFromSaveBundle(saveBundle);
+#endif
       return new SaveResult() { Entities = new List<Object>(), KeyMappings = new List<KeyMapping>() };
     }
 
@@ -287,9 +287,9 @@ namespace Test.AspNetCore.Controllers {
       }
       return false;
     }
-    #endregion
+#endregion
 
-    #region standard queries
+#region standard queries
 
     [HttpGet]
     //    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
@@ -731,14 +731,14 @@ namespace Test.AspNetCore.Controllers {
 #endregion
   }
 
-#if CODEFIRST_PROVIDER
+#if EFCORE
     public class NorthwindPersistenceManager : EFPersistenceManager<NorthwindIBContext_CF> {
     public const string CONFIG_VERSION = "EFCORE";
     public NorthwindPersistenceManager(NorthwindIBContext_CF dbContext) : base(dbContext) { }
 #elif NHIBERNATE
     public class NorthwindPersistenceManager : NorthwindNHPersistenceManager {
     public const string CONFIG_VERSION = "NHIBERNATE";
-    public NorthwindPersistenceManager(NHibernate.ISessionFactory sessionFactory) : base(sessionFactory) { }
+    public NorthwindPersistenceManager(NHSessionProvider<NorthwindPersistenceManager> provider) : base(provider.OpenSession()) { }
 #endif
 
     protected override void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {
@@ -799,7 +799,7 @@ namespace Test.AspNetCore.Controllers {
       return SaveWorkState.SaveMap;
     }
 
-#if (CODEFIRST_PROVIDER || DATABASEFIRST_NEW || DATABASEFIRST_OLD)
+#if (EFCORE || DATABASEFIRST_NEW || DATABASEFIRST_OLD)
     /* hack to set the current DbTransaction onto the DbCommand.  Transaction comes from EF private properties. */
     public void SetCurrentTransaction(System.Data.Common.DbCommand command) {
       if (EntityTransaction != null) {
@@ -860,12 +860,12 @@ namespace Test.AspNetCore.Controllers {
     // Use another Context to simulate lookup.  Returns Margaret Peacock if employeeId is not specified.
     private Employee LookupEmployeeInSeparateContext(bool existingConnection, int employeeId = 4) {
       var context2 = existingConnection
-#if CODEFIRST_PROVIDER
+#if EFCORE
  ? new NorthwindIBContext_CF(this.Context.Options)
  : new NorthwindIBContext_CF(this.Context.Options);
 #elif NHIBERNATE
         ? new NorthwindNHPersistenceManager(this)
-        : new NorthwindNHPersistenceManager(this.Session.SessionFactory);
+        : new NorthwindNHPersistenceManager(this.Session.SessionFactory.OpenSession());
 #endif
 
       var query = context2.Employees.Where(e => e.EmployeeID == employeeId);
@@ -879,7 +879,7 @@ namespace Test.AspNetCore.Controllers {
         Product product = new Product() {
           ProductName = "Product added on server"
         };
-#if CODEFIRST_PROVIDER
+#if EFCORE
         if (supplier.Products == null) supplier.Products = new List<Product>();
 #endif
         supplier.Products.Add(product);

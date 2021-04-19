@@ -1,6 +1,4 @@
-// Uncomment only one of the two defines below
-#define EFCORE
-//#define NHIBERNATE
+// Either EFCORE or NHIBERNATE should be defined in the project properties
 
 using Breeze.AspNetCore;
 using Breeze.Core;
@@ -11,18 +9,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Models.NorthwindIB.CF;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ProduceTPH;
 using Inheritance.Models;
+using Test.AspNetCore.Controllers;
 
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
+using Models.NorthwindIB.CF;
+using ProduceTPH;
 #elif NHIBERNATE
 using Breeze.Persistence.NH;
 #endif
@@ -85,32 +84,22 @@ namespace Test.AspNetCore5.EFCore5 {
 #endif
 
 #if NHIBERNATE
-      services.AddSingleton<NHibernate.ISessionFactory>(factory => {
-        var cfg = new NHibernate.Cfg.Configuration();
-        cfg.DataBaseIntegration(db => {
-          db.ConnectionString = nwcf;
-          db.Dialect<NHibernate.Dialect.MsSql2008Dialect>();
-          db.Driver<NHibernate.Driver.MicrosoftDataSqlClientDriver>();
-          db.LogFormattedSql = true;
-          db.LogSqlInConsole = true;
-        });
-        cfg.Properties.Add(NHibernate.Cfg.Environment.DefaultBatchFetchSize, "32");
-        cfg.CurrentSessionContext<NHibernate.Context.ThreadStaticSessionContext>();
-        var modelAssembly = typeof(Models.NorthwindIB.NH.Customer).Assembly;
-        cfg.AddAssembly(modelAssembly);  // mapping is in this assembly
-
-        var sessionFactory = cfg.BuildSessionFactory();
-        return sessionFactory;
-      });
-
+      services.AddSingleton(provider =>
+        BuildFactory<InheritancePersistenceManager>(inhe, typeof(Inheritance.Models.AccountType).Assembly));
+      services.AddSingleton(provider =>
+        BuildFactory<NorthwindPersistenceManager>(nwcf, typeof(Models.NorthwindIB.NH.Customer).Assembly));
+      services.AddSingleton(provider =>
+        BuildFactory<ProducePersistenceManager>(ptph, typeof(Models.Produce.NH.ItemOfProduce).Assembly));
 #endif
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-
+#if EFCORE
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, InheritanceContext inheritanceContext) {
-
       InheritanceDbInitializer.Seed(inheritanceContext);
+#elif NHIBERNATE
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+#endif
 
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
@@ -144,5 +133,27 @@ namespace Test.AspNetCore5.EFCore5 {
     //}
 
 
+#if NHIBERNATE
+    // Build NHibernate ISessionFactory, then wrap it in NHSessionProvider<T>
+    NHSessionProvider<T> BuildFactory<T>(string connectionString, System.Reflection.Assembly modelAssembly) {
+      var cfg = new NHibernate.Cfg.Configuration();
+      cfg.DataBaseIntegration(db => {
+        db.ConnectionString = connectionString;
+        db.Dialect<NHibernate.Dialect.MsSql2008Dialect>();
+        db.Driver<NHibernate.Driver.MicrosoftDataSqlClientDriver>();
+        db.LogFormattedSql = true;
+        db.LogSqlInConsole = true;
+      });
+      cfg.Properties.Add(NHibernate.Cfg.Environment.DefaultBatchFetchSize, "32");
+      cfg.CurrentSessionContext<NHibernate.Context.ThreadStaticSessionContext>();
+      //var modelAssembly = typeof(Models.NorthwindIB.NH.Customer).Assembly;
+      cfg.AddAssembly(modelAssembly);  // mapping is in this assembly
+
+      var sessionFactory = cfg.BuildSessionFactory();
+      return new NHSessionProvider<T>(sessionFactory);
+    }
+#endif
+
   }
+
 }

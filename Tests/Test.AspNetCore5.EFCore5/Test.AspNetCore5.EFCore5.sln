@@ -20,10 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Breeze.Persistence.NH", "..\..\AspNetCore-v5\Breeze.Persistence.NH\Breeze.Persistence.NH.csproj", "{CBBA3969-5F8F-410F-A261-415D05D9A3FD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_NorthwindIB_NH.net5", "..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.net5.csproj", "{02B44ED6-3699-4DCB-ADC3-040405756CC2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_ProduceTPH_CF.EFCore5", "..\Model_ProduceTPH_CF.EFCore\Model_ProduceTPH_CF.EFCore5.csproj", "{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_Inheritance.EFCore5", "..\Model_Inheritance.EFCore\Model_Inheritance.EFCore5.csproj", "{73A0D21C-F23B-4B8D-A589-51135CD2B481}"
@@ -58,14 +54,6 @@ Global
 		{20E423CA-2246-4DFD-BF93-2ACBF976BF3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20E423CA-2246-4DFD-BF93-2ACBF976BF3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20E423CA-2246-4DFD-BF93-2ACBF976BF3C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBBA3969-5F8F-410F-A261-415D05D9A3FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBBA3969-5F8F-410F-A261-415D05D9A3FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBBA3969-5F8F-410F-A261-415D05D9A3FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBBA3969-5F8F-410F-A261-415D05D9A3FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02B44ED6-3699-4DCB-ADC3-040405756CC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02B44ED6-3699-4DCB-ADC3-040405756CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02B44ED6-3699-4DCB-ADC3-040405756CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02B44ED6-3699-4DCB-ADC3-040405756CC2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B834B0AF-4EC2-4BCF-9E04-4C0CEC13A2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU

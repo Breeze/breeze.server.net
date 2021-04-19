@@ -1,6 +1,10 @@
+// Either EFCORE or NHIBERNATE should be defined in the project properties
+
 using Breeze.AspNetCore;
 using Breeze.Persistence;
+#if EFCORE
 using Breeze.Persistence.EFCore;
+#endif
 using Inheritance.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -12,13 +16,17 @@ namespace Test.AspNetCore.Controllers {
   [Route("breeze/[controller]/[action]")]
   [BreezeQueryFilter]
   public class InheritanceController : Controller {
+#if EFCORE
     private EFPersistenceManager<InheritanceContext> PersistenceManager;
-
-    // called via DI 
     public InheritanceController(InheritanceContext context) {
       PersistenceManager = new EFPersistenceManager<InheritanceContext>(context);
     }
-
+#elif NHIBERNATE
+    private InheritancePersistenceManager PersistenceManager;
+    public InheritanceController(NHSessionProvider<InheritancePersistenceManager> provider) {
+      PersistenceManager = new InheritancePersistenceManager(provider);
+    }
+#endif
     [HttpGet]
     public string Metadata() {
       return PersistenceManager.Metadata();
@@ -35,7 +43,7 @@ namespace Test.AspNetCore.Controllers {
     }
 
 
-    #region TPH
+#region TPH
 
     // ~/breeze/inheritance/billingDetailsTPH
     [HttpGet]
@@ -54,9 +62,9 @@ namespace Test.AspNetCore.Controllers {
     public IQueryable<CreditCardTPH> CreditCardTPHs() {
       return PersistenceManager.Context.BillingDetailTPHs.OfType<CreditCardTPH>();
     }
-    #endregion
+#endregion
 
-    #region TPT
+#region TPT
 
     // ~/breeze/inheritance/billingDetailsTPT
     [HttpGet]
@@ -75,9 +83,9 @@ namespace Test.AspNetCore.Controllers {
     public IQueryable<CreditCardTPT> CreditCardTPTs() {
       return PersistenceManager.Context.BillingDetailTPTs.OfType<CreditCardTPT>();
     }
-    #endregion
+#endregion
 
-    #region TPC
+#region TPC
 
     // ~/breeze/inheritance/billingDetailsTPC
     [HttpGet]
@@ -92,41 +100,86 @@ namespace Test.AspNetCore.Controllers {
     [HttpGet]
     public IQueryable<BankAccountTPC> BankAccountTPCs() {
       //return PersistenceManager.Context.BillingDetailTPCs.OfType<BankAccountTPC>();
+#if EFCORE
       return PersistenceManager.Context.BankAccountTPCs.OfType<BankAccountTPC>();
+#elif NHIBERNATE
+      return PersistenceManager.Context.BankAccountTPCs;
+#endif
     }
 
     // ~/breeze/inheritance/creditCardsTPC
     [HttpGet]
     public IQueryable<CreditCardTPC> CreditCardTPCs() {
       //return PersistenceManager.Context.BillingDetailTPCs.OfType<CreditCardTPC>();
+#if EFCORE
       return PersistenceManager.Context.CreditCardTPCs.OfType<CreditCardTPC>();
+#elif NHIBERNATE
+      return PersistenceManager.Context.CreditCardTPCs;
+#endif
     }
     #endregion
 
     #region Purge/Reset
-
     // ~/breeze/inheritance//purge
     [HttpPost]
     public string Purge() {
+#if EFCORE
       InheritanceDbInitializer.PurgeDatabase(PersistenceManager.Context);
+#endif
       return "purged";
     }
 
     // ~/breeze/inheritance//reset
     [HttpPost]
     public string Reset() {
+#if EFCORE
       Purge();
       InheritanceDbInitializer.ResetDatabase(PersistenceManager.Context);
+#endif
       return "reset";
     }
 
     [HttpPost]
     public string Seed() {
+#if EFCORE
       InheritanceDbInitializer.Seed(PersistenceManager.Context);
+#endif
       return "seed";
     }
+#endregion
 
-    #endregion
+    }
+#if NHIBERNATE
+  public class InheritancePersistenceManager : ValidatingPersistenceManager {
+    public InheritancePersistenceManager(NHSessionProvider<InheritancePersistenceManager> provider) : base(provider.OpenSession()) { }
+    public InheritancePersistenceManager Context {
+      get { return this; }
+    }
+
+    public IQueryable<AccountType> AccountTypes {
+      get { return GetQuery<AccountType>(); }
+    }
+
+    public IQueryable<BillingDetailTPH> BillingDetailTPHs {
+      get { return GetQuery<BillingDetailTPH>(); }
+    }
+    public IQueryable<BankAccountTPH> BankAccountTPHs {
+      get { return GetQuery<BankAccountTPH>(); }
+    }
+    public IQueryable<CreditCardTPH> CreditCardTPHs {
+      get { return GetQuery<CreditCardTPH>(); }
+    }
+
+    public IQueryable<BillingDetailTPT> BillingDetailTPTs {
+      get { return GetQuery<BillingDetailTPT>(); }
+    }
+    public IQueryable<BankAccountTPC> BankAccountTPCs {
+      get { return GetQuery<BankAccountTPC>(); }
+    }
+    public IQueryable<CreditCardTPC> CreditCardTPCs {
+      get { return GetQuery<CreditCardTPC>(); }
+    }
 
   }
+#endif
 }

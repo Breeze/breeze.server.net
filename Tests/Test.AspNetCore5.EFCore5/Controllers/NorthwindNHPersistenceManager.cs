@@ -1,3 +1,4 @@
+#if NHIBERNATE
 using Breeze.Persistence;
 using Breeze.Persistence.NH;
 using Models.NorthwindIB.NH;
@@ -7,23 +8,40 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Test.AspNetCore.Controllers {
-  public class NorthwindNHPersistenceManager : NHPersistenceManager {
-    public NorthwindNHPersistenceManager(ISessionFactory sessionFactory) : base(sessionFactory.OpenSession()) { }
 
-    public NorthwindNHPersistenceManager(NHPersistenceManager source) : base(source) { }
+  /// <summary> Wrap an ISessionFactory so we can give it a unique type for DI </summary>
+  public class NHSessionProvider<T> {
+    private readonly ISessionFactory factory;
+    public NHSessionProvider(ISessionFactory factory) {
+      this.factory = factory;
+    }
+    public ISession OpenSession() { return factory.OpenSession(); }
+  }
+
+  /// <summary> NHPersistenceManager with validation added.  TODO should this be in the base implementation? </summary>
+  public class ValidatingPersistenceManager : NHPersistenceManager {
+    public ValidatingPersistenceManager(ISession session) : base(session) { }
+
+    public ValidatingPersistenceManager(NHPersistenceManager source) : base(source) { }
 
     protected override Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap) {
       var meta = this.GetMetadata();
       var bvalidator = new BreezeEntityValidator(this, meta);
       bvalidator.ValidateEntities(saveMap, true);
 
-      DataAnnotationsValidator.AddDescriptor(typeof(Customer), typeof(CustomerMetaData));
+      //DataAnnotationsValidator.AddDescriptor(typeof(Customer), typeof(CustomerMetaData));
       var validator = new DataAnnotationsValidator(this);
       validator.ValidateEntities(saveMap, true);
 
       return base.BeforeSaveEntities(saveMap);
     }
+  }
 
+  public class NorthwindNHPersistenceManager : ValidatingPersistenceManager {
+    //public NorthwindNHPersistenceManager(ISessionFactory sessionFactory) : base(sessionFactory.OpenSession()) { }
+    public NorthwindNHPersistenceManager(ISession session) : base(session) { }
+
+    public NorthwindNHPersistenceManager(NHPersistenceManager source) : base(source) { }
 
     public NorthwindNHPersistenceManager Context {
       get { return this; }
@@ -80,3 +98,4 @@ namespace Test.AspNetCore.Controllers {
   }
 
 }
+#endif
