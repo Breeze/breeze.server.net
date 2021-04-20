@@ -5,6 +5,20 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
     <Version>3.1.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Jay Traband</Authors>
+    <Company>IdeaBlade</Company>
+    <Product>Breeze Server - EFCore Persistence</Product>
+    <Description>EFCore functionality for any Breeze Server using ASP.NET Core 3.1.
+Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NET Core 3 and Version 1.x is for .NET Core 2.</Description>
+    <Copyright>Copyright © IdeaBlade 2012-2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>AspNetCore DotNetCore javascript Breeze BreezeJs EFCore Entity Framework</PackageTags>
+    <PackageReleaseNotes>Version 5.x of this package is for .NET Core 5, whereas Version 3.x is for .NET Core 3 and  Version 1.x is for .NET Core 2.
+Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
