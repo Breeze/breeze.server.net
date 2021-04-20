@@ -1,4 +1,4 @@
- /** 
+ /**
  * Deploys nupkg to local cache dir for testing
  */
 var fs = require("fs-extra");
@@ -6,7 +6,7 @@ var del = require('del');
 const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
-const version = '5.0.3';
+const version = '5.0.4';
 const debugOrRelease = 'Debug'
 
 var baseNames = [
@@ -20,7 +20,7 @@ var baseNames = [
 const arg = bu.getArg();
 argl = arg.toLowerCase();
 if (argl == 'local') {
-  deployLocal();  
+  deployLocal();
 } else if (argl == 'remote') {
   deployRemote();
 } else {
