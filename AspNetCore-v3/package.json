@@ -1,0 +1,17 @@
+{
+  "name": "aspnetcore-v3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy-local": "node tools/deploy local",
+    "deploy-remote": "node tools/deploy remote"
+  },
+  "author": "Jay Traband",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^6.0.0",
+    "fs-extra": "^9.1.0"
+  }
+}

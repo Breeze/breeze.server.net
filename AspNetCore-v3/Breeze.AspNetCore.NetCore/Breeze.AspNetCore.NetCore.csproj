@@ -1,13 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
     <StartupObject />
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
-    <Version>3.1.0</Version>
+    <Version>3.1.4</Version>
     <Authors>Jay Traband</Authors>
     <Company>IdeaBlade</Company>
     <Product>Breeze Server - ASP.NET Core Library</Product>
@@ -22,6 +23,7 @@ Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NE
     <PackageReleaseNotes>Version 5.x of this package is for .NET Core 5, whereas Version 3.x is for .NET Core 3 and  Version 1.x is for .NET Core 2.
 Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

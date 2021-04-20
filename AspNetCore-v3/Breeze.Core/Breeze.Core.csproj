@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>3.1.0</AssemblyVersion>
-    <FileVersion>3.1.0</FileVersion>
-    <Version>3.1.0</Version>
+    <AssemblyVersion>3.1.4</AssemblyVersion>
+    <FileVersion>3.1.4</FileVersion>
+    <Version>3.1.4</Version>
     <Authors>Jay Traband</Authors>
     <Company>IdeaBlade</Company>
     <Product>Breeze Server - Core Library</Product>

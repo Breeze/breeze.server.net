@@ -11,7 +11,7 @@
 
 Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NET Core 3 and Version 1.x is for .NET Core 2.
 		</Description>
-		<Copyright>Copyright � IdeaBlade 2012-2021</Copyright>
+		<Copyright>Copyright © IdeaBlade 2012-2021</Copyright>
 		<PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
 		<Authors>Jay Traband, Steve Schmitt</Authors>
 		<Company>IdeaBlade</Company>
