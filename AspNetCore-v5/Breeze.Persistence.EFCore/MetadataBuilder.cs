@@ -174,6 +174,10 @@ namespace Breeze.Persistence.EFCore {
       if (p.IsOnDependent) {
         np.AssociationName = BuildAssocName(p);
         np.ForeignKeyNamesOnServer = p.ForeignKey.Properties.Select(fkp => fkp.Name).ToList();
+        if (!p.ForeignKey.PrincipalKey.IsPrimaryKey()) {
+          // if FK does not relate to PK of other entity, then identify the foreign property
+          np.InvForeignKeyNamesOnServer = p.ForeignKey.PrincipalKey.Properties.Select(fkp => fkp.Name).ToList();
+        }
       } else {
         var invP = p.Inverse;
         string assocName;
