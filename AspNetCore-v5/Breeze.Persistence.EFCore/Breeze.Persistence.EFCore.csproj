@@ -39,7 +39,7 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
