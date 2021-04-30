@@ -10,7 +10,7 @@
     <union-subclass name="BankAccountTPC" table="BankAccountTPCs">
       <property name="BankName" type="string" />
       <property name="Swift" type="string" />
-      <many-to-one name="AccountType" column="`AccountTypeId`" class="AccountType" />
+      <many-to-one name="AccountType" column="`AccountTypeId`" class="AccountType" insert="false" update="false" />
       <property name="AccountTypeId" type="int" />
       <!--Foreign key to DepositTPH -->
       <set name="Deposits" table="`DepositTPCs`" schema="`dbo`" cascade="all-delete-orphan" inverse="true">
@@ -22,7 +22,7 @@
     <union-subclass name="CreditCardTPC" table="CreditCardsTPCs">
       <property name="ExpiryMonth" type="string" />
       <property name="ExpiryYear" type="string" />
-      <many-to-one name="AccountType" column="`AccountTypeId`" class="AccountType" />
+      <many-to-one name="AccountType" column="`AccountTypeId`" class="AccountType" insert="false" update="false" />
       <property name="AccountTypeId" type="int" />
     </union-subclass>
 

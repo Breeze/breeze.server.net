@@ -98,7 +98,9 @@ namespace Test.AspNetCore5.EFCore5 {
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, InheritanceContext inheritanceContext) {
       InheritanceDbInitializer.Seed(inheritanceContext);
 #elif NHIBERNATE
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NHSessionProvider<InheritancePersistenceManager> provider) {
+      var persistenceManager = new InheritancePersistenceManager(provider);
+      persistenceManager.Seed();
 #endif
 
       if (env.IsDevelopment()) {

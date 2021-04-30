@@ -3,7 +3,7 @@
     <id name="Id" type="int">
       <generator class="native" />
     </id>
-    <many-to-one name="BankAccount" column="`BankAccountId`" class="BankAccountTPC" />
+    <many-to-one name="BankAccount" column="`BankAccountId`" class="BankAccountTPC" insert="false" update="false" />
     <property name="BankAccountId" type="int" />
     <property name="Amount" type="float" />
     <property name="Deposited" type="DateTime" />

@@ -125,6 +125,8 @@ namespace Test.AspNetCore.Controllers {
     public string Purge() {
 #if EFCORE
       InheritanceDbInitializer.PurgeDatabase(PersistenceManager.Context);
+#elif NHIBERNATE
+      PersistenceManager.PurgeDatabase();
 #endif
       return "purged";
     }
@@ -132,9 +134,11 @@ namespace Test.AspNetCore.Controllers {
     // ~/breeze/inheritance//reset
     [HttpPost]
     public string Reset() {
-#if EFCORE
       Purge();
+#if EFCORE
       InheritanceDbInitializer.ResetDatabase(PersistenceManager.Context);
+#elif NHIBERNATE
+      PersistenceManager.ResetDatabase();
 #endif
       return "reset";
     }
@@ -143,6 +147,8 @@ namespace Test.AspNetCore.Controllers {
     public string Seed() {
 #if EFCORE
       InheritanceDbInitializer.Seed(PersistenceManager.Context);
+#elif NHIBERNATE
+      PersistenceManager.Seed();
 #endif
       return "seed";
     }
@@ -180,6 +186,60 @@ namespace Test.AspNetCore.Controllers {
       get { return GetQuery<CreditCardTPC>(); }
     }
 
+    public void Seed() {
+      PurgeDatabase();
+      ResetDatabase();
+    }
+
+    public void PurgeDatabase() {
+      var session = this.Session;
+      session.Flush();
+
+      session.CreateSQLQuery("delete from DepositTPCs").ExecuteUpdate();
+      session.CreateSQLQuery("delete from DepositTPHs").ExecuteUpdate();
+      session.CreateSQLQuery("delete from DepositTPTs").ExecuteUpdate();
+
+      session.CreateSQLQuery("delete from BankAccountTPCs").ExecuteUpdate();
+      session.CreateSQLQuery("delete from BankAccountTPTs").ExecuteUpdate();
+
+      session.CreateSQLQuery("delete from CreditCardsTPCs").ExecuteUpdate();
+      session.CreateSQLQuery("delete from CreditCardTPTs").ExecuteUpdate();
+
+      session.CreateSQLQuery("delete from BillingDetailTPHs").ExecuteUpdate();
+      session.CreateSQLQuery("delete from BillingDetailTPTs").ExecuteUpdate();
+      session.Flush();
+    }
+
+    public void ResetDatabase() {
+      var session = this.Session;
+      IBillingDetail[] billingDetails;
+
+      billingDetails = InheritanceDataMaker.MakeData<BillingDetailTPH, BankAccountTPH, CreditCardTPH>("TPH");
+      Array.ForEach((BillingDetailTPH[])billingDetails, _ => {
+        session.Save(_);
+        var deps = InheritanceDataMaker.MakeDeposits<BillingDetailTPH, DepositTPH>(_);
+        Array.ForEach(deps, d => session.Save(d));
+      });
+      session.Flush();
+
+      billingDetails = InheritanceDataMaker.MakeData<BillingDetailTPT, BankAccountTPT, CreditCardTPT>("TPT");
+      Array.ForEach((BillingDetailTPT[])billingDetails, _ => {
+        session.Save(_);
+        var deps = InheritanceDataMaker.MakeDeposits<BillingDetailTPT, DepositTPT>(_);
+        Array.ForEach(deps, d => session.Save(d));
+      });
+      session.Flush();
+
+      billingDetails = InheritanceDataMaker.MakeData<BillingDetailTPC, BankAccountTPC, CreditCardTPC>("TPC");
+      Array.ForEach((BillingDetailTPC[])billingDetails, _ => {
+        session.Save(_);
+        var deps = InheritanceDataMaker.MakeDeposits<BillingDetailTPC, DepositTPC>(_);
+        Array.ForEach(deps, d => session.Save(d));
+      });
+
+      session.Flush();
+
+    }
   }
 #endif
 }
