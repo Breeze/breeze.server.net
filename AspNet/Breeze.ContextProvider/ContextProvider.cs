@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
@@ -257,18 +257,19 @@ namespace Breeze.ContextProvider {
 
     protected abstract void SaveChangesCore(SaveWorkState saveWorkState);
 
-      /// <summary>
-      /// The default implementation calls SavesChangesCore to maintain compatiblity with existing
-      /// ContextProvider implementations.
-      /// </summary>
-      /// <param name="saveWorkState"></param>
-      /// <param name="cancellationToken"></param>
-      /// <returns></returns>
-      protected virtual Task SaveChangesCoreAsync(SaveWorkState saveWorkState, CancellationToken cancellationToken)
+    /// <summary>
+    /// The default implementation calls SavesChangesCore to maintain compatiblity with existing
+    /// ContextProvider implementations.
+    /// </summary>
+    /// <param name="saveWorkState"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    protected virtual Task SaveChangesCoreAsync(SaveWorkState saveWorkState, CancellationToken cancellationToken)
     {
       SaveChangesCore(saveWorkState);
       return Task.FromResult(0);
     }
+
     public virtual object[] GetKeyValues(EntityInfo entityInfo) {
       throw new NotImplementedException();
     }
@@ -308,15 +309,15 @@ namespace Breeze.ContextProvider {
       }
     }
 
-      /// <summary>
-      /// The method is called for each entity to be saved before the save occurs during an async save.  If this method returns 'false'
-      /// then the entity will be excluded from the save.  The base implementation returns the result of BeforeSaveEntityDelegate,
-      /// or 'true' if BeforeSaveEntityDelegate is null.
-      /// </summary>
-      /// <param name="entityInfo"></param>
-      /// <param name="cancellationToken"></param>
-      /// <returns>true to include the entity in the save, false to exclude</returns>
-      protected internal virtual Task<bool> BeforeSaveEntityAsync(EntityInfo entityInfo, CancellationToken cancellationToken) {
+    /// <summary>
+    /// The method is called for each entity to be saved before the save occurs during an async save.  If this method returns 'false'
+    /// then the entity will be excluded from the save.  The base implementation returns the result of BeforeSaveEntityDelegate,
+    /// or 'true' if BeforeSaveEntityDelegate is null.
+    /// </summary>
+    /// <param name="entityInfo"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>true to include the entity in the save, false to exclude</returns>
+    protected internal virtual Task<bool> BeforeSaveEntityAsync(EntityInfo entityInfo, CancellationToken cancellationToken) {
       if (BeforeSaveEntityAsyncDelegate != null) {
         return BeforeSaveEntityAsyncDelegate(entityInfo, cancellationToken);
       } else {
@@ -340,17 +341,17 @@ namespace Breeze.ContextProvider {
       }
     }
 
-      /// <summary>
-      /// Called after BeforeSaveEntityAsync, and before saving the entities to the persistence layer.
-      /// Allows adding, changing, and removing entities prior to save.
-      /// The base implementation returns the result of BeforeSaveEntitiesDelegate, or the unchanged
-      /// saveMap if BeforeSaveEntitiesDelegate is null.
-      /// </summary>
-      /// <param name="saveMap">A List of EntityInfo for each Type</param>
-      /// <param name="cancellationToken"></param>
-      /// <returns>The EntityInfo for each entity that should be saved</returns>
-      protected internal virtual Task<Dictionary<Type, List<EntityInfo>>> BeforeSaveEntitiesAsync(Dictionary<Type, List<EntityInfo>> saveMap, CancellationToken cancellationToken) {
-      if (BeforeSaveEntitiesDelegate != null) {
+    /// <summary>
+    /// Called after BeforeSaveEntityAsync, and before saving the entities to the persistence layer.
+    /// Allows adding, changing, and removing entities prior to save.
+    /// The base implementation returns the result of BeforeSaveEntitiesDelegate, or the unchanged
+    /// saveMap if BeforeSaveEntitiesDelegate is null.
+    /// </summary>
+    /// <param name="saveMap">A List of EntityInfo for each Type</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The EntityInfo for each entity that should be saved</returns>
+    protected internal virtual Task<Dictionary<Type, List<EntityInfo>>> BeforeSaveEntitiesAsync(Dictionary<Type, List<EntityInfo>> saveMap, CancellationToken cancellationToken) {
+      if (BeforeSaveEntitiesAsyncDelegate != null) {
         return BeforeSaveEntitiesAsyncDelegate(saveMap, cancellationToken);
       } else {
         return Task.FromResult(saveMap);
