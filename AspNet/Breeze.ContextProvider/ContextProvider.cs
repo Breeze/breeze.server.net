@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Transactions;
 using System.Xml.Linq;
 
@@ -105,6 +107,54 @@ namespace Breeze.ContextProvider {
 
       return SaveWorkState.ToSaveResult();
     }
+    
+
+    public Task<SaveResult> SaveChangesAsync(JObject saveBundle, TransactionSettings transactionSettings = null)
+    {
+      return SaveChangesAsync(saveBundle, CancellationToken.None, transactionSettings);
+    }
+
+    public async Task<SaveResult> SaveChangesAsync(JObject saveBundle, CancellationToken cancellationToken, TransactionSettings transactionSettings = null) {
+
+    if (SaveWorkState == null || SaveWorkState.WasUsed) {
+      InitializeSaveState(saveBundle);
+    }
+
+      transactionSettings = transactionSettings ?? BreezeConfig.Instance.GetTransactionSettings();
+      try {
+        if (transactionSettings.TransactionType == TransactionType.TransactionScope) {
+          var txOptions = transactionSettings.ToTransactionOptions();
+          using (var txScope = new TransactionScope(TransactionScopeOption.Required, txOptions)) {           
+            await OpenAndSaveAsync(SaveWorkState, cancellationToken);           
+            txScope.Complete();
+          }
+        } else if (transactionSettings.TransactionType == TransactionType.DbTransaction) {
+          await this.OpenDbConnectionAsync(cancellationToken);
+          using (IDbTransaction tran = BeginTransaction(transactionSettings.IsolationLevelAs)) {
+            try {
+              await OpenAndSaveAsync(SaveWorkState, cancellationToken);
+              tran.Commit();
+            } catch {
+              tran.Rollback();
+              throw;
+            }
+          }          
+        } else {
+          await OpenAndSaveAsync(SaveWorkState, cancellationToken);
+        }
+      } catch (EntityErrorsException e) {
+        SaveWorkState.EntityErrors = e.EntityErrors;
+        throw; 
+      } catch(Exception e2) {
+        if (!HandleSaveException(e2, SaveWorkState)) {
+          throw;
+        }
+      } finally {
+        await CloseDbConnectionAsync(cancellationToken);
+      }
+
+      return SaveWorkState.ToSaveResult();
+    }
 
     // allows subclasses to plug in own save exception handling
     // either throw an exception here, return false or return true and modify the saveWorkState.
@@ -118,6 +168,13 @@ namespace Breeze.ContextProvider {
       saveWorkState.BeforeSave();
       SaveChangesCore(saveWorkState);
       saveWorkState.AfterSave();
+    }
+    private async Task OpenAndSaveAsync(SaveWorkState saveWorkState, CancellationToken cancellationToken) {
+      
+      await OpenDbConnectionAsync(cancellationToken);    // ensure connection is available for BeforeSaveEntities
+      await saveWorkState.BeforeSaveAsync(cancellationToken);
+      await SaveChangesCoreAsync(saveWorkState, cancellationToken);
+      await saveWorkState.AfterSaveAsync(cancellationToken);
     }
 
     
@@ -137,17 +194,58 @@ namespace Breeze.ContextProvider {
     public abstract IDbConnection GetDbConnection();
 
     /// <summary>
+    /// Should only be called from BeforeSaveEntities and AfterSaveEntities.
+    /// Default implementation returns GetDbConnection()
+    /// </summary>
+    /// <returns>Open DbConnection used by the ContextProvider's implementation</returns>
+    public virtual Task<IDbConnection> GetDbConnectionAsync()
+    {
+      return Task.FromResult(GetDbConnection());
+    }
+    /// <summary>
+    /// Should only be called from BeforeSaveEntities and AfterSaveEntities.
+    /// Default implementation returns GetDbConnection()
+    /// </summary>
+    /// <returns>Open DbConnection used by the ContextProvider's implementation</returns>
+    public virtual Task<IDbConnection> GetDbConnectionAsync(CancellationToken cancellationToken)
+    {
+      return Task.FromResult(GetDbConnection());
+    }
+    /// <summary>
     /// Internal use only.  Should only be called by ContextProvider during SaveChanges.
     /// Opens the DbConnection used by the ContextProvider's implementation.
     /// Method must be idempotent; after it is called the first time, subsequent calls have no effect.
     /// </summary>
     protected abstract void OpenDbConnection();
+    
+    /// <summary>
+    /// Internal use only.  Should only be called by ContextProvider during SaveChangesAsync.
+    /// Opens the DbConnection used by the ContextProvider's implementation.
+    /// Method must be idempotent; after it is called the first time, subsequent calls have no effect.
+    /// Default implementation calls OpenDbConnection()
+    /// </summary>
+    protected virtual Task OpenDbConnectionAsync(CancellationToken cancellationToken)
+    {
+      OpenDbConnection();
+      return Task.FromResult(0);
+    }
 
     /// <summary>
     /// Internal use only.  Should only be called by ContextProvider during SaveChanges.
     /// Closes the DbConnection used by the ContextProvider's implementation.
     /// </summary>
     protected abstract void CloseDbConnection();
+
+    /// <summary>
+    /// Internal use only.  Should only be called by ContextProvider during SaveChangesAsync.
+    /// Closes the DbConnection used by the ContextProvider's implementation.
+    /// Default implementation calls CloseDbConnection()
+    /// </summary>
+    protected virtual Task CloseDbConnectionAsync(CancellationToken cancellationToken)
+    {
+      CloseDbConnection();
+      return Task.FromResult(0);
+    }
 
     protected virtual IDbTransaction BeginTransaction(System.Data.IsolationLevel isolationLevel) {
       var conn = GetDbConnection();
@@ -159,6 +257,18 @@ namespace Breeze.ContextProvider {
 
     protected abstract void SaveChangesCore(SaveWorkState saveWorkState);
 
+      /// <summary>
+      /// The default implementation calls SavesChangesCore to maintain compatiblity with existing
+      /// ContextProvider implementations.
+      /// </summary>
+      /// <param name="saveWorkState"></param>
+      /// <param name="cancellationToken"></param>
+      /// <returns></returns>
+      protected virtual Task SaveChangesCoreAsync(SaveWorkState saveWorkState, CancellationToken cancellationToken)
+    {
+      SaveChangesCore(saveWorkState);
+      return Task.FromResult(0);
+    }
     public virtual object[] GetKeyValues(EntityInfo entityInfo) {
       throw new NotImplementedException();
     }
@@ -177,8 +287,11 @@ namespace Breeze.ContextProvider {
 
 
     public Func<EntityInfo, bool> BeforeSaveEntityDelegate { get; set; }
+    public Func<EntityInfo, CancellationToken, Task<bool>> BeforeSaveEntityAsyncDelegate { get; set; }
     public Func<Dictionary<Type, List<EntityInfo>>, Dictionary<Type, List<EntityInfo>>> BeforeSaveEntitiesDelegate { get; set; }
+    public Func<Dictionary<Type, List<EntityInfo>>, CancellationToken, Task<Dictionary<Type, List<EntityInfo>>>> BeforeSaveEntitiesAsyncDelegate { get; set; }
     public Action<Dictionary<Type, List<EntityInfo>>, List<KeyMapping>> AfterSaveEntitiesDelegate { get; set; }
+    public Func<Dictionary<Type, List<EntityInfo>>, List<KeyMapping>,CancellationToken, Task> AfterSaveEntitiesAsyncDelegate { get; set; }
 
     /// <summary>
     /// The method is called for each entity to be saved before the save occurs.  If this method returns 'false'
@@ -192,6 +305,22 @@ namespace Breeze.ContextProvider {
         return BeforeSaveEntityDelegate(entityInfo);
       } else {
         return true;
+      }
+    }
+
+      /// <summary>
+      /// The method is called for each entity to be saved before the save occurs during an async save.  If this method returns 'false'
+      /// then the entity will be excluded from the save.  The base implementation returns the result of BeforeSaveEntityDelegate,
+      /// or 'true' if BeforeSaveEntityDelegate is null.
+      /// </summary>
+      /// <param name="entityInfo"></param>
+      /// <param name="cancellationToken"></param>
+      /// <returns>true to include the entity in the save, false to exclude</returns>
+      protected internal virtual Task<bool> BeforeSaveEntityAsync(EntityInfo entityInfo, CancellationToken cancellationToken) {
+      if (BeforeSaveEntityAsyncDelegate != null) {
+        return BeforeSaveEntityAsyncDelegate(entityInfo, cancellationToken);
+      } else {
+        return Task.FromResult(true);
       }
     }
 
@@ -211,6 +340,23 @@ namespace Breeze.ContextProvider {
       }
     }
 
+      /// <summary>
+      /// Called after BeforeSaveEntityAsync, and before saving the entities to the persistence layer.
+      /// Allows adding, changing, and removing entities prior to save.
+      /// The base implementation returns the result of BeforeSaveEntitiesDelegate, or the unchanged
+      /// saveMap if BeforeSaveEntitiesDelegate is null.
+      /// </summary>
+      /// <param name="saveMap">A List of EntityInfo for each Type</param>
+      /// <param name="cancellationToken"></param>
+      /// <returns>The EntityInfo for each entity that should be saved</returns>
+      protected internal virtual Task<Dictionary<Type, List<EntityInfo>>> BeforeSaveEntitiesAsync(Dictionary<Type, List<EntityInfo>> saveMap, CancellationToken cancellationToken) {
+      if (BeforeSaveEntitiesDelegate != null) {
+        return BeforeSaveEntitiesAsyncDelegate(saveMap, cancellationToken);
+      } else {
+        return Task.FromResult(saveMap);
+      }
+    }
+
     /// <summary>
     /// Called after the entities have been saved, and all the temporary keys have been replaced by real keys.
     /// The base implementation calls AfterSaveEntitiesDelegate, or does nothing if AfterSaveEntitiesDelegate is null.
@@ -220,6 +366,19 @@ namespace Breeze.ContextProvider {
     protected internal virtual void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings) {
       if (AfterSaveEntitiesDelegate != null) {
         AfterSaveEntitiesDelegate(saveMap, keyMappings);
+      }
+    }
+
+    /// <summary>
+    /// Called after the entities have been saved, and all the temporary keys have been replaced by real keys.
+    /// The base implementation calls AfterSaveEntitiesDelegate, or does nothing if AfterSaveEntitiesDelegate is null.
+    /// </summary>
+    /// <param name="saveMap">The same saveMap that was returned from BeforeSaveEntities</param>
+    /// <param name="keyMappings">The mapping of temporary keys to real keys</param>
+    /// <param name="cancellationToken"></param>
+    protected internal virtual async Task AfterSaveEntitiesAsync(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings, CancellationToken cancellationToken) {
+      if (AfterSaveEntitiesAsyncDelegate != null) {
+        await AfterSaveEntitiesAsyncDelegate(saveMap, keyMappings, cancellationToken);
       }
     }
 
@@ -323,8 +482,45 @@ namespace Breeze.ContextProvider {
         .ToList();
     }
 
+    public Task BeforeSaveAsync()
+    {
+        return BeforeSaveAsync(CancellationToken.None);
+    }
+
+    public async Task BeforeSaveAsync(CancellationToken cancellationToken) {
+      SaveMap = new Dictionary<Type, List<EntityInfo>>();
+      foreach(var eg in EntityInfoGroups)
+      {
+        var entityInfos = new List<EntityInfo>();
+        foreach(var ei in eg.EntityInfos)
+        {
+          if (ContextProvider.BeforeSaveEntity(ei) && await ContextProvider.BeforeSaveEntityAsync(ei, cancellationToken))
+          {
+            entityInfos.Add(ei);
+          }
+        }
+        SaveMap.Add(eg.EntityType, entityInfos);
+      }
+      SaveMap = await ContextProvider.BeforeSaveEntitiesAsync(ContextProvider.BeforeSaveEntities(SaveMap), cancellationToken);
+      
+      EntitiesWithAutoGeneratedKeys = SaveMap
+        .SelectMany(eiGrp => eiGrp.Value)
+        .Where(ei => ei.AutoGeneratedKey != null && ei.EntityState != EntityState.Detached)
+        .ToList();
+    }
+
     public void AfterSave() {
       ContextProvider.AfterSaveEntities(SaveMap, KeyMappings);
+    }
+
+    public Task AfterSaveAsync()
+    {
+        return AfterSaveAsync(CancellationToken.None);
+    }
+
+    public Task AfterSaveAsync(CancellationToken cancellationToken) {
+      ContextProvider.AfterSaveEntities(SaveMap, KeyMappings);
+      return ContextProvider.AfterSaveEntitiesAsync(SaveMap, KeyMappings, cancellationToken);
     }
 
     public ContextProvider ContextProvider;
