@@ -396,7 +396,7 @@ namespace Breeze.Persistence.NH {
       if (propType.IsCollectionType) {
         // inverse foreign key
         var collectionPersister = joinable as AbstractCollectionPersister;
-        if (collectionPersister != null) {
+        if (collectionPersister != null && collectionPersister.IsOneToMany) {
           // many-to-many relationships do not have a direct connection on the client or in metadata
           var elementPersister = collectionPersister.ElementPersister as AbstractEntityPersister;
           if (elementPersister != null) {
@@ -413,6 +413,9 @@ namespace Breeze.Persistence.NH {
         if (fkNames != null) {
           if (propType.ForeignKeyDirection == ForeignKeyDirection.ForeignKeyFromParent) {
             nmap.ForeignKeyNamesOnServer = fkNames;
+            if (propType.RHSUniqueKeyPropertyName != null) {
+              nmap.InvForeignKeyNamesOnServer = new List<string> { propType.RHSUniqueKeyPropertyName };
+            }
           } else {
             nmap.InvForeignKeyNamesOnServer = fkNames;
           }

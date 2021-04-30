@@ -20,5 +20,6 @@
     <property name="Photo" type="System.Byte[]" />
     <property name="Notes" column="`Notes`" type="string" length="1073741823" />
     <property name="PhotoPath" type="string" length="255" />
+    <many-to-one name="EmpRegion" column="`Region`" class="Region" property-ref="RegionDescription"/>
   </class>
 </hibernate-mapping>

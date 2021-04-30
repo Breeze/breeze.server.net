@@ -15,5 +15,10 @@
       <key column="`RegionID`" foreign-key="FK_Territory_Region" />
       <one-to-many class="Territory" />
     </set>
+    <!--Foreign key to PreviousEmployee (Territory)-->
+    <set name="PreviousEmployees" table="`PreviousEmployee`" schema="`dbo`" cascade="all-delete-orphan" inverse="true">
+      <key column="`Region`" property-ref="RegionDescription" foreign-key="FK_PreviousEmployee_Region" />
+      <one-to-many class="PreviousEmployee" />
+    </set>
   </class>
 </hibernate-mapping>

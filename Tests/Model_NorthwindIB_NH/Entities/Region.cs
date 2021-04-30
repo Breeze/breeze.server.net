@@ -15,5 +15,6 @@ namespace Models.NorthwindIB.NH
         public virtual int RowVersion { get; set; }
 
         public virtual ICollection<Territory> Territories { get; set; }
+        public virtual ICollection<PreviousEmployee> PreviousEmployees { get; set; }
     }
 }

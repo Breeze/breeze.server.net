@@ -23,5 +23,7 @@ namespace Models.NorthwindIB.NH
         public virtual string Notes { get; set; }
         public virtual string PhotoPath { get; set; }
         public virtual int RowVersion { get; set; }
+
+        public virtual Region EmpRegion { get; set; }
     }
 }
