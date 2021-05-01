@@ -452,6 +452,9 @@
             This part is not sent to the client because it is for server-side save implementation.
             </summary>
         </member>
+        <member name="T:Breeze.Persistence.NH.NHPersistenceManager">
+            <summary> Manage persistence for NHibernate entity models </summary>
+        </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.#ctor(NHibernate.ISession)">
             <summary>
             Create a new context for the given session.  
@@ -464,6 +467,9 @@
             Creates a new context using the session and metadata from the sourceContext
             </summary>
             <param name="sourceContext">source of the Session and metadata used by this new context.</param>
+        </member>
+        <member name="P:Breeze.Persistence.NH.NHPersistenceManager.Session">
+            <summary> The NHibernate session.  Readonly. </summary>
         </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.GetQuery``1(System.Boolean)">
             <summary>
@@ -512,6 +518,12 @@
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.BeginTransactionAsync(System.Data.IsolationLevel,System.Threading.CancellationToken)">
             <summary> Start a transaction on the session </summary>
         </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.GetKeyValues(Breeze.Persistence.EntityInfo)">
+            <summary> Get the primary key values for the entity </summary>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.GetKeyValues(System.Object)">
+            <summary> Get the primary key values for the entity </summary>
+        </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.BeforeSaveEntityGraph(System.Collections.Generic.List{Breeze.Persistence.EntityInfo})">
             <summary>
             Allows subclasses to process entities before they are saved.  This method is called
@@ -547,6 +559,13 @@
             };
             </example>
         </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.BuildJsonMetadata">
+            <summary> Build the JSON string of Breeze metadata for the NHibernate entity model </summary>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.GetMetadata">
+            <summary> Build the BreezeMetadata for the NHibernate entity model. </summary>
+            <remarks> The metadata structure is cached by the NHPersistenceManager instance. </remarks>
+        </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.SaveChangesCore(Breeze.Persistence.SaveWorkState)">
             <summary>
             Persist the changes to the entities in the saveMap.
@@ -554,7 +573,6 @@
             Assigns saveWorkState.KeyMappings, which map the temporary keys to their real generated keys.
             Note that this method sets session.FlushMode = FlushMode.Never, so manual flushes are required.
             </summary>
-            <param name="saveMap">Map of Type -> List of entities of that type</param>
         </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.SaveChangesCoreAsync(Breeze.Persistence.SaveWorkState,System.Threading.CancellationToken)">
             <summary>
@@ -593,6 +611,9 @@
             <summary>
             Add, update, or delete the entity according to its EntityState.
             </summary>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.CheckForKeyUpdate(Breeze.Persistence.EntityInfo,NHibernate.Metadata.IClassMetadata)">
+            <summary> Throw an exception if the OriginalValuesMap shows an attempt to update the entity's key </summary>
         </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.RestoreOldVersionValue(Breeze.Persistence.EntityInfo,NHibernate.Metadata.IClassMetadata)">
             <summary>

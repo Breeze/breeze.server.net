@@ -15,11 +15,12 @@ using System.Transactions;
 using System.Xml.Linq;
 
 namespace Breeze.Persistence {
-
+  /// <summary> Manages persistence for Breeze entity models. </summary>
   public abstract class PersistenceManager {
-
+    /// <summary> Generates primary key values for new entities </summary>
     public IKeyGenerator KeyGenerator { get; set; }
 
+    /// <summary> Get the SaveOptions from the JSON save bundle </summary>
     public static SaveOptions ExtractSaveOptions(dynamic dynSaveBundle) {
       var jsonSerializer = CreateJsonSerializer();
 
@@ -28,8 +29,10 @@ namespace Breeze.Persistence {
       return saveOptions;
     }
 
+    /// <summary> Options for the current save operation </summary>
     public SaveOptions SaveOptions { get; set; }
 
+    /// <summary> Get the JSON metadata for the entity model </summary>
     public string Metadata() {
       lock (_metadataLock) {
         if (_jsonMetadata == null) {
@@ -40,6 +43,7 @@ namespace Breeze.Persistence {
       }
     }
 
+    /// <summary> Converts XML to JSON (for converting EF metadata documents) </summary>
     public static String XDocToJson(XDocument xDoc) {
 
       var sw = new StringWriter();
@@ -55,6 +59,7 @@ namespace Breeze.Persistence {
       return jsonText;
     }
 
+    /// <summary> Prepare the SaveWorkState from the JSON payload </summary>
     protected void InitializeSaveState(JObject saveBundle) {
       JsonSerializer = CreateJsonSerializer();
 
@@ -154,8 +159,8 @@ namespace Breeze.Persistence {
 
     }
 
-    // allows subclasses to plug in own save exception handling
-    // either throw an exception here, return false or return true and modify the saveWorkState.
+    /// <summary> Allows subclasses to plug in own save exception handling.
+    /// Either throw an exception here, return false, or return true and modify the saveWorkState. </summary>
     protected virtual bool HandleSaveException(Exception e, SaveWorkState saveWorkState) {
       return false;
     }
@@ -188,62 +193,70 @@ namespace Breeze.Persistence {
     /// <summary>
     /// Should only be called from BeforeSaveEntities and AfterSaveEntities.
     /// </summary>
-    /// <returns>Open DbConnection used by the ContextProvider's implementation</returns>
+    /// <returns>Open DbConnection used by the PersistenceManager's implementation</returns>
     public abstract IDbConnection GetDbConnection();
 
     /// <summary>
-    /// Internal use only.  Should only be called by ContextProvider during SaveChanges.
-    /// Opens the DbConnection used by the ContextProvider's implementation.
+    /// Internal use only.  Should only be called by PersistenceManager during SaveChanges.
+    /// Opens the DbConnection used by the PersistenceManager's implementation.
     /// Method must be idempotent; after it is called the first time, subsequent calls have no effect.
     /// </summary>
     protected abstract void OpenDbConnection();
 
     /// <summary>
-    /// Internal use only.  Should only be called by ContextProvider during SaveChangesAsync.
-    /// Opens the DbConnection used by the ContextProvider's implementation.
+    /// Internal use only.  Should only be called by PersistenceManager during SaveChangesAsync.
+    /// Opens the DbConnection used by the PersistenceManager's implementation.
     /// Method must be idempotent; after it is called the first time, subsequent calls have no effect.
     /// </summary>
     protected abstract Task OpenDbConnectionAsync(CancellationToken cancellationToken);
 
     /// <summary>
-    /// Internal use only.  Should only be called by ContextProvider during SaveChanges.
-    /// Closes the DbConnection used by the ContextProvider's implementation.
+    /// Internal use only.  Should only be called by PersistenceManager during SaveChanges.
+    /// Closes the DbConnection used by the PersistenceManager's implementation.
     /// </summary>
     protected abstract void CloseDbConnection();
 
     /// <summary>
-    /// Internal use only.  Should only be called by ContextProvider during SaveChangesAsync.
-    /// Closes the DbConnection used by the ContextProvider's implementation.
+    /// Internal use only.  Should only be called by PersistenceManager during SaveChangesAsync.
+    /// Closes the DbConnection used by the PersistenceManager's implementation.
     /// </summary>
     protected abstract Task CloseDbConnectionAsync();
 
+    /// <summary> Begin a transaction before saving entities </summary>
     protected virtual IDbTransaction BeginTransaction(System.Data.IsolationLevel isolationLevel) {
       var conn = GetDbConnection();
       if (conn == null) return null;
       return conn.BeginTransaction(isolationLevel);
     }
 
+    /// <summary> Begin a transaction before saving entities </summary>
     protected abstract Task<IDbTransaction> BeginTransactionAsync(System.Data.IsolationLevel isolationLevel, CancellationToken cancellationToken);
 
+    /// <summary> Build the metadata from the entity model </summary>
     protected abstract String BuildJsonMetadata();
 
+    /// <summary> Save the changes to the database </summary>
     protected abstract void SaveChangesCore(SaveWorkState saveWorkState);
 
+    /// <summary> Save the changes to the database </summary>
     protected abstract Task SaveChangesCoreAsync(SaveWorkState saveWorkState, CancellationToken cancellationToken);
 
+    /// <summary> Get the primary key values from the entity </summary>
     public virtual object[] GetKeyValues(EntityInfo entityInfo) {
       throw new NotImplementedException();
     }
 
+    /// <summary> Create an EntityInfo instance (override to return a subclass) </summary>
     protected virtual EntityInfo CreateEntityInfo() {
       return new EntityInfo();
     }
 
+    /// <summary> Create an EntityInfo instance </summary>
     public EntityInfo CreateEntityInfo(Object entity, EntityState entityState = EntityState.Added) {
       var ei = CreateEntityInfo();
       ei.Entity = entity;
       ei.EntityState = entityState;
-      ei.ContextProvider = this;
+      ei.PersistenceManager = this;
       return ei;
     }
 
@@ -281,7 +294,6 @@ namespace Breeze.Persistence {
     /// then the entity will be excluded from the save.  The base implementation returns the result of BeforeSaveEntityAsyncDelegate,
     /// or 'true' if BeforeSaveEntityAsyncDelegate is null.
     /// </summary>
-    /// <param name="entityInfo"></param>
     /// <returns>true to include the entity in the save, false to exclude</returns>
     protected internal virtual Task<bool> BeforeSaveEntityAsync(EntityInfo entityInfo, CancellationToken cancellationToken) {
       if (BeforeSaveEntityAsyncDelegate != null) {
@@ -314,6 +326,7 @@ namespace Breeze.Persistence {
     /// saveMap if BeforeSaveEntitiesAsyncDelegate is null.
     /// </summary>
     /// <param name="saveMap">A List of EntityInfo for each Type</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The EntityInfo for each entity that should be saved</returns>
     protected internal virtual Task<Dictionary<Type, List<EntityInfo>>> BeforeSaveEntitiesAsync(Dictionary<Type, List<EntityInfo>> saveMap, CancellationToken cancellationToken) {
       if (BeforeSaveEntitiesAsyncDelegate != null) {
@@ -341,6 +354,7 @@ namespace Breeze.Persistence {
     /// </summary>
     /// <param name="saveMap">The same saveMap that was returned from BeforeSaveEntities</param>
     /// <param name="keyMappings">The mapping of temporary keys to real keys</param>
+    /// <param name="cancellationToken"></param>
     protected internal virtual Task AfterSaveEntitiesAsync(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings, CancellationToken cancellationToken) {
       if (AfterSaveEntitiesAsyncDelegate != null) {
         return AfterSaveEntitiesAsyncDelegate(saveMap, keyMappings, cancellationToken);
@@ -351,12 +365,13 @@ namespace Breeze.Persistence {
 
     #endregion
 
+    /// <summary> Build an EntityInfo from the JObject </summary>
     protected internal EntityInfo CreateEntityInfoFromJson(dynamic jo, Type entityType) {
       var entityInfo = CreateEntityInfo();
 
       entityInfo.Entity = JsonSerializer.Deserialize(new JTokenReader(jo), entityType);
       entityInfo.EntityState = (EntityState)Enum.Parse(typeof(EntityState), (String)jo.entityAspect.entityState);
-      entityInfo.ContextProvider = this;
+      entityInfo.PersistenceManager = this;
 
 
       entityInfo.UnmappedValuesMap = JsonToDictionary(jo.__unmapped);
@@ -385,6 +400,7 @@ namespace Breeze.Persistence {
       return dict;
     }
 
+    /// <summary> Find the Type from the entityTypeName </summary>
     protected internal Type LookupEntityType(String entityTypeName) {
       var delims = new string[] { ":#" };
       var parts = entityTypeName.Split(delims, StringSplitOptions.None);
@@ -402,6 +418,7 @@ namespace Breeze.Persistence {
       }
     }
 
+    /// <summary> Get an IKeyGenerator implementation from loaded assemblies </summary>
     protected static Lazy<Type> KeyGeneratorType = new Lazy<Type>(() => {
       var typeCandidates = BreezeConfig.ProbeAssemblies.Concat(new Assembly[] { typeof(IKeyGenerator).Assembly })
        .SelectMany(a => a.GetTypes()).ToList();
@@ -413,7 +430,9 @@ namespace Breeze.Persistence {
       return generatorTypes.First();
     });
 
+    /// <summary> The SaveWorkState representing the save in progress </summary>
     protected SaveWorkState SaveWorkState { get; private set; }
+    /// <summary> The configured serializer for reading the save payload </summary>
     protected JsonSerializer JsonSerializer { get; private set; }
 
 
@@ -422,42 +441,46 @@ namespace Breeze.Persistence {
 
   }
 
+  /// <summary> Data structure and methods for processing entities during save </summary>
   public class SaveWorkState {
-
-    public SaveWorkState(PersistenceManager contextProvider, JArray entitiesArray) {
-      ContextProvider = contextProvider;
+    /// <summary> Construct instance from given entitiesArray </summary>
+    public SaveWorkState(PersistenceManager persistenceManager, JArray entitiesArray) {
+      PersistenceManager = persistenceManager;
       var jObjects = entitiesArray.Select(jt => (dynamic)jt).ToList();
       var groups = jObjects.GroupBy(jo => (String)jo.entityAspect.entityTypeName).ToList();
 
       EntityInfoGroups = groups.Select(g => {
-        var entityType = ContextProvider.LookupEntityType(g.Key);
-        var entityInfos = g.Select(jo => ContextProvider.CreateEntityInfoFromJson(jo, entityType)).Cast<EntityInfo>().ToList();
+        var entityType = PersistenceManager.LookupEntityType(g.Key);
+        var entityInfos = g.Select(jo => PersistenceManager.CreateEntityInfoFromJson(jo, entityType)).Cast<EntityInfo>().ToList();
         return new EntityGroup() { EntityType = entityType, EntityInfos = entityInfos };
       }).ToList();
     }
 
+    /// <summary> Call BeforeSaveEntity() on each entity; add those returning 'true' to the SaveMap; then call BeforeSaveEntities() </summary>
     public void BeforeSave() {
       SaveMap = new Dictionary<Type, List<EntityInfo>>();
       EntityInfoGroups.ForEach(eg => {
-        var entityInfos = eg.EntityInfos.Where(ei => ContextProvider.BeforeSaveEntity(ei)).ToList();
+        var entityInfos = eg.EntityInfos.Where(ei => PersistenceManager.BeforeSaveEntity(ei)).ToList();
         SaveMap.Add(eg.EntityType, entityInfos);
       });
-      SaveMap = ContextProvider.BeforeSaveEntities(SaveMap);
+      SaveMap = PersistenceManager.BeforeSaveEntities(SaveMap);
       MakeAutoKeys();
     }
 
+    /// <summary> Call BeforeSaveEntity() and BeforeSaveEntityAsync() on each entity; add those returning 'true' to the SaveMap;
+    /// then call BeforeSaveEntities() and BeforeSaveEntitiesAsync() </summary>
     public async Task BeforeSaveAsync(CancellationToken cancellationToken) {
       SaveMap = new Dictionary<Type, List<EntityInfo>>();
       foreach(var eg in EntityInfoGroups) { 
         var entityInfos = new List<EntityInfo>();
         foreach (var ei in eg.EntityInfos) {
-          if (ContextProvider.BeforeSaveEntity(ei) && await ContextProvider.BeforeSaveEntityAsync(ei, cancellationToken)) {
+          if (PersistenceManager.BeforeSaveEntity(ei) && await PersistenceManager.BeforeSaveEntityAsync(ei, cancellationToken)) {
             entityInfos.Add(ei);
           }
         }
         SaveMap.Add(eg.EntityType, entityInfos);
       };
-      SaveMap = await ContextProvider.BeforeSaveEntitiesAsync(ContextProvider.BeforeSaveEntities(SaveMap), cancellationToken);
+      SaveMap = await PersistenceManager.BeforeSaveEntitiesAsync(PersistenceManager.BeforeSaveEntities(SaveMap), cancellationToken);
       MakeAutoKeys();
     }
 
@@ -467,17 +490,18 @@ namespace Breeze.Persistence {
         .Where(ei => ei.AutoGeneratedKey != null && ei.EntityState != EntityState.Detached)
         .ToList();
     }
-
+    /// <summary> Call PersistenceManager.AfterSaveEntities </summary>
     public void AfterSave() {
-      ContextProvider.AfterSaveEntities(SaveMap, KeyMappings);
+      PersistenceManager.AfterSaveEntities(SaveMap, KeyMappings);
     }
 
+    /// <summary> Call PersistenceManager.AfterSaveEntities and AfterSaveEntitiesAsync </summary>
     public Task AfterSaveAsync(CancellationToken cancellationToken) {
-      ContextProvider.AfterSaveEntities(SaveMap, KeyMappings);
-      return ContextProvider.AfterSaveEntitiesAsync(SaveMap, KeyMappings, cancellationToken);
+      PersistenceManager.AfterSaveEntities(SaveMap, KeyMappings);
+      return PersistenceManager.AfterSaveEntitiesAsync(SaveMap, KeyMappings, cancellationToken);
     }
 
-    public PersistenceManager ContextProvider;
+    public PersistenceManager PersistenceManager;
     protected List<EntityGroup> EntityInfoGroups;
     public Dictionary<Type, List<EntityInfo>> SaveMap { get; set; }
     public List<EntityInfo> EntitiesWithAutoGeneratedKeys { get; set; }
@@ -502,7 +526,7 @@ namespace Breeze.Persistence {
         // we want to stub off any navigation properties here, but how to do it quickly.
         // entities.ForEach(e => e
         var deletes = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState == EntityState.Deleted || ei.EntityState == EntityState.Detached))
-          .Select(entityInfo => new EntityKey(entityInfo.Entity, ContextProvider.GetKeyValues(entityInfo)))).ToList();
+          .Select(entityInfo => new EntityKey(entityInfo.Entity, PersistenceManager.GetKeyValues(entityInfo)))).ToList();
         return new SaveResult() { Entities = entities, KeyMappings = KeyMappings, DeletedKeys = deletes };
       }
     }
@@ -570,7 +594,7 @@ namespace Breeze.Persistence {
     protected internal EntityInfo() {
     }
     /// <summary> PersistenceManager hosting this entity </summary>
-    public PersistenceManager ContextProvider { get; internal set; }
+    public PersistenceManager PersistenceManager { get; internal set; }
     /// <summary> Entity instance </summary>
     public Object Entity { get; internal set; }
     /// <summary> State of the entity; changes during save </summary>

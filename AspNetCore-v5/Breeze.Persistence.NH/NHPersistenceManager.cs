@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Threading;
 
 namespace Breeze.Persistence.NH {
+  /// <summary> Manage persistence for NHibernate entity models </summary>
   public class NHPersistenceManager : Breeze.Persistence.PersistenceManager, IDisposable {
     private readonly ISession session;
     //protected Configuration configuration;
@@ -44,6 +45,7 @@ namespace Breeze.Persistence.NH {
       this._metadata = sourceContext.GetMetadata();
     }
 
+    /// <summary> The NHibernate session.  Readonly. </summary>
     public ISession Session {
       get { return session; }
     }
@@ -136,10 +138,12 @@ namespace Breeze.Persistence.NH {
       return Task.FromResult(wrapper as IDbTransaction);
     }
 
+    /// <summary> Get the primary key values for the entity </summary>
     public override object[] GetKeyValues(EntityInfo entityInfo) {
       return GetKeyValues(entityInfo.Entity);
     }
 
+    /// <summary> Get the primary key values for the entity </summary>
     public object[] GetKeyValues(object entity) {
       var classMeta = session.SessionFactory.GetClassMetadata(entity.GetType());
       if (classMeta == null) {
@@ -192,6 +196,7 @@ namespace Breeze.Persistence.NH {
     /// </example>
     public Func<Type, bool> TypeFilter { get; set; }
 
+    /// <summary> Build the JSON string of Breeze metadata for the NHibernate entity model </summary>
     protected override string BuildJsonMetadata() {
       var meta = GetMetadata();
       var jss = new JsonSerializerSettings() {
@@ -204,6 +209,8 @@ namespace Breeze.Persistence.NH {
       return json;
     }
 
+    /// <summary> Build the BreezeMetadata for the NHibernate entity model. </summary>
+    /// <remarks> The metadata structure is cached by the NHPersistenceManager instance. </remarks>
     protected NHBreezeMetadata GetMetadata() {
       if (_metadata == null) {
         lock (_metadataLock) {
@@ -230,7 +237,6 @@ namespace Breeze.Persistence.NH {
     /// Assigns saveWorkState.KeyMappings, which map the temporary keys to their real generated keys.
     /// Note that this method sets session.FlushMode = FlushMode.Never, so manual flushes are required.
     /// </summary>
-    /// <param name="saveMap">Map of Type -> List of entities of that type</param>
     protected override void SaveChangesCore(SaveWorkState saveWorkState) {
       var saveMap = saveWorkState.SaveMap;
       session.FlushMode = FlushMode.Manual;
@@ -427,6 +433,7 @@ namespace Breeze.Persistence.NH {
       }
     }
 
+    /// <summary> Throw an exception if the OriginalValuesMap shows an attempt to update the entity's key </summary>
     protected void CheckForKeyUpdate(EntityInfo entityInfo, IClassMetadata classMeta) {
       if (classMeta.HasIdentifierProperty && entityInfo.OriginalValuesMap != null
         && entityInfo.OriginalValuesMap.ContainsKey(classMeta.IdentifierPropertyName)) {

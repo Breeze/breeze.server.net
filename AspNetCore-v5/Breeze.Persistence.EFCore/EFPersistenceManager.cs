@@ -18,13 +18,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Breeze.Persistence.EFCore {
-
+  /// <summary> Interface for providing a DbContext </summary>
   public interface IEFContextProvider {
     DbContext DbContext { get; }
     String GetEntitySetName(Type entityType);
   }
 
-  // T is a subclass of DbContext 
+  // T is a subclass of DbContext
+  /// <summary> Manages persistence for Breeze entity models using Entity Framework </summary>
   public class EFPersistenceManager<T> : PersistenceManager, IEFContextProvider where T : DbContext {
 
     private T _context;
@@ -156,20 +157,22 @@ namespace Breeze.Persistence.EFCore {
       return json;
     }
 
-
+    /// <summary> Allow a subclass to provide alternate metadata </summary>
     protected virtual string BuildAltJsonMetadata() {
       // default implementation
       return null; // "{ \"foo\": 8, \"bar\": \"xxx\" }";
     }
 
+    /// <summary> Create a new EFEntityInfo </summary>
     protected override EntityInfo CreateEntityInfo() {
       return new EFEntityInfo();
     }
-
+    /// <summary> Get the primary key values from the Entity </summary>
     public override object[] GetKeyValues(EntityInfo entityInfo) {
       return GetKeyValues(entityInfo.Entity);
     }
 
+    /// <summary> Get the primary key values from the Entity </summary>
     public object[] GetKeyValues(object entity) {
       var et = entity.GetType();
       var values = GetKeyProperties(et).Select(kp => kp.GetValue(entity)).ToArray();
@@ -611,7 +614,7 @@ namespace Breeze.Persistence.EFCore {
     }
 
     private Object[] GetKeyValues(EntityInfo entityInfo) {
-      return entityInfo.ContextProvider.GetKeyValues(entityInfo);
+      return entityInfo.PersistenceManager.GetKeyValues(entityInfo);
     }
   }
 
