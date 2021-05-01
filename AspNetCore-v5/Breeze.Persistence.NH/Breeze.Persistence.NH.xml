@@ -494,10 +494,23 @@
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.GetDbConnection">
             <returns>The connection from the session.</returns>
         </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.OpenDbConnection">
+            <summary> Does nothing; connection is already open when session is created </summary>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.OpenDbConnectionAsync(System.Threading.CancellationToken)">
+            <summary> Does nothing; connection is already open when session is created </summary>
+        </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.CloseDbConnection">
-            <summary>
-            Close the session and its associated db connection
-            </summary>
+            <summary> Close the session and its associated db connection </summary>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.CloseDbConnectionAsync">
+            <summary> Close the session and its associated db connection </summary>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.BeginTransaction(System.Data.IsolationLevel)">
+            <summary> Start a transaction on the session </summary>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.BeginTransactionAsync(System.Data.IsolationLevel,System.Threading.CancellationToken)">
+            <summary> Start a transaction on the session </summary>
         </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.BeforeSaveEntityGraph(System.Collections.Generic.List{Breeze.Persistence.EntityInfo})">
             <summary>
@@ -543,6 +556,14 @@
             </summary>
             <param name="saveMap">Map of Type -> List of entities of that type</param>
         </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.SaveChangesCoreAsync(Breeze.Persistence.SaveWorkState,System.Threading.CancellationToken)">
+            <summary>
+            Persist the changes to the entities in the saveMap.
+            This implements the abstract method in PersistenceManager.
+            Assigns saveWorkState.KeyMappings, which map the temporary keys to their real generated keys.
+            Note that this method sets session.FlushMode = FlushMode.Never, so manual flushes are required.
+            </summary>
+        </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.GetRelationshipFixer(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.Persistence.EntityInfo}})">
             <summary>
             Get a new NHRelationshipFixer using the saveMap and the foreign-key map from the metadata.
@@ -556,11 +577,22 @@
             </summary>
             <param name="saveOrder"></param>
         </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.ProcessSavesAsync(System.Collections.Generic.List{Breeze.Persistence.EntityInfo},System.Threading.CancellationToken)">
+            <summary>
+            Persist the changes to the entities in the saveOrder.
+            </summary>
+            <param name="saveOrder"></param>
+        </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.ProcessEntity(Breeze.Persistence.EntityInfo,NHibernate.Metadata.IClassMetadata)">
             <summary>
             Add, update, or delete the entity according to its EntityState.
             </summary>
             <param name="entityInfo"></param>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.ProcessEntityAsync(Breeze.Persistence.EntityInfo,NHibernate.Metadata.IClassMetadata,System.Threading.CancellationToken)">
+            <summary>
+            Add, update, or delete the entity according to its EntityState.
+            </summary>
         </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.RestoreOldVersionValue(Breeze.Persistence.EntityInfo,NHibernate.Metadata.IClassMetadata)">
             <summary>
@@ -601,6 +633,14 @@
             <returns></returns>
         </member>
         <member name="M:Breeze.Persistence.NH.NHPersistenceManager.RefreshFromSession(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.Persistence.EntityInfo}})">
+            <summary>
+            Refresh the entities from the database.  This picks up changes due to triggers, etc.
+            </summary>
+            TODO make this faster
+            TODO make this optional
+            <param name="saveMap"></param>
+        </member>
+        <member name="M:Breeze.Persistence.NH.NHPersistenceManager.RefreshFromSessionAsync(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.Persistence.EntityInfo}},System.Threading.CancellationToken)">
             <summary>
             Refresh the entities from the database.  This picks up changes due to triggers, etc.
             </summary>
