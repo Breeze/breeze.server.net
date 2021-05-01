@@ -23,6 +23,7 @@ using System.Linq;
 
 using BreezeEntityState = Breeze.Persistence.EntityState;
 using Microsoft.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace Test.AspNetCore.Controllers {
 
@@ -47,98 +48,98 @@ namespace Test.AspNetCore.Controllers {
       return Ok(PersistenceManager.Metadata());
     }
     [HttpPost]
-    public SaveResult SaveChanges([FromBody] JObject saveBundle) {
-      return PersistenceManager.SaveChanges(saveBundle);
+    public Task<SaveResult> SaveChanges([FromBody] JObject saveBundle) {
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
 #region Save interceptors 
     [HttpPost]
-    public SaveResult SaveWithTransactionScope([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithTransactionScope([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.TransactionScope };
-      return PersistenceManager.SaveChanges(saveBundle, txSettings);
+      return PersistenceManager.SaveChangesAsync(saveBundle, txSettings);
     }
 
     [HttpPost]
-    public SaveResult SaveWithDbTransaction([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithDbTransaction([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.DbTransaction };
-      return PersistenceManager.SaveChanges(saveBundle, txSettings);
+      return PersistenceManager.SaveChangesAsync(saveBundle, txSettings);
     }
 
     [HttpPost]
-    public SaveResult SaveWithNoTransaction([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithNoTransaction([FromBody]JObject saveBundle) {
       var txSettings = new TransactionSettings() { TransactionType = TransactionType.None };
-      return PersistenceManager.SaveChanges(saveBundle, txSettings);
+      return PersistenceManager.SaveChangesAsync(saveBundle, txSettings);
     }
 
     [HttpPost]
-    public SaveResult SaveWithComment([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithComment([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntitiesDelegate = AddComment;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithExit([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithExit([FromBody]JObject saveBundle) {
       // set break points here to see how these two approaches give you a SaveMap w/o saving.
       var saveMap = PersistenceManager.GetSaveMapFromSaveBundle(saveBundle);
 #if EFCORE
       saveMap = new NorthwindIBDoNotSaveContext().GetSaveMapFromSaveBundle(saveBundle);
 #endif
-      return new SaveResult() { Entities = new List<Object>(), KeyMappings = new List<KeyMapping>() };
+      return Task.FromResult(new SaveResult() { Entities = new List<Object>(), KeyMappings = new List<KeyMapping>() });
     }
 
     [HttpPost]
-    public SaveResult SaveAndThrow([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveAndThrow([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntitiesDelegate = ThrowError;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithEntityErrorsException([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithEntityErrorsException([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntitiesDelegate = ThrowEntityErrorsException;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithAuditFields([FromBody] JObject saveBundle) {
+    public Task<SaveResult> SaveWithAuditFields([FromBody] JObject saveBundle) {
       PersistenceManager.BeforeSaveEntityDelegate = SetAuditFields;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
 
     [HttpPost]
-    public SaveResult SaveWithFreight([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithFreight([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntityDelegate = CheckFreight;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithFreight2([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveWithFreight2([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntitiesDelegate = CheckFreightOnOrders;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckInitializer([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveCheckInitializer([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntitiesDelegate = AddOrder;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedProperty([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveCheckUnmappedProperty([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntityDelegate = CheckUnmappedProperty;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedPropertySerialized([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveCheckUnmappedPropertySerialized([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntityDelegate = CheckUnmappedPropertySerialized;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedPropertySuppressed([FromBody]JObject saveBundle) {
+    public Task<SaveResult> SaveCheckUnmappedPropertySuppressed([FromBody]JObject saveBundle) {
       PersistenceManager.BeforeSaveEntityDelegate = CheckUnmappedPropertySuppressed;
-      return PersistenceManager.SaveChanges(saveBundle);
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     private Dictionary<Type, List<EntityInfo>> ThrowError(Dictionary<Type, List<EntityInfo>> saveMap) {

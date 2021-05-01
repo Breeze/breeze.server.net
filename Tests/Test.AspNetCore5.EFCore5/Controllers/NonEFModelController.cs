@@ -1,4 +1,4 @@
-﻿using Breeze.AspNetCore;
+using Breeze.AspNetCore;
 using Breeze.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -8,7 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Test.AspNetCore.Controllers {
 
@@ -79,6 +80,22 @@ namespace Test.AspNetCore.Controllers {
     }
 
     protected override void SaveChangesCore(SaveWorkState saveWorkState) {
+      throw new NotImplementedException();
+    }
+
+    protected override Task OpenDbConnectionAsync(CancellationToken cancellationToken) {
+      throw new NotImplementedException();
+    }
+
+    protected override Task CloseDbConnectionAsync() {
+      throw new NotImplementedException();
+    }
+
+    protected override Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel, CancellationToken cancellationToken) {
+      throw new NotImplementedException();
+    }
+
+    protected override Task SaveChangesCoreAsync(SaveWorkState saveWorkState, CancellationToken cancellationToken) {
       throw new NotImplementedException();
     }
   }

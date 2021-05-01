@@ -8,6 +8,7 @@ using Breeze.WebApi2;
 using Newtonsoft.Json.Linq;
 
 using Inheritance.Models;
+using System.Threading.Tasks;
 
 namespace Inheritance.Controllers {
  
@@ -24,9 +25,13 @@ namespace Inheritance.Controllers {
     }
 
     // ~/breeze/inheritance/SaveChanges
+    //[HttpPost]
+    //public SaveResult SaveChanges(JObject saveBundle) {
+    //  return _contextProvider.SaveChanges(saveBundle);
+    //}
     [HttpPost]
-    public SaveResult SaveChanges(JObject saveBundle) {
-      return _contextProvider.SaveChanges(saveBundle);
+    public Task<SaveResult> SaveChanges(JObject saveBundle) {
+      return _contextProvider.SaveChangesAsync(saveBundle);
     }
 
     // ~/breeze/inheritance/accountTypes

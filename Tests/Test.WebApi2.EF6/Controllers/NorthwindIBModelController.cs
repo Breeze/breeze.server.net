@@ -27,6 +27,7 @@ using System.Web;
 
 using NHibernate.Mapping;
 using NHibernate.Transform;
+using System.Threading.Tasks;
 #if CODEFIRST_PROVIDER
 using Breeze.ContextProvider.EF6;
 using Models.NorthwindIB.CF;
@@ -83,9 +84,13 @@ namespace Sample_WebApi2.Controllers {
     public String Metadata() {
       return ContextProvider.Metadata();
     }
+    //[HttpPost]
+    //public SaveResult SaveChanges(JObject saveBundle) {
+    //  return ContextProvider.SaveChanges(saveBundle);
+    //}
     [HttpPost]
-    public SaveResult SaveChanges(JObject saveBundle) {
-      return ContextProvider.SaveChanges(saveBundle);
+    public Task<SaveResult> SaveChanges(JObject saveBundle) {
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     #region Save interceptors 
@@ -108,9 +113,9 @@ namespace Sample_WebApi2.Controllers {
     }
 
     [HttpPost]
-    public SaveResult SaveWithComment(JObject saveBundle) {
+    public Task<SaveResult> SaveWithComment(JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = AddComment;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
@@ -122,57 +127,57 @@ namespace Sample_WebApi2.Controllers {
     }
 
     [HttpPost]
-    public SaveResult SaveAndThrow(JObject saveBundle) {
+    public Task<SaveResult> SaveAndThrow(JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = ThrowError;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithEntityErrorsException(JObject saveBundle) {
+    public Task<SaveResult> SaveWithEntityErrorsException(JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = ThrowEntityErrorsException;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithAuditFields(JObject saveBundle) {
+    public Task<SaveResult> SaveWithAuditFields(JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = SetAuditFields;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithFreight(JObject saveBundle) {
+    public Task<SaveResult> SaveWithFreight(JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckFreight;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveWithFreight2(JObject saveBundle) {
+    public Task<SaveResult> SaveWithFreight2(JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = CheckFreightOnOrders;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckInitializer(JObject saveBundle) {
+    public Task<SaveResult> SaveCheckInitializer(JObject saveBundle) {
       ContextProvider.BeforeSaveEntitiesDelegate = AddOrder;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedProperty(JObject saveBundle) {
+    public Task<SaveResult> SaveCheckUnmappedProperty(JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedProperty;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedPropertySerialized(JObject saveBundle) {
+    public Task<SaveResult> SaveCheckUnmappedPropertySerialized(JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedPropertySerialized;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     [HttpPost]
-    public SaveResult SaveCheckUnmappedPropertySuppressed(JObject saveBundle) {
+    public Task<SaveResult> SaveCheckUnmappedPropertySuppressed(JObject saveBundle) {
       ContextProvider.BeforeSaveEntityDelegate = CheckUnmappedPropertySuppressed;
-      return ContextProvider.SaveChanges(saveBundle);
+      return ContextProvider.SaveChangesAsync(saveBundle);
     }
 
     private Dictionary<Type, List<EntityInfo>> ThrowError(Dictionary<Type, List<EntityInfo>> saveMap) {

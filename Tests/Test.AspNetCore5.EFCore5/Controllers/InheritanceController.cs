@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Test.AspNetCore.Controllers {
 
@@ -33,8 +34,8 @@ namespace Test.AspNetCore.Controllers {
     }
 
     [HttpPost]
-    public SaveResult SaveChanges([FromBody] JObject saveBundle) {
-      return PersistenceManager.SaveChanges(saveBundle);
+    public Task<SaveResult> SaveChanges([FromBody] JObject saveBundle) {
+      return PersistenceManager.SaveChangesAsync(saveBundle);
     }
 
     [HttpGet]
