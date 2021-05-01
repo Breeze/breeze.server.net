@@ -22,9 +22,5 @@
       <key column="`SupplierID`" foreign-key="FK_Product_Supplier" />
       <one-to-many class="Product" />
     </set>
-    <set name="RoleNames" table="Role">
-      <key column="Id" />
-      <element column="Description" type="string" />
-    </set>    
   </class>
 </hibernate-mapping>

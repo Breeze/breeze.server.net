@@ -9,7 +9,6 @@ namespace Models.NorthwindIB.NH
         public Supplier()
         {
             this.Products = new HashSet<Product>();
-            this.RoleNames = new HashSet<string>();
         }
 
         public virtual int SupplierID { get; set; }
@@ -28,7 +27,6 @@ namespace Models.NorthwindIB.NH
         }
 
         public virtual ICollection<Product> Products { get; set; }
-        public virtual ICollection<string> RoleNames { get; set; }
 
     }
 }
