@@ -6,8 +6,8 @@ var del = require('del');
 const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
-const version = '5.0.4';
-const debugOrRelease = 'Debug'
+const version = '5.0.5';
+const debugOrRelease = 'Release'
 
 var baseNames = [
   'Breeze.AspNetCore.NetCore',
