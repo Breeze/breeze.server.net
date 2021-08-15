@@ -346,6 +346,17 @@ namespace Breeze.Core {
       return mi3;
     }
 
+    public static MethodInfo GetMethodByNameAndType(Type containingType, string methodName, params Type[] genericTypeArgs) {
+      MethodInfo mi;
+      if(containingType.IsGenericType) {
+        var constructed = containingType.MakeGenericType(genericTypeArgs);
+        mi = constructed.GetMethod(methodName);
+      } else {
+        mi = containingType.GetMethod(methodName);
+      }            
+      return mi;
+    }
+
     public static MethodInfo GetMethodByExample<TIn1, TIn2, TOut>(Expression<Func<TIn1, TIn2, TOut>> prototypeLambda, params Type[] resolvedTypes) {
       var mi = (prototypeLambda.Body as MethodCallExpression).Method;
       if (!resolvedTypes.Any()) return mi;
