@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
+		<OutputType>Library</OutputType>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IsPackable>true</IsPackable>
+		<Version>6.0.1.0</Version>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>Core ASP.NET Core functionality for any Breeze Server using ASP.NET Core 6.x.
+
+Note: Version 6.x of this package is for .NET 6,  whereas Version 5.x is for .NET Core 5, Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.		</Description>
+		<Copyright>Copyright © IdeaBlade 2012-2022</Copyright>
+		<PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
+		<Authors>Jay Traband</Authors>
+		<Company>IdeaBlade</Company>
+		<PackageReleaseNotes>Version 6.x of this package is for .NET 6,  whereas Version 5.x is for .NET Core 5, Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+
+Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html
+		</PackageReleaseNotes>
+		<Product>Breeze Server - ASP.NET Core Provider</Product>
+		<PackageTags>AspNetCore DotNetCore Net6 javascript Breeze BreezeJs</PackageTags>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<AssemblyVersion>6.0.1.0</AssemblyVersion>
+		<PackageIcon>Breeze-aspnet.png</PackageIcon>
+		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>C:\GitHub\breeze.server.net\AspNetCore-v6\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>C:\GitHub\breeze.server.net\AspNetCore-v5\Breeze.AspNetCore.NetCore\bin\release\net5.0\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Breeze.Core\Breeze.Core.csproj" />
+		<ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\Breeze-aspnet.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
+
+</Project>
