@@ -6,7 +6,7 @@ var del = require('del');
 const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
-const version = '5.0.5';
+const version = '6.0.1';
 const debugOrRelease = 'Release'
 
 var baseNames = [
@@ -14,7 +14,7 @@ var baseNames = [
   'Breeze.Core',
   'Breeze.Persistence',
   'Breeze.Persistence.EFCore',
-  'Breeze.Persistence.NH',
+  // 'Breeze.Persistence.NH',
 ];
 
 const arg = bu.getArg();

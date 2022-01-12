@@ -13,6 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Breeze.AspNetCore.NetCore" Version="6.0.1" />
+    <PackageReference Include="Breeze.Persistence.EFCore" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
@@ -22,8 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCore-v6\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
-    <ProjectReference Include="..\..\AspNetCore-v6\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.csproj" />
     <ProjectReference Include="..\Model_Inheritance.EFCore\Model_Inheritance.EFCore6.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore6\Model.NorthwindIB_CF.EFCore6.csproj" />
     <ProjectReference Include="..\Model_ProduceTPH_CF.EFCore\Model_ProduceTPH_CF.EFCore6.csproj" />
