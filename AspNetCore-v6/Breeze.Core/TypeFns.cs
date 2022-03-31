@@ -354,7 +354,19 @@ namespace Breeze.Core {
       var mi3 = mi2.MakeGenericMethod(resolvedTypes);
       return mi3;
     }
-  
+
+    public static MethodInfo GetMethodByNameAndType(Type containingType, string methodName, params Type[] genericTypeArgs) {
+      MethodInfo mi;
+      if (containingType.IsGenericType) {
+        var constructed = containingType.MakeGenericType(genericTypeArgs);
+        mi = constructed.GetMethod(methodName);
+      } else {
+        mi = containingType.GetMethod(methodName);
+      }
+      return mi;
+    }
+
+
     /// <summary>
     /// Finds a specific public property or field. Will be automatically restricted as well by execution environment restrictions ( e.g. Silverlight).
     /// </summary>

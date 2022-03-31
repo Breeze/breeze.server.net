@@ -118,8 +118,7 @@ namespace Breeze.Core {
         var mi = TypeFns.GetMethodByExample((String s) => s.Contains("abc"));
         return Expression.Call(expr1, mi, expr2);
       } else if (op == BinaryOperator.In) {
-        // TODO: need to generalize this past just 'string'
-        var mi = TypeFns.GetMethodByExample((List<String> list) => list.Contains("abc"), expr1.Type);
+        var mi = TypeFns.GetMethodByNameAndType(typeof(List<>), "Contains", expr1.Type);
         return Expression.Call(expr2, mi, expr1);
       }
 
