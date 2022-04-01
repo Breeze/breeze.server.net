@@ -4,11 +4,20 @@
         <name>Breeze.Persistence.EFCore</name>
     </assembly>
     <members>
+        <member name="T:Breeze.Persistence.EFCore.IEFContextProvider">
+            <summary> Interface for providing a DbContext </summary>
+        </member>
+        <member name="T:Breeze.Persistence.EFCore.EFPersistenceManager`1">
+            <summary> Manages persistence for Breeze entity models using Entity Framework </summary>
+        </member>
         <member name="P:Breeze.Persistence.EFCore.EFPersistenceManager`1.EntityConnection">
             <summary>Gets the EntityConnection from the ObjectContext.</summary>
         </member>
         <member name="P:Breeze.Persistence.EFCore.EFPersistenceManager`1.EntityTransaction">
             <summary>Gets the current transaction, if one is in progress.</summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.GetDbConnection">
+            <summary>Gets the EntityConnection from the ObjectContext.</summary>
         </member>
         <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.OpenDbConnection">
             <summary>
@@ -19,6 +28,46 @@
             See http://blogs.msdn.com/b/diego/archive/2012/01/26/exception-from-dbcontext-api-entityconnection-can-only-be-constructed-with-a-closed-dbconnection.aspx
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.OpenDbConnectionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Opens the DbConnection used by the Context.
+            If the connection will be used outside of the DbContext, this method should be called prior to DbContext 
+            initialization, so that the connection will already be open when the DbContext uses it.  This keeps
+            the DbContext from closing the connection, so it must be closed manually.
+            See http://blogs.msdn.com/b/diego/archive/2012/01/26/exception-from-dbcontext-api-entityconnection-can-only-be-constructed-with-a-closed-dbconnection.aspx
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.CloseDbConnection">
+            <summary> Close the db connection used by the DbContext. </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.CloseDbConnectionAsync">
+            <summary> Close the db connection used by the DbContext. </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.BeginTransaction(System.Data.IsolationLevel)">
+            Override BeginTransaction so we can keep the current transaction in a property
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.BeginTransactionAsync(System.Data.IsolationLevel,System.Threading.CancellationToken)">
+            <summary> Override BeginTransactionAsync and keep the transaction in the Entitytransaction property </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.BuildAltJsonMetadata">
+            <summary> Allow a subclass to provide alternate metadata </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.CreateEntityInfo">
+            <summary> Create a new EFEntityInfo </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.GetKeyValues(Breeze.Persistence.EntityInfo)">
+            <summary> Get the primary key values from the Entity </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.GetKeyValues(System.Object)">
+            <summary> Get the primary key values from the Entity </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.SaveChangesCore(Breeze.Persistence.SaveWorkState)">
+            <summary> Save changes and update key mappings </summary>
+        </member>
+        <member name="M:Breeze.Persistence.EFCore.EFPersistenceManager`1.SaveChangesCoreAsync(Breeze.Persistence.SaveWorkState,System.Threading.CancellationToken)">
+            <summary> Save changes and update key mappings </summary>
         </member>
     </members>
 </doc>

@@ -6,7 +6,7 @@
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>5.0.5.0</Version>
+		<Version>5.0.6.0</Version>
 		<Description>Persistence for NHibernate functionality for any Breeze Server using .NET 5.
 
 Note: Version 5.x of this package is for .NET 5,  whereas Version 3.x in for .NET Core 3 and Version 1.x is for .NET Core 2.
@@ -23,8 +23,8 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<PackageTags>AspNetCore DotNetCore Net5 NHibernate javascript Breeze BreezeJs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>5.0.5.0</AssemblyVersion>
-		<FileVersion>5.0.5.0</FileVersion>
+		<AssemblyVersion>5.0.6.0</AssemblyVersion>
+		<FileVersion>5.0.6.0</FileVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
