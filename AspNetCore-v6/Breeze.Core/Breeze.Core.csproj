@@ -35,7 +35,7 @@ Note: Version 6.x of this package is for .NET 6,  whereas Version 5.x is for .NE
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
