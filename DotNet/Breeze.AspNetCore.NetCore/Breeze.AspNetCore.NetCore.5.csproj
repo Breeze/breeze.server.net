@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
+		<OutputType>Library</OutputType>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IsPackable>true</IsPackable>
+		<Version>5.0.6.0</Version>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>Core ASP.NET Core functionality for any Breeze Server using ASP.NET Core.
+Please review the Breeze documentation at http://breeze.github.io/doc-main/
+
+Note: Version 7.x of this package is for .NET 7,  whereas Version 6.x is for .NET Core 6, Version 5.x is for .NET Core 5, Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+		</Description>
+		<Copyright>Copyright © IdeaBlade 2012-2023</Copyright>
+		<PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
+		<Authors>Jay Traband</Authors>
+		<Company>IdeaBlade</Company>
+		<PackageReleaseNotes>
+Note: Version 7.x of this package is for .NET 7,  whereas Version 6.x is for .NET Core 6, Version 5.x is for .NET Core 5, Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+
+Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html
+		</PackageReleaseNotes>
+		<Product>Breeze Server - ASP.NET Core Provider</Product>
+		<PackageTags>AspNetCore DotNetCore Net5 JavaScript Breeze BreezeJs</PackageTags>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<AssemblyVersion>5.0.6.0</AssemblyVersion>
+		<FileVersion>5.0.6.0</FileVersion>
+		<PackageIcon>Breeze-aspnet.png</PackageIcon>
+		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<AssemblyName>Breeze.AspNetCore.NetCore</AssemblyName>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.AspNetCore.NetCore\bin\release\net5.0\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Breeze.Core\Breeze.Core.5.csproj" />
+		<ProjectReference Include="..\Breeze.Persistence\Breeze.Persistence.5.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\Breeze-aspnet.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
+
+</Project>

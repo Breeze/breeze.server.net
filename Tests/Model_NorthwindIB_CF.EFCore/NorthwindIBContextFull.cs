@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
 using System.Runtime.Serialization;
 
 namespace Models.NorthwindIB.CF {
@@ -32,7 +33,21 @@ namespace Models.NorthwindIB.CF {
       modelBuilder.Entity<Supplier>()
         .OwnsOne<Location>(s => s.Location);
 
-    }
+      // For testing a relationship that uses non-key attribute,
+      // we relate PreviousEmployee.EmpRegion to Region via PreviousEmployee.Region <=> Region.RegionDescription
+      modelBuilder.Entity<PreviousEmployee>(entity => {
+        entity.HasOne(p => p.EmpRegion)
+            .WithMany(r => r.PreviousEmployees)
+            .HasPrincipalKey(r => r.RegionDescription)
+            .HasForeignKey(p => p.Region)
+            .HasConstraintName("FK_PreviousEmployee_Region");
+      });
+
+#if NET7_0_OR_GREATER
+      modelBuilder.Entity<TimeGroup>()
+        .ToTable(tb => tb.HasTrigger("Update_Comment_On_TimeGroup"));
+#endif
+        }
 
 
     #region DbSets
@@ -662,6 +677,8 @@ namespace Foo {
 
     #region Navigation properties
 
+    public Region EmpRegion { get; set; }
+
     #endregion Navigation properties
 
   }
@@ -784,6 +801,8 @@ namespace Foo {
     /// <summary>Gets the Territories. </summary>
     [InverseProperty("Region")]
     public ICollection<Territory> Territories { get; set; }
+
+    public ICollection<PreviousEmployee> PreviousEmployees { get; set; }
 
     #endregion Navigation properties
 

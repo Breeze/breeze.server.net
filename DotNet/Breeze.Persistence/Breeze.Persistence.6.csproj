@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
+		<IsPackable>true</IsPackable>
+		<Version>6.0.2.0</Version>
+		<Description>Basic Persistence functionality for any Breeze Server using .NET.
+Please review the Breeze documentation at http://breeze.github.io/doc-main/
+
+Note: Version 7.x of this package is for .NET 7,  whereas Version 6.x is for .NET Core 6, Version 5.x is for .NET Core 5, Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+		</Description>
+		<Copyright>Copyright © IdeaBlade 2012-2023</Copyright>
+		<PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
+		<Authors>Jay Traband</Authors>
+		<Company>IdeaBlade</Company>
+		<PackageReleaseNotes>
+Note: Version 7.x of this package is for .NET 7,  whereas Version 6.x is for .NET Core 6, Version 5.x is for .NET Core 5, Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+
+Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html
+		</PackageReleaseNotes>
+		<Product>Breeze Server - Persistence for .NET</Product>
+		<PackageTags>AspNetCore DotNetCore Net6 JavaScript Breeze BreezeJs</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<DelaySign>false</DelaySign>
+		<AssemblyVersion>6.0.2.0</AssemblyVersion>
+		<FileVersion>6.0.2.0</FileVersion>
+		<PackageIcon>BreezeLogo.png</PackageIcon>
+		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<AssemblyName>Breeze.Persistence</AssemblyName>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Persistence\Breeze.Persistence.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Persistence\bin\release\net6.0\Breeze.Persistence.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Breeze.Core\Breeze.Core.6.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\BreezeLogo.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
+
+</Project>
