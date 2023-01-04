@@ -1,5 +1,3 @@
-<p align="center"><a href="http://www.getbreezenow.com/" target="_blank"><img src="http://breeze.github.io/images/logos/Breeze-aspnet.png" alt="Breeze" width="100"/></a></p>
-
 # [Breeze](http://breeze.github.io/doc-main/) Data Management for [.NET Servers](http://breeze.github.io/doc-net/)
 
 **Breeze** is a library that helps you manage data in rich client applications. If you store data in a database, query and save those data as complex object graphs, and share these graphs across multiple screens of your JavaScript or C# client, Breeze is for you.
@@ -74,9 +72,9 @@ The recent sources and solutions are in the [breeze.server.net](https://github.c
 
 Test solutions are in the **Tests/Test.AspNetCore.EFCore** folder.
 
-<hr>
+<hr/>
 
-If you have discovered a bug or missing feature, please create an issue in the [breeze-client github repo](https://github.com/Breeze/breeze.server.net).
+If you have discovered a bug or missing feature, please create an issue in the [breeze.server.net github repo](https://github.com/Breeze/breeze.server.net).
 
 If you have questions about using Breeze, please ask on [Stack Overflow](https://stackoverflow.com/questions/tagged/breeze).
 

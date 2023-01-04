@@ -32,15 +32,15 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<AssemblyName>Breeze.AspNetCore.NetCore</AssemblyName>
+		<ApplicationIcon>BreezeB.ico</ApplicationIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.AspNetCore.NetCore\bin\release\net7.0\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
-	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="BreezeB.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Breeze.Core\Breeze.Core.7.csproj" />
@@ -52,6 +52,10 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	  <None Include="..\Breeze-aspnet.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>

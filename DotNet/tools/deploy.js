@@ -6,8 +6,8 @@ var del = require('del');
 const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
-const version = '6.0.2';
-const debugOrRelease = 'Release'
+const version = '7.0.1';
+const debugOrRelease = 'Release';
 
 var baseNames = [
   'Breeze.AspNetCore.NetCore',
@@ -36,7 +36,7 @@ function deployLocal() {
   nupkgs.forEach(nupkg => {
     // call will look something like the line below
     // --> nuget add  .\Breeze.Core\bin\Debug\Breeze.Core.5.0.2.nupkg  -Source C:/Users/Jay/AppData/Local/NuGet/Test
-    cmd = `nuget add ${nupkg} -Source ${localNugetCacheDir}`;
+    var cmd = `nuget add ${nupkg} -Source ${localNugetCacheDir}`;
     console.log(cmd);
     bu.execCmd(cmd);
   });
