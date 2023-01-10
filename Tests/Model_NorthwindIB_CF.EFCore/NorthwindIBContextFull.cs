@@ -1,13 +1,12 @@
 using Foo;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata;
-using System.Runtime.Serialization;
 
 namespace Models.NorthwindIB.CF {
 
@@ -43,11 +42,63 @@ namespace Models.NorthwindIB.CF {
             .HasConstraintName("FK_PreviousEmployee_Region");
       });
 
+#if NET6_0_OR_GREATER
+        modelBuilder.Entity<UnusualDate>(builder =>
+        {
+            // DateOnly is a DateOnly property and date on database
+            builder.Property(x => x.DateOnly)
+                .HasConversion<DateOnlyConverter, DateOnlyComparer>();
+
+            // TimeOnly is a TimeOnly property and time on database
+            builder.Property(x => x.TimeOnly)
+                .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+        });
+#endif
+
 #if NET7_0_OR_GREATER
-      modelBuilder.Entity<TimeGroup>()
+            modelBuilder.Entity<TimeGroup>()
         .ToTable(tb => tb.HasTrigger("Update_Comment_On_TimeGroup"));
 #endif
+    }
+
+#if NET6_0_OR_GREATER
+    // We need to manually convert values because EF7 & SqlClient still don't support DateOnly and TimeOnly natively
+    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+    {
+        public DateOnlyConverter() : base(
+                dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
+                dateTime => DateOnly.FromDateTime(dateTime))
+        {
         }
+    }
+
+    public class DateOnlyComparer : ValueComparer<DateOnly>
+    {
+        public DateOnlyComparer() : base(
+            (d1, d2) => d1.DayNumber == d2.DayNumber,
+            d => d.GetHashCode())
+        {
+        }
+    }
+
+    public class TimeOnlyConverter : ValueConverter<TimeOnly, TimeSpan>
+    {
+        public TimeOnlyConverter() : base(
+                timeOnly => timeOnly.ToTimeSpan(),
+                timeSpan => TimeOnly.FromTimeSpan(timeSpan))
+        {
+        }
+    }
+
+    public class TimeOnlyComparer : ValueComparer<TimeOnly>
+    {
+        public TimeOnlyComparer() : base(
+            (t1, t2) => t1.Ticks == t2.Ticks,
+            t => t.GetHashCode())
+        {
+        }
+    }
+#endif
 
 
     #region DbSets
@@ -1348,8 +1399,29 @@ namespace Foo {
 
     [Column("ModificationDate2")]
     public Nullable<System.DateTime> ModificationDate2 { get; set; }
-  }
 
-  #endregion UnusualDate
+#if NET6_0_OR_GREATER
+    /* May need to 
+    ALTER TABLE [dbo].[UnusualDate] ADD
+	    [DateOnly] [date] NULL,
+	    [TimeOnly] [time](7) NULL
+    GO
+     */
+
+    [Column("DateOnly")]
+    public DateOnly? DateOnly { get; set; }
+
+    [Column("TimeOnly")]
+    public TimeOnly? TimeOnly { get; set; }
+#else
+    // Older .NET does not have DateOnly and TimeOnly, so just use strings for tests.
+    [Column("DateOnly")]
+    public string DateOnly { get; set; }
+
+    [Column("TimeOnly")]
+    public string TimeOnly { get; set; }
+#endif
+    }
+    #endregion UnusualDate
 }
 

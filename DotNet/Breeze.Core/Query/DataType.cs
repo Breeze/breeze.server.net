@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,8 +30,10 @@ namespace Breeze.Core {
     public static DataType Decimal = new DataType("Decimal", typeof(Decimal));
     public static DataType Double = new DataType("Double", typeof(Double));
     public static DataType Single = new DataType("Single", typeof(Single));
-
-
+#if NET6_0_OR_GREATER
+    public static DataType DateOnly = new DataType("DateOnly", typeof(DateOnly));
+    public static DataType TimeOnly = new DataType("TimeOnly", typeof(TimeOnly));
+#endif
 
     public DataType(String name) {
       _name = name;
@@ -87,6 +89,12 @@ namespace Breeze.Core {
         return result;
       } else if (dataType == DataType.Time && value is String) {
         return XmlConvert.ToTimeSpan((string)value);
+#if NET6_0_OR_GREATER
+      } else if (dataType == DataType.DateOnly && value is String) {
+        return System.DateOnly.Parse((string)value);
+      } else if (dataType == DataType.TimeOnly && value is String) {
+        return System.TimeOnly.Parse((string)value);
+#endif
       } else {
         return Convert.ChangeType(value, dataType.GetUnderlyingType());
       }
