@@ -3,21 +3,26 @@ using Breeze.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
-using System.Collections;
 using System.Linq;
-using System.Net;
 
 namespace Breeze.AspNetCore {
 
-
+  /// <summary> Attribute to apply the request's query string to the returned IQueryable </summary>
+  /// <remarks> Put [BreezeQueryFilter] on a Controller class to apply Breeze query filtering
+  /// and execution to each method that returns an IQueryable or IEnumerable.
+  /// <para></para>
+  /// See <see href="https://breeze.github.io/doc-net/webapi-controller-core#breezequeryfilterattribute"/>
+  /// </remarks>
   public class BreezeQueryFilterAttribute : ActionFilterAttribute {
+
+    /// <summary> Check if context.ModelState is valid </summary>
     public override void OnActionExecuting(ActionExecutingContext context) {
       if (!context.ModelState.IsValid) {
         context.Result = new BadRequestObjectResult(context.ModelState);
       }
     }
 
+    /// <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
     public override void OnActionExecuted(ActionExecutedContext context) {
 
       // don't attempt to process queryable if we are throwing an error

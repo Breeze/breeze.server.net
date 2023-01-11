@@ -68,6 +68,10 @@ namespace Breeze.Core {
             typeof(Decimal),
             typeof(DateTime),
             typeof(DateTimeOffset),
+#if NET6_0_OR_GREATER
+            typeof(DateOnly),
+            typeof(TimeOnly),
+#endif
             typeof(TimeSpan),
             typeof(Guid),
             typeof(Math),
