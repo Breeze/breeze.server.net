@@ -4,5 +4,103 @@
         <name>Breeze.AspNetCore.NetCore</name>
     </assembly>
     <members>
+        <member name="T:Breeze.AspNetCore.GlobalExceptionFilter">
+            <summary> Filter to capture and return entity errors </summary>
+        </member>
+        <member name="M:Breeze.AspNetCore.GlobalExceptionFilter.#ctor">
+            <summary> Empty constructor </summary>
+        </member>
+        <member name="M:Breeze.AspNetCore.GlobalExceptionFilter.OnException(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <summary> Process exceptions to extract EntityErrors and include them in the response </summary>
+        </member>
+        <member name="T:Breeze.AspNetCore.ErrorDto">
+            <summary> Error object returned to the client </summary>
+        </member>
+        <member name="P:Breeze.AspNetCore.ErrorDto.Code">
+            <summary> HTTP status code </summary>
+        </member>
+        <member name="P:Breeze.AspNetCore.ErrorDto.Message">
+            <summary> Exception message </summary>
+        </member>
+        <member name="P:Breeze.AspNetCore.ErrorDto.StackTrace">
+            <summary> Exception stack trace </summary>
+        </member>
+        <member name="P:Breeze.AspNetCore.ErrorDto.EntityErrors">
+            <summary> Entity validation errors </summary>
+        </member>
+        <member name="M:Breeze.AspNetCore.ErrorDto.ToString">
+            <summary> Return ErrorDto as JSON </summary>
+        </member>
+        <member name="T:Breeze.AspNetCore.BreezeQueryFilterAttribute">
+            <summary> Attribute to apply the request's query string to the returned IQueryable </summary>
+            <remarks> Put [BreezeQueryFilter] on a Controller class to apply Breeze query filtering
+            and execution to each method that returns an IQueryable or IEnumerable.
+            <para></para>
+            See <see href="https://breeze.github.io/doc-net/webapi-controller-core#breezequeryfilterattribute"/>
+            </remarks>
+        </member>
+        <member name="M:Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary> Check if context.ModelState is valid </summary>
+        </member>
+        <member name="M:Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
+        </member>
+        <member name="T:Breeze.AspNetCore.QueryFns">
+            <summary> Static utility functions for processing queries </summary>
+        </member>
+        <member name="M:Breeze.AspNetCore.QueryFns.ExtractQueryable(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext,System.Boolean)">
+            <summary> Get the IQueryable from the context.Result </summary>
+        </member>
+        <member name="M:Breeze.AspNetCore.QueryFns.ExtractAndDecodeQueryString(Microsoft.AspNetCore.Mvc.ActionContext)">
+            <summary> Get the query string from the HttpRequest </summary>
+        </member>
+        <member name="M:Breeze.AspNetCore.QueryFns.ApplyBreezeQuery``1(Microsoft.AspNetCore.Mvc.ActionContext,System.Linq.IQueryable{``0})">
+            <summary> Apply the Where, Order, Skip, and Take predicates from the request's query string to the IQueryable </summary>
+            <remarks><example> Example: Apply query filtering, then aggregate the results.
+            <code>
+            // Apply EntityQuery to filter the IQueryable before aggregation
+            var query = QueryFns.ApplyBreezeQuery(this.ControllerContext, dbContext.Orders);
+            // Total the results
+            var totals = query.Sum(o => o.TotalAmount).ToList();
+            // Return an object, not an IEnumerable, else Breeze will attempt to apply the query again
+            return new { total = totals[0] };
+            </code></example></remarks>
+        </member>
+        <member name="M:Breeze.AspNetCore.QueryFns.ApplyBreezeQuery``1(Microsoft.AspNetCore.Mvc.ControllerBase,System.Linq.IQueryable{``0})">
+            <summary> Apply the Where, Order, Skip, and Take predicates from the request's query string to the IQueryable </summary>
+            <remarks><example> Example: Apply query filtering, then aggregate the results.
+            <code>
+            // Apply EntityQuery from client to filter the IQueryable before aggregation
+            var query = this.ApplyBreezeQuery(dbContext.Orders);
+            // Total the results
+            var totals = query.Sum(o => o.TotalAmount).ToList();
+            // Return an object, not an IEnumerable, else Breeze will attempt to apply the query again
+            return new { total = totals[0] };
+            </code></example></remarks>
+        </member>
+        <member name="M:Breeze.AspNetCore.QueryFns.ApplyBreezeWhere``1(Microsoft.AspNetCore.Mvc.ActionContext,System.Linq.IQueryable{``0})">
+            <summary> Apply the Where predicate from the request's query string to the IQueryable </summary>
+            <remarks><example> Example: Apply query Where clause, then aggregate the results.
+            <code>
+            // Apply Where clause from client to filter the IQueryable before aggregation
+            var query = QueryFns.ApplyBreezeWhere(this.ControllerContext, dbContext.Orders);
+            // Total the results
+            var totals = query.Sum(o => o.TotalAmount).ToList();
+            // Return an object, not an IEnumerable, else Breeze will attempt to apply the query again
+            return new { total = totals[0] };
+            </code></example></remarks>
+        </member>
+        <member name="M:Breeze.AspNetCore.QueryFns.ApplyBreezeWhere``1(Microsoft.AspNetCore.Mvc.ControllerBase,System.Linq.IQueryable{``0})">
+            <summary> Apply the Where predicate from the request's query string to the IQueryable </summary>
+            <remarks><example> Example: Apply query filtering, then aggregate the results.
+            <code>
+            // Apply Where clause from client to filter the IQueryable before aggregation
+            var query = this.ApplyBreezeWhere(dbContext.Orders);
+            // Total the results
+            var totals = query.Sum(o => o.TotalAmount).ToList();
+            // Return an object, not an IEnumerable, else Breeze will attempt to apply the query again
+            return new { total = totals[0] };
+            </code></example></remarks>
+        </member>
     </members>
 </doc>
