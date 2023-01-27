@@ -5,7 +5,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<IsPackable>true</IsPackable>
-		<Version>6.0.2.1</Version>
+		<Version>6.0.4</Version>
 		<Description>Core functionality for any Breeze Server using .NET.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
 
@@ -25,27 +25,31 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>6.0.2.1</AssemblyVersion>
-		<FileVersion>6.0.2.1</FileVersion>
+		<AssemblyVersion>6.0.4</AssemblyVersion>
+		<FileVersion>6.0.4</FileVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<AssemblyName>Breeze.Core</AssemblyName>
-	</PropertyGroup>
+		<ApplicationIcon>BreezeB.ico</ApplicationIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Core\Breeze.Core.xml</DocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Core\bin\release\net6.0\Breeze.Core.xml</DocumentationFile>
-	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="BreezeB.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	  <None Include="..\BreezeLogo.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>

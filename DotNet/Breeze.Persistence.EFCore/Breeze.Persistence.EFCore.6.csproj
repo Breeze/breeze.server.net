@@ -6,7 +6,7 @@
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>6.0.2.1</Version>
+		<Version>6.0.4</Version>
 		<Description>Persistence for EF Core functionality for any Breeze Server using .NET.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
 
@@ -25,21 +25,21 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<PackageTags>AspNetCore DotNetCore Net6 EFCore EntityFramework JavaScript Breeze BreezeJs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>6.0.2.1</AssemblyVersion>
-		<FileVersion>6.0.2.1</FileVersion>
+		<AssemblyVersion>6.0.4</AssemblyVersion>
+		<FileVersion>6.0.4</FileVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<AssemblyName>Breeze.Persistence.EFCore</AssemblyName>
-	</PropertyGroup>
+  	<ApplicationIcon>BreezeB.ico</ApplicationIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Persistence.EFCore\Breeze.Persistence.EFCore.xml</DocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Persistence.EFCore\bin\release\net6.0\Breeze.Persistence.EFCore.xml</DocumentationFile>
-	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="BreezeB.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.1" />
@@ -51,6 +51,10 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	  <None Include="..\BreezeLogo.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>

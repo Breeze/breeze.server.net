@@ -22,12 +22,12 @@ For .NET Core (2 through 7) and Entity Framework Core (2 through 7), find the fo
 > Note: Version 7.x of each package is for .NET 7,  whereas Version 6.x is for .NET Core 6, Version 5.x is for .NET Core 5, Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
 
 - [Breeze.AspNetCore.NetCore](https://www.nuget.org/packages/Breeze.AspNetCore.NetCore/)
+- [Breeze.Persistence.EFCore](https://www.nuget.org/packages/Breeze.Persistence.EFCore/) (support for EF Core)
+- [Breeze.Persistence.NH](https://www.nuget.org/packages/Breeze.Persistence.NH/) (support for NHibernate)
 - [Breeze.Core](https://www.nuget.org/packages/Breeze.Core/)
 - [Breeze.Persistence](https://www.nuget.org/packages/Breeze.Persistence/)
-- [Breeze.Persistence.EFCore (support for EF Core)](https://www.nuget.org/packages/Breeze.Persistence.EFCore/)
-- [Breeze.Persistence.NH (support for NHibernate)](https://www.nuget.org/packages/Breeze.Persistence.NH/)
 
-For a typical EFCore application, you would install the first four packages.  For an NHibernate application, install the first three and Breeze.Persistence.NH.
+For a typical EFCore application, you would install the first two packages.  For an NHibernate application, install the first package and Breeze.Persistence.NH.  The last two packages are dependencies that are automatically installed by the other packages.
 
 ### .NET Framework
 
@@ -72,7 +72,7 @@ The recent sources and solutions are in the [breeze.server.net](https://github.c
 
 Test solutions are in the **Tests/Test.AspNetCore.EFCore** folder.
 
-<hr/>
+---
 
 If you have discovered a bug or missing feature, please create an issue in the [breeze.server.net github repo](https://github.com/Breeze/breeze.server.net).
 

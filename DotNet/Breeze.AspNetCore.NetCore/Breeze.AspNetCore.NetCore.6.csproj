@@ -7,7 +7,7 @@
 		<OutputType>Library</OutputType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>6.0.2.1</Version>
+		<Version>6.0.4</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Core ASP.NET Core functionality for any Breeze Server using ASP.NET Core.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
@@ -26,21 +26,21 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<Product>Breeze Server - ASP.NET Core Provider</Product>
 		<PackageTags>AspNetCore DotNetCore Net6 JavaScript Breeze BreezeJs</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<AssemblyVersion>6.0.2.1</AssemblyVersion>
-		<FileVersion>6.0.2.1</FileVersion>
+		<AssemblyVersion>6.0.4</AssemblyVersion>
+		<FileVersion>6.0.4</FileVersion>
 		<PackageIcon>Breeze-aspnet.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<AssemblyName>Breeze.AspNetCore.NetCore</AssemblyName>
-	</PropertyGroup>
+		<ApplicationIcon>BreezeB.ico</ApplicationIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.AspNetCore.NetCore\bin\release\net6.0\Breeze.AspNetCore.NetCore.xml</DocumentationFile>
-	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="BreezeB.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Breeze.Core\Breeze.Core.6.csproj" />
@@ -52,6 +52,10 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	  <None Include="..\Breeze-aspnet.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>

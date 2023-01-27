@@ -31,15 +31,15 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<AssemblyName>Breeze.Persistence.NH</AssemblyName>
+		<ApplicationIcon>BreezeB.ico</ApplicationIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Persistence.NH\Breeze.Persistence.NH.xml</DocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DocumentationFile>C:\git\Breeze\breeze.server.net\DotNet\Breeze.Persistence.NH\Breeze.Persistence.NH.xml</DocumentationFile>
-	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="BreezeB.ico" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -52,6 +52,10 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
   </ItemGroup>
 
 	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	  <None Include="..\BreezeLogo.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>
