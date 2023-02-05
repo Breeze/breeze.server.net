@@ -79,7 +79,8 @@ namespace Breeze.ContextProvider.NH
         /// <param name="meta"></param>
         void AddClass(IClassMetadata meta)
         {
-            var type = meta.GetMappedClass(EntityMode.Poco);
+            //var type = meta.GetMappedClass(EntityMode.Poco);
+            var type = meta.MappedClass;
 
             // "Customer:#Breeze.Nhibernate.NorthwindIBModel": {
             var classKey = type.Name + ":#" + type.Namespace;

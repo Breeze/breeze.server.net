@@ -334,7 +334,7 @@ namespace Breeze.ContextProvider.NH {
         var entity = entityInfo.Entity;
         var vtype = classMeta.PropertyTypes[vcol].ReturnedClass;
         oldVersion = Convert.ChangeType(oldVersion, vtype);     // because JsonConvert makes all integers Int64
-        classMeta.SetPropertyValue(entity, vname, oldVersion, EntityMode.Poco);
+        classMeta.SetPropertyValue(entity, vname, oldVersion);
       }
     }
 
@@ -362,16 +362,16 @@ namespace Breeze.ContextProvider.NH {
       meta = meta ?? session.SessionFactory.GetClassMetadata(type);
 
       if (meta.IdentifierType != null) {
-        var id = meta.GetIdentifier(entity, EntityMode.Poco);
+        var id = meta.GetIdentifier(entity);
         if (meta.IdentifierType.IsComponentType) {
           var compType = (ComponentType)meta.IdentifierType;
-          return compType.GetPropertyValues(id, EntityMode.Poco);
+          return compType.GetPropertyValues(id);
         } else {
           return id;
         }
       } else if (meta.HasNaturalIdentifier) {
         var idprops = meta.NaturalIdentifierProperties;
-        var values = meta.GetPropertyValues(entity, EntityMode.Poco);
+        var values = meta.GetPropertyValues(entity);
         var idvalues = idprops.Select(i => values[i]).ToArray();
         return idvalues;
       }

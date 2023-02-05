@@ -203,7 +203,7 @@ namespace Breeze.ContextProvider.NH
                     {
                         // get the value of the component's subproperties
                         component = GetPropertyValue(meta, entityInfo.Entity, propName);
-                        compValues = compType.GetPropertyValues(component, EntityMode.Poco);
+                        compValues = compType.GetPropertyValues(component);
                     }
                     if (compValues[j] == null)
                     {
@@ -225,7 +225,7 @@ namespace Breeze.ContextProvider.NH
             }
             if (isChanged)
             {
-                compType.SetPropertyValues(component, compValues, EntityMode.Poco);
+                compType.SetPropertyValues(component, compValues);
             }
 
         }
@@ -242,7 +242,7 @@ namespace Breeze.ContextProvider.NH
             var entity = entityInfo.Entity;
             if (removeMode)
             {
-                meta.SetPropertyValue(entity, propName, null, EntityMode.Poco);
+                meta.SetPropertyValue(entity, propName, null);
                 return;
             }
             object relatedEntity = GetPropertyValue(meta, entity, propName);
@@ -257,7 +257,7 @@ namespace Breeze.ContextProvider.NH
             relatedEntity = GetRelatedEntity(propName, propType, entityInfo, meta);
 
             if (relatedEntity != null)
-                meta.SetPropertyValue(entity, propName, relatedEntity, EntityMode.Poco);
+                meta.SetPropertyValue(entity, propName, relatedEntity);
         }
 
         /// <summary>
@@ -347,14 +347,14 @@ namespace Breeze.ContextProvider.NH
             var entity = entityInfo.Entity;
             object id = null;
             if (foreignKeyName == meta.IdentifierPropertyName)
-                id = meta.GetIdentifier(entity, EntityMode.Poco);
+                id = meta.GetIdentifier(entity);
             else if (meta.PropertyNames.Contains(foreignKeyName))
-                id = meta.GetPropertyValue(entity, foreignKeyName, EntityMode.Poco);
+                id = meta.GetPropertyValue(entity, foreignKeyName);
             else if (meta.IdentifierType.IsComponentType)
             {
                 // compound key
                 var compType = meta.IdentifierType as ComponentType;
-                var idComp = meta.GetIdentifier(entity, EntityMode.Poco);
+                var idComp = meta.GetIdentifier(entity);
                 string joinedNames = string.Join(",", compType.PropertyNames);
                 if (joinedNames == foreignKeyName)
                 {
@@ -365,7 +365,7 @@ namespace Breeze.ContextProvider.NH
                     var index = Array.IndexOf<string>(compType.PropertyNames, foreignKeyName);
                     if (index >= 0)
                     {
-                        id = compType.GetPropertyValue(idComp, index, EntityMode.Poco);
+                        id = compType.GetPropertyValue(idComp, index);
                     }
                 }
             }
@@ -387,9 +387,9 @@ namespace Breeze.ContextProvider.NH
         private object GetPropertyValue(IClassMetadata meta, object entity, string propName)
         {
             if (propName == null || propName == meta.IdentifierPropertyName)
-                return meta.GetIdentifier(entity, EntityMode.Poco);
+                return meta.GetIdentifier(entity);
             else
-                return meta.GetPropertyValue(entity, propName, EntityMode.Poco);
+                return meta.GetPropertyValue(entity, propName);
         }
 
 
@@ -409,7 +409,7 @@ namespace Breeze.ContextProvider.NH
                 foreach (var entityInfo in entityInfoList)
                 {
                     var entity = entityInfo.Entity;
-                    var id = meta.GetIdentifier(entity, EntityMode.Poco);
+                    var id = meta.GetIdentifier(entity);
                     if (id != null && entityIdString.Equals(id.ToString()))
                         return entityInfo;
                 }
