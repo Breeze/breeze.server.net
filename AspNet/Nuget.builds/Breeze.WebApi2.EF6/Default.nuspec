@@ -6,16 +6,17 @@
         <title>Breeze Client and Server - Javascript client with ASP.NET Web API 2.2 and Entity Framework 6.</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
-        <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
+        <license type="expression">MIT</license>
         <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
         <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>The files and references that are essential for a Breeze ASP.NET Web API 2.2 client and server on Entity Framework 6. (Not for use with .NET Core or ASP.Net Core)</description>
         <summary>Breeze Client and Server - Javascript client with ASP.NET Web API 2.2 and Entity Framework 6. (Not for use with .NET Core or ASP.Net Core)</summary>
-        <copyright>Copyright © IdeaBlade 2012-2019</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2023</copyright>
         <language>en-US</language>
-        <releaseNotes>Note that this package uses Microsoft's ASP.NET WebApi 2.2 and will attempt to upgrade any WebApi 2.1 dependencies in your project. Please review the BreezeJS release notes at http://breeze.github.io/doc-main/release-notes.html</releaseNotes>        
+        <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA EntityFramework</tags>
+        <readme>README.md</readme>
 		<dependencies>
 		    <dependency id="Breeze.Client" version="[{{clientVersion}}]"/>
 		    <dependency id="Breeze.Server.WebApi2" version="[{{version}}]"/>
@@ -24,5 +25,6 @@
     </metadata>
     <files>
         <file src="readme.txt" target="readme.txt" />
+        <file src="../README_4x.md" target="README.md" />
     </files>
 </package>

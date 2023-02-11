@@ -218,11 +218,33 @@
             </summary>
             <returns>Open DbConnection used by the ContextProvider's implementation</returns>
         </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.GetDbConnectionAsync">
+            <summary>
+            Should only be called from BeforeSaveEntities and AfterSaveEntities.
+            Default implementation returns GetDbConnection()
+            </summary>
+            <returns>Open DbConnection used by the ContextProvider's implementation</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.GetDbConnectionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Should only be called from BeforeSaveEntities and AfterSaveEntities.
+            Default implementation returns GetDbConnection()
+            </summary>
+            <returns>Open DbConnection used by the ContextProvider's implementation</returns>
+        </member>
         <member name="M:Breeze.ContextProvider.ContextProvider.OpenDbConnection">
             <summary>
             Internal use only.  Should only be called by ContextProvider during SaveChanges.
             Opens the DbConnection used by the ContextProvider's implementation.
             Method must be idempotent; after it is called the first time, subsequent calls have no effect.
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.OpenDbConnectionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Internal use only.  Should only be called by ContextProvider during SaveChangesAsync.
+            Opens the DbConnection used by the ContextProvider's implementation.
+            Method must be idempotent; after it is called the first time, subsequent calls have no effect.
+            Default implementation calls OpenDbConnection()
             </summary>
         </member>
         <member name="M:Breeze.ContextProvider.ContextProvider.CloseDbConnection">
@@ -231,6 +253,22 @@
             Closes the DbConnection used by the ContextProvider's implementation.
             </summary>
         </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.CloseDbConnectionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Internal use only.  Should only be called by ContextProvider during SaveChangesAsync.
+            Closes the DbConnection used by the ContextProvider's implementation.
+            Default implementation calls CloseDbConnection()
+            </summary>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.SaveChangesCoreAsync(Breeze.ContextProvider.SaveWorkState,System.Threading.CancellationToken)">
+            <summary>
+            The default implementation calls SavesChangesCore to maintain compatiblity with existing
+            ContextProvider implementations.
+            </summary>
+            <param name="saveWorkState"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
         <member name="M:Breeze.ContextProvider.ContextProvider.BeforeSaveEntity(Breeze.ContextProvider.EntityInfo)">
             <summary>
             The method is called for each entity to be saved before the save occurs.  If this method returns 'false'
@@ -238,6 +276,16 @@
             or 'true' if BeforeSaveEntityDelegate is null.
             </summary>
             <param name="entityInfo"></param>
+            <returns>true to include the entity in the save, false to exclude</returns>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.BeforeSaveEntityAsync(Breeze.ContextProvider.EntityInfo,System.Threading.CancellationToken)">
+            <summary>
+            The method is called for each entity to be saved before the save occurs during an async save.  If this method returns 'false'
+            then the entity will be excluded from the save.  The base implementation returns the result of BeforeSaveEntityDelegate,
+            or 'true' if BeforeSaveEntityDelegate is null.
+            </summary>
+            <param name="entityInfo"></param>
+            <param name="cancellationToken"></param>
             <returns>true to include the entity in the save, false to exclude</returns>
         </member>
         <member name="M:Breeze.ContextProvider.ContextProvider.BeforeSaveEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}})">
@@ -250,6 +298,17 @@
             <param name="saveMap">A List of EntityInfo for each Type</param>
             <returns>The EntityInfo for each entity that should be saved</returns>
         </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.BeforeSaveEntitiesAsync(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}},System.Threading.CancellationToken)">
+            <summary>
+            Called after BeforeSaveEntityAsync, and before saving the entities to the persistence layer.
+            Allows adding, changing, and removing entities prior to save.
+            The base implementation returns the result of BeforeSaveEntitiesDelegate, or the unchanged
+            saveMap if BeforeSaveEntitiesDelegate is null.
+            </summary>
+            <param name="saveMap">A List of EntityInfo for each Type</param>
+            <param name="cancellationToken"></param>
+            <returns>The EntityInfo for each entity that should be saved</returns>
+        </member>
         <member name="M:Breeze.ContextProvider.ContextProvider.AfterSaveEntities(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}},System.Collections.Generic.List{Breeze.ContextProvider.KeyMapping})">
             <summary>
             Called after the entities have been saved, and all the temporary keys have been replaced by real keys.
@@ -257,6 +316,15 @@
             </summary>
             <param name="saveMap">The same saveMap that was returned from BeforeSaveEntities</param>
             <param name="keyMappings">The mapping of temporary keys to real keys</param>
+        </member>
+        <member name="M:Breeze.ContextProvider.ContextProvider.AfterSaveEntitiesAsync(System.Collections.Generic.Dictionary{System.Type,System.Collections.Generic.List{Breeze.ContextProvider.EntityInfo}},System.Collections.Generic.List{Breeze.ContextProvider.KeyMapping},System.Threading.CancellationToken)">
+            <summary>
+            Called after the entities have been saved, and all the temporary keys have been replaced by real keys.
+            The base implementation calls AfterSaveEntitiesDelegate, or does nothing if AfterSaveEntitiesDelegate is null.
+            </summary>
+            <param name="saveMap">The same saveMap that was returned from BeforeSaveEntities</param>
+            <param name="keyMappings">The mapping of temporary keys to real keys</param>
+            <param name="cancellationToken"></param>
         </member>
         <member name="M:Breeze.ContextProvider.BreezeConfig.CreateJsonSerializerSettings">
             <summary>

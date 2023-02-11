@@ -26,5 +26,8 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Breeze.ContextProvider.EF6.EFContextProvider`1.MakeEntityErrors(System.Data.Entity.Validation.DbEntityValidationException,Breeze.ContextProvider.SaveWorkState)">
+            <summary> Build EntityErrors from the info in the exception </summary>
+        </member>
     </members>
 </doc>

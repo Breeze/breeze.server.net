@@ -2,24 +2,25 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Breeze.Server.ContextProvider.EF6</id>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
         <title>Breeze Server - ContextProvider for Entity Framework 6</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
-        <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
+        <license type="expression">MIT</license>
         <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
         <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Core data access library for a Breeze Server working with Entity Framework v6 and ASP.NET WebApi (Not for use with .NET Core or ASP.Net Core)</description>
         <summary>Breeze Server - ContextProvider for Entity Framework 6. Used with Breeze.WebApi2 package. (Not for use with .NET Core or ASP.Net Core)</summary>
-        <copyright>Copyright © IdeaBlade 2012-2019</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2023</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
+        <readme>README.md</readme>
 		<dependencies>
-		    <dependency id="Breeze.Server.ContextProvider" version="[2.0.1]"/>
-			<dependency id="EntityFramework" version="6.2.0" />
-            <dependency id="Newtonsoft.Json" version="12.0.1"/>
+		    <dependency id="Breeze.Server.ContextProvider" version="[2.0.3]"/>
+			<dependency id="EntityFramework" version="6.4.4" />
+            <dependency id="Newtonsoft.Json" version="13.0.2"/>
 		</dependencies>
     </metadata>
     <files>
@@ -27,5 +28,6 @@
 		<file src="lib\Breeze.ContextProvider.EF6.pdb" target="lib\Breeze.ContextProvider.EF6.pdb" />
         <file src="lib\Breeze.ContextProvider.EF6.XML" target="lib\Breeze.ContextProvider.EF6.XML" />
         <file src="readme.txt" target="readme.txt" />
+        <file src="../README_4x.md" target="README.md" />
     </files>
 </package>

@@ -6,18 +6,19 @@
         <title>Breeze Server - ContextProvider</title>
         <authors>Jay Traband</authors>
         <owners>IdeaBlade</owners>
-        <licenseUrl>http://breeze.github.io/doc-main/license.html</licenseUrl>
+        <license type="expression">MIT</license>
         <projectUrl>https://github.com/Breeze/breeze.server.net</projectUrl>
         <iconUrl>http://breeze.github.io/images/logos/Breeze-aspnet.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Core data access library for any Breeze Server using ASP.NET. (Not for use with .NET Core or ASP.Net Core)</description>
         <summary>Breeze Server - ContextProvider - used with Breeze.WebApi2.xxx with extensions for EntityFramework, NHibernate etc. (Not for use with .NET Core or ASP.Net Core)</summary>
-        <copyright>Copyright © IdeaBlade 2012-2019</copyright>
+        <copyright>Copyright © IdeaBlade 2012-2023</copyright>
         <language>en-US</language>
         <releaseNotes>Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html</releaseNotes>        
         <tags>javascript WebApi Breeze SPA</tags>
+        <readme>README.md</readme>
 		<dependencies>
-			<dependency id="Newtonsoft.Json" version="12.0.1"/>
+			<dependency id="Newtonsoft.Json" version="13.0.2"/>
 		</dependencies>
     </metadata>
     <files>
@@ -25,5 +26,6 @@
 		<file src="lib\Breeze.ContextProvider.pdb" target="lib\Breeze.ContextProvider.pdb" />
         <file src="lib\Breeze.ContextProvider.XML" target="lib\Breeze.ContextProvider.XML" />
         <file src="readme.txt" target="readme.txt" />
+        <file src="../README_4x.md" target="README.md" />
     </files>
 </package>

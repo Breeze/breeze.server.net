@@ -39,9 +39,9 @@ var _jsSrcDir = '../../Breeze.js/src/'
 var _jsBuildDir = '../../Breeze.js/build/';
 
 // TODO: pick one of the next 3 _buildSlnDirs defs
-// var _buildSlnDirs = ["../AspNet/"];
+var _buildSlnDirs = ["../AspNet/"];
 // var _buildSlnDirs = ["../AspNetCore/"];
-var _buildSlnDirs = ["../AspNetCore-v3/"];
+// var _buildSlnDirs = ["../AspNetCore-v3/"];
 
 var _nugetDirs = _buildSlnDirs.map(function(bsd) {
   return path.join(bsd, "/Nuget.builds/");
@@ -49,7 +49,8 @@ var _nugetDirs = _buildSlnDirs.map(function(bsd) {
 
 // var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe" ' // vs 2017 version of MsBuild
 // var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/MSBuild/15.0/Bin/MSBuild.exe" '
-var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe" '
+// var _msBuildCmd = '"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe" '
+var _msBuildCmd = '"C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/MSBuild.exe" '
 // var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal ';
 var _msBuildOptions = ' /p:Configuration=Release /verbosity:minimal  /clp:NoSummary;NoItemAndPropertyList;ErrorsOnly';
 
@@ -98,16 +99,16 @@ gulp.task("initDllTemplates",  function(done) {
   copyToNugetLib("../AspNet/", "Breeze.ContextProvider.EF6");
   copyToNugetLib("../AspNet/", "Breeze.ContextProvider.NH");
   copyToNugetLib("../AspNet/", "Breeze.WebApi2");
-  copyToNugetLib("../AspNetCore/", "Breeze.AspNetCore.NetCore");
-  copyToNugetLib("../AspNetCore/", "Breeze.Core");
-  copyToNugetLib("../AspNetCore/", "Breeze.Persistence");
-  copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EF6");
-  copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EFCore");
-  copyToNugetLib("../AspNetCore-v3/", "Breeze.AspNetCore.NetCore");
-  copyToNugetLib("../AspNetCore-v3/", "Breeze.Core");
-  copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence");
-  copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence.EFCore");
-  copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence.NH");
+  // copyToNugetLib("../AspNetCore/", "Breeze.AspNetCore.NetCore");
+  // copyToNugetLib("../AspNetCore/", "Breeze.Core");
+  // copyToNugetLib("../AspNetCore/", "Breeze.Persistence");
+  // copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EF6");
+  // copyToNugetLib("../AspNetCore/", "Breeze.Persistence.EFCore");
+  // copyToNugetLib("../AspNetCore-v3/", "Breeze.AspNetCore.NetCore");
+  // copyToNugetLib("../AspNetCore-v3/", "Breeze.Core");
+  // copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence");
+  // copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence.EFCore");
+  // copyToNugetLib("../AspNetCore-v3/", "Breeze.Persistence.NH");
   done();
 });
 
@@ -150,7 +151,8 @@ gulp.task('nugetClean', function(done) {
   done();
 });
 
-gulp.task('nugetPack', gulp.series('copyBreezeJs', 'copyDllsToNugetDir', 'nugetClean', function(done) {
+// gulp.task('nugetPack', gulp.series('copyBreezeJs', 'copyDllsToNugetDir', 'nugetClean', function(done) {
+gulp.task('nugetPack', gulp.series('copyDllsToNugetDir', 'nugetClean', function(done) {
   async.eachSeries(_nugetDirs, function(nd, cb1) {
     var version;
     versionFileName = path.resolve(nd, '../version.txt');
