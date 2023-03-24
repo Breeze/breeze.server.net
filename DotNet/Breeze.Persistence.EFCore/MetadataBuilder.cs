@@ -23,13 +23,13 @@ namespace Breeze.Persistence.EFCore {
         .Select(et => CreateMetaType(et, dbSetMap)).ToList();
 
 
-      var complexTypes = dbContext.Model.GetEntityTypes()
-        .Where(et => et.IsOwned())
-        .Select(et => CreateMetaType(et, dbSetMap)).ToList();
       // Complex types show up once per parent reference and we need to reduce
       // this to just the unique types.
-      var complexTypesMap = complexTypes.ToDictionary(mt => mt.ShortName);
-      complexTypesMap.Values.ToList().ForEach(v => metadata.StructuralTypes.Insert(0, v));
+      var complexTypes = dbContext.Model.GetEntityTypes()
+        .Where(et => et.IsOwned())
+        .Select(et => CreateMetaType(et, dbSetMap))
+        .DistinctBy(et => et.ShortName).ToList();
+      complexTypes.ForEach(v => metadata.StructuralTypes.Insert(0, v));
 
       // Get the enums out of the model types
       var enums = dbContext.Model.GetEntityTypes()
