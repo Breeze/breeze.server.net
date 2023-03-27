@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -28,7 +29,11 @@ namespace Breeze.Persistence.EFCore {
       var complexTypes = dbContext.Model.GetEntityTypes()
         .Where(et => et.IsOwned())
         .Select(et => CreateMetaType(et, dbSetMap))
+#if NET6_0_OR_GREATER
         .DistinctBy(et => et.ShortName).ToList();
+#else
+        .Distinct(new MetaTypeEqualityComparer()).ToList();
+#endif
       complexTypes.ForEach(v => metadata.StructuralTypes.Insert(0, v));
 
       // Get the enums out of the model types
@@ -214,5 +219,15 @@ namespace Breeze.Persistence.EFCore {
 
   }
 
+#if !NET6_0_OR_GREATER
+  class MetaTypeEqualityComparer : IEqualityComparer<MetaType> {
+    public bool Equals(MetaType x, MetaType y) {
+      return x.ShortName == y.ShortName; 
+    }
 
+    public int GetHashCode([DisallowNull] MetaType obj) {
+      return obj.ShortName.GetHashCode(); 
+    }
+  }
+#endif
 }
