@@ -1,4 +1,5 @@
 
+using System;
 using Breeze.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -24,6 +25,7 @@ namespace Breeze.AspNetCore {
 
     /// <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
     public override void OnActionExecuted(ActionExecutedContext context) {
+      var cancellationToken = context.HttpContext.RequestAborted;
 
       // don't attempt to process queryable if we are throwing an error
       if (context.Result is IStatusCodeActionResult scar && scar.StatusCode >= 400) {
@@ -67,11 +69,26 @@ namespace Breeze.AspNetCore {
         // execute the DbQueries here, so that any exceptions thrown can be properly returned.
         // if we wait to have the query executed within the serializer, some exceptions will not
         // serialize properly.
-        var listResult = Enumerable.ToList((dynamic)queryable);
-        listResult = EntityQuery.AfterExecution(eq, queryable, listResult);
+        try {
+          var toListTask = queryable.Cast<dynamic>().ToListAsync(cancellationToken);
+          toListTask.Wait(cancellationToken);
+          if (toListTask.IsFaulted) {
+            if (toListTask.Exception is OperationCanceledException) {
+              var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
+              context.Result = new ObjectResult(emptyResult);
+            } else {
+              throw toListTask.Exception;
+            }
+          }
 
-        var qr = new QueryResult(listResult, inlineCount);
-        context.Result = new ObjectResult(qr);
+          var listResult = EntityQuery.AfterExecution(eq, queryable, toListTask.Result);
+
+          var qr = new QueryResult(listResult, inlineCount);
+          context.Result = new ObjectResult(qr);
+        } catch (OperationCanceledException) {
+          var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
+          context.Result = new ObjectResult(emptyResult);
+        }
       }
 
       base.OnActionExecuted(context);
