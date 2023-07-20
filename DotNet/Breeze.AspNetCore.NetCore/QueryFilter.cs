@@ -15,7 +15,10 @@ namespace Breeze.AspNetCore {
   /// See <see href="https://breeze.github.io/doc-net/webapi-controller-core#breezequeryfilterattribute"/>
   /// </remarks>
   public class BreezeQueryFilterAttribute : ActionFilterAttribute {
-
+    /// <summary>
+    /// If true, OperationCanceledExceptions will be caught and an empty result will be returned.
+    /// </summary>
+    public bool CatchCancellations { get; set; }
     /// <summary> Check if context.ModelState is valid </summary>
     public override void OnActionExecuting(ActionExecutingContext context) {
       if (!context.ModelState.IsValid) {
@@ -69,25 +72,33 @@ namespace Breeze.AspNetCore {
         // execute the DbQueries here, so that any exceptions thrown can be properly returned.
         // if we wait to have the query executed within the serializer, some exceptions will not
         // serialize properly.
-        try {
-          var toListTask = queryable.Cast<dynamic>().ToListAsync(cancellationToken);
-          toListTask.Wait(cancellationToken);
-          if (toListTask.IsFaulted) {
-            if (toListTask.Exception is OperationCanceledException) {
-              var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
-              context.Result = new ObjectResult(emptyResult);
-            } else {
-              throw toListTask.Exception;
+        if (CatchCancellations) {
+          try {
+            var toListTask = queryable.Cast<dynamic>().ToListAsync(cancellationToken);
+            toListTask.Wait(cancellationToken);
+            if (toListTask.IsFaulted) {
+              if (toListTask.Exception is OperationCanceledException) {
+                var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
+                context.Result = new ObjectResult(emptyResult);
+              } else {
+                throw toListTask.Exception;
+              }
             }
-          }
 
-          var listResult = EntityQuery.AfterExecution(eq, queryable, toListTask.Result);
+            var listResult = EntityQuery.AfterExecution(eq, queryable, toListTask.Result);
+
+            var qr = new QueryResult(listResult, inlineCount);
+            context.Result = new ObjectResult(qr);
+          } catch (OperationCanceledException) {
+            var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
+            context.Result = new ObjectResult(emptyResult);
+          }
+        } else {
+          var listResult = Enumerable.ToList((dynamic) queryable);
+          listResult = EntityQuery.AfterExecution(eq, queryable, listResult);
 
           var qr = new QueryResult(listResult, inlineCount);
           context.Result = new ObjectResult(qr);
-        } catch (OperationCanceledException) {
-          var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
-          context.Result = new ObjectResult(emptyResult);
         }
       }
 
