@@ -84,12 +84,12 @@ namespace Breeze.AspNetCore {
               } else {
                 throw toListTask.Exception;
               }
+            } else {
+              var listResult = EntityQuery.AfterExecution(eq, queryable, toListTask.Result);
+
+              var qr = new QueryResult(listResult, inlineCount);
+              context.Result = new ObjectResult(qr);
             }
-
-            var listResult = EntityQuery.AfterExecution(eq, queryable, toListTask.Result);
-
-            var qr = new QueryResult(listResult, inlineCount);
-            context.Result = new ObjectResult(qr);
           } catch (OperationCanceledException) {
             var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
             context.Result = new ObjectResult(emptyResult);
