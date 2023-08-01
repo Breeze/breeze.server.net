@@ -85,8 +85,8 @@ namespace Breeze.AspNetCore {
             executedContext.Result = new ObjectResult(emptyResult);
           }
         } else {
-          var listResult = Enumerable.ToList((dynamic) queryable);
-          listResult = EntityQuery.AfterExecution(eq, queryable, listResult);
+          var result = await queryable.Cast<dynamic>().ToListAsync(cancellationToken);
+          var listResult = EntityQuery.AfterExecution(eq, queryable, result);
 
           var qr = new QueryResult(listResult, inlineCount);
           executedContext.Result = new ObjectResult(qr);
