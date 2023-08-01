@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Linq;
 using Breeze.AspNetCore.NetCore;
+using System.Threading.Tasks;
 
 namespace Breeze.AspNetCore {
 
@@ -15,33 +16,31 @@ namespace Breeze.AspNetCore {
   /// <para></para>
   /// See <see href="https://breeze.github.io/doc-net/webapi-controller-core#breezequeryfilterattribute"/>
   /// </remarks>
-  public class BreezeQueryFilterAttribute : ActionFilterAttribute {
+  public class BreezeQueryFilterAttribute : Attribute, IAsyncActionFilter {
     /// <summary>
     /// If true, OperationCanceledExceptions will be caught and an empty result will be returned.
     /// </summary>
     public bool CatchCancellations { get; set; }
-    /// <summary> Check if context.ModelState is valid </summary>
-    public override void OnActionExecuting(ActionExecutingContext context) {
-      if (!context.ModelState.IsValid) {
-        context.Result = new BadRequestObjectResult(context.ModelState);
-      }
-    }
 
     /// <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
-    public override void OnActionExecuted(ActionExecutedContext context) {
-      var cancellationToken = context.HttpContext.RequestAborted;
+    public async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next) {
+      var cancellationToken = executingContext.HttpContext.RequestAborted;
+
+      if (!executingContext.ModelState.IsValid) {
+        executingContext.Result = new BadRequestObjectResult(executingContext.ModelState);
+      }
+
+      var executedContext = await next();
 
       // don't attempt to process queryable if we are throwing an error
-      if (context.Result is IStatusCodeActionResult scar && scar.StatusCode >= 400) {
-        base.OnActionExecuted(context);
+      if (executedContext.Result is IStatusCodeActionResult scar && scar.StatusCode >= 400) {
         return;
       }
 
-      var qs = QueryFns.ExtractAndDecodeQueryString(context);
-      var queryable = QueryFns.ExtractQueryable(context);
+      var qs = QueryFns.ExtractAndDecodeQueryString(executedContext);
+      var queryable = QueryFns.ExtractQueryable(executedContext);
 
       if (!EntityQuery.NeedsExecution(qs, queryable)) {
-        base.OnActionExecuted(context);
         return;
       }
 
@@ -75,36 +74,24 @@ namespace Breeze.AspNetCore {
         // serialize properly.
         if (CatchCancellations) {
           try {
-            var toListTask = queryable.Cast<dynamic>().ToListAsync(cancellationToken);
-            toListTask.Wait(cancellationToken);
-            if (toListTask.IsFaulted) {
-              if (toListTask.Exception is OperationCanceledException) {
-                var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
-                context.Result = new ObjectResult(emptyResult);
-              } else {
-                throw toListTask.Exception;
-              }
-            } else {
-              var listResult = EntityQuery.AfterExecution(eq, queryable, toListTask.Result);
+            var result = await queryable.Cast<dynamic>().ToListAsync(cancellationToken);
+            var listResult = EntityQuery.AfterExecution(eq, queryable, result);
 
-              var qr = new QueryResult(listResult, inlineCount);
-              context.Result = new ObjectResult(qr);
-            }
+            var qr = new QueryResult(listResult, inlineCount);
+            executedContext.Result = new ObjectResult(qr);
+
           } catch (OperationCanceledException) {
             var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
-            context.Result = new ObjectResult(emptyResult);
+            executedContext.Result = new ObjectResult(emptyResult);
           }
         } else {
           var listResult = Enumerable.ToList((dynamic) queryable);
           listResult = EntityQuery.AfterExecution(eq, queryable, listResult);
 
           var qr = new QueryResult(listResult, inlineCount);
-          context.Result = new ObjectResult(qr);
+          executedContext.Result = new ObjectResult(qr);
         }
       }
-
-      base.OnActionExecuted(context);
-
     }
   }
 
