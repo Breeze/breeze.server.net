@@ -150,9 +150,11 @@ namespace Breeze.Persistence.EFCore {
       dp.IsPartOfKey = p.IsPrimaryKey() ? true : (bool?)null;
       dp.IsIdentityColumn = p.IsPrimaryKey() && p.ValueGenerated == ValueGenerated.OnAdd;
       dp.MaxLength = p.GetMaxLength();
-      dp.DataType = NormalizeDataTypeName(p.ClrType);
       if (IsEnum(p.ClrType)) {
+        dp.DataType = NormalizeDataTypeName(typeof(int));
         dp.EnumType = NormalizeTypeName(TypeFns.GetNonNullableType(p.ClrType));
+      } else {
+        dp.DataType = NormalizeDataTypeName(p.ClrType);
       }
       dp.ConcurrencyMode = p.IsConcurrencyToken ? "Fixed" : null;
       var dfa = p.GetAnnotations().Where(a => a.Name == "DefaultValue").FirstOrDefault();
