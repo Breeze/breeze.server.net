@@ -39,10 +39,12 @@
             See <see href="https://breeze.github.io/doc-net/webapi-controller-core#breezequeryfilterattribute"/>
             </remarks>
         </member>
-        <member name="M:Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
-            <summary> Check if context.ModelState is valid </summary>
+        <member name="P:Breeze.AspNetCore.BreezeQueryFilterAttribute.CatchCancellations">
+            <summary>
+            If true, OperationCanceledExceptions will be caught and an empty result will be returned.
+            </summary>
         </member>
-        <member name="M:Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+        <member name="M:Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)">
             <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
         </member>
         <member name="T:Breeze.AspNetCore.QueryFns">

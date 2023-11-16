@@ -78,9 +78,9 @@ namespace Test.AspNetCore5.EFCore5 {
       var nwcf = Configuration.GetConnectionString("NorthwindIB_CF");
       var ptph = Configuration.GetConnectionString("ProduceTPH");
 #if EFCORE
-      services.AddDbContext<InheritanceContext>(options => options.UseSqlServer(inhe));
-      services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(nwcf));
-      services.AddDbContext<ProduceTPHContext>(options => options.UseSqlServer(ptph));
+      services.AddDbContext<InheritanceContext>(options => options.UseSqlServer(inhe, o => o.UseCompatibilityLevel(120)));
+      services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(nwcf, o => o.UseCompatibilityLevel(120)));
+      services.AddDbContext<ProduceTPHContext>(options => options.UseSqlServer(ptph, o => o.UseCompatibilityLevel(120)));
 #endif
 
 #if NHIBERNATE
