@@ -41,7 +41,7 @@ namespace Breeze.Core {
       if (enumType != null) { 
         if (Expr2Source != null) {
           var et = TypeFns.GetNonNullableType(enumType);
-          var expr2Enum = Enum.Parse(et, (String)Expr2Source);
+          var expr2Enum = Expr2Source is string ? Enum.Parse(et, (String)Expr2Source) : Enum.ToObject(et, Expr2Source);
           this._block2 = BaseBlock.CreateRHSBlock(expr2Enum, entityType, null);
         } else {
           this._block2 = BaseBlock.CreateRHSBlock(null, entityType, null);
