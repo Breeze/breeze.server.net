@@ -1,6 +1,6 @@
 # [Breeze](http://breeze.github.io/doc-main/) Data Management for [.NET Servers](http://breeze.github.io/doc-net/)
 
-**Breeze** is a library that helps you manage data in rich client applications. If you store data in a database, query and save those data as complex object graphs, and share these graphs across multiple screens of your JavaScript or C# client, Breeze is for you.
+**Breeze** is a library from [IdeaBlade](https://www.ideablade.com/) that helps you manage data in rich client applications. If you store data in a database, query and save those data as complex object graphs, and share these graphs across multiple screens of your JavaScript or C# client, Breeze is for you.
 
 Client-side querying, caching, dynamic object graphs, change tracking and notification, model validation, batch save, offline … all part of rich data management with Breeze.  Breeze clients communicate with any remote service that speaks HTTP and JSON.
 
@@ -17,9 +17,9 @@ Client-side querying, caching, dynamic object graphs, change tracking and notifi
 
 ### .NET Core
 
-For .NET Core (2 through 7) and Entity Framework Core (2 through 7), find the following packages in NuGet.
+For .NET Core (2 through 8) and Entity Framework Core (2 through 8), find the following packages in NuGet.
 
-> Note: Version 7.1 or later of each package is for .NET 5, 6, and 7, whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+> Note: Version 7.1 or later of each package is for .NET 5, 6, 7, and 8, whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
 
 - [Breeze.AspNetCore.NetCore](https://www.nuget.org/packages/Breeze.AspNetCore.NetCore/)
 - [Breeze.Persistence.EFCore](https://www.nuget.org/packages/Breeze.Persistence.EFCore/) (support for EF Core)
@@ -48,6 +48,17 @@ See the [TempHire](https://github.com/Breeze/temphire.angular) application for a
 ## Sources
 
 The sources for this package are in the [breeze.server.net](https://github.com/Breeze/breeze.server.net) repo.  Please file issues and pull requests against that repo.
+
+Source directories:
+
+ - [AspNet](./AspNet/) - Support for .NET Framework up to 4.8
+ - [AspNetCore-v3](./AspNetCore-v3/) - Support for .NET Core 3.1
+ - [AspNetCore](./AspNetCore/) - Support for .NET Core 2
+ - [DotNet](./DotNet/) - Support for .NET 5+
+ - [Old](./Old/) - Old code related to initial Core support
+ - [Tests](./Tests/) - Test projects for running the client-driven test suite.  Latest test projects are in [Tests/Test.AspNetCore.EFCore](./Tests/Test.AspNetCore.EFCore/).
+ - [build](./build/) - Build scripts for .NET Framework and .NET Core up to 3.1.  Build tools for .NET 5 and above are in [DotNet/tools](./DotNet/tools/).
+
 
 ## Upgrading from .NET Framework to Core
 

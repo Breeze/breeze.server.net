@@ -6,7 +6,8 @@ var del = require('del');
 const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
-const version = '7.2.1';
+const userNugetCacheDir = process.env.USERPROFILE + '\\.nuget\\packages';
+const version = '7.2.2';
 const debugOrRelease = 'Release';
 
 var baseNames = [
@@ -68,7 +69,13 @@ function getNupkgs(baseNames) {
 
 function deleteLocalAppCache(baseNames) {
   baseNames.forEach(baseName => {
-    const cacheDir = localNugetCacheDir + '\\' + baseName;
+    let cacheDir = localNugetCacheDir + '\\' + baseName;
+    console.log(cacheDir);
+    if (fs.existsSync(cacheDir)) {
+      console.log('Deleting: ' + cacheDir)
+      del(cacheDir, { force: true} );
+    }
+    cacheDir = userNugetCacheDir + '\\' + baseName;
     console.log(cacheDir);
     if (fs.existsSync(cacheDir)) {
       console.log('Deleting: ' + cacheDir)

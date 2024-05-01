@@ -16,18 +16,19 @@ namespace Breeze.AspNetCore {
   /// <para></para>
   /// See <see href="https://breeze.github.io/doc-net/webapi-controller-core#breezequeryfilterattribute"/>
   /// </remarks>
-  public class BreezeQueryFilterAttribute : Attribute, IAsyncActionFilter {
+  public class BreezeQueryFilterAttribute : ActionFilterAttribute, IAsyncActionFilter {
     /// <summary>
     /// If true, OperationCanceledExceptions will be caught and an empty result will be returned.
     /// </summary>
     public bool CatchCancellations { get; set; }
 
     /// <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
-    public async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next) {
+    override public async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next) {
       var cancellationToken = executingContext.HttpContext.RequestAborted;
 
       if (!executingContext.ModelState.IsValid) {
         executingContext.Result = new BadRequestObjectResult(executingContext.ModelState);
+        return;
       }
 
       var executedContext = await next();
