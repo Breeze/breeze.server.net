@@ -51,7 +51,11 @@ namespace Breeze.Persistence.EFCore {
           }
 
           string[] enumNames = Enum.GetNames(realType);
-          int[] enumOrds = Enum.GetValues(realType) as int[];
+#if NET7_0_OR_GREATER
+          Array enumOrds = BreezeConfig.Instance.UseIntEnums ? Enum.GetValuesAsUnderlyingType(realType) : enumNames;
+#else
+          Array enumOrds = BreezeConfig.Instance.UseIntEnums ? Enum.GetValues(realType).Cast<int>().ToArray<int>() : enumNames;
+#endif
           var et = new MetaEnum {
             ShortName = realType.Name,
             Namespace = realType.Namespace,
@@ -151,7 +155,11 @@ namespace Breeze.Persistence.EFCore {
       dp.IsIdentityColumn = p.IsPrimaryKey() && p.ValueGenerated == ValueGenerated.OnAdd;
       dp.MaxLength = p.GetMaxLength();
       if (IsEnum(p.ClrType)) {
-        dp.DataType = NormalizeDataTypeName(typeof(int));
+        if (BreezeConfig.Instance.UseIntEnums) {
+          dp.DataType = NormalizeDataTypeName(typeof(int));
+        } else {
+          dp.DataType = NormalizeDataTypeName(typeof(string));
+        }
         dp.EnumType = NormalizeTypeName(TypeFns.GetNonNullableType(p.ClrType));
       } else {
         dp.DataType = NormalizeDataTypeName(p.ClrType);

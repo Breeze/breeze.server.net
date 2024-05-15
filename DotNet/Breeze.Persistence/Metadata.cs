@@ -24,8 +24,8 @@ namespace Breeze.Persistence {
     public string Namespace { get; set; }
     /// <summary> String values of the enum </summary>
     public string[] Values { get; set; }
-    /// <summary> Int values of the enum </summary>
-    public int[] Ordinals { get; set; }
+    /// <summary> Int or string values of the enum </summary>
+    public Array Ordinals { get; set; }
   }
 
   /// <summary> EntityType or ComplexType </summary>

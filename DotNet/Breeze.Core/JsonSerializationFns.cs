@@ -1,11 +1,25 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Runtime.Serialization.Formatters;
+using Newtonsoft.Json.Serialization;
 
 namespace Breeze.Core {
+  /// <summary> Static functions related to JSON serialization </summary>
   public static class JsonSerializationFns {
 
-    public static JsonSerializerSettings UpdateWithDefaults(JsonSerializerSettings ss) {
+    /// <summary> Set the NewtonSoftJson settings for Breeze serialization of entities.
+    /// This ensures that the Breeze client can correctly identify and parse entities from the server. </summary>
+    /// <param name="ss">Initial settings, see example below.</param>
+    /// <param name="camelCasing">Whether to camelCase property names.  Default is false because this is normally handled on the client. </param>
+    /// <param name="useIntEnums">Whether to pass enum values as int instead of string.  Default is false (string) for backward compatibility.
+    /// See <see href="https://github.com/Breeze/breeze.server.net/issues/196" />
+    /// </param>
+    /// <example><code>
+    /// services.AddControllers().AddNewtonsoftJson(opt => {
+    ///   var ss = JsonSerializationFns.UpdateWithDefaults(opt.SerializerSettings, false, BreezeConfig.Instance.UseIntEnums);
+    ///   ss.SerializationBinder = new NoAnonSerializationBinder();
+    /// }
+    /// </code></example>
+    public static JsonSerializerSettings UpdateWithDefaults(JsonSerializerSettings ss, bool camelCasing = false, bool useIntEnums = false) {
       ss.NullValueHandling = NullValueHandling.Include;
       ss.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
       ss.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -31,9 +45,17 @@ namespace Breeze.Core {
 
       // Needed because JSON.NET does not natively support I8601 Duration formats for TimeSpan
       ss.Converters.Add(new TimeSpanConverter());
-      ss.Converters.Add(new StringEnumConverter());
+      if (!useIntEnums) {
+        ss.Converters.Add(new StringEnumConverter());
+      }
       // only needed because this functionality seems to be broken in JSON.NET 10.0.3
       ss.Converters.Add(new ByteArrayConverter());
+
+      if (!camelCasing) {
+        if (ss.ContractResolver is DefaultContractResolver resolver) {
+          resolver.NamingStrategy = null;  // remove json camelCasing; names are converted on the client.
+        }
+      }
 
       // Default is DateTimeZoneHandling.RoundtripKind - you can change that here.
       // ss.DateTimeZoneHandling = DateTimeZoneHandling.Utc;

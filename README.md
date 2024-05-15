@@ -51,13 +51,13 @@ The sources for this package are in the [breeze.server.net](https://github.com/B
 
 Source directories:
 
- - [AspNet](./AspNet/) - Support for .NET Framework up to 4.8
- - [AspNetCore-v3](./AspNetCore-v3/) - Support for .NET Core 3.1
- - [AspNetCore](./AspNetCore/) - Support for .NET Core 2
- - [DotNet](./DotNet/) - Support for .NET 5+
- - [Old](./Old/) - Old code related to initial Core support
- - [Tests](./Tests/) - Test projects for running the client-driven test suite.  Latest test projects are in [Tests/Test.AspNetCore.EFCore](./Tests/Test.AspNetCore.EFCore/).
- - [build](./build/) - Build scripts for .NET Framework and .NET Core up to 3.1.  Build tools for .NET 5 and above are in [DotNet/tools](./DotNet/tools/).
+ - [AspNet](https://github.com/Breeze/breeze.server.net/tree/master/AspNet/) - Support for .NET Framework up to 4.8
+ - [AspNetCore-v3](https://github.com/Breeze/breeze.server.net/tree/master/AspNetCore-v3/) - Support for .NET Core 3.1
+ - [AspNetCore](https://github.com/Breeze/breeze.server.net/tree/master/AspNetCore/) - Support for .NET Core 2
+ - [DotNet](https://github.com/Breeze/breeze.server.nettree/master//DotNet/) - Support for .NET 5+
+ - [Old](https://github.com/Breeze/breeze.server.net/tree/master/Old/) - Old code related to initial Core support
+ - [Tests](https://github.com/Breeze/breeze.server.net/tree/master/Tests/) - Test projects for running the client-driven test suite.  Latest test projects are in [Tests/Test.AspNetCore.EFCore](https://github.com/Breeze/breeze.server.net/tree/master/Tests/Test.AspNetCore.EFCore/).
+ - [build](https://github.com/Breeze/breeze.server.net/tree/master/build/) - Build scripts for .NET Framework and .NET Core up to 3.1.  Build tools for .NET 5 and above are in [DotNet/tools](https://github.com/Breeze/breeze.server.net/tree/master/DotNet/tools/).
 
 
 ## Upgrading from .NET Framework to Core

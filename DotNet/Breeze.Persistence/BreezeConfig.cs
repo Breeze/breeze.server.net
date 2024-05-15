@@ -66,6 +66,14 @@ namespace Breeze.Persistence {
       }
     }
 
+    private bool _useIntEnums;
+    /// <summary> Whether to serialize enum values as string (false) or int (true).
+    /// Default is false for backward compatibility.  Switch to true for more C#-like behavior and
+    /// see https://github.com/Breeze/breeze.server.net/issues/196 for guidance.
+    /// Set this value early in startup, because it affects JSON serialization settings and metadata generation.
+    /// </summary>
+    public virtual bool UseIntEnums { get => _useIntEnums; set => _useIntEnums = value; }
+
     static void CurrentDomain_AssemblyLoad(object sender, AssemblyLoadEventArgs args) {
       Interlocked.Increment(ref __assemblyLoadedCount);
     }
@@ -79,7 +87,7 @@ namespace Breeze.Persistence {
     protected virtual JsonSerializerSettings CreateJsonSerializerSettings() {
 
       var jsonSerializerSettings = new JsonSerializerSettings();
-      return JsonSerializationFns.UpdateWithDefaults(jsonSerializerSettings);
+      return JsonSerializationFns.UpdateWithDefaults(jsonSerializerSettings, false, BreezeConfig.Instance.UseIntEnums);
 
     }
 
