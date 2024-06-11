@@ -7,7 +7,7 @@
     "event-stream": "^3.1.7",
     "fs-extra": "^3.0.1",
     "glob": "^7.1.6",
-    "gulp": "^4.0.0",
+    "gulp": "^5.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-flatten": "0.0.4",
     "gulp-newer": "^1.4.0",
