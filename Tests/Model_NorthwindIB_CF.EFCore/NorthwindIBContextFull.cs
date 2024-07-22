@@ -1,3 +1,6 @@
+#define ETNOPAYLOAD
+// ^ indicates use of EmployeeTerritoryNoPayload table for many-to-many relationship. Comment out if you don't want to use it.
+
 using Foo;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -26,6 +29,10 @@ namespace Models.NorthwindIB.CF {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       modelBuilder.Entity<Comment>()
          .HasKey(c => new { c.CreatedOn, c.SeqNum });
+#if ETNOPAYLOAD
+      modelBuilder.Entity<EmployeeTerritory>()
+         .HasKey(c => new { c.EmployeeID, c.TerritoryID });
+#endif
       modelBuilder.Entity<OrderDetail>()
         .HasKey(od => new { od.OrderID, od.ProductID });
       modelBuilder.Entity<OrderDetail>().Property(od => od.OrderID).ValueGeneratedNever();
@@ -425,21 +432,24 @@ namespace Foo {
 
   }
 
-  #endregion Employee class
+    #endregion Employee class
 
-  #region EmployeeTerritory class
-
+    #region EmployeeTerritory class
+#if ETNOPAYLOAD
+  [Table("EmployeeTerritoryNoPayload", Schema = "dbo")]
+#else
   [Table("EmployeeTerritory", Schema = "dbo")]
-  public partial class EmployeeTerritory {
+#endif
+    public partial class EmployeeTerritory {
 
     #region Data Properties
-
+#if !ETNOPAYLOAD
     /// <summary>Gets or sets the ID. </summary>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("ID")]
     public int ID { get; set; }
-
+#endif
     /// <summary>Gets or sets the EmployeeID. </summary>
     [Column("EmployeeID")]
     public int EmployeeID { get; set; }
@@ -447,11 +457,11 @@ namespace Foo {
     /// <summary>Gets or sets the TerritoryID. </summary>
     [Column("TerritoryID")]
     public int TerritoryID { get; set; }
-
+#if !ETNOPAYLOAD
     /// <summary>Gets or sets the RowVersion. </summary>
     [Column("RowVersion")]
     public int RowVersion { get; set; }
-
+#endif
     #endregion Data Properties
 
     #region Navigation properties
@@ -469,7 +479,6 @@ namespace Foo {
     #endregion Navigation properties
 
   }
-
   #endregion EmployeeTerritory class
 
   #region Order class
