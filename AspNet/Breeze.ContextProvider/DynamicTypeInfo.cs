@@ -391,7 +391,7 @@ namespace Breeze.ContextProvider {
     /// <summary>
     /// Returns a hash encoded as a string with the chars (A-Z,A-z,0-9,_) only.
     /// Under the covers this method returns an 128 bit hash code calculated
-    /// using SHA1.  This code is then encoded into an approx Base64 encode
+    /// using SHA256.  This code is then encoded into an approx Base64 encode
     /// of the chars listed above.  This will usually be approx 28 chars in length,
     /// which may then be truncated based on the maxChars parameter. This
     /// method can process approx 100K 300 char strings a second.
@@ -402,7 +402,7 @@ namespace Breeze.ContextProvider {
     private static string CalcStringHash(string stringToHash, int maxChars) {
       //Unicode Encode Covering all characterset
       byte[] byteContents = Encoding.Unicode.GetBytes(stringToHash);
-      var provider = new System.Security.Cryptography.SHA1Managed();
+      var provider = new System.Security.Cryptography.SHA256Managed();
       byte[] hash = provider.ComputeHash(byteContents);
 
       string stringHash = Convert.ToBase64String(hash);
