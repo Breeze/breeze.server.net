@@ -1,32 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>7.1.1-beta-01</Version>
+		<Version>7.3.1-beta-01</Version>
 		<Description>Persistence for EF Core functionality for any Breeze Server using .NET.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
 
-Note: Version 7.1+ of this package is for .NET 5, 6, and 7; whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+Note: Version 7.1+ of this package is for .NET 5, 6, 7, and 8; whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
 		</Description>
-		<Copyright>Copyright © IdeaBlade 2012-2023</Copyright>
+		<Copyright>Copyright © IdeaBlade 2012-2024</Copyright>
 		<PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
 		<Authors>Jay Traband</Authors>
 		<Company>IdeaBlade</Company>
 		<PackageReleaseNotes>
-Note: Version 7.1+ of this package is for .NET 5, 6, and 7; whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+Note: Version 7.1+ of this package is for .NET 5, 6, 7, and 8; whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
 
 Please review the Breeze release notes at http://breeze.github.io/doc-net/release-notes.html
 		</PackageReleaseNotes>
 		<Product>Breeze Server - Persistence for EF Core Provider</Product>
-		<PackageTags>AspNetCore DotNetCore Net7 Net6 Net5 EFCore EntityFramework JavaScript Breeze BreezeJs</PackageTags>
+		<PackageTags>AspNetCore DotNetCore Net8 Net7 Net6 Net5 EFCore EntityFramework JavaScript Breeze BreezeJs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>7.1.0</AssemblyVersion>
-		<FileVersion>7.1.0</FileVersion>
+		<AssemblyVersion>7.3.0</AssemblyVersion>
+		<FileVersion>7.3.0</FileVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -45,6 +45,7 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.*" Condition="'$(TargetFramework)' == 'net5.0'" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.*" Condition="'$(TargetFramework)' == 'net6.0'" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.*" Condition="'$(TargetFramework)' == 'net7.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.*" Condition="'$(TargetFramework)' == 'net8.0'" />
   </ItemGroup>
 
 	<ItemGroup>

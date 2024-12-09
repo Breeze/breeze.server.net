@@ -17,6 +17,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Inheritance.Models;
 using Test.AspNetCore.Controllers;
+using Breeze.Persistence;
+
 
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -42,14 +44,10 @@ namespace Test.AspNetCore5.EFCore5 {
     public void ConfigureServices(IServiceCollection services) {
       services.AddMvc(option => option.EnableEndpointRouting = false);
       var mvcBuilder = services.AddMvc();
-      services.AddControllers().AddNewtonsoftJson();
+      // Tests use string enums
+      BreezeConfig.Instance.UseIntEnums = false;
       services.AddControllers().AddNewtonsoftJson(opt => {
-        var ss = JsonSerializationFns.UpdateWithDefaults(opt.SerializerSettings);
-        var resolver = ss.ContractResolver;
-        if (resolver != null) {
-          var res = resolver as DefaultContractResolver;
-          res.NamingStrategy = null;  // <<!-- this removes the camelcasing
-        }
+        var ss = JsonSerializationFns.UpdateWithDefaults(opt.SerializerSettings, false, BreezeConfig.Instance.UseIntEnums);
 
 #if NHIBERNATE
         // NHibernate settings
@@ -78,9 +76,15 @@ namespace Test.AspNetCore5.EFCore5 {
       var nwcf = Configuration.GetConnectionString("NorthwindIB_CF");
       var ptph = Configuration.GetConnectionString("ProduceTPH");
 #if EFCORE
+#if NET8_0_OR_GREATER
+      services.AddDbContext<InheritanceContext>(options => options.UseSqlServer(inhe, o => o.UseCompatibilityLevel(120)));
+      services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(nwcf, o => o.UseCompatibilityLevel(120)));
+      services.AddDbContext<ProduceTPHContext>(options => options.UseSqlServer(ptph, o => o.UseCompatibilityLevel(120)));
+#else
       services.AddDbContext<InheritanceContext>(options => options.UseSqlServer(inhe));
       services.AddDbContext<NorthwindIBContext_CF>(options => options.UseSqlServer(nwcf));
       services.AddDbContext<ProduceTPHContext>(options => options.UseSqlServer(ptph));
+#endif
 #endif
 
 #if NHIBERNATE
