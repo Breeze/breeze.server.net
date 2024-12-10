@@ -370,12 +370,14 @@ namespace Breeze.Persistence.EFCore {
       // Do NOT change this to EntityState.Modified because this will cause the entire record to update.
       entry.State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
 
+      // TODO: modify UpdateOriginalValues so that it mark as modified the changed properties of complex (aka owned)
+      //       entities. Once modified remove the call to MarkOwnedChildren below
       // updating the original values is necessary under certain conditions when we change a foreign key field
       // because the before value is used to determine ordering.
       UpdateOriginalValues(entry, entityInfo);
 
       // SetModified(entry, entityInfo.ForceUpdate);
-      MarkEntryAndOwnedChildren(entry, Microsoft.EntityFrameworkCore.EntityState.Modified);
+      MarkOwnedChildren(entry, Microsoft.EntityFrameworkCore.EntityState.Modified);
       
 
       return entry;
@@ -383,6 +385,10 @@ namespace Breeze.Persistence.EFCore {
 
     private void MarkEntryAndOwnedChildren(EntityEntry entry, Microsoft.EntityFrameworkCore.EntityState state ) {
       entry.State = state;
+      MarkOwnedChildren(entry, state);
+    }
+
+    private void MarkOwnedChildren(EntityEntry entry, Microsoft.EntityFrameworkCore.EntityState state ) {
 
       // Handle owned entities - ( complex types).
       var ownedNavs = entry.Navigations.Where(n => n.Metadata.TargetEntityType.IsOwned());

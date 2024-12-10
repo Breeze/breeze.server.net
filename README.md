@@ -83,6 +83,19 @@ The recent sources and solutions are in the [breeze.server.net](https://github.c
 
 Test solutions are in the **Tests/Test.AspNetCore.EFCore** folder.
 
+## Publishing Breeze to private mri nuget feed
+
+1. Merge feature branch into mri/master
+2. Update the Version attribute in the csproj file that is changing (eg DotNet/Breeze.Persistence.EFCore/Breeze.Persistence.EFCore.csproj)
+3. Commit and push mri/master branch
+4. Build, pack and publish sources:
+
+   ```bash
+   dotnet pack DotNet/Breeze.Persistence.EFCore/Breeze.Persistence.EFCore.csproj -c Release
+   # IMPORTANT: change n.n.n-beta-nn to match the Version attribute value in Breeze.Persistence.EFCore.csproj file
+   dotnet nuget push --source mrisoftware --api-key az --interactive DotNet/Breeze.Persistence.EFCore/bin/Release/Breeze.Persistence.EFCore.n.n.n-beta-nn.nupkg
+   ```
+
 ---
 
 If you have discovered a bug or missing feature, please create an issue in the [breeze.server.net github repo](https://github.com/Breeze/breeze.server.net).

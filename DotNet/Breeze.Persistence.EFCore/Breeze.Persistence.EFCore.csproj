@@ -6,7 +6,7 @@
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>7.3.0</Version>
+		<Version>7.3.1-beta-01</Version>
 		<Description>Persistence for EF Core functionality for any Breeze Server using .NET.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
 
