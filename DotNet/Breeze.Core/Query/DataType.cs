@@ -2,8 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Breeze.Core {
@@ -63,6 +61,23 @@ namespace Breeze.Core {
     public static DataType FromType(Type type) {
       var nnType = TypeFns.GetNonNullableType(type);
       return _typeMap[nnType];
+    }
+
+    /// <summary> Convert list to IList of itemType.  Handles case where itemType is enum and/or nullable. </summary>
+    public static IList CoerceList(IList list, Type itemType) {
+      var listType = typeof(List<>).MakeGenericType(new[] { itemType });
+      var newList = (IList)Activator.CreateInstance(listType);
+      var et = TypeFns.GetNonNullableType(itemType);
+      foreach (var item in list) {
+        if (et.IsEnum) {
+          var enumVal = item == null ? null : item is string ? Enum.Parse(et, (String)item) : Enum.ToObject(et, item);
+          newList.Add(enumVal);
+        } else {
+          var itemVal = item == null ? null : Convert.ChangeType(item, et);
+          newList.Add(itemVal);
+        }
+      }
+      return newList;
     }
 
     // Can't use this safely because of missing support for optional parts.

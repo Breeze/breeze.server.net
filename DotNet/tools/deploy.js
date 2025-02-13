@@ -1,5 +1,5 @@
  /**
- * Deploys nupkg to local cache dir for testing
+ * Deploys nupkg to local cache dir for testing.  Update version number to match assemblies before running.
  */
 var fs = require("fs-extra");
 var del = require('del');
@@ -7,7 +7,7 @@ const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
 const userNugetCacheDir = process.env.USERPROFILE + '\\.nuget\\packages';
-const version = '7.3.0';
+const version = '7.3.1';
 const debugOrRelease = 'Release';
 
 var baseNames = [

@@ -12,6 +12,10 @@ delete from [Order] where OrderID > 12000
 go
 update [Order] set CustomerID = 'FBCF888C-7EE3-4B00-980E-373CE8B7817D' where ShipName = 'Wartian Herkku'
 go
+delete from EmployeeTerritory where EmployeeID > 10
+go
+delete from EmployeeTerritoryNoPayload where EmployeeID > 10
+go
 delete from Employee where EmployeeID > 10
 go
 delete from Customer where CompanyName like 'Test%' or CompanyName like '''%' or CompanyName like 'error%'

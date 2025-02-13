@@ -2,9 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Breeze.Core {
   /**
@@ -41,13 +39,26 @@ namespace Breeze.Core {
       if (enumType != null) { 
         if (Expr2Source != null) {
           var et = TypeFns.GetNonNullableType(enumType);
-          var expr2Enum = Expr2Source is string ? Enum.Parse(et, (String)Expr2Source) : Enum.ToObject(et, Expr2Source);
-          this._block2 = BaseBlock.CreateRHSBlock(expr2Enum, entityType, null);
+          if (Expr2Source is IList) {
+            // coerce to list of enum
+            var list = DataType.CoerceList((IList)Expr2Source, enumType);
+            this._block2 = new LitBlock(list, null);
+          } else {
+            var expr2Enum = Expr2Source is string ? Enum.Parse(et, (String)Expr2Source) : Enum.ToObject(et, Expr2Source);
+            this._block2 = BaseBlock.CreateRHSBlock(expr2Enum, entityType, null);
+          }
         } else {
           this._block2 = BaseBlock.CreateRHSBlock(null, entityType, null);
         }
       } else {
-        this._block2 = BaseBlock.CreateRHSBlock(Expr2Source, entityType, this._block1.DataType);
+        if (Expr2Source is IList) {
+          // coerce to list of (potentially nullable) types
+          var propType = (this._block1 is PropBlock pb) ? pb.Property.ReturnType : this._block1.DataType.GetUnderlyingType();
+          var list = DataType.CoerceList((IList)Expr2Source, propType);
+          this._block2 = new LitBlock(list, null);
+        } else {
+          this._block2 = BaseBlock.CreateRHSBlock(Expr2Source, entityType, this._block1.DataType);
+        }
       }
     }
 
@@ -73,8 +84,8 @@ namespace Breeze.Core {
     private Expression BuildBinaryExpr(Expression expr1, Expression expr2, Operator op) {
 
       if (expr1.Type != expr2.Type) {
-        
-        if (TypeFns.IsNullableType(expr1.Type) && !TypeFns.IsNullableType(expr2.Type)) {
+        // don't try to convert if operator is In, because then expr2 is IList
+        if (TypeFns.IsNullableType(expr1.Type) && !TypeFns.IsNullableType(expr2.Type) && op != BinaryOperator.In) {
           if (!expr2.Type.IsEnum) {
             expr2 = Expression.Convert(expr2, expr1.Type);
           } else {
