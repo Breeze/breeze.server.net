@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-// only needed because this functionality seems to be broken in JSON.NET 10.0.3
 namespace Breeze.Core {
+  /// <summary> only needed because this functionality seems to be broken in JSON.NET 10.0.3 </summary>
   public class ByteArrayConverter : JsonConverter {
     public override bool CanConvert(Type objectType) {
       return objectType == typeof(byte[]);

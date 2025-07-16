@@ -1,8 +1,10 @@
 using Breeze.Core;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -34,8 +36,14 @@ namespace Breeze.AspNetCore {
       return queryable;
     }
 
-    /// <summary> Get the query string from the HttpRequest </summary>
-    public static string ExtractAndDecodeQueryString(ActionContext context) {
+    /// <summary> Get the query string OR request body from the HttpRequest </summary>
+    /// <param name="context">Contains HttpContext</param>
+    /// <param name="usePost">If true and request is POST, then attempt to extract the Breeze query from the request body.</param>
+    public static string ExtractAndDecodeQueryString(ActionContext context, bool usePost = false) {
+      if (usePost && context.HttpContext.Request.Method == WebRequestMethods.Http.Post) {
+        var bqs = ExtractRequestBody(context);
+        if (bqs != null) { return bqs; }
+      }
       var qs = context.HttpContext.Request.QueryString;
       var q = WebUtility.UrlDecode(qs.Value);
       if (q.Length == 0) {
@@ -59,6 +67,21 @@ namespace Breeze.AspNetCore {
       return q;
     }
 
+    /// <summary> Get the request body from the HttpRequest </summary>
+    public static string ExtractRequestBody(ActionContext context) {
+      var request = context.HttpContext.Request;
+
+      // Allow synchronous read of body; should be non-blocking if body < 30kb
+      var syncIOFeature = request.HttpContext.Features.Get<IHttpBodyControlFeature>();
+      if (syncIOFeature != null) {
+        syncIOFeature.AllowSynchronousIO = true;
+      }
+
+      var body = new StreamReader(request.Body).ReadToEnd();
+      if (string.IsNullOrWhiteSpace(body) || body.Length < 5) { return null; }
+      return body;
+    }
+
     /// <summary> Apply the Where, Order, Skip, and Take predicates from the request's query string to the IQueryable </summary>
     /// <remarks><example> Example: Apply query filtering, then aggregate the results.
     /// <code>
@@ -71,7 +94,7 @@ namespace Breeze.AspNetCore {
     /// </code></example></remarks>
     public static IQueryable<T> ApplyBreezeQuery<T>(ActionContext context, IQueryable<T> queryable) {
       // Build Breeze EntityQuery from string parameters
-      var qs = QueryFns.ExtractAndDecodeQueryString(context);
+      var qs = QueryFns.ExtractAndDecodeQueryString(context, true);
       var eq = new EntityQuery(qs);
       eq.Validate(typeof(T));
 
@@ -84,7 +107,7 @@ namespace Breeze.AspNetCore {
       return queryable;
     }
 
-    /// <summary> Apply the Where, Order, Skip, and Take predicates from the request's query string to the IQueryable </summary>
+    /// <summary> Apply the Where, Order, Skip, and Take predicates from the request's query string (or POST body) to the IQueryable </summary>
     /// <remarks><example> Example: Apply query filtering, then aggregate the results.
     /// <code>
     /// // Apply EntityQuery from client to filter the IQueryable before aggregation
@@ -98,7 +121,7 @@ namespace Breeze.AspNetCore {
       return ApplyBreezeQuery(controller.ControllerContext, queryable);
     }
 
-    /// <summary> Apply the Where predicate from the request's query string to the IQueryable </summary>
+    /// <summary> Apply the Where predicate from the request's query string (or POST body) to the IQueryable </summary>
     /// <remarks><example> Example: Apply query Where clause, then aggregate the results.
     /// <code>
     /// // Apply Where clause from client to filter the IQueryable before aggregation
@@ -110,7 +133,7 @@ namespace Breeze.AspNetCore {
     /// </code></example></remarks>
     public static IQueryable<T> ApplyBreezeWhere<T>(ActionContext context, IQueryable<T> queryable) {
       // Build Breeze EntityQuery from string parameters
-      var qs = QueryFns.ExtractAndDecodeQueryString(context);
+      var qs = QueryFns.ExtractAndDecodeQueryString(context, true);
       var eq = new EntityQuery(qs);
       eq.Validate(typeof(T));
 
@@ -119,7 +142,7 @@ namespace Breeze.AspNetCore {
       return queryable;
     }
 
-    /// <summary> Apply the Where predicate from the request's query string to the IQueryable </summary>
+    /// <summary> Apply the Where predicate from the request's query string (or POST body) to the IQueryable </summary>
     /// <remarks><example> Example: Apply query filtering, then aggregate the results.
     /// <code>
     /// // Apply Where clause from client to filter the IQueryable before aggregation

@@ -11,9 +11,9 @@ Please review the Breeze documentation at http://breeze.github.io/doc-main/
 
 ${versionblurb}
 		</Description>
-		<Copyright>Copyright © IdeaBlade 2012-2024</Copyright>
+		<Copyright>Copyright © IdeaBlade 2012-2025</Copyright>
 		<PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
-		<Authors>Jay Traband</Authors>
+		<Authors>Jay Traband, IdeaBlade</Authors>
 		<Company>IdeaBlade</Company>
 		<PackageReleaseNotes>
 ${versionblurb}

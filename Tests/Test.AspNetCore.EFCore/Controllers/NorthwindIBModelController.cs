@@ -292,8 +292,9 @@ namespace Test.AspNetCore.Controllers {
 
 #region standard queries
 
-    [HttpGet]
     //    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
+    [BreezeQueryFilter(UsePost = true)]
+    [HttpGet, HttpPost]
     public IQueryable<Customer> Customers() {
       var q = PersistenceManager.Context.Customers;
       // For testing expression trees
@@ -330,6 +331,11 @@ namespace Test.AspNetCore.Controllers {
     [HttpGet]
     public IQueryable<Region> Regions() {
       return PersistenceManager.Context.Regions;
+    }
+
+    [HttpGet]
+    public IQueryable<EmployeeTerritory> EmployeeTerritories() {
+      return PersistenceManager.Context.EmployeeTerritories;
     }
 
     [HttpGet]
@@ -419,6 +425,11 @@ namespace Test.AspNetCore.Controllers {
     // [EnableBreezeQuery]
     public IEnumerable<Employee> EnumerableEmployees() {
       return PersistenceManager.Context.Employees.ToList();
+    }
+
+    [HttpGet]
+    public IQueryable<Employee> EmployeesNoTracking() {
+      return PersistenceManager.Context.Employees.AsNoTracking();
     }
 
     [HttpGet]
