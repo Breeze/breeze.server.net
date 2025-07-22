@@ -5,7 +5,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<IsPackable>true</IsPackable>
-		<Version>7.4.0</Version>
+		<Version>7.4.1</Version>
 		<Description>Basic Persistence functionality for any Breeze Server using .NET.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
 
@@ -25,8 +25,8 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>7.4.0</AssemblyVersion>
-		<FileVersion>7.4.0</FileVersion>
+		<AssemblyVersion>7.4.1</AssemblyVersion>
+		<FileVersion>7.4.1</FileVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

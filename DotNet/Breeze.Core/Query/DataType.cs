@@ -68,12 +68,15 @@ namespace Breeze.Core {
       var listType = typeof(List<>).MakeGenericType(new[] { itemType });
       var newList = (IList)Activator.CreateInstance(listType);
       var et = TypeFns.GetNonNullableType(itemType);
-      foreach (var item in list) {
-        if (et.IsEnum) {
+      if (et.IsEnum) {
+        foreach (var item in list) {
           var enumVal = item == null ? null : item is string ? Enum.Parse(et, (String)item) : Enum.ToObject(et, item);
           newList.Add(enumVal);
-        } else {
-          var itemVal = item == null ? null : Convert.ChangeType(item, et);
+        }
+      } else {
+        var dataType = DataType.FromType(et);
+        foreach (var item in list) {
+          var itemVal = item == null ? null : CoerceData(item, dataType);
           newList.Add(itemVal);
         }
       }
@@ -83,20 +86,14 @@ namespace Breeze.Core {
     // Can't use this safely because of missing support for optional parts.
     // private static DateFormat ISO8601_Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
+    /// <summary> Convert value to an object of the dataType </summary>
     public static Object CoerceData(Object value, DataType dataType) {
 
       if (value == null || dataType == null || value.GetType() == dataType.GetUnderlyingType()) {
         return value;
-      } else if (value is IList) {
+      } else if (value is IList ilist) {
         // this occurs with an 'In' clause
-        var itemType = dataType.GetUnderlyingType();
-        var listType = typeof(List<>).MakeGenericType(new[] { itemType });
-        var newList = (IList)Activator.CreateInstance(listType);
-        foreach (var item in value as IList) {
-          newList.Add(CoerceData(item, dataType));
-        }
-        return newList;
-
+        return CoerceList(ilist, dataType.GetUnderlyingType());
       } else if (dataType == DataType.Guid) {
         return System.Guid.Parse(value.ToString());
       } else if (dataType == DataType.DateTimeOffset && value is DateTime) {
