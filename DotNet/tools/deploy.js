@@ -7,7 +7,7 @@ const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
 const userNugetCacheDir = process.env.USERPROFILE + '\\.nuget\\packages';
-const version = '7.4.1';
+const version = '7.4.2';
 const debugOrRelease = 'Release';
 
 var baseNames = [

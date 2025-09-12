@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,18 +15,18 @@
   <ItemGroup>
     <PackageReference Include="Breeze.AspNetCore.NetCore" Version="7.4.2" />
     <PackageReference Include="Breeze.Persistence.EFCore" Version="7.4.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.*">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.*">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Model_Inheritance.EFCore\Model_Inheritance.EFCore8.csproj" />
-    <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore\Model_NorthwindIB_CF.EFCore8.csproj" />
-    <ProjectReference Include="..\Model_ProduceTPH_CF.EFCore\Model_ProduceTPH_CF.EFCore8.csproj" />
+    <ProjectReference Include="..\Model_Inheritance.EFCore\Model_Inheritance.EFCore9.csproj" />
+    <ProjectReference Include="..\Model_NorthwindIB_CF.EFCore\Model_NorthwindIB_CF.EFCore9.csproj" />
+    <ProjectReference Include="..\Model_ProduceTPH_CF.EFCore\Model_ProduceTPH_CF.EFCore9.csproj" />
   </ItemGroup>
 
   <ItemGroup>
