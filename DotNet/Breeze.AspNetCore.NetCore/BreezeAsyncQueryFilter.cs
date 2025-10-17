@@ -28,6 +28,15 @@ namespace Breeze.AspNetCore {
     /// If the request body has already been read (for example, due to model binding), it will need to be rewound before the filter can read it. </remarks>
     public bool UsePost { get; set; }
 
+    /// <summary> Sets max depth for Select and Expand clauses.
+    /// Set to 0 to disallow Selects and Expands requested by the client.
+    /// Set to null (the default) to allow unlimited depth.<br/>
+    /// Returns 400 Bad Request if MaxDepth is violated. <br/>
+    /// MaxDepth = 1 on IQueryable&lt;Customer&gt; will allow Expand = "Orders" but not "Orders.OrderDetails" <br/>
+    /// MaxDepth = 0 on IQueryable&lt;Customer&gt; will allow Select = "Name" but not Select = "Orders" or Expand = "Orders"
+    /// </summary>
+    public int? MaxDepth { get; set; }
+
     /// <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
     override public async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next) {
 
@@ -44,6 +53,12 @@ namespace Breeze.AspNetCore {
         return;
       }
 
+      // don't process queryable if flag has been set for this request
+      if (QueryFns.IsSkipBreezeQueryFilter(executedContext)) {
+        base.OnActionExecuted(executedContext);
+        return;
+      }
+
       var qs = QueryFns.ExtractAndDecodeQueryString(executedContext, UsePost);
       var queryable = QueryFns.ExtractQueryable(executedContext);
 
@@ -56,13 +71,19 @@ namespace Breeze.AspNetCore {
       var eleType = TypeFns.GetElementType(queryable.GetType());
       eq.Validate(eleType);
 
+      var msg = BreezeQueryFilterAttribute.CheckMaxDepth(eq, MaxDepth);
+      if (msg != null) {
+        executedContext.Result = new BadRequestObjectResult(msg);
+        return;
+      }
+
       var originalQueryable = queryable;
       queryable = eq.ApplyWhere(queryable, eleType);
 
       try {
         int? inlineCount = null;
         if (eq.IsInlineCountEnabled) {
-          inlineCount = await queryable.Cast<dynamic>().CountAsync(executingContext.HttpContext.RequestAborted);
+          inlineCount = await queryable.Cast<dynamic>().CountAsync(executedContext.HttpContext.RequestAborted);
         }
 
         queryable = EntityQuery.ApplyCustomLogic(eq, queryable, eleType);
@@ -77,7 +98,7 @@ namespace Breeze.AspNetCore {
           // execute the DbQueries here, so that any exceptions thrown can be properly returned.
           // if we wait to have the query executed within the serializer, some exceptions will not
           // serialize properly.
-          var result = await queryable.Cast<dynamic>().ToListAsync(executingContext.HttpContext.RequestAborted);
+          var result = await queryable.Cast<dynamic>().ToListAsync(executedContext.HttpContext.RequestAborted);
           var listResult = EntityQuery.AfterExecution(eq, queryable, result);
 
           var qr = new QueryResult(listResult, inlineCount);

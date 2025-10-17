@@ -1,12 +1,8 @@
-
-using Breeze.AspNetCore.NetCore;
 using Breeze.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Breeze.AspNetCore {
 
@@ -24,6 +20,15 @@ namespace Breeze.AspNetCore {
     /// If the request body has already been read (for example, due to model binding), it will need to be rewound before the filter can read it. </remarks>
     public bool UsePost { get; set; }
 
+    /// <summary> Sets max depth for Select and Expand clauses.
+    /// Set to 0 to disallow Selects and Expands requested by the client.
+    /// Set to null (the default) to allow unlimited depth.<br/>
+    /// Returns 400 Bad Request if MaxDepth is violated. <br/>
+    /// MaxDepth = 1 on IQueryable&lt;Customer&gt; will allow Expand = "Orders" but not "Orders.OrderDetails" <br/>
+    /// MaxDepth = 0 on IQueryable&lt;Customer&gt; will allow Select = "Name" but not Select = "Orders" or Expand = "Orders"
+    /// </summary>
+    public int? MaxDepth { get; set; }
+
     /// <summary> Check if context.ModelState is valid </summary>
     public override void OnActionExecuting(ActionExecutingContext context) {
       if (!context.ModelState.IsValid) {
@@ -40,6 +45,12 @@ namespace Breeze.AspNetCore {
         return;
       }
 
+      // don't process queryable if flag has been set for this request
+      if (QueryFns.IsSkipBreezeQueryFilter(context)) {
+        base.OnActionExecuted(context);
+        return;
+      }
+
       var qs = QueryFns.ExtractAndDecodeQueryString(context, UsePost);
       var queryable = QueryFns.ExtractQueryable(context);
 
@@ -51,6 +62,12 @@ namespace Breeze.AspNetCore {
       var eq = new EntityQuery(qs);
       var eleType = TypeFns.GetElementType(queryable.GetType());
       eq.Validate(eleType);
+
+      var msg = CheckMaxDepth(eq, MaxDepth);
+      if (msg != null) {
+        context.Result = new BadRequestObjectResult(msg);
+        return;
+      }
 
       var originalQueryable = queryable;
       queryable = eq.ApplyWhere(queryable, eleType);
@@ -93,6 +110,32 @@ namespace Breeze.AspNetCore {
     private ObjectResult GetEmptyResult() {
       var emptyResult = new QueryResult(Enumerable.Empty<dynamic>(), null);
       return new ObjectResult(emptyResult) { StatusCode = 499 };
+    }
+
+    /// <summary> Check select and expand to see if MaxDepth is exceeded </summary>
+    internal static string CheckMaxDepth(EntityQuery eq, int? maxDepth) {
+      if (maxDepth != null && eq.SelectClause != null) {
+        // check selects
+        foreach (var sp in eq.SelectClause.Properties) {
+          // okay to exceed the count by one, iff selecting a data property
+          if (sp.Properties.Count > maxDepth + 1 || (sp.Properties.Count == maxDepth + 1 && !sp.IsDataProperty)) {
+            return $"MaxDepth exceeded: {sp.PropertyPath}";
+          }
+        }
+      }
+
+      if (maxDepth != null && eq.ExpandClause != null) {
+        // check expands
+        foreach (var path in eq.ExpandClause.PropertyPaths) {
+          var sp = path.Split('/', '.');
+          // okay to exceed the count by one, iff selecting a data property
+          if (sp.Length > maxDepth) {
+            return $"MaxDepth exceeded: {path}";
+          }
+        }
+      }
+
+      return null;
     }
   }
 

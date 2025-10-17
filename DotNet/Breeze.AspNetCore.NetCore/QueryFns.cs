@@ -12,6 +12,8 @@ using System.Text.RegularExpressions;
 namespace Breeze.AspNetCore {
   /// <summary> Static utility functions for processing queries </summary>
   public static class QueryFns {
+    /// <summary> Flag on HttpContext.Items to indicate that BreezeQueryFilter processing should be skipped. </summary>
+    public static readonly string skipFlag = "SkipBreezeQueryFilter";
 
     /// <summary> Get the IQueryable from the context.Result </summary>
     public static IQueryable ExtractQueryable(ActionExecutedContext context, bool throwOnError = false) {
@@ -154,6 +156,22 @@ namespace Breeze.AspNetCore {
     /// </code></example></remarks>
     public static IQueryable<T> ApplyBreezeWhere<T>(this ControllerBase controller, IQueryable<T> queryable) {
       return ApplyBreezeWhere(controller.ControllerContext, queryable);
+    }
+
+    /// <summary> Set the flag to skip BreezeQueryFilter processing for this request. </summary>
+    public static void SkipBreezeQueryFilter(ActionContext context, bool skip = true) {
+      context.HttpContext.Items[skipFlag] = skip;
+    }
+
+    /// <summary> Set the flag to skip BreezeQueryFilter processing for this request. </summary>
+    public static void SkipBreezeQueryFilter(this ControllerBase controller, bool skip = true) {
+      SkipBreezeQueryFilter(controller.ControllerContext, skip);
+    }
+
+    /// <summary> Set the flag to skip BreezeQueryFilter processing for this request. </summary>
+    public static bool IsSkipBreezeQueryFilter(ActionContext context) {
+      var skip = context.HttpContext.Items[skipFlag];
+      return (skip is bool b) && (b == true);
     }
 
   }
