@@ -39,7 +39,7 @@ namespace TestBreeze {
       var filter = new BreezeQueryFilterAttribute();
       filter.OnActionExecuted(aec);
 
-      var rows = Util.AssertListResult<object>(aec.Result);
+      var rows = Util.AssertQueryResult<object>(aec.Result);
       Assert.IsTrue(rows.Count == 10);
       var row0 = (dynamic) rows[0];
       Assert.IsNotNull(row0);
@@ -61,7 +61,7 @@ namespace TestBreeze {
       var filter = new BreezeAsyncQueryFilterAttribute();
       await filter.OnActionExecutionAsync(Util.NewActionExecutingContext(), Util.GetNextDelegate(aec));
 
-      var rows = Util.AssertListResult<object>(aec.Result);
+      var rows = Util.AssertQueryResult<object>(aec.Result);
       Assert.IsTrue(rows.Count == 10);
       var row0 = (dynamic)rows[0];
       Assert.IsNotNull(row0);
@@ -82,7 +82,7 @@ namespace TestBreeze {
       var filter = new BreezeQueryFilterAttribute() { MaxDepth = 1 };
       filter.OnActionExecuted(aec);
 
-      var rows = Util.AssertListResult<object>(aec.Result);
+      var rows = Util.AssertQueryResult<object>(aec.Result);
       var row0 = (dynamic)rows[0];
       Assert.IsNotNull(row0);
       Assert.IsTrue(row0.ShipCity != null);
@@ -102,7 +102,7 @@ namespace TestBreeze {
       var filter = new BreezeAsyncQueryFilterAttribute() { MaxDepth = 1 };
       await filter.OnActionExecutionAsync(Util.NewActionExecutingContext(), Util.GetNextDelegate(aec));
 
-      var rows = Util.AssertListResult<object>(aec.Result);
+      var rows = Util.AssertQueryResult<object>(aec.Result);
       var row0 = (dynamic)rows[0];
       Assert.IsNotNull(row0);
       Assert.IsTrue(row0.ShipCity != null);
@@ -178,7 +178,7 @@ namespace TestBreeze {
       var filter = new BreezeQueryFilterAttribute() { MaxDepth = 2 };
       filter.OnActionExecuted(aec);
 
-      var rows = Util.AssertListResult<object>(aec.Result);
+      var rows = Util.AssertQueryResult<object>(aec.Result);
       var row0 = (dynamic)rows[0];
       Assert.IsNotNull(row0);
       Assert.IsTrue(row0.Order_ShipCity != null);
@@ -196,7 +196,7 @@ namespace TestBreeze {
       var filter = new BreezeAsyncQueryFilterAttribute() { MaxDepth = 2 };
       await filter.OnActionExecutionAsync(Util.NewActionExecutingContext(), Util.GetNextDelegate(aec));
 
-      var rows = Util.AssertListResult<object>(aec.Result);
+      var rows = Util.AssertQueryResult<object>(aec.Result);
       var row0 = (dynamic)rows[0];
       Assert.IsNotNull(row0);
       Assert.IsTrue(row0.Order_ShipCity != null);

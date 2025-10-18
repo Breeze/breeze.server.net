@@ -74,6 +74,14 @@ namespace Breeze.Persistence {
     /// </summary>
     public virtual bool UseIntEnums { get => _useIntEnums; set => _useIntEnums = value; }
 
+    private string _queryParamName;
+    /// <summary>
+    /// Name of query parameter for JSON query string.  Note that this must agree with what the client sends.<br/>
+    /// Default is null, which means no parameter -- the JSON starts at the question mark: <code>?{"take":5}</code><br/>
+    /// If non-null, then the JSON is the value of a named parameter.  E.g. if QueryParamName = "bq", then <code>?bq={"take":5}</code>
+    /// </summary>
+    public virtual string QueryParamName { get => _queryParamName; set => _queryParamName = value; }
+
     static void CurrentDomain_AssemblyLoad(object sender, AssemblyLoadEventArgs args) {
       Interlocked.Increment(ref __assemblyLoadedCount);
     }

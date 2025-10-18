@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Models.NorthwindIB.CF;
+using System.Net;
 
 namespace TestBreeze {
   public class Util {
@@ -114,11 +115,25 @@ namespace TestBreeze {
     /// <typeparam name="T">Entity type (e.g. Customer), or object for projections</typeparam>
     /// <param name="actionResult"></param>
     /// <returns>The list extracted from the result </returns>
-    public static List<T> AssertListResult<T>(IActionResult? actionResult) {
+    public static List<T> AssertQueryResult<T>(IActionResult? actionResult) {
       Assert.IsInstanceOfType<ObjectResult>(actionResult);
       var result = ((ObjectResult)actionResult).Value;
       Assert.IsInstanceOfType<QueryResult>(result);
       var rows = ((QueryResult)result).Results.Cast<T>().ToList();
+      return rows;
+    }
+
+    /// <summary>
+    /// Assert that actionResult contains an IEnumerable of T, and return it as a list.
+    /// </summary>
+    /// <typeparam name="T">Entity type (e.g. Customer), or object for projections</typeparam>
+    /// <param name="actionResult"></param>
+    /// <returns>The list extracted from the result </returns>
+    public static List<T> AssertListResult<T>(IActionResult? actionResult) {
+      Assert.IsInstanceOfType<ObjectResult>(actionResult);
+      var result = ((ObjectResult)actionResult).Value;
+      Assert.IsInstanceOfType<IEnumerable<T>>(result);
+      var rows = ((IEnumerable<T>)result).ToList();
       return rows;
     }
 

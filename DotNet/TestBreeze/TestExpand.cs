@@ -19,7 +19,7 @@ namespace TestBreeze {
       var filter = new BreezeQueryFilterAttribute();
       filter.OnActionExecuted(aec);
 
-      var rows = Util.AssertListResult<Customer>(aec.Result);
+      var rows = Util.AssertQueryResult<Customer>(aec.Result);
       var row0 = rows[0];
       Assert.IsTrue(row0.City != null);
       Assert.IsTrue(row0.Orders.Count > 0);
@@ -36,7 +36,7 @@ namespace TestBreeze {
       var filter = new BreezeAsyncQueryFilterAttribute();
       await filter.OnActionExecutionAsync(Util.NewActionExecutingContext(), Util.GetNextDelegate(aec));
 
-      var rows = Util.AssertListResult<Customer>(aec.Result);
+      var rows = Util.AssertQueryResult<Customer>(aec.Result);
       var row0 = rows[0];
       Assert.IsTrue(row0.City != null);
       Assert.IsTrue(row0.Orders.Count > 0);
@@ -53,7 +53,7 @@ namespace TestBreeze {
       var filter = new BreezeQueryFilterAttribute() { MaxDepth = 2 };
       filter.OnActionExecuted(aec);
 
-      var rows = Util.AssertListResult<Customer>(aec.Result);
+      var rows = Util.AssertQueryResult<Customer>(aec.Result);
       var row0 = rows[0];
       Assert.IsNotNull(row0);
       Assert.IsTrue(row0.Orders.Count > 0);
@@ -71,7 +71,7 @@ namespace TestBreeze {
       var filter = new BreezeAsyncQueryFilterAttribute() { MaxDepth = 2 };
       await filter.OnActionExecutionAsync(Util.NewActionExecutingContext(), Util.GetNextDelegate(aec));
 
-      var rows = Util.AssertListResult<Customer>(aec.Result);
+      var rows = Util.AssertQueryResult<Customer>(aec.Result);
       var row0 = rows[0];
       Assert.IsNotNull(row0);
       Assert.IsTrue(row0.Orders.Count > 0);

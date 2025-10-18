@@ -1,4 +1,5 @@
 using Breeze.Core;
+using Breeze.Persistence;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Breeze.AspNetCore {
   /// <summary> Static utility functions for processing queries </summary>
@@ -51,18 +53,27 @@ namespace Breeze.AspNetCore {
       if (q.Length == 0) {
         return null;
       }
-      // escape all & within quotes
-      var marker = "~`~";
-      // Next line not needed because quotes are always converted to double quotes on the server 
-      // q = Regex.Replace(q, @"&(?=[^']*'([^']*'[^']*')*[^']*$)", marker);
-      q = Regex.Replace(q, @"&(?=[^\""]*""([^""]*""[^""]*"")*[^""]*$)", marker);
-      var endIx = q.IndexOf('&');
-      if (endIx > 1) {
-        q = q.Substring(1, endIx - 1);
+      if (BreezeConfig.Instance.QueryParamName != null) {
+        var nvc = HttpUtility.ParseQueryString(qs.Value);
+        var ar = nvc.GetValues(BreezeConfig.Instance.QueryParamName);
+        q = ar != null && ar.Length > 0 ? ar[0] : null;
       } else {
-        q = q.Substring(1);
+        if (!q.StartsWith("?{")) {
+          return null;
+        }
+        // escape all & within quotes
+        var marker = "~`~";
+        // Next line not needed because quotes are always converted to double quotes on the server 
+        // q = Regex.Replace(q, @"&(?=[^']*'([^']*'[^']*')*[^']*$)", marker);
+        q = Regex.Replace(q, @"&(?=[^\""]*""([^""]*""[^""]*"")*[^""]*$)", marker);
+        var endIx = q.IndexOf('&');
+        if (endIx > 1) {
+          q = q.Substring(1, endIx - 1);
+        } else {
+          q = q.Substring(1);
+        }
+        q = q.Replace(marker, "&");
       }
-      q = q.Replace(marker, "&");
       if (q == "{}" || q == "") {
         return null;
       }
