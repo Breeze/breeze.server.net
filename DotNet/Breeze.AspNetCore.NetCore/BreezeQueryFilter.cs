@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Linq;
+using System.Security.AccessControl;
 
 namespace Breeze.AspNetCore {
 
@@ -20,14 +21,26 @@ namespace Breeze.AspNetCore {
     /// If the request body has already been read (for example, due to model binding), it will need to be rewound before the filter can read it. </remarks>
     public bool UsePost { get; set; }
 
-    /// <summary> Sets max depth for Select and Expand clauses.
-    /// Set to 0 to disallow Selects and Expands requested by the client.
-    /// Set to null (the default) to allow unlimited depth.<br/>
+    /// <summary> Sets max depth for Select and Expand clauses.<br/>
+    /// Set to 0 to disallow Selects and Expands requested by the client.<br/>
+    /// Set to -1 (the default) to allow unlimited depth.<br/>
     /// Returns 400 Bad Request if MaxDepth is violated. <br/>
     /// MaxDepth = 1 on IQueryable&lt;Customer&gt; will allow Expand = "Orders" but not "Orders.OrderDetails" <br/>
     /// MaxDepth = 0 on IQueryable&lt;Customer&gt; will allow Select = "Name" but not Select = "Orders" or Expand = "Orders"
     /// </summary>
-    public int? MaxDepth { get; set; }
+    public int MaxDepth { get; set; } = -1;
+
+    /// <summary> Sets max rows allowed; adds Take(MaxTake) to query if Take is unspecified or if Take > MaxTake.<br/>
+    /// Set to 100 to allow max of 100 rows on any query.<br/>
+    /// Set to -1 (the default) to allow unlimited rows.<br/>
+    /// Set to 0 to not return any rows (but why would you do that?).<br/>
+    /// NOTE: MaxTake does not affect Expand/Include subqueries
+    /// </summary><remarks>
+    /// MaxTake can be used to limit result size if the client accidently (or maliciously) does not apply any filtering.<br/>
+    /// MaxTake is not the same as adding a Take() clause in the controller method, because MaxTake is applied after any
+    /// Where and OrderBy provided in the request.
+    /// </remarks>
+    public int MaxTake { get; set; } = -1;
 
     /// <summary> Check if context.ModelState is valid </summary>
     public override void OnActionExecuting(ActionExecutingContext context) {
@@ -87,6 +100,7 @@ namespace Breeze.AspNetCore {
       queryable = eq.ApplyOrderBy(queryable, eleType);
       queryable = eq.ApplySkip(queryable, eleType);
       queryable = eq.ApplyTake(queryable, eleType);
+      queryable = ApplyMaxTake(queryable, eleType, MaxTake);
       queryable = eq.ApplySelect(queryable, eleType);
       queryable = EntityQuery.ApplyExpand(eq, queryable, eleType);
 
@@ -113,8 +127,8 @@ namespace Breeze.AspNetCore {
     }
 
     /// <summary> Check select and expand to see if MaxDepth is exceeded </summary>
-    internal static string CheckMaxDepth(EntityQuery eq, int? maxDepth) {
-      if (maxDepth != null && eq.SelectClause != null) {
+    internal static string CheckMaxDepth(EntityQuery eq, int maxDepth) {
+      if (maxDepth >= 0 && eq.SelectClause != null) {
         // check selects
         foreach (var sp in eq.SelectClause.Properties) {
           // okay to exceed the count by one, iff selecting a data property
@@ -124,7 +138,7 @@ namespace Breeze.AspNetCore {
         }
       }
 
-      if (maxDepth != null && eq.ExpandClause != null) {
+      if (maxDepth >= 0 && eq.ExpandClause != null) {
         // check expands
         foreach (var path in eq.ExpandClause.PropertyPaths) {
           var sp = path.Split('/', '.');
@@ -137,6 +151,18 @@ namespace Breeze.AspNetCore {
 
       return null;
     }
+
+    /// <summary> Check query and apply Take(maxTake) if needed. </summary>
+    internal static IQueryable ApplyMaxTake(IQueryable queryable, System.Type eleType, int maxTake) {
+      if (maxTake < 0) { return queryable; }
+      var curTake = EntityQueryExtensions.GetTakeValue(queryable);
+      if (curTake == null || curTake.Value > maxTake) {
+        queryable = QueryBuilder.ApplyTake(queryable, eleType, maxTake);
+      }
+      return queryable;
+    }
+
+
   }
 
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,6 +52,30 @@ namespace Breeze.Core {
         
       }
       return queryable;
+    }
+
+    /// <summary> Gets the minimum Take() value in the queryable Expression </summary>
+    public static int? GetTakeValue(IQueryable queryable) {
+      var visitor = new TakeFinder();
+      visitor.Visit(queryable.Expression);
+      return visitor.MinTake;
+    }
+  }
+
+
+  /// <summary> Sets MinTake to the minimum Take() value in the queryable Expression </summary>
+  public class TakeFinder : ExpressionVisitor {
+    public int? MinTake { get; private set; } = null;
+
+    protected override Expression VisitMethodCall(MethodCallExpression node) {
+      if (node.Method.DeclaringType == typeof(Queryable) && node.Method.Name == "Take") {
+        if (int.TryParse(node.Arguments.Last().ToString(), out int arg)) {
+          if (MinTake == null || MinTake > arg) {
+            MinTake = arg;
+          }
+        }
+      }
+      return base.VisitMethodCall(node);
     }
   }
 }

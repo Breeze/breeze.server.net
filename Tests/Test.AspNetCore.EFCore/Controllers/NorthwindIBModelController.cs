@@ -293,7 +293,7 @@ namespace Test.AspNetCore.Controllers {
 #region standard queries
 
     //    [EnableBreezeQuery(MaxAnyAllExpressionDepth = 3)]
-    [BreezeQueryFilter(UsePost = true)]
+    [BreezeQueryFilter(MaxDepth = 3, UsePost = true)]
     [HttpGet, HttpPost]
     public IQueryable<Customer> Customers() {
       var q = PersistenceManager.Context.Customers;
@@ -304,7 +304,14 @@ namespace Test.AspNetCore.Controllers {
 
     [HttpGet]
     //    [EnableBreezeQuery(MaxExpansionDepth = 3)]
+    [BreezeQueryFilter(MaxDepth = 3)]
     public IQueryable<Order> Orders() {
+      return PersistenceManager.Context.Orders;
+    }
+
+    [HttpGet]
+    [BreezeQueryFilter(MaxTake = 5)]
+    public IQueryable<Order> OrdersWithMaxTake() {
       return PersistenceManager.Context.Orders;
     }
 

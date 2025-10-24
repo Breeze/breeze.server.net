@@ -30,12 +30,24 @@ namespace Breeze.AspNetCore {
 
     /// <summary> Sets max depth for Select and Expand clauses.
     /// Set to 0 to disallow Selects and Expands requested by the client.
-    /// Set to null (the default) to allow unlimited depth.<br/>
+    /// Set to -1 (the default) to allow unlimited depth.<br/>
     /// Returns 400 Bad Request if MaxDepth is violated. <br/>
     /// MaxDepth = 1 on IQueryable&lt;Customer&gt; will allow Expand = "Orders" but not "Orders.OrderDetails" <br/>
     /// MaxDepth = 0 on IQueryable&lt;Customer&gt; will allow Select = "Name" but not Select = "Orders" or Expand = "Orders"
     /// </summary>
-    public int? MaxDepth { get; set; }
+    public int MaxDepth { get; set; } = -1;
+
+    /// <summary> Sets max rows allowed; adds Take(MaxTake) to query if Take is unspecified or if Take > MaxTake.<br/>
+    /// Set to 100 to allow max of 100 rows on any query.<br/>
+    /// Set to -1 (the default) to allow unlimited rows.<br/>
+    /// Set to 0 to not return any rows (but why would you do that?).<br/>
+    /// NOTE: MaxTake does not affect Expand/Include subqueries
+    /// </summary><remarks>
+    /// MaxTake can be used to limit result size if the client accidently (or maliciously) does not apply any filtering.<br/>
+    /// MaxTake is not the same as adding a Take() clause in the controller method, because MaxTake is applied after any
+    /// Where and OrderBy provided in the request.
+    /// </remarks>
+    public int MaxTake { get; set; } = -1;
 
     /// <summary> Extract the IQueryable from the context, apply the query, and execute it. </summary>
     override public async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next) {
@@ -90,6 +102,7 @@ namespace Breeze.AspNetCore {
         queryable = eq.ApplyOrderBy(queryable, eleType);
         queryable = eq.ApplySkip(queryable, eleType);
         queryable = eq.ApplyTake(queryable, eleType);
+        queryable = BreezeQueryFilterAttribute.ApplyMaxTake(queryable, eleType, MaxTake);
         queryable = eq.ApplySelect(queryable, eleType);
         queryable = EntityQuery.ApplyExpand(eq, queryable, eleType);
 
