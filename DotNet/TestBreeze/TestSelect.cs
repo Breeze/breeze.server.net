@@ -203,5 +203,43 @@ namespace TestBreeze {
       Assert.IsTrue(row0.Order_Employee_LastName != null);
     }
 
+    [TestMethod]
+    public void TestSelectMax4() {
+      var dbx = Util.NorthwindIB();
+      var orders = dbx.OrderDetails.Select(x => new { x.Order.Employee.LastName, x.Order.ShipCity });
+
+      //var qs = "?{\"select\":[\"Order.Employee.LastName\",\"Order.ShipCity\"]}";
+      var qs = "";
+      var aec = Util.NewActionExecutedContext(qs, orders);
+
+      var filter = new BreezeQueryFilterAttribute() { MaxDepth = 2, MaxTake = 10 };
+      filter.OnActionExecuted(aec);
+
+      var rows = Util.AssertQueryResult<object>(aec.Result);
+      var row0 = (dynamic)rows[0];
+      Assert.IsNotNull(row0);
+      Assert.IsTrue(row0.ShipCity != null);
+      Assert.IsTrue(row0.LastName != null);
+    }
+
+    [TestMethod]
+    public async Task TestSelectMax4Async() {
+      var dbx = Util.NorthwindIB();
+      var orders = dbx.OrderDetails.Take(20).Select(x => new { x.Order.Employee.LastName, x.Order.ShipCity });
+
+      //var qs = "?{\"select\":[\"Order.Employee.LastName\",\"Order.ShipCity\"]}";
+      var qs = "";
+      var aec = Util.NewActionExecutedContext(qs, orders);
+
+      var filter = new BreezeAsyncQueryFilterAttribute() { MaxDepth = 2, MaxTake = 10 };
+      await filter.OnActionExecutionAsync(Util.NewActionExecutingContext(), Util.GetNextDelegate(aec));
+
+      var rows = Util.AssertQueryResult<object>(aec.Result);
+      var row0 = (dynamic)rows[0];
+      Assert.IsNotNull(row0);
+      Assert.IsTrue(row0.ShipCity != null);
+      Assert.IsTrue(row0.LastName != null);
+    }
+
   }
 }

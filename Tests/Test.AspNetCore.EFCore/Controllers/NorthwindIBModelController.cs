@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 namespace Test.AspNetCore.Controllers {
 
   [Route("breeze/[controller]/[action]")]
-  [BreezeQueryFilter]
+  [BreezeQueryFilter(MaxDepth = 2, MaxTake = 2000)]
   public class NorthwindIBModelController : Controller {
     private NorthwindPersistenceManager PersistenceManager;
 
@@ -443,6 +443,16 @@ namespace Test.AspNetCore.Controllers {
     public IQueryable<Employee> EmployeesFilteredByCountryAndBirthdate(DateTime birthDate, string country) {
       return PersistenceManager.Context.Employees.Where(emp => emp.BirthDate >= birthDate && emp.Country == country);
     }
+
+    [HttpGet]
+    public Dictionary<int, List<Employee>> EmployeeDictionary(DateTime birthDate, string country) {
+      var empsByManager = PersistenceManager.Context.Employees.GroupBy(x => x.ReportsToEmployeeID ?? 0).ToDictionary(
+                group => group.Key,
+                group => group.ToList()
+            );
+      return empsByManager;
+    }
+
 
 #if NHIBERNATE
     [HttpGet]

@@ -41,7 +41,7 @@ namespace Breeze.AspNetCore {
     /// Set to 100 to allow max of 100 rows on any query.<br/>
     /// Set to -1 (the default) to allow unlimited rows.<br/>
     /// Set to 0 to not return any rows (but why would you do that?).<br/>
-    /// NOTE: MaxTake does not affect Expand/Include subqueries
+    /// NOTE: MaxTake does not affect Expand/Include subqueries, nor non-EF results (arrays, Lists, etc.)
     /// </summary><remarks>
     /// MaxTake can be used to limit result size if the client accidently (or maliciously) does not apply any filtering.<br/>
     /// MaxTake is not the same as adding a Take() clause in the controller method, because MaxTake is applied after any
@@ -74,7 +74,7 @@ namespace Breeze.AspNetCore {
       var qs = QueryFns.ExtractAndDecodeQueryString(executedContext, UsePost);
       var queryable = QueryFns.ExtractQueryable(executedContext);
 
-      if (!EntityQuery.NeedsExecution(qs, queryable)) {
+      if (!EntityQuery.NeedsExecution(qs, queryable) && !BreezeQueryFilterAttribute.NeedsMaxTake(queryable, MaxTake)) {
         base.OnActionExecuted(executedContext);
         return;
       }

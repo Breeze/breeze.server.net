@@ -21,7 +21,6 @@ namespace TestBreeze {
       return ctx;
     }
 
-
     /// <summary>
     /// Initialize an ActionExecutedContext for testing ActionFilters
     /// </summary>
@@ -29,6 +28,16 @@ namespace TestBreeze {
     /// <param name="queryable">IQueryable of entities, as would be the result of the controller method</param>
     /// <returns></returns>
     public static ActionExecutedContext NewActionExecutedContext(string queryString, IQueryable queryable) {
+      return NewActionExecutedContext(queryString, new ObjectResult(queryable));
+    }
+
+    /// <summary>
+    /// Initialize an ActionExecutedContext for testing ActionFilters
+    /// </summary>
+    /// <param name="queryString">Request query string, starting with "?".  For breeze, it should be like "?{id:3}"</param>
+    /// <param name="queryable">IQueryable of entities, as would be the result of the controller method</param>
+    /// <returns></returns>
+    public static ActionExecutedContext NewActionExecutedContext(string queryString, ActionResult result) {
       var modelState = new ModelStateDictionary();
       //modelState.AddModelError("", "error");
       var httpContext = new DefaultHttpContext {
@@ -47,7 +56,7 @@ namespace TestBreeze {
         controller: new()
       );
 
-      aeContext.Result = new ObjectResult(queryable);
+      aeContext.Result = result;
       return aeContext;
     }
 
@@ -116,8 +125,7 @@ namespace TestBreeze {
     /// <param name="actionResult"></param>
     /// <returns>The list extracted from the result </returns>
     public static List<T> AssertQueryResult<T>(IActionResult? actionResult) {
-      Assert.IsInstanceOfType<ObjectResult>(actionResult);
-      var result = ((ObjectResult)actionResult).Value;
+      var result = AssertObjectResult(actionResult);
       Assert.IsInstanceOfType<QueryResult>(result);
       var rows = ((QueryResult)result).Results.Cast<T>().ToList();
       return rows;
@@ -130,11 +138,23 @@ namespace TestBreeze {
     /// <param name="actionResult"></param>
     /// <returns>The list extracted from the result </returns>
     public static List<T> AssertListResult<T>(IActionResult? actionResult) {
-      Assert.IsInstanceOfType<ObjectResult>(actionResult);
-      var result = ((ObjectResult)actionResult).Value;
+      var result = AssertObjectResult(actionResult);
       Assert.IsInstanceOfType<IEnumerable<T>>(result);
       var rows = ((IEnumerable<T>)result).ToList();
       return rows;
+    }
+
+    /// <summary>
+    /// Assert that actionResult contains an IEnumerable of T, and return it as a list.
+    /// </summary>
+    /// <typeparam name="T">Entity type (e.g. Customer), or object for projections</typeparam>
+    /// <param name="actionResult"></param>
+    /// <returns>The list extracted from the result </returns>
+    public static object AssertObjectResult(IActionResult? actionResult) {
+      Assert.IsInstanceOfType<ObjectResult>(actionResult);
+      var result = ((ObjectResult)actionResult).Value;
+      Assert.IsNotNull(result);
+      return result;
     }
 
     /// <summary>

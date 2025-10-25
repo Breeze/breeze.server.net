@@ -34,7 +34,7 @@ namespace Breeze.AspNetCore {
     /// Set to 100 to allow max of 100 rows on any query.<br/>
     /// Set to -1 (the default) to allow unlimited rows.<br/>
     /// Set to 0 to not return any rows (but why would you do that?).<br/>
-    /// NOTE: MaxTake does not affect Expand/Include subqueries
+    /// NOTE: MaxTake does not affect Expand/Include subqueries, nor non-EF results (arrays, Lists, etc.)
     /// </summary><remarks>
     /// MaxTake can be used to limit result size if the client accidently (or maliciously) does not apply any filtering.<br/>
     /// MaxTake is not the same as adding a Take() clause in the controller method, because MaxTake is applied after any
@@ -67,7 +67,7 @@ namespace Breeze.AspNetCore {
       var qs = QueryFns.ExtractAndDecodeQueryString(context, UsePost);
       var queryable = QueryFns.ExtractQueryable(context);
 
-      if (!EntityQuery.NeedsExecution(qs, queryable)) {
+      if (!EntityQuery.NeedsExecution(qs, queryable) && !NeedsMaxTake(queryable, MaxTake)) {
         base.OnActionExecuted(context);
         return;
       }
@@ -154,12 +154,19 @@ namespace Breeze.AspNetCore {
 
     /// <summary> Check query and apply Take(maxTake) if needed. </summary>
     internal static IQueryable ApplyMaxTake(IQueryable queryable, System.Type eleType, int maxTake) {
-      if (maxTake < 0) { return queryable; }
+      if (!NeedsMaxTake(queryable, maxTake)) { return queryable; }
       var curTake = EntityQueryExtensions.GetTakeValue(queryable);
       if (curTake == null || curTake.Value > maxTake) {
         queryable = QueryBuilder.ApplyTake(queryable, eleType, maxTake);
       }
       return queryable;
+    }
+
+    /// <summary> Check query and apply Take(maxTake) if needed. </summary>
+    internal static bool NeedsMaxTake(IQueryable queryable, int maxTake) {
+      if (maxTake < 0 || queryable == null) { return false; }
+      if (!queryable.GetType().FullName.Contains("EntityFramework")) { return false; }
+      return true;
     }
 
 
