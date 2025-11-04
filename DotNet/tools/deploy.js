@@ -7,8 +7,8 @@ const bu = require('.\\build-utils');
 
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
 const userNugetCacheDir = process.env.USERPROFILE + '\\.nuget\\packages';
-const version = '7.4.2.7';
-const debugOrRelease = 'Debug';
+const version = '7.5.0';
+const debugOrRelease = 'Release';
 
 var baseNames = [
   'Breeze.AspNetCore.NetCore',

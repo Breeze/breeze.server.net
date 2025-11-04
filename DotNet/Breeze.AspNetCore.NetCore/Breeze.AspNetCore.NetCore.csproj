@@ -7,7 +7,7 @@
 		<OutputType>Library</OutputType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>7.4.2.7</Version>
+		<Version>7.5.0.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Core ASP.NET Core functionality for any Breeze Server using ASP.NET Core.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
@@ -26,8 +26,8 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<Product>Breeze Server - ASP.NET Core Provider</Product>
 		<PackageTags>AspNetCore DotNetCore Net10 Net9 Net8 Net7 Net6 Net5 JavaScript Breeze BreezeJs</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<AssemblyVersion>7.4.2.7</AssemblyVersion>
-		<FileVersion>7.4.2.7</FileVersion>
+		<AssemblyVersion>7.5.0.0</AssemblyVersion>
+		<FileVersion>7.5.0.0</FileVersion>
 		<PackageIcon>Breeze-aspnet.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
