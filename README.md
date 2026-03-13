@@ -17,7 +17,7 @@ Client-side querying, caching, dynamic object graphs, change tracking and notifi
 
 ### .NET Core
 
-For .NET Core (2 through 8) and Entity Framework Core (2 through 8), find the following packages in NuGet.
+For .NET Core (2 through 10) and Entity Framework Core (2 through 10), find the following packages in NuGet.
 
 > Note: Version 7.1 or later of each package is for .NET 5, 6, 7, and 8, whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
 
