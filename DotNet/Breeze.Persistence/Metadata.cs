@@ -102,7 +102,7 @@ namespace Breeze.Persistence {
       if (!(this.IsNullable ?? false)) {
         Validators.Add(MetaValidator.Required);
       }
-      if (this.MaxLength != null) {
+      if (this.MaxLength != null && this.MaxLength.Value >= 0) {
         Validators.Add(new MaxLengthMetaValidator(this.MaxLength.Value));
       }
       var validator = MetaValidator.FindValidator(TypeFns.GetNonNullableType(clrType));
