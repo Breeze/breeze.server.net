@@ -29,6 +29,8 @@ namespace Models.NorthwindIB.CF {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       modelBuilder.Entity<Comment>()
          .HasKey(c => new { c.CreatedOn, c.SeqNum });
+      modelBuilder.Entity<Comment>()
+         .Property(c => c.Comment1).HasMaxLength(-1);
 #if ETNOPAYLOAD
       modelBuilder.Entity<EmployeeTerritory>()
          .HasKey(c => new { c.EmployeeID, c.TerritoryID });
