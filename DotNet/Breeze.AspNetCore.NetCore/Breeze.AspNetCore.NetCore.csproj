@@ -14,7 +14,7 @@ Please review the Breeze documentation at http://breeze.github.io/doc-main/
 
 Note: Version 7.1+ of this package is for .NET 5+; whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
 		</Description>
-		<Copyright>Copyright © IdeaBlade 2012-2025</Copyright>
+		<Copyright>Copyright © IdeaBlade 2012-2026</Copyright>
 		<PackageProjectUrl>http://breeze.github.io</PackageProjectUrl>
 		<Authors>Jay Traband, IdeaBlade</Authors>
 		<Company>IdeaBlade</Company>

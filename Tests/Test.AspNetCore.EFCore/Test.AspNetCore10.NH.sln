@@ -12,13 +12,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.Persistence.NH", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breeze.AspNetCore.NetCore", "..\..\DotNet\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj", "{D87086D7-B9EB-AEEC-4016-0F55B32E148A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_Inheritance_NH.net5", "..\Model_Inheritance_NH\Model_Inheritance_NH.net5.csproj", "{2B39BB15-A992-652B-C84A-798A067F9D1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_Inheritance_NH.net10", "..\Model_Inheritance_NH\Model_Inheritance_NH.net10.csproj", "{2B39BB15-A992-652B-C84A-798A067F9D1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_NorthwindIB_NH.net5", "..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.net5.csproj", "{8BD1CE20-CC84-E82C-1569-29F5906B978B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_NorthwindIB_NH.net10", "..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.net10.csproj", "{8BD1CE20-CC84-E82C-1569-29F5906B978B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_Produce_NH.net5", "..\Model_Produce_NH\Model_Produce_NH.net5.csproj", "{F58FC761-13AC-F402-3930-C0D5A8BBD5CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_Produce_NH.net10", "..\Model_Produce_NH\Model_Produce_NH.net10.csproj", "{F58FC761-13AC-F402-3930-C0D5A8BBD5CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.AspNetCore5.NH", "Test.AspNetCore5.NH.csproj", "{3C19ADBD-F68F-2104-2BA8-BC756D4CD3FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.AspNetCore10.NH", "Test.AspNetCore10.NH.csproj", "{3C19ADBD-F68F-2104-2BA8-BC756D4CD3FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

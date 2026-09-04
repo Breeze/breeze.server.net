@@ -58,6 +58,9 @@ namespace Test.AspNetCore.Controllers {
     public IQueryable<Employee> Employees {
       get { return GetQuery<Employee>(); }
     }
+    public IQueryable<EmployeeTerritory> EmployeeTerritories {
+      get { return GetQuery<EmployeeTerritory>(); }
+    }
     //public IQueryable<Geospatial> Geospatials {
     //  get { return GetQuery<Geospatial>(); }
     //}

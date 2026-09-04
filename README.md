@@ -19,7 +19,7 @@ Client-side querying, caching, dynamic object graphs, change tracking and notifi
 
 For .NET Core (2 through 10) and Entity Framework Core (2 through 10), find the following packages in NuGet.
 
-> Note: Version 7.1 or later of each package is for .NET 5, 6, 7, and 8, whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
+> Note: Version 7.1 or later of each package is for .NET 5 through 10, whereas Version 3.x is for .NET Core 3 and Version 1.x is for .NET Core 2.
 
 - [Breeze.AspNetCore.NetCore](https://www.nuget.org/packages/Breeze.AspNetCore.NetCore/)
 - [Breeze.Persistence.EFCore](https://www.nuget.org/packages/Breeze.Persistence.EFCore/) (support for EF Core)

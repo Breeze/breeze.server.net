@@ -6,6 +6,7 @@ using Breeze.Persistence;
 using Breeze.Persistence.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Data.SqlClient;
 using Models.NorthwindIB.CF;
 using Foo;
 #elif NHIBERNATE
@@ -22,7 +23,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 using BreezeEntityState = Breeze.Persistence.EntityState;
-using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Test.AspNetCore.Controllers {
@@ -436,7 +436,11 @@ namespace Test.AspNetCore.Controllers {
 
     [HttpGet]
     public IQueryable<Employee> EmployeesNoTracking() {
+#if NHIBERNATE
+      return PersistenceManager.Context.Employees;
+#else
       return PersistenceManager.Context.Employees.AsNoTracking();
+#endif
     }
 
     [HttpGet]
@@ -875,6 +879,17 @@ namespace Test.AspNetCore.Controllers {
     }
 
     // Test performing a raw db update to ProduceTPH using the ProduceTPH connection.  Requires DTC.
+#if NHIBERNATE
+    private int UpdateProduceDescription(string comment) {
+      var text = String.Format("update ItemOfProduce set Description='{0}' where id='{1}'",
+          comment, "13F1C9F5-3189-45FA-BA6E-13314FAFAA92");
+      var ps = Session.SessionFactory.OpenStatelessSession();
+      ps.Connection.ChangeDatabase("ProduceTPH");
+      var cmd = ps.CreateSQLQuery(text);
+      var result = cmd.ExecuteUpdate();
+      return result;
+    }
+#else
     private int UpdateProduceDescription(string comment) {
       using var conn = new SqlConnection("data source=.;initial catalog=ProduceTPH;integrated security=True;Encrypt=False;multipleactiveresultsets=True;application name=EntityFramework");
       conn.Open();
@@ -885,7 +900,7 @@ namespace Test.AspNetCore.Controllers {
       conn.Close();
       return result;
     }
-
+#endif
     // Use another Context to simulate lookup.  Returns Margaret Peacock if employeeId is not specified.
     private Employee LookupEmployeeInSeparateContext(bool existingConnection, int employeeId = 4) {
       var context2 = existingConnection

@@ -28,7 +28,7 @@ using ProduceTPH;
 using Breeze.Persistence.NH;
 #endif
 
-namespace Test.AspNetCore5.EFCore5 {
+namespace Test.AspNetCore {
   public class Startup {
 
     public Startup(IConfiguration configuration) {

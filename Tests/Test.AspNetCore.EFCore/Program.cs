@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Test.AspNetCore5.EFCore5 {
+namespace Test.AspNetCore {
     public class Program {
         public static void Main(string[] args) {
             CreateHostBuilder(args).Build().Run();

@@ -16,11 +16,20 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Test.AspNetCore5.EFCore5": {
-      "commandName": "Project",
-      "dotnetRunMessages": "true",
+    "IIS Express NH": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5000/api/values",
+      "launchUrl": "index.aspcore.nh.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Self Host": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:34377",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:34377/index.aspcore.efcore.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
