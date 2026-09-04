@@ -42,7 +42,7 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="[13.0.1,14)" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.*" />
   </ItemGroup>
 
 	<ItemGroup>

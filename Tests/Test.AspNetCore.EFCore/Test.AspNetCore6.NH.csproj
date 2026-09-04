@@ -13,13 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Breeze.AspNetCore.NetCore" Version="7.5.1" />
+    <PackageReference Include="Breeze.Persistence.NH" Version="7.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DotNet\Breeze.AspNetCore.NetCore\Breeze.AspNetCore.NetCore.csproj" />
-    <ProjectReference Include="..\..\DotNet\Breeze.Persistence.NH\Breeze.Persistence.NH.csproj" />
     <ProjectReference Include="..\Model_Inheritance_NH\Model_Inheritance_NH.net6.csproj" />
     <ProjectReference Include="..\Model_NorthwindIB_NH\Model_NorthwindIB_NH.net6.csproj" />
     <ProjectReference Include="..\Model_Produce_NH\Model_Produce_NH.net6.csproj" />

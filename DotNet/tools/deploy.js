@@ -8,14 +8,14 @@ const bu = require('.\\build-utils');
 const localNugetCacheDir = process.env.LOCALAPPDATA + '\\NuGet\\Test';
 const userNugetCacheDir = process.env.USERPROFILE + '\\.nuget\\packages';
 const version = '7.5.1';
-const debugOrRelease = 'Release';
+const debugOrRelease = 'Debug';
 
 var baseNames = [
   'Breeze.AspNetCore.NetCore',
   'Breeze.Core',
   'Breeze.Persistence',
   'Breeze.Persistence.EFCore',
-  // 'Breeze.Persistence.NH',
+  'Breeze.Persistence.NH',
 ];
 
 const arg = bu.getArg();
