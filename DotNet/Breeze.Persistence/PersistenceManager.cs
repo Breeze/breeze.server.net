@@ -126,7 +126,7 @@ namespace Breeze.Persistence {
       try {
         if (transactionSettings.TransactionType == TransactionType.TransactionScope) {
           var txOptions = transactionSettings.ToTransactionOptions();
-          using (var txScope = new TransactionScope(TransactionScopeOption.Required, txOptions)) {
+          using (var txScope = new TransactionScope(TransactionScopeOption.Required, txOptions, TransactionScopeAsyncFlowOption.Enabled)) {
             await OpenAndSaveAsync(SaveWorkState, cancellationToken);
             txScope.Complete();
           }
@@ -471,7 +471,7 @@ namespace Breeze.Persistence {
     /// then call BeforeSaveEntities() and BeforeSaveEntitiesAsync() </summary>
     public async Task BeforeSaveAsync(CancellationToken cancellationToken) {
       SaveMap = new Dictionary<Type, List<EntityInfo>>();
-      foreach(var eg in EntityInfoGroups) { 
+      foreach(var eg in EntityInfoGroups) {
         var entityInfos = new List<EntityInfo>();
         foreach (var ei in eg.EntityInfos) {
           if (PersistenceManager.BeforeSaveEntity(ei) && await PersistenceManager.BeforeSaveEntityAsync(ei, cancellationToken)) {
@@ -522,7 +522,7 @@ namespace Breeze.Persistence {
       } else {
         var entities = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState != EntityState.Detached))
           .Select(entityInfo => entityInfo.Entity)).ToList();
-        
+
         // we want to stub off any navigation properties here, but how to do it quickly.
         // entities.ForEach(e => e
         var deletes = SaveMap.SelectMany(kvp => kvp.Value.Where(ei => (ei.EntityState == EntityState.Deleted || ei.EntityState == EntityState.Detached))
