@@ -6,7 +6,7 @@
 		<AssemblyOriginatorKeyFile>Breeze.snk</AssemblyOriginatorKeyFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPackable>true</IsPackable>
-		<Version>7.5.1.0</Version>
+		<Version>7.5.2</Version>
 		<Description>
 Persistence for NHibernate functionality for any Breeze Server using .NET.
 Please review the Breeze documentation at http://breeze.github.io/doc-main/
@@ -26,8 +26,8 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 		<PackageTags>AspNetCore DotNetCore Net10 Net9 Net8 Net7 Net6 Net5 NHibernate JavaScript Breeze BreezeJs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<DelaySign>false</DelaySign>
-		<AssemblyVersion>7.5.1.0</AssemblyVersion>
-		<FileVersion>7.5.1.0</FileVersion>
+		<AssemblyVersion>7.5.2</AssemblyVersion>
+		<FileVersion>7.5.2</FileVersion>
 		<PackageIcon>BreezeLogo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Breeze/breeze.server.net</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -43,7 +43,7 @@ Please review the Breeze release notes at http://breeze.github.io/doc-net/releas
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="[13.0.1,14)" />
     <PackageReference Include="NHibernate" Version="5.*" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
