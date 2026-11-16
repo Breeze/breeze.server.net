@@ -1,5 +1,7 @@
 # [Breeze](http://breeze.github.io/doc-main/) Data Management for [.NET Servers](http://breeze.github.io/doc-net/)
 
+> **Upgrading an older Breeze application?** IdeaBlade, the team that builds Breeze, modernizes Breeze apps on AngularJS, Knockout or Durandal with Web API 2 and Entity Framework 6 to current Angular, Breeze 3, ASP.NET Core and EF Core. [See how we do it](https://www.ideablade.com/modernization/#breeze).
+
 **Breeze** is a library from [IdeaBlade](https://www.ideablade.com/) that helps you manage data in rich client applications. If you store data in a database, query and save those data as complex object graphs, and share these graphs across multiple screens of your JavaScript or C# client, Breeze is for you.
 
 Client-side querying, caching, dynamic object graphs, change tracking and notification, model validation, batch save, offline … all part of rich data management with Breeze.  Breeze clients communicate with any remote service that speaks HTTP and JSON.
